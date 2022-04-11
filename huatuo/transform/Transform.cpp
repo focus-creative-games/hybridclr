@@ -1344,7 +1344,7 @@ ip++;
 				}
 				case 12:
 				{
-					CreateIR(ir, LdfldVarVar_size_12);
+					CreateIR(ir, LdfldValueTypeVarVar_size_12);
 					ir->dst = dstIdx;
 					ir->obj = objIdx;
 					ir->offset = offset;
@@ -1352,7 +1352,7 @@ ip++;
 				}
 				case 16:
 				{
-					CreateIR(ir, LdfldVarVar_size_16);
+					CreateIR(ir, LdfldValueTypeVarVar_size_16);
 					ir->dst = dstIdx;
 					ir->obj = objIdx;
 					ir->offset = offset;
@@ -1360,7 +1360,7 @@ ip++;
 				}
 				default:
 				{
-					CreateIR(ir, LdfldVarVar_n_4);
+					CreateIR(ir, LdfldValueTypeVarVar_n_4);
 					ir->dst = dstIdx;
 					ir->obj = objIdx;
 					ir->offset = offset;
