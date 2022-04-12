@@ -650,6 +650,8 @@ if (ARR->max_length <= (*(uint32_t*)(localVarBase + __index))) { \
 
 #define SAVE_CUR_FRAME(nextIp) { \
 	frame->ip = nextIp; \
+	frame->saveException = curException; \
+    curException = nullptr; \
 }
 
 #define LOAD_PREV_FRAME() { \
@@ -657,6 +659,10 @@ if (ARR->max_length <= (*(uint32_t*)(localVarBase + __index))) { \
 	ip = frame->ip; \
 	ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
+	if (!curException) \
+	{ \
+		curException = frame->saveException; \
+	} \
 }
 
 
@@ -887,7 +893,6 @@ else \
 
 		PREPARE_NEW_FRAME(methodInfo, args, ret, false);
 
-		// exception handler
 		Il2CppException* curException = nullptr;
 
 	LoopStart:

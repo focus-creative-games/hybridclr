@@ -71,6 +71,7 @@ namespace interpreter
 		byte* ip;
 
 		ExceptionFlowType exFlowType;
+		Il2CppException* saveException;
 		int32_t throwOffset;
 		int32_t nextExClauseIndex;
 		int32_t leaveTarget;
