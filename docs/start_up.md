@@ -13,18 +13,18 @@
 
 - 为你所用的Unity版本安装适当的il2cpp模块，（如果你发布其他平台，要选择相应平台的il2cpp模块）。
 - 从[il2cpp_huatuo](https://github.com/pirunxi/il2cpp_huatuo) clone你所用的unity版本对应的分支
-- 将huatuo目录复制到 il2cpp_huatuo/libil2cpp下，最终目录为il2cpp_huatuo/libil2cpp/huatuo。
-- 用il2cpp_huatuo项目的libil2cpp目录替换你当前所用的Unity的Editor安装目录下的 Editor/Data/il2cpp/libil2cpp 目录。
+- 将huatuo项目下的huatuo目录（注意不是huatuo项目根目录，而是根目录下的huatuo目录）复制（**推荐用建立目录链接的方法，linux下用ln，Win下用mlink**）到 il2cpp_huatuo/libil2cpp下，最终目录为il2cpp_huatuo/libil2cpp/huatuo。
+- 将这个添加了huatuo目录的libil2cpp目录替换你当前所用的Unity的Editor安装目录下的 Editor/Data/il2cpp/libil2cpp 目录。
+
+**简单来说，就是将 il2cpp_huatuo 项目的libil2cpp与 huatuo项目的huatuo目录合并，形成最终的libil2cpp目录，再替换安装目录的原始libil2cpp目录。**
 
 **至此即完成huatuo安装，后续打包出的app就能支持c#热更新。**
 
 ### 项目的准备工作
 
 - 使用 Unity的 Assembly def 创建一个专门的 HotFix 模块（你也可以使用创建第三方工程的方式，只不过麻烦了点）。
-- 配置HotFix模块
-  - 根据需求设置正确的Assembly Definition Reference。
-  - Platforms 选项下，取消AnyPlatform，接着只选中 Editor和随便一个**不导出**的平台（如XboxOne）。不能只有Editor，因为Unity会把它当作纯Editor模板，不允许加载MonoBehaviour。
-- 将示例项目Assets/Main/HuatuoLib 以及Assets/link.xml 拷贝到 你项目中。link.xml文件可酌情调整。
+- 将示例项目Assets/Main/HuatuoLib 、Assets/Editor/HuaTuo 以及Assets/link.xml 拷贝到 你项目中。link.xml文件可酌情调整。
+- 参考[MonoBehaviour相关工作流](./MonoBehaviour.md) 作一些必要的设置
 
 ### 代码中使用
 
@@ -43,7 +43,7 @@ public class App
 
 - 主工程中，使用标准反射函数加载Hotfix.dll,以示例 LoadDll.cs 为例
 
-- 如果需要加载AssetBundle, 请查看示例工程中的LoadDllFromAssetbundle.cs文件
+- 如果需要加载AssetBundle, 请查看示例工程中的LoadDllFromAssetBundle.cs文件
 
   同时也在菜单中添加了简单hotfix.dll文件的ab制作工具
 
@@ -61,14 +61,12 @@ public class LoadDll : MonoBehaviour
 
     private void LoadGameDll()
     {
-#if UNITY_EDITOR
-        string gameDll = Application.dataPath + "/../Library/ScriptAssemblies/HotFix.dll";
-        // 使用File.ReadAllBytes是为了避免Editor下gameDll文件被占用导致后续编译后无法覆盖
-        gameAss = System.Reflection.Assembly.Load(File.ReadAllBytes(gameDll));
-#else
+#if !UNITY_EDITOR
         // 此代码在Android等平台下并不能工作，请酌情调整
         string gameDll = Application.streamingAssetsPath + "/HotFix.dll";
         gameAss = System.Reflection.Assembly.LoadFile(File.ReadAllBytes(gameDll));
+        #else
+        gameAss = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(assembly => assembly.GetName().Name == "HotFix");
 #endif
     }
 

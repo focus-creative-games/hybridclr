@@ -41,6 +41,7 @@ huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpr
 - [wiki](docs/home.md)
 - [快速上手](docs/start_up.md)
 - [FAQ](docs/FAQ.md)
+- [限制和注意事项](docs/limit.md)
 - [常见错误](docs/common_errors.md)
 - [最佳实践](docs/best_practices.md)
 - [源码结构与跟踪调试](docs/source_inspect.md)
@@ -63,29 +64,17 @@ huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpr
 - 可以运行 [StarForce](https://github.com/EllanJiang/StarForce) 这样的小型游戏
 - 正在帮助一些小中大型（其中有一个重度MMORPG项目）进行huatuo的迁移和测试工作。预计本月可以顺利运行MMORPG这样的大型游戏项目。
 
-## 限制和注意事项
-
-**不在限制事项中的特性都是huatuo支持**。请不要再问huatuo是否支持某个功能。
-
-- 支持2019-2022全系列版本，但不是每个小版本都支持。具体请查看[现在支持的Unity版本](docs/support_versions.md)。
-- 无法创建出普通AOT泛型(**delegate、Nullable、数组(包括多维)不受限制，热更新泛型也完全不受限**)的**热更新非枚举值类型**的实例化类型的实例。 例如不支持List&lt;HotUpdateValueType&gt;但支持List&lt;int&gt;、List&lt;HotUpdateClass&gt;和List&lt;HotUpdateEnum&gt;。 具体原因见[AOT泛型限制及原理介绍](docs/generic_limit.md)。这个会在7月份版本比较彻底地解决，此后不再有限制。
-- 暂时不支持返回**自定义值类型**的默认async task，原生值类型如int及枚举及class类型不受限制。原因是编译器会为async默认生成 AsyncTaskMethodBuilder&lt;T&gt;的泛型类实例化，如果像ETask那样使用自定义Task及AsyncTaskMethodBuilder，则不受限制。原生async这个限制后续版本会解决。
-- **注意使用link.xml或者代码引用的方式避免unity裁减代码。避免开发期能调用，发布后却找不到函数的错误**。我们后续会提供默认模板。
-- 不支持delegate的BeginInvoke, EndInvoke。纯粹是觉得没必要实现。
-- 热更新的MonoBehaviour通过AddComponent可以正常工作。如果要挂载到热更新资源上，还需要打包时略微做一点额外操作（文档正在补充），才能正常工作。
-- 暂不支持增量式gc。由于时间紧凑，来不及仔细处理增量式gc的memory barrier细节。这个问题很快会解决。
-- 暂时不支持打包后真机的c#源码调试，但能打印错误堆栈（只能精确到函数），也可以在Build出的Debug工程中跟踪调试。Editor下开发期调试使用平时的mono调试就可以了。
-
 ## RoadMap
 
 huatuo虽然与il2cpp相关，但绝大多数核心代码独立于il2cpp，很容易移植（预计一个月）到其他不支持AOT+Interpreter的CLR平台。无论unity如何版本变迁，哪怕废弃了il2cpp改用.net 6+，huatuo会持续跟进，稳定地提供跨平台的CLR热更新服务，直至某天.net官方直接支持AOT+Interpreter，则huatuo完成其历史使命。
 
-- 持续修复bug，让一个中大型游戏正常运行 (2022.4)
-- 持续跟进unity的版本更新，支持更多的unity版本。查看[现在支持的Unity版本](docs/support_versions.md)
+- 持续修复bug，在Win平台能正常运行一个中大型游戏 (2022.4)
+- 持续跟进unity的版本更新，支持更多的unity版本。查看[现在支持的Unity版本](docs/support_versions.md) (2022.4)
+- 推进Android与ios的全平台测试 (2022.5)
 - 支持 hotfix AOT部分的bug (2022.6)
 - 除去大多数普通AOT泛型类限制 (2022.6)
-- 支持增量式gc。 (2022.6)
-- 指令优化，编译后指令数减少到原来1/4-1/2，基础指令和大多数对象模型指令有100%-300%的性能提升。 (2022.6 出预览版本)
+- 支持增量式gc。 (2022.7)
+- 指令优化，编译后指令数减少到原来1/4-1/2，基础指令和大多数对象模型指令有100%-300%的性能提升。 (2022.7 出预览版本)
 - 支持 extern函数 (2022.7)
 - 其他内存和效率优化，以及代码重构
 - **===支持godot引擎===**(2022.12)

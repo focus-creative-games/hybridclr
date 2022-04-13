@@ -10,6 +10,7 @@
 - [性能测试报告](./benchmark.md)
 - [内存分析报告](./memory.md)
 - [限制和注意事项](./limit.md)
+- [MonoBehaviour相关工作流](./MonoBehaviour.md)
 - [常用框架和库的兼容性报告](compatible.md)
 - [FAQ](./FAQ.md)
 - [AOT泛型限制及原理介绍](generic_limit.md)
