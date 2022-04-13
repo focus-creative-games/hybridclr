@@ -715,17 +715,21 @@ namespace metadata
 				for (uint32_t paramRowIndex = namedParamStart + 1; paramRowIndex <= namedParamStart + namedParamCount; paramRowIndex++)
 				{
 					TbParam data = TableReader::ReadParam(*this, paramRowIndex);
-					ParamDetail& paramDetail = _params[actualParamStart + data.sequence - 1];
-					Il2CppParameterDefinition& pd = paramDetail.paramDef;
-					IL2CPP_ASSERT(paramDetail.parameterIndex == data.sequence - 1);
-					pd.nameIndex = EncodeWithIndex(data.name);
-					pd.token = EncodeToken(TableType::PARAM, paramRowIndex);
+					if (data.sequence > 0)
+					{
+						ParamDetail& paramDetail = _params[actualParamStart + data.sequence - 1];
+						Il2CppParameterDefinition& pd = paramDetail.paramDef;
+						IL2CPP_ASSERT(paramDetail.parameterIndex == data.sequence - 1);
+						pd.nameIndex = EncodeWithIndex(data.name);
+						pd.token = EncodeToken(TableType::PARAM, paramRowIndex);
+					}
+					else
+					{
+						// data.sequence == 0  is for returnType.
+						// used for parent of CustomeAttributes of ReturnType
+						// il2cpp not support ReturnType CustomAttributes. so we just ignore it.
+					}
 				}
-
-				//for (uint16_t paramIdx = 0; paramIdx < md.parameterCount; paramIdx++)
-				//{
-				//    _params[md.parameterCount + paramIdx].parameterIndex = paramIdx;
-				//}
 			}
 		}
 	}

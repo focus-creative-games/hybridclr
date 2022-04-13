@@ -521,7 +521,7 @@ namespace metadata
             IL2CPP_ASSERT(gc->type_argc == genParamCount);
         }
         uint32_t paramCount = reader.ReadCompressedUint32();
-        IL2CPP_ASSERT(paramCount >= methodDef.parameterCount);
+        //IL2CPP_ASSERT(paramCount >= methodDef.parameterCount);
 
         Il2CppType returnType = {};
         ReadType(reader, klassGenericContainer, methodGenericContainer, returnType);
