@@ -88,7 +88,7 @@ namespace interpreter
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 
 			newFrame = _machineState.PushFrame();
-			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, ExceptionFlowType::None, 0, 0, 0 };
+			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, {}, {} };
 			_frames.push(newFrame);
 		}
 		else
@@ -96,7 +96,7 @@ namespace interpreter
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize);
 
 			newFrame = _machineState.PushFrame();
-			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, ExceptionFlowType::None, 0, 0, 0 };
+			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, {}, {} };
 			_frames.push(newFrame);
 
 			// if not prepare arg stack. copy from args

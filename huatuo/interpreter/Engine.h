@@ -61,6 +61,15 @@ namespace interpreter
 
 	struct InterpMethodInfo;
 
+	struct ExceptionFlowInfo
+	{
+		ExceptionFlowType exFlowType;
+		int32_t throwOffset;
+		Il2CppException* ex;
+		int32_t nextExClauseIndex;
+		int32_t leaveTarget;
+	};
+
 	struct InterpFrame
 	{
 		const InterpMethodInfo* method;
@@ -70,11 +79,11 @@ namespace interpreter
 
 		byte* ip;
 
-		ExceptionFlowType exFlowType;
-		Il2CppException* saveException;
-		int32_t throwOffset;
-		int32_t nextExClauseIndex;
-		int32_t leaveTarget;
+		//Il2CppException* saveException;
+		std::vector<ExceptionFlowInfo>* exHandleStack;
+		ExceptionFlowInfo prevExFlowInfo;
+		ExceptionFlowInfo curExFlowInfo;
+		
 		//std::vector<void*> *bigLocalAllocs;
 	};
 
@@ -310,10 +319,21 @@ namespace interpreter
 		void CleanUpFrames()
 		{
 			uint32_t n = (uint32_t)_frames.size();
-			if (n > 0)
+			switch (n)
 			{
-				_machineState.SetStackTop(_stackBaseIdx);
-				_machineState.PopFrameN(n);
+			case 0: break;
+			case 1:
+			{
+				LeaveFrame();
+				break;
+			}
+			default:
+			{
+				for (uint32_t i = 0; i < n; i++)
+				{
+					LeaveFrame();
+				}
+			}
 			}
 		}
 
@@ -324,6 +344,12 @@ namespace interpreter
 			IL2CPP_ASSERT(!_frames.empty());
 			POP_STACK_FRAME();
 			InterpFrame* frame = _frames.top();
+			if (frame->exHandleStack)
+			{
+				frame->exHandleStack->~vector();
+				IL2CPP_FREE(frame->exHandleStack);
+				frame->exHandleStack = nullptr;
+			}
 			_machineState.PopFrame();
 			_machineState.SetStackTop(frame->oldStackTop);
 			_frames.pop();
@@ -335,6 +361,8 @@ namespace interpreter
 			uint32_t soNum = (uint32_t)((size + sizeof(StackObject) - 1) / sizeof(StackObject));
 			return _machineState.AllocStackSlot(soNum);
  		}
+
+		size_t GetFrameCount() const { return _frames.size(); }
 	private:
 		MachineState& _machineState;
 		ptrdiff_t _stackBaseIdx;

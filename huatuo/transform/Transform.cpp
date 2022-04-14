@@ -826,9 +826,9 @@ default: \
     break; \
 } \
 } \
-PopStackN(1) \
+PopStackN(2) \
 AddInst(ir);\
-op1.reduceType = EvalStackReduceDataType::I4;
+PushStackByReduceType(EvalStackReduceDataType::I4);
 
 
 #define CI_BinOpOvf(op, dataType4, dataType8)  IL2CPP_ASSERT(evalStackTop >= 2); \
@@ -4278,8 +4278,8 @@ ip++;
 				ir->addr = ir->obj = GetEvalStackTopOffset();
 				ir->klass = objKlass;
 
-				EvalStackVarInfo& top = evalStack[evalStackTop - 1];
-				top.reduceType = EvalStackReduceDataType::Ref;
+				PopStack();
+				PushStackByReduceType(EvalStackReduceDataType::Ref);
 
 				ip += 5;
 				continue;
@@ -5272,7 +5272,9 @@ ip++;
 							CreateAddIR(ir, BoxRefVarVar);
 							ir->dst = ir->src = self.locOffset;
 							ir->klass = conKlass;
+							
 							self.reduceType = EvalStackReduceDataType::Obj;
+							self.byteSize = GetSizeByReduceType(self.reduceType);
 							goto LabelCallVir;
 						}
 					}
@@ -5282,6 +5284,7 @@ ip++;
 						CreateAddIR(ir, LdindVarVar_i8);
 						ir->dst = ir->src = self.locOffset;
 						self.reduceType = EvalStackReduceDataType::Obj;
+						self.byteSize = GetSizeByReduceType(self.reduceType);
 						goto LabelCallVir;
 					}
 					continue;
