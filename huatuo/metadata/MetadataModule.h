@@ -197,6 +197,11 @@ namespace metadata
 			return GetImage(DecodeImageIndex(index))->GetFieldOrParameterDefalutValueByRawIndex(DecodeMetadataIndex(index));
 		}
 
+		static bool HasAttribute(const Il2CppImage* image, uint32_t token, Il2CppClass* attribute)
+		{
+			return GetImage(image)->HasAttribute(token, attribute);
+		}
+
 	private:
 		static uint32_t s_cliImageCount;
 		static Image* s_images[kMaxLoadImageCount + 1];

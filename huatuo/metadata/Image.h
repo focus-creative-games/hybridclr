@@ -356,6 +356,25 @@ namespace metadata
 			return GenerateCustomAttributesCacheInternal(index);
 		}
 
+		bool HasAttribute(uint32_t token, Il2CppClass* attribute)
+		{
+			CustomAttributeIndex index = GetCustomAttributeIndex(token);
+			if (index == kCustomAttributeIndexInvalid)
+			{
+				return false;
+			}
+			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(index);
+			for (int i = 0; i < attrCache->count; i++)
+			{
+				Il2CppObject* attrObj = attrCache->attributes[i];
+				if (il2cpp::vm::Class::IsAssignableFrom(attribute, attrObj->klass))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
