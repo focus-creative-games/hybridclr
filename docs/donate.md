@@ -3,6 +3,7 @@
 ## 致谢名单
 
 - 奶泡泡 慷慨赞助 **1000** 。[github主页](https://github.com/yimengfan)，推荐框架 [BDFramework.Core](https://github.com/yimengfan/BDFramework.Core)
+- tinygridlock [github](https://github.com/tinygridlock) 感谢为我们反馈了大量bug，提供包括单元测试方案在内的大量改进建议。
 - HusKka
 - Stark
 - L  [github](https://github.com/LiuOcean)
