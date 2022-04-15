@@ -134,7 +134,7 @@ namespace metadata
 
     inline bool IsPrivateMethod(uint32_t flags)
     {
-        return flags & METHOD_ATTRIBUTE_PRIVATE;
+        return (flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK) == METHOD_ATTRIBUTE_PRIVATE;
     }
 
     inline bool IsGenericIns(const Il2CppType* type)

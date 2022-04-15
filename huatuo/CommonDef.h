@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <cstring>
 #include <memory>
 
 #include "codegen/il2cpp-codegen.h"
