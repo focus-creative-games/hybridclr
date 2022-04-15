@@ -165,9 +165,8 @@ namespace metadata
 
 	void VTableSetUp::ComputAotTypeVtables()
 	{
-		for (uint16_t i = 0; i < _typeDef->interfaces_count; i++)
+		for (uint16_t i = 0; i < _typeDef->interface_offsets_count; i++)
 		{
-			const Il2CppType* intType = il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(_typeDef, i);
 			Il2CppInterfaceOffsetInfo ioi = il2cpp::vm::GlobalMetadata::GetInterfaceOffsetInfo(_typeDef, i);
 			_interfaceOffsetInfos.push_back({ TryInflateIfNeed(_type, ioi.interfaceType), nullptr, (uint16_t)ioi.offset });
 		}
