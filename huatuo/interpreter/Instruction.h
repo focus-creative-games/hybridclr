@@ -650,8 +650,6 @@ namespace interpreter
 		SetArrayElementVarVar_size_12_8,
 		SetArrayElementVarVar_size_16_8,
 		SetArrayElementVarVar_n_8,
-		SetArrayElementObjectCheckVarVar_4,
-		SetArrayElementObjectCheckVarVar_8,
 		NewMdArrVarVar_length,
 		NewMdArrVarVar_length_bound,
 		GetMdArrElementVarVar,
@@ -5406,24 +5404,6 @@ namespace interpreter
 		uint16_t arr;
 		uint16_t index;
 		uint16_t ele;
-	};
-
-
-	struct IRSetArrayElementObjectCheckVarVar_4 : IRCommon
-	{
-		uint16_t arr;
-		uint16_t index;
-		uint16_t ele;
-		Il2CppClass* klass;
-	};
-
-
-	struct IRSetArrayElementObjectCheckVarVar_8 : IRCommon
-	{
-		uint16_t arr;
-		uint16_t index;
-		uint16_t ele;
-		Il2CppClass* klass;
 	};
 
 

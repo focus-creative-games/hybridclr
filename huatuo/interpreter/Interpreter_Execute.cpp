@@ -102,6 +102,10 @@ namespace interpreter
 		{
 			il2cpp::vm::Exception::RaiseDivideByZeroException();
 		}
+		else if (a == kIl2CppInt32Min && b == -1 )
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a / b;
 	}
 
@@ -111,16 +115,28 @@ namespace interpreter
 		{
 			il2cpp::vm::Exception::RaiseDivideByZeroException();
 		}
+		else if (a == kIl2CppInt64Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a / b;
 	}
 
 	inline float HiDiv(float a, float b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return a / b;
 	}
 
 	inline double HiDiv(double a, double b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return a / b;
 	}
 
@@ -136,41 +152,81 @@ namespace interpreter
 
 	inline int32_t HiDivUn(int32_t a, int32_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint32_t)a / (uint32_t)b;
 	}
 
 	inline int64_t HiDivUn(int64_t a, int64_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint64_t)a / (uint64_t)b;
 	}
 
 	inline float HiRem(float a, float b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return std::fmodf(a, b);
 	}
 
 	inline double HiRem(double a, double b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return std::fmod(a, b);
 	}
 
 	inline int32_t HiRem(int32_t a, int32_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
+		else if (a == kIl2CppInt32Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a % b;
 	}
 
 	inline int64_t HiRem(int64_t a, int64_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
+		else if (a == kIl2CppInt64Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a % b;
 	}
 
 	inline uint32_t HiRemUn(int32_t a, int32_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint32_t)a % (uint32_t)b;
 	}
 
 	inline uint64_t HiRemUn(int64_t a, int64_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint64_t)a % (uint64_t)b;
 	}
 
@@ -7190,6 +7246,7 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
 				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele))->klass);
 				    il2cpp_array_setref((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7314,6 +7371,7 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
 				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele))->klass);
 				    il2cpp_array_setref((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7350,30 +7408,6 @@ else \
 				    int32_t eleSize = il2cpp::vm::Array::GetElementSize(arr->klass);
 				    il2cpp_array_setrefwithsize(arr, eleSize, __index, (void*)(localVarBase + __ele));
 				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::SetArrayElementObjectCheckVarVar_4:
-				{
-					uint16_t __arr = *(uint16_t*)(ip + 2);
-					uint16_t __index = *(uint16_t*)(ip + 4);
-					uint16_t __ele = *(uint16_t*)(ip + 6);
-					Il2CppClass* __klass = *(Il2CppClass**)(ip + 8);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
-				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), __klass);
-				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), Il2CppObject*, (*(int32_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
-				    ip += 16;
-				    continue;
-				}
-				case HiOpcodeEnum::SetArrayElementObjectCheckVarVar_8:
-				{
-					uint16_t __arr = *(uint16_t*)(ip + 2);
-					uint16_t __index = *(uint16_t*)(ip + 4);
-					uint16_t __ele = *(uint16_t*)(ip + 6);
-					Il2CppClass* __klass = *(Il2CppClass**)(ip + 8);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
-				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), __klass);
-				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), Il2CppObject*, (*(int64_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
-				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::NewMdArrVarVar_length:
