@@ -111,6 +111,7 @@ namespace interpreter
 			if (returnType)
 			{
 				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+				il2cpp::vm::Class::SetupFields(klass);
 				if (klass->valuetype && klass->instance_size > sizeof(Il2CppObject) + 8)
 				{
 					pos += std::sprintf(sigBuf + pos, "s%d", (int)(klass->instance_size - sizeof(Il2CppObject) + 7) / 8);
