@@ -124,19 +124,11 @@ namespace interpreter
 
 	inline float HiDiv(float a, float b)
 	{
-		if (b == 0)
-		{
-			il2cpp::vm::Exception::RaiseDivideByZeroException();
-		}
 		return a / b;
 	}
 
 	inline double HiDiv(double a, double b)
 	{
-		if (b == 0)
-		{
-			il2cpp::vm::Exception::RaiseDivideByZeroException();
-		}
 		return a / b;
 	}
 
@@ -170,19 +162,11 @@ namespace interpreter
 
 	inline float HiRem(float a, float b)
 	{
-		if (b == 0)
-		{
-			il2cpp::vm::Exception::RaiseDivideByZeroException();
-		}
 		return std::fmodf(a, b);
 	}
 
 	inline double HiRem(double a, double b)
 	{
-		if (b == 0)
-		{
-			il2cpp::vm::Exception::RaiseDivideByZeroException();
-		}
 		return std::fmod(a, b);
 	}
 
