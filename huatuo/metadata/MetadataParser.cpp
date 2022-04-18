@@ -956,7 +956,11 @@ namespace metadata
             type = il2cpp_defaults.object_class->byval_arg;
             break;
         }
-        
+        default:
+        {
+            TEMP_FORMAT(errMsg, "ReadCustomAttributeFieldOrPropType. image:%s unknown type:%d", reader.GetImage().GetIl2CppImage()->name, (int)type.type);
+            RaiseBadImageException(errMsg);
+        }
         }
     }
 
