@@ -11,6 +11,55 @@ namespace huatuo
 {
 namespace metadata
 {
+	const Il2CppType* TryInflateIfNeed(const Il2CppType* containerType, const Il2CppType* genericType, const Il2CppType* selfType)
+	{
+		if (selfType->type == IL2CPP_TYPE_CLASS || selfType->type == IL2CPP_TYPE_VALUETYPE)
+		{
+			if (genericType->data.typeHandle == selfType->data.typeHandle)
+			{
+				return containerType;
+			}
+		}
+		return TryInflateIfNeed(containerType, selfType);
+	}
+
+	VTableSetUp* VTableSetUp::InflateVts(Il2CppType2TypeDeclaringTreeMap& cache, VTableSetUp* genericType, const Il2CppType* type)
+	{
+		IL2CPP_ASSERT(genericType->_type->data.typeHandle == type->data.generic_class->type->data.typeHandle);
+		VTableSetUp* tdt = new (IL2CPP_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
+		tdt->_type = type;
+		tdt->_typeDef = genericType->_typeDef;
+		tdt->_parent = genericType->_parent ? BuildByType(cache, TryInflateIfNeed(type, genericType->_parent->_type)) : nullptr;
+		tdt->_name = genericType->_name;
+
+		for (VTableSetUp* gintf : genericType->_interfaces)
+		{
+			const Il2CppType* intType = TryInflateIfNeed(type, gintf->_type);
+			VTableSetUp* intf = BuildByType(cache, intType);
+			tdt->_interfaces.push_back(intf);
+		}
+
+		tdt->_methods = genericType->_methods;
+		for (GenericClassMethod& gcm : genericType->_virtualMethods)
+		{
+			tdt->_virtualMethods.push_back({ TryInflateIfNeed(type, genericType->_type, gcm.type), gcm.method, gcm.name });
+		}
+
+		for (RawInterfaceOffsetInfo& roi : genericType->_interfaceOffsetInfos)
+		{
+			const Il2CppType* intType = TryInflateIfNeed(type, genericType->_type, roi.type);
+			VTableSetUp* intf = BuildByType(cache, intType);
+			tdt->_interfaceOffsetInfos.push_back({intType, intf, roi.offset});
+		}
+
+		for (VirtualMethodImpl& vmi : genericType->_methodImpls)
+		{
+			const Il2CppType* declaringType = TryInflateIfNeed(type, genericType->_type, vmi.type);
+			tdt->_methodImpls.push_back({ vmi.method, declaringType, vmi.slot, vmi.name });
+		}
+
+		return tdt;
+	}
 
 	VTableSetUp* VTableSetUp::BuildByType(Il2CppType2TypeDeclaringTreeMap& cache, const Il2CppType* type)
 	{
@@ -18,6 +67,14 @@ namespace metadata
 		if (it != cache.end())
 		{
 			return it->second;
+		}
+		if (type->type == IL2CPP_TYPE_GENERICINST)
+		{
+			const Il2CppType* genericType = type->data.generic_class->type;
+			IL2CPP_ASSERT(genericType);
+			VTableSetUp* gdt = BuildByType(cache, genericType);
+			VTableSetUp* gidt = InflateVts(cache, gdt, type);
+			return cache[type] = gidt;
 		}
 		VTableSetUp* tdt = new (IL2CPP_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
@@ -254,7 +311,6 @@ namespace metadata
 					for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 					{
 						RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
-
 						if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(rioi.type, &matchImpl->declaration.containerType))
 						{
 							continue;

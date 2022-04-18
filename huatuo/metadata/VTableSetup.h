@@ -53,6 +53,7 @@ namespace metadata
 	{
 	public:
 		static VTableSetUp* BuildByType(Il2CppType2TypeDeclaringTreeMap& cache, const Il2CppType* type);
+		static VTableSetUp* InflateVts(Il2CppType2TypeDeclaringTreeMap& cache, VTableSetUp* genericType, const Il2CppType* type);
 
 		VTableSetUp()
 		{
