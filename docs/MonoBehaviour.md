@@ -38,7 +38,7 @@ AddComponent&lt;T&gt;()或者AddComponent(Type type)都是完美支持的。
 
 正常打包即可，但有几个注意事项
 
-- 需要把热更dll打包成ab，参考代码见 `Assets/Editor/HuaTuo/HuaTuoEditorHelper.cs`
+- dll可以自由选择AssetBundle或者StreamingAssets或者其他方式更新。如需要把热更dll打包成ab，可参见示例 `Assets/Editor/HuaTuo/HuaTuoEditorHelper.cs`
 - 建议打AB时不要禁用TypeTree，否则普通的AB加载方式会失败。（原因是对于禁用TypeTree的脚本，Unity为了防止二进制不匹配导致反序列化MonoBehaviour过程中进程Crash，会对脚本的签名进行校验，签名的内容是脚本FullName及TypeTree数据生成的Hash, 但由于我们的热更脚本信息不存在于打包后的安装包中，因此校验必定会失败）
 
 - 如果必须要禁用TypeTree，一个变通的方法是禁止脚本的Hash校验, 此种情况下用户必须保证打包时代码与资源版本一致，否则可能会导致Crash，示例代码
