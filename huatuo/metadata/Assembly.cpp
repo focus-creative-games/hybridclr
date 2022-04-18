@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 #include "os/File.h"
 #include "utils/MemoryMappedFile.h"
@@ -14,11 +15,14 @@
 #include "Image.h"
 #include "MetadataModule.h"
 #include "MetadataUtil.h"
+#include "TableReader.h"
 
 namespace huatuo
 {
 namespace metadata
 {
+
+    std::vector<Il2CppAssembly*> s_placeHolderAssembies;
 
     bool GetMappedFileBuffer(const char* assemblyFile, void*& buf, uint64_t& fileLength)
     {
@@ -27,14 +31,12 @@ namespace metadata
 
         if (err != 0)
         {
-            //utils::Logging::Write("ERROR: Could not open %s", assemblyFile);
             return false;
         }
 
         fileLength = il2cpp::os::File::GetLength(fh, &err);
         if (err != 0)
         {
-            //utils::Logging::Write("ERROR: GetLength %s, err:%d", assemblyFile, err);
             il2cpp::os::File::Close(fh, &err);
             return false;
         }
@@ -44,7 +46,6 @@ namespace metadata
         il2cpp::os::File::Close(fh, &err);
         if (err != 0)
         {
-            //utils::Logging::Write("ERROR: Close %s, err:%ulld", assemblyFile, err);
             il2cpp::utils::MemoryMappedFile::Unmap(buf);
             buf = NULL;
             return false;
@@ -52,13 +53,90 @@ namespace metadata
         return true;
     }
 
+#if ENABLE_PLACEHOLDER_DLL == 1
+    static const char* s_ignorePlaceHolderDlls[] =
+    {
+        "UnityEngine.",
+        "Unity.",
+        "WindowsRuntimeMetadata.dll",
+        nullptr,
+    };
+
+    static bool NeedCreatePlaceHolderDll(const char* assemblyName)
+    {
+        // if assemblyName is path
+        if (std::strstr(assemblyName, "/") || std::strstr(assemblyName, "\\"))
+        {
+            return false;
+        }
+        for (const char** ignoreDll = s_ignorePlaceHolderDlls; *ignoreDll; ignoreDll++)
+        {
+            if (std::strstr(assemblyName, *ignoreDll))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static const char* CreateAssemblyNameWithoutExt(const char* assemblyName)
+    {
+        const char* extStr = std::strstr(assemblyName, ".dll");
+        if (extStr)
+        {
+            size_t nameLen = extStr - assemblyName;
+            char* name = (char*)IL2CPP_MALLOC(nameLen + 1);
+            std::strncpy(name, assemblyName, nameLen);
+            name[nameLen] = '\0';
+            return name;
+        }
+        else
+        {
+            return CopyString(assemblyName);
+        }
+    }
+
+    static Il2CppAssembly* CreatePlaceHolderAssembly(const char* assemblyName)
+    {
+        auto ass = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppAssembly))) Il2CppAssembly;
+        auto image2 = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppImage))) Il2CppImage;
+        ass->image = image2;
+        ass->image->name = CopyString(assemblyName);
+        ass->image->nameNoExt = ass->aname.name = CreateAssemblyNameWithoutExt(assemblyName);
+        image2->assembly = ass;
+        s_placeHolderAssembies.push_back(ass);
+        return ass;
+    }
+
+    static Il2CppAssembly* FindPlaceHolderAssembly(const char* assemblyNameNoExt)
+    {
+        for (Il2CppAssembly* ass : s_placeHolderAssembies)
+        {
+            if (std::strcmp(ass->image->nameNoExt, assemblyNameNoExt) == 0)
+            {
+                return ass;
+            }
+        }
+        return nullptr;
+    }
+#endif
+
     Il2CppAssembly* Assembly::LoadFromFile(const char* assemblyFile)
     {
         void* fileBuffer;
         uint64_t fileLength;
         if (!GetMappedFileBuffer(assemblyFile, fileBuffer, fileLength))
         {
+
+#if ENABLE_PLACEHOLDER_DLL == 1
+            if (!NeedCreatePlaceHolderDll(assemblyFile))
+            {
+                return nullptr;
+            }
+            return CreatePlaceHolderAssembly(assemblyFile);
+#else
             return nullptr;
+#endif
         }
 
         return LoadFromBytes((const byte*)fileBuffer, fileLength, false);
@@ -101,8 +179,22 @@ namespace metadata
             // when load a bad image, mean a fatal error. we don't clean image on purpose.
         }
 
-        auto ass = new Il2CppAssembly{};
-        auto image2 = new Il2CppImage{};
+        TbAssembly data = TableReader::ReadAssembly(*image, 1);
+        const char* nameNoExt = image->GetStringFromRawIndex(data.name);
+
+        Il2CppAssembly* ass;
+        Il2CppImage* image2;
+        if ((ass = FindPlaceHolderAssembly(nameNoExt)) != nullptr)
+        {
+            image2 = ass->image;
+            IL2CPP_FREE((void*)ass->image->name);
+            IL2CPP_FREE((void*)ass->image->nameNoExt);
+        }
+        else
+        {
+            ass = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppAssembly))) Il2CppAssembly;
+            image2 = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppImage))) Il2CppImage;
+        }
 
         image->InitBasic(image2);
         image->BuildIl2CppAssembly(ass);
@@ -117,7 +209,6 @@ namespace metadata
 
         return ass;
     }
-
 }
 }
 

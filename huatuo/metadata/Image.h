@@ -110,7 +110,7 @@ namespace metadata
 	{
 	public:
 
-		Image(uint32_t imageIndex) : _index(imageIndex), _ptrRawData(nullptr), _imageLength(0), _ptrRawDataEnd(nullptr),
+		Image(uint32_t imageIndex) : _index(imageIndex), _inited(false), _ptrRawData(nullptr), _imageLength(0), _ptrRawDataEnd(nullptr),
 			_isDll(false), _PEHeader(nullptr), _PESectionHeaders(nullptr), _ptrMetaData(nullptr), _ptrMetaRoot(nullptr),
 			_streamStringHeap{}, _streamUS{}, _streamBlobHeap{}, _streamGuidHeap{}, _streamTables{},
 			_stringHeapStrNum(0), _userStringStrNum(0), _blobNum(0),
@@ -120,6 +120,8 @@ namespace metadata
 		}
 
 		LoadImageErrorCode Load(const byte* imageData, size_t length);
+
+		bool IsInitialized() const { return _inited; }
 
 		uint32_t GetIndex() const
 		{
@@ -538,6 +540,8 @@ namespace metadata
 			}
 			return ComputIndexByte(n, tagBitNum);
 		}
+
+		bool _inited;
 
 		Il2CppImage* _il2cppImage;
 

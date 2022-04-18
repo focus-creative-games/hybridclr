@@ -181,6 +181,7 @@ namespace metadata
 			return err;
 		}
 
+		_inited = true;
 		return LoadImageErrorCode::OK;
 	}
 

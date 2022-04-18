@@ -24,6 +24,11 @@ namespace huatuo
 #error "only support 64bit"
 #endif
 
+
+#ifndef ENABLE_PLACEHOLDER_DLL
+#define ENABLE_PLACEHOLDER_DLL 1
+#endif
+
     typedef uint8_t byte;
 
 #define TEMP_FORMAT(var, fmt, ...) char var[600]; \
