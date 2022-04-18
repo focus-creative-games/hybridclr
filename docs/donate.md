@@ -21,4 +21,7 @@
 - 自然妙有猫仙人 推荐 [CatJson](https://github.com/CatImmortal/CatJson)
 - 91焦先生 [github](https://github.com/mister91jiao)，推荐 [BundleMaster](https://github.com/mister91jiao/BundleMaster)
 - ^(-@-)^
-- [寒晟](https://github.com/huangchaoqun) 贡献了huatuo的 [UPM包](https://github.com/huangchaoqun/huotuo_package) [OUPM包](https://openupm.com/packages/com.huatuo.il2cpp/)
+- [寒晟](https://github.com/huangchaoqun) 贡献了huatuo的 [UPM包](https://github.com/huangchaoqun/huotuo_package) [OUPM包](https://openupm.com/packages/com.huatuo.il2cpp/)  
+- Adon [github](https://github.com/Adon92)
+- Omnana
+- D [github](github.com/adiu)
