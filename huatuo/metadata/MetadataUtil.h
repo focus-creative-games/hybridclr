@@ -61,7 +61,7 @@ namespace metadata
 
 #pragma region interpreter metadtata index
 
-    const uint32_t kMetadataIndexBits = 28;
+    const uint32_t kMetadataIndexBits = 26;
 
     const uint32_t kMetadataIndexMask = (1 << kMetadataIndexBits) - 1;
 
