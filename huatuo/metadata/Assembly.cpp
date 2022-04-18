@@ -66,9 +66,7 @@ namespace metadata
 
     Il2CppAssembly* Assembly::LoadFromBytes(const void* assemblyData, uint64_t length, bool copyData)
     {
-        auto ass = Create((const byte*)assemblyData, length, copyData);
-        il2cpp::vm::Assembly::Register(ass);
-        return ass;
+        return Create((const byte*)assemblyData, length, copyData);
     }
 
     Il2CppAssembly* Assembly::Create(const byte* assemblyData, uint64_t length, bool copyData)
