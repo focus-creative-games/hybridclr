@@ -1199,6 +1199,7 @@ ip++;
 		{
 			CI_createClassLdfldAndReturn(i8);
 		}
+		Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createClassLdfldAndReturn(u1)
@@ -1224,6 +1225,11 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
+				if (klass->enumtype)
+				{
+					type = &klass->element_class->byval_arg;
+					goto Retry;
+				}
 				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
 				switch (size)
 				{
@@ -1298,6 +1304,7 @@ ip++;
 		{
 			CI_createValueTypeLdfldAndReturn(i8);
 		}
+		Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createValueTypeLdfldAndReturn(u1)
@@ -1323,6 +1330,11 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
+				if (klass->enumtype)
+				{
+					type = &klass->element_class->byval_arg;
+					goto Retry;
+				}
 				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
 				switch (size)
 				{
@@ -1391,12 +1403,12 @@ ip++;
 		int32_t offset = GetFieldOffset(fieldInfo);
 		IL2CPP_ASSERT(offset < (1 << 16));
 
-
 		const Il2CppType* type = fieldInfo->type;
 		if (type->byref)
 		{
 			CI_createStfldAndReturn(i8);
 		}
+	Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createStfldAndReturn(u1)
@@ -1422,6 +1434,11 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
+				if (klass->enumtype)
+				{
+					type = &klass->element_class->byval_arg;
+					goto Retry;
+				}
 				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
 				switch (size)
 				{
@@ -1496,6 +1513,7 @@ ip++;
 		{
 			CI_createLdsfldAndReturn(i8);
 		}
+		Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createLdsfldAndReturn(u1)
@@ -1521,6 +1539,11 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
+				if (klass->enumtype)
+				{
+					type = &klass->element_class->byval_arg;
+					goto Retry;
+				}
 				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
 				switch (size)
 				{
@@ -1592,6 +1615,7 @@ ip++;
 		{
 			CI_createStsfldAndReturn(i8);
 		}
+		Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createStsfldAndReturn(u1)
@@ -1617,41 +1641,55 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
-				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
-				if (size <= 8)
+				if (klass->enumtype)
 				{
-					CI_createStsfldAndReturn(i8)
+					type = &klass->element_class->byval_arg;
+					goto Retry;
 				}
-				else
+				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+				switch (size)
 				{
-					switch (size)
-					{
-					case 12:
-					{
-						CreateIR(ir, StsfldVarVar_size_12);
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->data = dataIdx;
-						return ir;
-					}
-					case 16:
-					{
-						CreateIR(ir, StsfldVarVar_size_16);
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->data = dataIdx;
-						return ir;
-					}
-					default:
-					{
-						CreateIR(ir, StsfldVarVar_n_4);
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->data = dataIdx;
-						ir->size = size;
-						return ir;
-					}
-					}
+				case 1:
+				{
+					CI_createStsfldAndReturn(u1)
+				}
+				case 2:
+				{
+					CI_createStsfldAndReturn(u2)
+				}
+				case 4:
+				{
+					CI_createStsfldAndReturn(u4)
+				}
+				case 8:
+				{
+					CI_createStsfldAndReturn(u8)
+				}
+				case 12:
+				{
+					CreateIR(ir, StsfldVarVar_size_12);
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->data = dataIdx;
+					return ir;
+				}
+				case 16:
+				{
+					CreateIR(ir, StsfldVarVar_size_16);
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->data = dataIdx;
+					return ir;
+				}
+				default:
+				{
+					CreateIR(ir, StsfldVarVar_n_4);
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->data = dataIdx;
+					ir->size = size;
+					return ir;
+				}
 				}
 			}
 			else
@@ -1689,6 +1727,7 @@ ip++;
 		{
 			CI_createLdsfldAndReturn(i8);
 		}
+		Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createLdthreadlocalAndReturn(u1)
@@ -1714,41 +1753,55 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
-				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
-				if (size <= 8)
+				if (klass->enumtype)
 				{
-					CI_createLdsfldAndReturn(i8)
+					type = &klass->element_class->byval_arg;
+					goto Retry;
 				}
-				else
+				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+				switch (size)
 				{
-					switch (size)
-					{
-					case 12:
-					{
-						CreateIR(ir, LdthreadlocalVarVar_size_12);
-						ir->dst = dstIdx;
-						ir->klass = parent;
-						ir->offset = offset;
-						return ir;
-					}
-					case 16:
-					{
-						CreateIR(ir, LdthreadlocalVarVar_size_16);
-						ir->dst = dstIdx;
-						ir->klass = parent;
-						ir->offset = offset;
-						return ir;
-					}
-					default:
-					{
-						CreateIR(ir, LdthreadlocalVarVar_n_4);
-						ir->dst = dstIdx;
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->size = size;
-						return ir;
-					}
-					}
+				case 1:
+				{
+					CI_createLdthreadlocalAndReturn(u1)
+				}
+				case 2:
+				{
+					CI_createLdthreadlocalAndReturn(u2)
+				}
+				case 4:
+				{
+					CI_createLdthreadlocalAndReturn(u4)
+				}
+				case 8:
+				{
+					CI_createLdthreadlocalAndReturn(u8)
+				}
+				case 12:
+				{
+					CreateIR(ir, LdthreadlocalVarVar_size_12);
+					ir->dst = dstIdx;
+					ir->klass = parent;
+					ir->offset = offset;
+					return ir;
+				}
+				case 16:
+				{
+					CreateIR(ir, LdthreadlocalVarVar_size_16);
+					ir->dst = dstIdx;
+					ir->klass = parent;
+					ir->offset = offset;
+					return ir;
+				}
+				default:
+				{
+					CreateIR(ir, LdthreadlocalVarVar_n_4);
+					ir->dst = dstIdx;
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->size = size;
+					return ir;
+				}
 				}
 			}
 			else
@@ -1778,6 +1831,7 @@ ip++;
 		{
 			CI_createStthreadlocalAndReturn(i8);
 		}
+		Retry:
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN: CI_createStthreadlocalAndReturn(u1)
@@ -1803,41 +1857,55 @@ ip++;
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (klass->valuetype)
 			{
-				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
-				if (size <= 8)
+				if (klass->enumtype)
 				{
-					CI_createStsfldAndReturn(i8)
+					type = &klass->element_class->byval_arg;
+					goto Retry;
 				}
-				else
+				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+				switch (size)
 				{
-					switch (size)
-					{
-					case 12:
-					{
-						CreateIR(ir, StthreadlocalVarVar_size_12);
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->data = dataIdx;
-						return ir;
-					}
-					case 16:
-					{
-						CreateIR(ir, StthreadlocalVarVar_size_16);
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->data = dataIdx;
-						return ir;
-					}
-					default:
-					{
-						CreateIR(ir, StthreadlocalVarVar_n_4);
-						ir->klass = parent;
-						ir->offset = offset;
-						ir->data = dataIdx;
-						ir->size = size;
-						return ir;
-					}
-					}
+				case 1:
+				{
+					CI_createStthreadlocalAndReturn(u1)
+				}
+				case 2:
+				{
+					CI_createStthreadlocalAndReturn(u2)
+				}
+				case 4:
+				{
+					CI_createStthreadlocalAndReturn(u4)
+				}
+				case 8:
+				{
+					CI_createStthreadlocalAndReturn(u8)
+				}
+				case 12:
+				{
+					CreateIR(ir, StthreadlocalVarVar_size_12);
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->data = dataIdx;
+					return ir;
+				}
+				case 16:
+				{
+					CreateIR(ir, StthreadlocalVarVar_size_16);
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->data = dataIdx;
+					return ir;
+				}
+				default:
+				{
+					CreateIR(ir, StthreadlocalVarVar_n_4);
+					ir->klass = parent;
+					ir->offset = offset;
+					ir->data = dataIdx;
+					ir->size = size;
+					return ir;
+				}
 				}
 			}
 			else
@@ -4764,7 +4832,7 @@ ip++;
 
 				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8 || index.reduceType == EvalStackReduceDataType::I);
 				bool isIndexInt32Type = index.reduceType == EvalStackReduceDataType::I4;
-
+				LdelemRetry:
 				switch (eleType->type)
 				{
 				case IL2CPP_TYPE_BOOLEAN: { CI_ldele0(i1, I4); break; }
@@ -4788,43 +4856,57 @@ ip++;
 				{
 					if (objKlass->valuetype)
 					{
-						uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
-						if (size <= 8)
+						if (objKlass->enumtype)
 						{
-							CI_ldele0(i8, Other)
+							eleType = &objKlass->element_class->byval_arg;
+							goto LdelemRetry;
 						}
-						else
+						uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
+						switch (size)
 						{
-							switch (size)
-							{
-							case 12:
-							{
-								CreateAddIR(ir, GetArrayElementVarVar_size_12_8);
-								ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_size_12_4 : HiOpcodeEnum::GetArrayElementVarVar_size_12_8;
-								ir->arr = arr.locOffset;
-								ir->index = index.locOffset;
-								ir->dst = arr.locOffset;
-								break;
-							}
-							case 16:
-							{
-								CreateAddIR(ir, GetArrayElementVarVar_size_16_8);
-								ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_size_16_4 : HiOpcodeEnum::GetArrayElementVarVar_size_16_8;
-								ir->arr = arr.locOffset;
-								ir->index = index.locOffset;
-								ir->dst = arr.locOffset;
-								break;
-							}
-							default:
-							{
-								CreateAddIR(ir, GetArrayElementVarVar_n_8);
-								ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_n_4 : HiOpcodeEnum::GetArrayElementVarVar_n_8;
-								ir->arr = arr.locOffset;
-								ir->index = index.locOffset;
-								ir->dst = arr.locOffset;
-								break;
-							}
-							}
+						case 1:
+						{
+							CI_ldele0(u1, Other)
+						}
+						case 2:
+						{
+							CI_ldele0(u2, Other)
+						}
+						case 4:
+						{
+							CI_ldele0(u4, Other)
+						}
+						case 8:
+						{
+							CI_ldele0(u8, Other)
+						}
+						case 12:
+						{
+							CreateAddIR(ir, GetArrayElementVarVar_size_12_8);
+							ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_size_12_4 : HiOpcodeEnum::GetArrayElementVarVar_size_12_8;
+							ir->arr = arr.locOffset;
+							ir->index = index.locOffset;
+							ir->dst = arr.locOffset;
+							break;
+						}
+						case 16:
+						{
+							CreateAddIR(ir, GetArrayElementVarVar_size_16_8);
+							ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_size_16_4 : HiOpcodeEnum::GetArrayElementVarVar_size_16_8;
+							ir->arr = arr.locOffset;
+							ir->index = index.locOffset;
+							ir->dst = arr.locOffset;
+							break;
+						}
+						default:
+						{
+							CreateAddIR(ir, GetArrayElementVarVar_n_8);
+							ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_n_4 : HiOpcodeEnum::GetArrayElementVarVar_n_8;
+							ir->arr = arr.locOffset;
+							ir->index = index.locOffset;
+							ir->dst = arr.locOffset;
+							break;
+						}
 						}
 					}
 					else
@@ -4863,7 +4945,7 @@ ip++;
 
 				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8 || index.reduceType == EvalStackReduceDataType::I);
 				bool isIndexInt32Type = index.reduceType == EvalStackReduceDataType::I4;
-
+				StelemRetry:
 				switch (eleType->type)
 				{
 				case IL2CPP_TYPE_BOOLEAN: { CI_stele0(i1); break; }
@@ -4887,43 +4969,57 @@ ip++;
 				{
 					if (objKlass->valuetype)
 					{
-						uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
-						if (size <= 8)
+						if (objKlass->enumtype)
 						{
-							CI_stele0(i8)
+							eleType = &objKlass->element_class->byval_arg;
+							goto StelemRetry;
 						}
-						else
+						uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
+						switch (size)
 						{
-							switch (size)
-							{
-							case 12:
-							{
-								CreateAddIR(ir, SetArrayElementVarVar_size_12_8);
-								ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_size_12_4 : HiOpcodeEnum::SetArrayElementVarVar_size_12_8;
-								ir->arr = arr.locOffset;
-								ir->index = index.locOffset;
-								ir->ele = ele.locOffset;
-								break;
-							}
-							case 16:
-							{
-								CreateAddIR(ir, SetArrayElementVarVar_size_16_8);
-								ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_size_16_4 : HiOpcodeEnum::SetArrayElementVarVar_size_16_8;
-								ir->arr = arr.locOffset;
-								ir->index = index.locOffset;
-								ir->ele = ele.locOffset;
-								break;
-							}
-							default:
-							{
-								CreateAddIR(ir, SetArrayElementVarVar_n_8);
-								ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_n_4 : HiOpcodeEnum::SetArrayElementVarVar_n_8;
-								ir->arr = arr.locOffset;
-								ir->index = index.locOffset;
-								ir->ele = ele.locOffset;
-								break;
-							}
-							}
+						case 1:
+						{
+							CI_stele0(u1)
+						}
+						case 2:
+						{
+							CI_stele0(u2)
+						}
+						case 4:
+						{
+							CI_stele0(u4)
+						}
+						case 8:
+						{
+							CI_stele0(u8)
+						}
+						case 12:
+						{
+							CreateAddIR(ir, SetArrayElementVarVar_size_12_8);
+							ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_size_12_4 : HiOpcodeEnum::SetArrayElementVarVar_size_12_8;
+							ir->arr = arr.locOffset;
+							ir->index = index.locOffset;
+							ir->ele = ele.locOffset;
+							break;
+						}
+						case 16:
+						{
+							CreateAddIR(ir, SetArrayElementVarVar_size_16_8);
+							ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_size_16_4 : HiOpcodeEnum::SetArrayElementVarVar_size_16_8;
+							ir->arr = arr.locOffset;
+							ir->index = index.locOffset;
+							ir->ele = ele.locOffset;
+							break;
+						}
+						default:
+						{
+							CreateAddIR(ir, SetArrayElementVarVar_n_8);
+							ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_n_4 : HiOpcodeEnum::SetArrayElementVarVar_n_8;
+							ir->arr = arr.locOffset;
+							ir->index = index.locOffset;
+							ir->ele = ele.locOffset;
+							break;
+						}
 						}
 					}
 					else
