@@ -54,7 +54,7 @@ namespace metadata
 
 		for (VirtualMethodImpl& vmi : genericType->_methodImpls)
 		{
-			const Il2CppType* declaringType = TryInflateIfNeed(type, genericType->_type, vmi.type);
+			const Il2CppType* declaringType = vmi.type ? TryInflateIfNeed(type, genericType->_type, vmi.type) : nullptr;
 			tdt->_methodImpls.push_back({ vmi.method, declaringType, vmi.slot, vmi.name });
 		}
 
