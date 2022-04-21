@@ -447,7 +447,6 @@ namespace interpreter
 		LdobjVarVar_24,
 		LdobjVarVar_28,
 		LdobjVarVar_32,
-		LdobjVarVar_n_2,
 		LdobjVarVar_n_4,
 		StobjVarVar_1,
 		StobjVarVar_2,
@@ -459,7 +458,6 @@ namespace interpreter
 		StobjVarVar_24,
 		StobjVarVar_28,
 		StobjVarVar_32,
-		StobjVarVar_n_2,
 		StobjVarVar_n_4,
 		InitobjVar_1,
 		InitobjVar_2,
@@ -3802,14 +3800,6 @@ namespace interpreter
 	};
 
 
-	struct IRLdobjVarVar_n_2 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint16_t size;
-	};
-
-
 	struct IRLdobjVarVar_n_4 : IRCommon
 	{
 		uint16_t dst;
@@ -3885,14 +3875,6 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t src;
-	};
-
-
-	struct IRStobjVarVar_n_2 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint16_t size;
 	};
 
 

@@ -289,8 +289,8 @@ inline bool Compare##cmp(double a, double b) { return a op b; }
 		}
 	}
 
-#define CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(ARR) CHECK_NOT_NULL_THROW(ARR); \
-if (ARR->max_length <= (*(uint32_t*)(localVarBase + __index))) { \
+#define CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(ARR, INDEX) CHECK_NOT_NULL_THROW(ARR); \
+if (ARR->max_length <= INDEX) { \
 	il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException()); \
 }
 
@@ -5383,21 +5383,12 @@ else \
 				    ip += 6;
 				    continue;
 				}
-				case HiOpcodeEnum::LdobjVarVar_n_2:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
-					std::memcpy((void*)(localVarBase + __dst), (*(void**)(localVarBase + __src)), (*(uint16_t*)(localVarBase + __size)));
-				    ip += 8;
-				    continue;
-				}
 				case HiOpcodeEnum::LdobjVarVar_n_4:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
-					std::memcpy((void*)(localVarBase + __dst), (*(void**)(localVarBase + __src)), (*(uint32_t*)(localVarBase + __size)));
+					std::memcpy((void*)(localVarBase + __dst), (*(void**)(localVarBase + __src)), __size);
 				    ip += 8;
 				    continue;
 				}
@@ -5481,21 +5472,12 @@ else \
 				    ip += 6;
 				    continue;
 				}
-				case HiOpcodeEnum::StobjVarVar_n_2:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
-					std::memcpy((*(void**)(localVarBase + __dst)), (void*)(localVarBase + __src), (*(uint16_t*)(localVarBase + __size)));
-				    ip += 8;
-				    continue;
-				}
 				case HiOpcodeEnum::StobjVarVar_n_4:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
-					std::memcpy((*(void**)(localVarBase + __dst)), (void*)(localVarBase + __src), (*(uint32_t*)(localVarBase + __size)));
+					std::memcpy((*(void**)(localVarBase + __dst)), (void*)(localVarBase + __src), __size);
 				    ip += 8;
 				    continue;
 				}
@@ -6462,7 +6444,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(void**)(localVarBase + __dst)) = il2cpp::vm::Thread::GetThreadStaticData(__offset);
+				    (*(void**)(localVarBase + __dst)) = (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset;
 				    ip += 16;
 				    continue;
 				}
@@ -6472,7 +6454,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int32_t*)(localVarBase + __dst)) = *(int8_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int32_t*)(localVarBase + __dst)) = *(int8_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6482,7 +6464,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6492,7 +6474,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int32_t*)(localVarBase + __dst)) = *(int16_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int32_t*)(localVarBase + __dst)) = *(int16_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6502,7 +6484,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6512,7 +6494,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int32_t*)(localVarBase + __dst)) = *(int32_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int32_t*)(localVarBase + __dst)) = *(int32_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6522,7 +6504,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6532,7 +6514,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int64_t*)(localVarBase + __dst)) = *(int64_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int64_t*)(localVarBase + __dst)) = *(int64_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6542,7 +6524,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6552,7 +6534,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy8((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy8((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6562,7 +6544,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy12((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy12((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6572,7 +6554,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy16((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy16((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6582,7 +6564,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy20((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy20((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6592,7 +6574,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy24((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy24((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6602,7 +6584,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy28((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy28((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6612,7 +6594,7 @@ else \
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy32((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset));
+				    Copy32((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -6623,7 +6605,7 @@ else \
 					int32_t __offset = *(int32_t*)(ip + 12);
 					uint16_t __size = *(uint16_t*)(ip + 16);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    std::memcpy((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset), __size);
+				    std::memcpy((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, __size);
 				    ip += 18;
 				    continue;
 				}
@@ -6634,7 +6616,7 @@ else \
 					int32_t __offset = *(int32_t*)(ip + 12);
 					uint32_t __size = *(uint32_t*)(ip + 16);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    std::memcpy((void*)(localVarBase + __dst), il2cpp::vm::Thread::GetThreadStaticData(__offset), __size);
+				    std::memcpy((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, __size);
 				    ip += 20;
 				    continue;
 				}
@@ -6644,7 +6626,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(int8_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(int8_t*)(localVarBase + __data));
+				    *(int8_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int8_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6654,7 +6636,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(uint8_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(uint8_t*)(localVarBase + __data));
+				    *(uint8_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint8_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6664,7 +6646,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(int16_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(int16_t*)(localVarBase + __data));
+				    *(int16_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int16_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6674,7 +6656,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(uint16_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(uint16_t*)(localVarBase + __data));
+				    *(uint16_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint16_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6684,7 +6666,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(int32_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(int32_t*)(localVarBase + __data));
+				    *(int32_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int32_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6694,7 +6676,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(uint32_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(uint32_t*)(localVarBase + __data));
+				    *(uint32_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint32_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6704,7 +6686,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(int64_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(int64_t*)(localVarBase + __data));
+				    *(int64_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int64_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6714,7 +6696,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    *(uint64_t*)(il2cpp::vm::Thread::GetThreadStaticData(__offset)) = (*(uint64_t*)(localVarBase + __data));
+				    *(uint64_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint64_t*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6724,7 +6706,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy8(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy8((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6734,7 +6716,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy12(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy12((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6744,7 +6726,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy16(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy16((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6754,7 +6736,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy20(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy20((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6764,7 +6746,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy24(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy24((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6774,7 +6756,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy28(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy28((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6784,7 +6766,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 10);
 					uint16_t __data = *(uint16_t*)(ip + 12);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    Copy32(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data));
+				    Copy32((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 14;
 				    continue;
 				}
@@ -6795,7 +6777,7 @@ else \
 					uint16_t __data = *(uint16_t*)(ip + 12);
 					uint16_t __size = *(uint16_t*)(ip + 14);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    std::memcpy(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data), __size);
+				    std::memcpy((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
 				    continue;
 				}
@@ -6806,7 +6788,7 @@ else \
 					uint16_t __data = *(uint16_t*)(ip + 12);
 					uint32_t __size = *(uint32_t*)(ip + 14);
 				    Interpreter::RuntimeClassCCtorInit(__klass);
-				    std::memcpy(il2cpp::vm::Thread::GetThreadStaticData(__offset), (void*)(localVarBase + __data), __size);
+				    std::memcpy((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 18;
 				    continue;
 				}
@@ -6858,7 +6840,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)))
 				    (*(void**)(localVarBase + __addr)) = load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), il2cpp::vm::Array::GetElementSize(arr->klass));
 				    ip += 8;
 				    continue;
@@ -6869,7 +6851,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)))
 				    (*(void**)(localVarBase + __addr)) = load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), il2cpp::vm::Array::GetElementSize(arr->klass));
 				    ip += 8;
 				    continue;
@@ -6881,7 +6863,7 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 6);
 					Il2CppClass* __eleKlass = *(Il2CppClass**)(ip + 8);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)))
 				    CheckArrayElementTypeCompatible(arr->klass, __eleKlass);
 				    (*(void**)(localVarBase + __addr)) = load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), il2cpp::vm::Array::GetElementSize(arr->klass));
 				    ip += 16;
@@ -6894,7 +6876,7 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 6);
 					Il2CppClass* __eleKlass = *(Il2CppClass**)(ip + 8);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)))
 				    CheckArrayElementTypeCompatible(arr->klass, __eleKlass);
 				    (*(void**)(localVarBase + __addr)) = load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), il2cpp::vm::Array::GetElementSize(arr->klass));
 				    ip += 16;
@@ -6905,9 +6887,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int8_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int8_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6916,9 +6897,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint8_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint8_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6927,9 +6907,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int16_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int16_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6938,9 +6917,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint16_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint16_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6949,9 +6927,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int32_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int32_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6960,9 +6937,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint32_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint32_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6971,9 +6947,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int64_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int64_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6982,9 +6957,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint64_t, (*(int32_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint64_t, (*(int32_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -6993,9 +6967,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    Copy12((void*)(localVarBase + __dst), load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), 12));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    Copy12((void*)(localVarBase + __dst), load_array_elema((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)), 12));
 				    ip += 8;
 				    continue;
 				}
@@ -7004,9 +6977,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    Copy16((void*)(localVarBase + __dst), load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), 16));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)))
+				    Copy16((void*)(localVarBase + __dst), load_array_elema((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)), 16));
 				    ip += 8;
 				    continue;
 				}
@@ -7016,7 +6988,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)))
 				    int32_t eleSize = il2cpp::vm::Array::GetElementSize(arr->klass);
 				    std::memcpy((void*)(localVarBase + __dst), load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), eleSize), eleSize);
 				    ip += 8;
@@ -7027,9 +6999,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int8_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int8_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7038,9 +7009,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint8_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint8_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7049,9 +7019,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int16_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int16_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7060,9 +7029,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint16_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint16_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7071,9 +7039,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int32_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int32_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7082,9 +7049,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint32_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint32_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7093,9 +7059,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, int64_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), int64_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7104,9 +7069,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get(arr, uint64_t, (*(int64_t*)(localVarBase + __index)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_array_get((*(Il2CppArray**)(localVarBase + __arr)), uint64_t, (*(int64_t*)(localVarBase + __index)));
 				    ip += 8;
 				    continue;
 				}
@@ -7115,9 +7079,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    Copy12((void*)(localVarBase + __dst), load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), 12));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    Copy12((void*)(localVarBase + __dst), load_array_elema((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)), 12));
 				    ip += 8;
 				    continue;
 				}
@@ -7126,9 +7089,8 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
-				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
-				    Copy16((void*)(localVarBase + __dst), load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), 16));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)))
+				    Copy16((void*)(localVarBase + __dst), load_array_elema((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)), 16));
 				    ip += 8;
 				    continue;
 				}
@@ -7138,7 +7100,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __index = *(uint16_t*)(ip + 6);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr)
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)))
 				    int32_t eleSize = il2cpp::vm::Array::GetElementSize(arr->klass);
 				    std::memcpy((void*)(localVarBase + __dst), load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), eleSize), eleSize);
 				    ip += 8;
@@ -7149,7 +7111,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int8_t, (*(int32_t*)(localVarBase + __index)), (*(int8_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7159,7 +7121,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint8_t, (*(int32_t*)(localVarBase + __index)), (*(uint8_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7169,7 +7131,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int16_t, (*(int32_t*)(localVarBase + __index)), (*(int16_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7179,7 +7141,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint16_t, (*(int32_t*)(localVarBase + __index)), (*(uint16_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7189,7 +7151,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int32_t, (*(int32_t*)(localVarBase + __index)), (*(int32_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7199,7 +7161,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint32_t, (*(int32_t*)(localVarBase + __index)), (*(uint32_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7209,7 +7171,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int64_t, (*(int32_t*)(localVarBase + __index)), (*(int64_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7219,7 +7181,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint64_t, (*(int32_t*)(localVarBase + __index)), (*(uint64_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7229,7 +7191,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)));
 				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele))->klass);
 				    il2cpp_array_setref((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    ip += 8;
@@ -7240,9 +7202,9 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr)
-				    Copy12(load_array_elema(_arr, (*(int32_t*)(localVarBase + __index)), 12), (void*)(localVarBase + __ele));
+				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)));
+				    Copy12(load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), 12), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7251,9 +7213,9 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr)
-				    Copy16(load_array_elema(_arr, (*(int32_t*)(localVarBase + __index)), 16), (void*)(localVarBase + __ele));
+				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)));
+				    Copy16(load_array_elema(arr, (*(int32_t*)(localVarBase + __index)), 16), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7263,9 +7225,9 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_THROW(arr);
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)));
 				    int32_t eleSize = il2cpp::vm::Array::GetElementSize(arr->klass);
-				    il2cpp_array_setrefwithsize(arr, eleSize, __index, (void*)(localVarBase + __ele));
+				    il2cpp_array_setrefwithsize(arr, eleSize, (*(int32_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7274,7 +7236,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int8_t, (*(int64_t*)(localVarBase + __index)), (*(int8_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7284,7 +7246,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint8_t, (*(int64_t*)(localVarBase + __index)), (*(uint8_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7294,7 +7256,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int16_t, (*(int64_t*)(localVarBase + __index)), (*(int16_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7304,7 +7266,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint16_t, (*(int64_t*)(localVarBase + __index)), (*(uint16_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7314,7 +7276,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int32_t, (*(int64_t*)(localVarBase + __index)), (*(int32_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7324,7 +7286,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint32_t, (*(int64_t*)(localVarBase + __index)), (*(uint32_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7334,7 +7296,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), int64_t, (*(int64_t*)(localVarBase + __index)), (*(int64_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7344,7 +7306,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    il2cpp_array_set((*(Il2CppArray**)(localVarBase + __arr)), uint64_t, (*(int64_t*)(localVarBase + __index)), (*(uint64_t*)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7354,7 +7316,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)));
 				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele))->klass);
 				    il2cpp_array_setref((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    ip += 8;
@@ -7365,9 +7327,9 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr)
-				    Copy12(load_array_elema(_arr, (*(int64_t*)(localVarBase + __index)), 12), (void*)(localVarBase + __ele));
+				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)));
+				    Copy12(load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), 12), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7376,9 +7338,9 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
-				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr)
-				    Copy16(load_array_elema(_arr, (*(int64_t*)(localVarBase + __index)), 16), (void*)(localVarBase + __ele));
+				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)));
+				    Copy16(load_array_elema(arr, (*(int64_t*)(localVarBase + __index)), 16), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7388,9 +7350,9 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
-				    CHECK_NOT_NULL_THROW(arr);
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)));
 				    int32_t eleSize = il2cpp::vm::Array::GetElementSize(arr->klass);
-				    il2cpp_array_setrefwithsize(arr, eleSize, __index, (void*)(localVarBase + __ele));
+				    il2cpp_array_setrefwithsize(arr, eleSize, (*(int64_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7466,7 +7428,7 @@ else \
 				case HiOpcodeEnum::EndFilterEx:
 				{
 					uint16_t __value = *(uint16_t*)(ip + 2);
-					ENDFILTER_EX(*(bool*)(localVarBase + __value));
+					ENDFILTER_EX((*(bool*)(localVarBase + __value)));
 				    ip += 4;
 				    continue;
 				}

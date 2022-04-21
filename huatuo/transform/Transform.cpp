@@ -1712,7 +1712,7 @@ ip++;
 
 	inline int32_t GetThreadStaticFieldOffset(const FieldInfo* fieldInfo)
 	{
-		return fieldInfo->parent->thread_static_fields_offset + il2cpp::vm::MetadataCache::GetThreadLocalStaticOffsetForField(const_cast<FieldInfo*>(fieldInfo));
+		return il2cpp::vm::MetadataCache::GetThreadLocalStaticOffsetForField(const_cast<FieldInfo*>(fieldInfo));
 	}
 
 	inline interpreter::IRCommon* CreateLdthreadlocal(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo)
@@ -4844,7 +4844,7 @@ ip++;
 				case IL2CPP_TYPE_I4: { CI_ldele0(i4, I4); break; }
 				case IL2CPP_TYPE_U4: { CI_ldele0(u4, I4); break; }
 				case IL2CPP_TYPE_I8: { CI_ldele0(i8, I8); break; }
-				case IL2CPP_TYPE_U8: { CI_ldele0(i1, I8); break; }
+				case IL2CPP_TYPE_U8: { CI_ldele0(u8, I8); break; }
 				case IL2CPP_TYPE_R4: { CI_ldele0(i4, R4); break; }
 				case IL2CPP_TYPE_R8:
 				case IL2CPP_TYPE_I:
@@ -4867,18 +4867,22 @@ ip++;
 						case 1:
 						{
 							CI_ldele0(u1, Other)
+                            break;
 						}
 						case 2:
 						{
 							CI_ldele0(u2, Other)
+                            break;
 						}
 						case 4:
 						{
 							CI_ldele0(u4, Other)
+                            break;
 						}
 						case 8:
 						{
 							CI_ldele0(u8, Other)
+                            break;
 						}
 						case 12:
 						{
@@ -4980,18 +4984,22 @@ ip++;
 						case 1:
 						{
 							CI_stele0(u1)
+                            break;
 						}
 						case 2:
 						{
 							CI_stele0(u2)
+                            break;
 						}
 						case 4:
 						{
 							CI_stele0(u4)
+                            break;
 						}
 						case 8:
 						{
 							CI_stele0(u8)
+                            break;
 						}
 						case 12:
 						{
