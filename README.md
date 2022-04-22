@@ -9,7 +9,7 @@
 
 <br/>
 
-huatuo是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的c#热更新方案。
+huatuo是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的Unity全平台原生c#热更方案。
 
 huatuo为il2cpp之类的纯AOT CLR提供了interpreter模块，使基于它们的app不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行，从底层彻底支持了热更新。
 
@@ -35,6 +35,32 @@ huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpr
 - 实现了一个高效的寄存器解释器
 - 额外提供大量的instinct函数，提升解释器性能
 - 提供hotfix AOT的支持 （进行中）
+
+## 与其他流行的c#热更新方案的区别
+
+简单类比，将il2cpp比作一只没有翅膀的鸭子，只能地面行走或者水里游泳，huatuo则让il2cpp直接长出原生翅膀，可以飞翔。 而其他热更方案则类似于做了一个飞行器，让鸭子可以乘坐飞起来。
+
+再拿使用英语举例，huatuo是直接让il2cpp学会了英语，其他热更方案是给il2cpp配了个翻译。
+
+### 本质比较
+
+huatuo是原生的c#热更新方案。原始il2cpp相当于只有aot的mono，而huatuo则给il2cpp新增了原生的interpreter模块，使得il2cpp变成一个全功能的mono，原生（即通过System.Reflection.Assembly.Load可以动态加载dll）支持动态加载dll，从而支持ios平台的热更新。其他热更新方案则是新增了一个独立于il2cpp的第三方vm。
+
+正因为huatuo是原生runtime级别实现，热更新部分的类型与主工程AOT部分类型是完全等价并且无缝统一的。可以随意调用、继承、反射、多线程，不需要生成代码或者写适配器。
+
+其他热更新方案则是独立vm，与il2cpp的关系本质上相当于mono嵌lua的关系。因此类型系统不统一，为了让热更新类型能够继承AOT部分类型，需要写适配器，并且解释器中的类型不能为主工程的类型系统所识别。
+
+### 实际使用体验或者特性比较
+
+- huatuo学习和使用成本几乎为零。huatuo 让il2cpp变成全功能的mono，学习和使用成本几乎为零，几乎零侵入性。而其他方案则有大量的坑和需要规避的规则，学习和使用成本，需要对原项目作大量改造。
+- huatuo可以使用所有c#的特性。而其他方案往往有大量的限制。
+- huatuo中可以直接支持使用和继承主工程中的类型。其他方案要写适配器或者生成代码。
+- huatuo中热更新类型与主工程的AOT类型无缝统一。huatuo中反射代码能够正常工作的，主工程部分也可以通过标准Reflection接口创建出热更新对象。其他方案做不到。
+- huatuo对多线程支持良好。像多线程、ThreadStatic、async等等特性都是huatuo直接支持，其他方案除了async特性外均难以支持。
+- huatuo中Unity工作流与原生几乎完全相同。huatuo中热更新MonoBehaviour可以直接挂载在热更新资源上，并且正确工作。其他方案不行。
+- huatuo兼容性极高。各种第三方库只要在il2cpp下能工作，在huatuo下也能正常工作。其他方案往往要大量魔改源码。
+- huatuo内存效率极高。huatuo中热更新类型与主工程的AOT类型完全等价，占用一样多的空间。其他方案的同等类型则是假类型，不仅不能被runtime识别，还多占了数倍空间。
+- huatuo执行效率高。huatuo中热更新部分与主工程AOT部分交互属于il2cpp内部交互，效率极高。而其他方案则是独立虚拟机与il2cpp之间的效率，不仅交互麻烦还效率低下。
 
 ## 文档
 
