@@ -202,6 +202,11 @@ namespace metadata
 			return GetImage(image)->HasAttribute(token, attribute);
 		}
 
+		static std::tuple<void*, void*> GetCustomAttributeDataRange(const Il2CppImage* image, uint32_t token)
+		{
+			return GetImage(image)->GetCustomAttributeDataRange(token);
+		}
+
 	private:
 		static uint32_t s_cliImageCount;
 		static Image* s_images[kMaxLoadImageCount + 1];

@@ -2,13 +2,14 @@
 
 #include <stack>
 
+#include "../CommonDef.h"
+
 #include "gc/GarbageCollector.h"
 #include "vm/Exception.h"
 #include "vm/StackTrace.h"
 
 #include "../metadata/MetadataDef.h"
 
-#include "../CommonDef.h"
 #include "../HuatuoConfig.h"
 
 

@@ -3,6 +3,7 @@
 #include "BasicBlockSpliter.h"
 
 #include "../interpreter/Instruction.h"
+#include "../interpreter/Engine.h"
 
 namespace huatuo
 {

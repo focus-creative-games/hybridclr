@@ -147,6 +147,7 @@ namespace metadata
 			bool isValueType = data.extends && MetadataParser::IsValueTypeFromToken(*this, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.extends), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.extends));
 			Il2CppType cppType = {};
 			cppType.type = isValueType ? IL2CPP_TYPE_VALUETYPE : IL2CPP_TYPE_CLASS;
+			SET_IL2CPPTYPE_VALUE_TYPE(cppType, isValueType);
 			cppType.data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
 		}
@@ -421,10 +422,16 @@ namespace metadata
 				int32_t attributeStartIndex = EncodeWithIndex((int32_t)_customAttribues.size());
 				int32_t handleIndex = (int32_t)_customAttributeHandles.size();
 				_tokenCustomAttributes[token] = { handleIndex };
+#ifdef HUATUO_UNITY_2021_OR_NEW
+				_customAttributeHandles.push_back({ token, (uint32_t)attributeStartIndex});
+#else
 				_customAttributeHandles.push_back({ token, attributeStartIndex, 0 });
+#endif
 				curTypeRange = &_customAttributeHandles[handleIndex];
 			}
+#ifndef HUATUO_UNITY_2021_OR_NEW
 			++curTypeRange->count;
+#endif
 
 			TableType ctorMethodTableType = DecodeCustomAttributeTypeCodedIndexTableType(data.type);
 			uint32_t ctorMethodRowIndex = DecodeCustomAttributeTypeCodedIndexRowIndex(data.type);
@@ -453,6 +460,10 @@ namespace metadata
 
 		}
 		IL2CPP_ASSERT(_tokenCustomAttributes.size() == _customAttributeHandles.size());
+#ifdef HUATUO_UNITY_2021_OR_NEW
+		// add extra Il2CppCustomAttributeTypeRange for compute count
+		_customAttributeHandles.push_back({ 0, EncodeWithIndex((int32_t)_customAttribues.size())});
+#endif
 		_customAttribtesCaches.resize(_tokenCustomAttributes.size());
 	}
 
@@ -478,11 +489,17 @@ namespace metadata
 		huatuo::interpreter::ExecutingInterpImageScope scope(huatuo::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
 
 		cache = (CustomAttributesCache*)IL2CPP_CALLOC(1, sizeof(CustomAttributesCache));
-		cache->count = typeRange.count;
-		cache->attributes = (Il2CppObject**)il2cpp::gc::GarbageCollector::AllocateFixed(sizeof(Il2CppObject*) * typeRange.count, 0);
+		int32_t count;
+#ifdef HUATUO_UNITY_2021_OR_NEW
+		count = (int32_t)(_customAttributeHandles[index + 1].startOffset - typeRange.startOffset);
+#else
+		count = (int32_t)typeRange.count;
+#endif
+		cache->count = count;
+		cache->attributes = (Il2CppObject**)il2cpp::gc::GarbageCollector::AllocateFixed(sizeof(Il2CppObject*) * count, 0);
 
-		int32_t start = DecodeMetadataIndex(typeRange.start);
-		for (int32_t i = 0; i < typeRange.count; i++)
+		int32_t start = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(typeRange));
+		for (int32_t i = 0; i < count; i++)
 		{
 			int32_t attrIndex = start + i;
 			IL2CPP_ASSERT(attrIndex >= 0 && attrIndex < (int32_t)_customAttribues.size());
@@ -1016,7 +1033,7 @@ namespace metadata
 			bool match = true;
 			for (uint32_t i = 0; i < cur->parameters_count; i++)
 			{
-				if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(cur->parameters[i].parameter_type, matchMethod->parameters[i].parameter_type))
+				if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(GET_METHOD_PARAMETER_TYPE(cur->parameters[i]), GET_METHOD_PARAMETER_TYPE(matchMethod->parameters[i])))
 				{
 					match = false;
 					break;

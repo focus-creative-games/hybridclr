@@ -111,10 +111,17 @@ namespace interpreter
 			if (returnType)
 			{
 				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				il2cpp::vm::Class::SetupFields(klass);
-				if (klass->valuetype && klass->instance_size > sizeof(Il2CppObject) + 8)
+				if (IS_CLASS_VALUE_TYPE(klass))
 				{
-					pos += std::sprintf(sigBuf + pos, "s%d", (int)(klass->instance_size - sizeof(Il2CppObject) + 7) / 8);
+					il2cpp::vm::Class::SetupFields(klass);
+					if (klass->instance_size > sizeof(Il2CppObject) + 8)
+					{
+						pos += std::sprintf(sigBuf + pos, "s%d", (int)(klass->instance_size - sizeof(Il2CppObject) + 7) / 8);
+					}
+					else
+					{
+						AppendString(sigBuf, bufferSize, pos, "i");
+					}
 				}
 				else
 				{
@@ -184,7 +191,7 @@ namespace interpreter
 
 		for (uint8_t i = 0; i < method->parameters_count; i++)
 		{
-			AppendSignature(method->parameters[i].parameter_type, false, sigBuf, bufferSize, pos);
+			AppendSignature(GET_METHOD_PARAMETER_TYPE(method->parameters[i]), false, sigBuf, bufferSize, pos);
 		}
 		sigBuf[pos] = 0;
 		return true;

@@ -7,7 +7,6 @@
 #include "vm/Object.h"
 #include "vm/Reflection.h"
 #include "icalls/mscorlib/System.Reflection/Assembly.h"
-#include "icalls/mscorlib/System.Reflection/MonoCMethod.h"
 
 #include "interpreter/InterpreterModule.h"
 #include "metadata/MetadataModule.h"

@@ -351,6 +351,16 @@ namespace metadata
 			return it != _tokenCustomAttributes.end() ? it->second.typeRangeIndex : kCustomAttributeIndexInvalid;
 		}
 
+		std::tuple<void*, void*> GetCustomAttributeDataRange(uint32_t token)
+		{
+			const Il2CppCustomAttributeTypeRange* dataRangeCur = (const Il2CppCustomAttributeTypeRange*)GetCustomAttributeTypeToken(token);
+			CustomAttributeIndex curIndex = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(*dataRangeCur));
+			CustomAttributeIndex nextIndex = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(*(dataRangeCur + 1)));
+			CustomAttribute& curCa = _customAttribues[curIndex];
+			CustomAttribute& nextCa = _customAttribues[nextIndex];
+			return std::make_tuple<void*, void*>((void*)GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)GetBlobReaderByRawIndex(nextCa.value).GetData());
+		}
+
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)
 		{
 			CustomAttributeIndex index = (CustomAttributeIndex)(typeRange - (const Il2CppCustomAttributeTypeRange*)&_customAttributeHandles[0]);

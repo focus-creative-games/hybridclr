@@ -4,6 +4,8 @@
 #include <cstring>
 #include <memory>
 
+#include "huatuo-compatible-adaptor.h"
+
 #include "codegen/il2cpp-codegen.h"
 #include "utils/Memory.h"
 #include "utils/StringView.h"
@@ -11,24 +13,14 @@
 #include "vm/Exception.h"
 #include "vm/Class.h"
 #include "icalls/mscorlib/System/Type.h"
+#ifdef HUATUO_UNITY_2021_OR_NEW
+#include "icalls/mscorlib/System/RuntimeType.h"
+#else
 #include "icalls/mscorlib/System/MonoType.h"
+#endif
 
 namespace huatuo
 {
-
-#if IL2CPP_BYTE_ORDER != IL2CPP_LITTLE_ENDIAN
-#error "only support litten endian"
-#endif
-
-#if	PLATFORM_ARCH_64 != 1
-#error "only support 64bit"
-#endif
-
-
-#ifndef ENABLE_PLACEHOLDER_DLL
-#define ENABLE_PLACEHOLDER_DLL 1
-#endif
-
     typedef uint8_t byte;
 
 #define TEMP_FORMAT(var, fmt, ...) char var[600]; \
@@ -88,12 +80,6 @@ namespace huatuo
 		return il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(msg));
 	}
 
-	inline Il2CppString* GetKlassFullName(const Il2CppType* type)
-	{
-		Il2CppReflectionType* refType = il2cpp::icalls::mscorlib::System::Type::internal_from_handle((intptr_t)type);
-		return il2cpp::icalls::mscorlib::System::MonoType::getFullName(refType, true, false);
-	}
-
 	inline void RaiseMethodNotFindException(const Il2CppType* type, const char* methodName)
 	{
 		if (!type)
@@ -144,7 +130,7 @@ namespace huatuo
 			{
 				name.append(",");
 			}
-			AppendTypeName(name, method->parameters[i].parameter_type);
+			AppendTypeName(name, GET_METHOD_PARAMETER_TYPE(method->parameters[i]));
 		}
 		name.append(")");
 		return name;

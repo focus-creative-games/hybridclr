@@ -11,7 +11,11 @@
 #include "vm/String.h"
 #include "metadata/GenericMetadata.h"
 #include "icalls/mscorlib/System.Reflection/FieldInfo.h"
+#ifdef HUATUO_UNITY_2021_OR_NEW
+#include "icalls/mscorlib/System/RuntimeTypeHandle.h"
+#else
 #include "icalls/mscorlib/System.Reflection/PropertyInfo.h"
+#endif
 #include "icalls/mscorlib/System/Type.h"
 #include "utils/StringUtils.h"
 
@@ -189,7 +193,10 @@ namespace metadata
         case IL2CPP_TYPE_U8:
         case IL2CPP_TYPE_R4:
         case IL2CPP_TYPE_R8:
+        {
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
+        }
         case IL2CPP_TYPE_STRING:
             break;
         case IL2CPP_TYPE_PTR:
@@ -211,6 +218,7 @@ namespace metadata
         {
             uint32_t codedIndex = reader.ReadCompressedUint32(); // 低2位为type, 高位为index
             ReadTypeFromToken(reader.GetImage(), klassGenericContainer, methodGenericContainer, DecodeTypeDefOrRefOrSpecCodedIndexTableType(codedIndex), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(codedIndex), type);
+            SET_IL2CPPTYPE_VALUE_TYPE(type, (etype == IL2CPP_TYPE_VALUETYPE));
             break;
         }
         case IL2CPP_TYPE_ARRAY:
@@ -225,13 +233,20 @@ namespace metadata
             Il2CppGenericClass* genericClass = (Il2CppGenericClass*)IL2CPP_MALLOC_ZERO(sizeof(Il2CppGenericClass));
             ReadGenericClass(reader, klassGenericContainer, methodGenericContainer, *genericClass);
             type.data.generic_class = genericClass;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, GET_IL2CPPTYPE_VALUE_TYPE(*genericClass->type));
             break;
         }
         case IL2CPP_TYPE_TYPEDBYREF:
+        {
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
+        }
         case IL2CPP_TYPE_I:
         case IL2CPP_TYPE_U:
+        {
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
+        }
         case IL2CPP_TYPE_FNPTR:
         {
             RaiseHuatuoNotSupportedException("MetadataParser::ReadType IL2CPP_TYPE_FNPTR");
@@ -808,7 +823,7 @@ namespace metadata
                 Il2CppArray* arr = il2cpp::vm::Array::New(il2cpp::vm::Class::GetElementClass(arrKlass), numElem);
                 for (uint16_t i = 0; i < numElem; i++)
                 {
-                    ReadFixedArg(reader, argType->data.type, load_array_elema(arr, i, arr->klass->element_size));
+                    ReadFixedArg(reader, argType->data.type, GET_ARRAY_ELEMENT_ADDRESS(arr, i, arr->klass->element_size));
                 }
                 *(void**)data = arr;
             }
@@ -855,7 +870,7 @@ namespace metadata
             else if (klass == il2cpp_defaults.systemtype_class)
             {
                 Il2CppString* fullName = ReadSerString(reader);
-                Il2CppReflectionType* type = il2cpp::icalls::mscorlib::System::Type::internal_from_name(fullName, true, false);
+                Il2CppReflectionType* type = GetReflectionTypeFromName(fullName);
                 if (!type)
                 {
                     std::string stdTypeName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
@@ -881,7 +896,7 @@ namespace metadata
         case IL2CPP_TYPE_SYSTEM_TYPE:
         {
             Il2CppString* fullName = ReadSerString(reader);
-            Il2CppReflectionType* type = il2cpp::icalls::mscorlib::System::Type::internal_from_name(fullName, true, false);
+            Il2CppReflectionType* type = GetReflectionTypeFromName(fullName);
             if (!type)
             {
                 std::string stdTypeName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
@@ -936,7 +951,7 @@ namespace metadata
         {
             Il2CppString* enumTypeName = ReadSerString(reader);
 
-            Il2CppReflectionType* enumType = il2cpp::icalls::mscorlib::System::Type::internal_from_name(enumTypeName, true, false);
+            Il2CppReflectionType* enumType = GetReflectionTypeFromName(enumTypeName);
             if (!enumType)
             {
                 std::string stdStrName = il2cpp::utils::StringUtils::Utf16ToUtf8(enumTypeName->chars);
@@ -981,10 +996,10 @@ namespace metadata
             for (uint8_t i = 0; i < ctorMethod->parameters_count; i++)
             {
                 argPtrs[i] = argDatas + i;
-                const Il2CppType* paramType = ctorMethod->parameters[i].parameter_type;
+                const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(ctorMethod->parameters[i]);
                 ReadFixedArg(reader, paramType, argDatas + i);
                 Il2CppClass* paramKlass = il2cpp::vm::Class::FromIl2CppType(paramType);
-                if (!paramKlass->valuetype)
+                if (!IS_CLASS_VALUE_TYPE(paramKlass))
                 {
                     argPtrs[i] = (void*)argDatas[i];
                 }
@@ -1029,11 +1044,11 @@ namespace metadata
                     TEMP_FORMAT(errMsg, "CustomAttribute property missing. klass:%s property:%s", klass->name, cstrName);
                     il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeInitializationException(errMsg, nullptr));
                 }
-                IL2CPP_ASSERT(IsTypeEqual(&fieldOrPropType, prop->set->parameters[0].parameter_type));
+                IL2CPP_ASSERT(IsTypeEqual(&fieldOrPropType, GET_METHOD_PARAMETER_TYPE(prop->set->parameters[0])));
                 Il2CppException* ex = nullptr;
                 Il2CppClass* propKlass = il2cpp::vm::Class::FromIl2CppType(&fieldOrPropType);
                 IL2CPP_ASSERT(propKlass);
-                void* args[] = { (propKlass->valuetype ? &value : (void*)value) };
+                void* args[] = { (IS_CLASS_VALUE_TYPE(propKlass) ? &value : (void*)value) };
                 il2cpp::vm::Runtime::Invoke(prop->set, obj, args, &ex);
                 if (ex)
                 {

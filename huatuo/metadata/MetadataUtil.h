@@ -132,6 +132,11 @@ namespace metadata
         return !(method->flags & METHOD_ATTRIBUTE_STATIC);
     }
 
+    inline bool IsStaticMethod(const MethodInfo* method)
+    {
+        return (method->flags & METHOD_ATTRIBUTE_STATIC);
+    }
+
     inline bool IsPrivateMethod(uint32_t flags)
     {
         return (flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK) == METHOD_ATTRIBUTE_PRIVATE;

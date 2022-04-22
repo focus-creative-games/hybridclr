@@ -65,13 +65,13 @@ namespace metadata
 			return sizeof(Il2CppTypedRef);
 		case IL2CPP_TYPE_CLASS:
 		{
-			IL2CPP_ASSERT(!il2cpp::vm::Class::FromIl2CppType(type)->valuetype);
+			IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
 			return 8;
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(klass->valuetype);
+			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 			return il2cpp::vm::Class::GetValueSize(klass, nullptr);
 		}
 		case IL2CPP_TYPE_GENERICINST:
@@ -79,13 +79,13 @@ namespace metadata
 			Il2CppGenericClass* genericClass = type->data.generic_class;
 			if (genericClass->type->type == IL2CPP_TYPE_CLASS)
 			{
-				IL2CPP_ASSERT(!il2cpp::vm::Class::FromIl2CppType(type)->valuetype);
+				IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
 				return 8;
 			}
 			else
 			{
 				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				IL2CPP_ASSERT(klass->valuetype);
+				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 				return il2cpp::vm::Class::GetValueSize(klass, nullptr);
 			}
 		}
@@ -137,11 +137,11 @@ namespace metadata
 		{
 			Il2CppClass* klass1 = il2cpp::vm::Class::FromIl2CppType(typeTo);
 			Il2CppClass* klass2 = il2cpp::vm::Class::FromIl2CppType(typeFrom);
-			if (klass1->valuetype != klass2->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass1) != IS_CLASS_VALUE_TYPE(klass2))
 			{
 				return false;
 			}
-			if (klass1->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass1))
 			{
 				return klass1->instance_size == klass2->instance_size;
 			}
@@ -417,7 +417,7 @@ namespace metadata
 		for (uint32_t i = 0; i < methodDef->parameters_count; i++)
 		{
 			const Il2CppType* paramType1 = &resolveSig.params[i];
-			const Il2CppType* paramType2 = methodDef->parameters[i].parameter_type;
+			const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(methodDef->parameters[i]);
 			if (!IsMatchSigType(paramType2, paramType1, klassGenericContainer, methodGenericContainer))
 			{
 				return false;

@@ -22,7 +22,7 @@ namespace interpreter
 		{
 			Il2CppClass* klass = method->klass;
 			il2cpp::vm::ClassInlines::InitFromCodegen(klass);
-			if (klass->has_cctor && !klass->cctor_finished && !huatuo::metadata::IsInstanceMethod(method))
+			if (!IS_CCTOR_FINISH_OR_NO_CCTOR(klass) && huatuo::metadata::IsStaticMethod(method))
 			{
 				il2cpp_codegen_runtime_class_init(klass);
 			}
@@ -31,13 +31,13 @@ namespace interpreter
 		IL2CPP_FORCE_INLINE static void RuntimeClassCCtorInit(Il2CppClass* klass)
 		{
 			il2cpp::vm::ClassInlines::InitFromCodegen(klass);
-			if (klass->has_cctor && !klass->cctor_finished)
+			if (!IS_CCTOR_FINISH_OR_NO_CCTOR(klass))
 			{
 				il2cpp_codegen_runtime_class_init(klass);
 			}
 		}
 
-		static void Execute(const MethodInfo* methodInfo, StackObject* args, StackObject* ret);
+		static void Execute(const MethodInfo* methodInfo, StackObject* args, void* ret);
 
 	};
 

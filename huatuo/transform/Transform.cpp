@@ -1084,7 +1084,7 @@ ip++;
 		case IL2CPP_TYPE_VALUETYPE:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(klass->valuetype);
+			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 			return GetTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
 		}
 		case IL2CPP_TYPE_GENERICINST:
@@ -1092,13 +1092,13 @@ ip++;
 			Il2CppGenericClass* genericClass = type->data.generic_class;
 			if (genericClass->type->type == IL2CPP_TYPE_CLASS)
 			{
-				IL2CPP_ASSERT(!il2cpp::vm::Class::FromIl2CppType(type)->valuetype);
+				IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
 				return{ LocationDataType::U8, 1 };
 			}
 			else
 			{
 				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				IL2CPP_ASSERT(klass->valuetype);
+				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 				return GetTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
 			}
 		}
@@ -1118,7 +1118,7 @@ ip++;
 	inline int32_t GetFieldOffset(const FieldInfo* fieldInfo)
 	{
 		Il2CppClass* klass = fieldInfo->parent;
-		return klass->valuetype ? (fieldInfo->offset - sizeof(Il2CppObject)) : fieldInfo->offset;
+		return IS_CLASS_VALUE_TYPE(klass) ? (fieldInfo->offset - sizeof(Il2CppObject)) : fieldInfo->offset;
 	}
 
 	inline uint32_t GetOrAddResolveDataIndex(std::unordered_map<const void*, uint32_t>& ptr2Index, std::vector<const void*>& resolvedDatas, const void* ptr)
@@ -1223,7 +1223,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -1328,7 +1328,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -1432,7 +1432,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -1537,7 +1537,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -1639,7 +1639,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -1751,7 +1751,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -1855,7 +1855,7 @@ ip++;
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->valuetype)
+			if (IS_CLASS_VALUE_TYPE(klass))
 			{
 				if (klass->enumtype)
 				{
@@ -2071,7 +2071,7 @@ ip++;
 			{
 				ArgVarInfo& self = args[0];
 				self.klass = methodInfo->klass;
-				self.type = self.klass->valuetype ? &self.klass->this_arg : &self.klass->byval_arg;
+				self.type = IS_CLASS_VALUE_TYPE(self.klass) ? &self.klass->this_arg : &self.klass->byval_arg;
 				self.argOffset = idx;
 				self.argLocOffset = totalArgSize;
 				totalArgSize += GetTypeValueStackObjectCount(self.type);
@@ -2081,7 +2081,7 @@ ip++;
 			for (uint32_t i = 0; i < methodInfo->parameters_count; i++)
 			{
 				ArgVarInfo& arg = args[idx + i];
-				arg.type = InflateIfNeeded((Il2CppType*)(methodInfo->parameters[i].parameter_type), genericContext, true);
+				arg.type = InflateIfNeeded((Il2CppType*)(GET_METHOD_PARAMETER_TYPE(methodInfo->parameters[i])), genericContext, true);
 				arg.klass = il2cpp::vm::Class::FromIl2CppType(arg.type);
 				arg.argOffset = idx + i;
 				arg.argLocOffset = totalArgSize;
@@ -2521,7 +2521,7 @@ ip++;
 					}
 					else if (std::strcmp(klassName, "Nullable`1") == 0)
 					{
-						uint32_t eleSize = GetTypeValueSize(klass->castClass);
+						il2cpp::vm::Class::SetupFields(klass);
 						uint16_t topOffset = GetEvalStackTopOffset();
 						if (strcmp(methodName, ".ctor") == 0)
 						{
@@ -2530,7 +2530,7 @@ ip++;
 								CreateAddIR(ir, NullableCtorVarVar);
 								ir->dst = GetEvalStackOffset_2();
 								ir->data = GetEvalStackOffset_1();
-								ir->size = eleSize;
+								ir->klass = klass;
 
 								PopStackN(2);
 								continue;
@@ -2543,7 +2543,7 @@ ip++;
 								CreateAddIR(ir, NullableGetValueOrDefaultVarVar);
 								ir->dst = topOffset;
 								ir->obj = topOffset;
-								ir->size = eleSize;
+								ir->klass = klass;
 
 								// pop this, push value
 								PopStack();
@@ -2555,7 +2555,7 @@ ip++;
 								CreateAddIR(ir, NullableGetValueOrDefaultVarVar_1);
 								ir->dst = ir->obj = GetEvalStackOffset_2();
 								ir->defaultValue = topOffset;
-								ir->size = eleSize;
+								ir->klass = klass;
 
 								// pop this, default value then push value
 								PopStackN(2);
@@ -2568,7 +2568,7 @@ ip++;
 							CreateAddIR(ir, NullableHasValueVar);
 							ir->result = topOffset;
 							ir->obj = topOffset;
-							ir->offset = eleSize;
+							ir->klass = klass;
 
 							// pop this, push value
 							PopStack();
@@ -2580,7 +2580,7 @@ ip++;
 							CreateAddIR(ir, NullableGetValueVarVar);
 							ir->dst = topOffset;
 							ir->obj = topOffset;
-							ir->size = eleSize;
+							ir->klass = klass;
 
 							// pop this, push value
 							PopStack();
@@ -2607,11 +2607,11 @@ ip++;
 							ir->value = valueIdx;
 							ir->comparand = comparandIdx;
 
-							const Il2CppType* paramType = shareMethod->parameters[1].parameter_type;
+							const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
 							if (!paramType->byref)
 							{
 								Il2CppClass* paramKlass = il2cpp::vm::Class::FromIl2CppType(paramType);
-								if (paramKlass->valuetype)
+								if (IS_CLASS_VALUE_TYPE(paramKlass))
 								{
 									uint32_t valueSize = GetTypeValueSize(paramKlass);
 									if (valueSize == 4)
@@ -2645,11 +2645,11 @@ ip++;
 							ir->localtion = locationIdx;
 							ir->value = valueIdx;
 
-							const Il2CppType* paramType = shareMethod->parameters[1].parameter_type;
+							const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
 							if (!paramType->byref)
 							{
 								Il2CppClass* paramKlass = il2cpp::vm::Class::FromIl2CppType(paramType);
-								if (paramKlass->valuetype)
+								if (IS_CLASS_VALUE_TYPE(paramKlass))
 								{
 									uint32_t valueSize = GetTypeValueSize(paramKlass);
 									if (valueSize == 4)
@@ -2846,17 +2846,19 @@ ip++;
 				if (resolvedIsInstanceMethod)
 				{
 					__argIdxs[0] = GetEvalStackOffset(callArgEvalStackIdxBase);
-					if (shareMethod->klass->valuetype)
+#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
+					if (IS_CLASS_VALUE_TYPE(shareMethod->klass))
 					{
 						CreateAddIR(ir, AdjustValueTypeRefVar);
 						ir->data = __argIdxs[0];
 					}
+#endif
 				}
 				int32_t bigValueTypeRefStackIdx = GetEvalStackNewTopOffset();
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + resolvedIsInstanceMethod;
-					int32_t argSize = GetTypeValueStackObjectCount(shareMethod->parameters[i].parameter_type);
+					int32_t argSize = GetTypeValueStackObjectCount(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i]));
 					if (argSize == 1)
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
@@ -2954,7 +2956,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + 1;
-					int32_t argSize = GetTypeValueStackObjectCount(shareMethod->parameters[i].parameter_type);
+					int32_t argSize = GetTypeValueStackObjectCount(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i]));
 					if (argSize == 1)
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
@@ -3061,7 +3063,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i;
-					int32_t argSize = GetTypeValueStackObjectCount(shareMethod->parameters[i].parameter_type);
+					int32_t argSize = GetTypeValueStackObjectCount(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i]));
 					if (argSize == 1)
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
@@ -3116,16 +3118,75 @@ ip++;
 					// ms.ret = nullptr;
 					IL2CPP_ASSERT(evalStackTop == 1);
 					int32_t size = GetTypeValueSize(methodInfo->return_type);
-					if (size <= 8)
+					switch (size)
+					{
+					case 1:
+					{
+						CreateAddIR(ir, RetVar_ret_1);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 2:
+					{					
+						CreateAddIR(ir, RetVar_ret_2);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 4:
+					{
+						CreateAddIR(ir, RetVar_ret_4);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 8:
 					{
 						CreateAddIR(ir, RetVar_ret_8);
 						ir->ret = GetEvalStackTopOffset();
+						break;
 					}
-					else
+					case 12:
+					{
+						CreateAddIR(ir, RetVar_ret_12);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 16:
+					{
+						CreateAddIR(ir, RetVar_ret_16);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 20:
+					{
+						CreateAddIR(ir, RetVar_ret_20);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 24:
+					{
+						CreateAddIR(ir, RetVar_ret_24);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 28:
+					{
+						CreateAddIR(ir, RetVar_ret_28);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					case 32:
+					{
+						CreateAddIR(ir, RetVar_ret_32);
+						ir->ret = GetEvalStackTopOffset();
+						break;
+					}
+					default:
 					{
 						CreateAddIR(ir, RetVar_ret_n);
 						ir->ret = GetEvalStackTopOffset();
 						ir->size = size;
+						break;
+					}
 					}
 				}
 				ip++;
@@ -4082,7 +4143,7 @@ ip++;
 				{
 					if (klass == il2cpp_defaults.object_class)
 					{
-						IL2CPP_ASSERT(!klass->valuetype);
+						IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(klass));
 						CreateAddIR(ir, NewSystemObjectVar);
 						ir->obj = GetEvalStackNewTopOffset();
 						PushStackByReduceType(EvalStackReduceDataType::Obj);
@@ -4090,11 +4151,12 @@ ip++;
 					}
 					if (strcmp(klass->name, "Nullable`1") == 0)
 					{
-						IL2CPP_ASSERT(klass->valuetype);
+						IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 						IL2CPP_ASSERT(evalStackTop > 0);
+						il2cpp::vm::Class::SetupFields(klass);
 						CreateAddIR(ir, NullableNewVarVar);
 						ir->dst = ir->data = GetEvalStackTopOffset();
-						ir->size = GetTypeValueSize(klass->element_class);
+						ir->klass = klass;
 						PopStack();
 						PushStackByType(&klass->byval_arg);
 						continue;
@@ -4158,7 +4220,7 @@ ip++;
 
 				if (IsInterpreterType(klass))
 				{
-					if (klass->valuetype)
+					if (IS_CLASS_VALUE_TYPE(klass))
 					{
 						CreateAddIR(ir, NewValueTypeInterpVar);
 						ir->obj = GetEvalStackOffset(callArgEvalStackIdxBase);
@@ -4201,7 +4263,7 @@ ip++;
 				}
 
 				// optimize when argv == 0
-				if (shareMethod->parameters_count == 0 && !klass->valuetype)
+				if (shareMethod->parameters_count == 0 && !IS_CLASS_VALUE_TYPE(klass))
 				{
 					CreateAddIR(ir, NewClassVar_Ctor_0);
 					ir->method = const_cast<MethodInfo*>(shareMethod);
@@ -4232,7 +4294,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + 1;
-					int32_t argSize = GetTypeValueStackObjectCount(shareMethod->parameters[i].parameter_type);
+					int32_t argSize = GetTypeValueStackObjectCount(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i]));
 					if (argSize == 1)
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + i].locOffset;
@@ -4256,7 +4318,7 @@ ip++;
 				PopStackN(resolvedTotalArgdNum + 1); // args + obj + this
 				PushStackByType(&klass->byval_arg);
 				CreateAddIR(ir, NewClassVar);
-				ir->type = shareMethod->klass->valuetype ? HiOpcodeEnum::NewValueTypeVar : HiOpcodeEnum::NewClassVar;
+				ir->type = IS_CLASS_VALUE_TYPE(shareMethod->klass) ? HiOpcodeEnum::NewValueTypeVar : HiOpcodeEnum::NewClassVar;
 				ir->managed2NativeMethod = (void*)managed2NativeMethod;
 				ir->method = const_cast<MethodInfo*>(shareMethod);
 				ir->argIdxs = argIdxDataIndex;
@@ -4370,7 +4432,7 @@ ip++;
 				// ldfld obj may be obj or or valuetype or ref valuetype....
 				EvalStackVarInfo& obj = evalStack[evalStackTop - 1];
 				uint16_t topIdx = GetEvalStackTopOffset();
-				IRCommon* ir = obj.reduceType != EvalStackReduceDataType::Ref && fieldInfo->parent->valuetype ? CreateValueTypeLdfld(pool, topIdx, topIdx, fieldInfo) : CreateClassLdfld(pool, topIdx, topIdx, fieldInfo);
+				IRCommon* ir = obj.reduceType != EvalStackReduceDataType::Ref && IS_CLASS_VALUE_TYPE(fieldInfo->parent) ? CreateValueTypeLdfld(pool, topIdx, topIdx, fieldInfo) : CreateClassLdfld(pool, topIdx, topIdx, fieldInfo);
 				AddInst(ir);
 				PopStack();
 				PushStackByType(fieldInfo->type);
@@ -4613,7 +4675,7 @@ ip++;
 				}*/
 				PopStack();
 				PushStackByReduceType(EvalStackReduceDataType::Obj);
-				if (objKlass->valuetype)
+				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
 					CreateAddIR(ir, BoxVarVar);
 					ir->dst = ir->data = GetEvalStackTopOffset();
@@ -4854,7 +4916,7 @@ ip++;
 				case IL2CPP_TYPE_BYREF: { CI_ldele0(i8, I); break; }
 				default:
 				{
-					if (objKlass->valuetype)
+					if (IS_CLASS_VALUE_TYPE(objKlass))
 					{
 						if (objKlass->enumtype)
 						{
@@ -4866,23 +4928,23 @@ ip++;
 						{
 						case 1:
 						{
-							CI_ldele0(u1, Other)
-                            break;
+							CI_ldele0(u1, Other);
+							break;
 						}
 						case 2:
 						{
 							CI_ldele0(u2, Other)
-                            break;
+							break;
 						}
 						case 4:
 						{
 							CI_ldele0(u4, Other)
-                            break;
+							break;
 						}
 						case 8:
 						{
 							CI_ldele0(u8, Other)
-                            break;
+							break;
 						}
 						case 12:
 						{
@@ -4971,7 +5033,7 @@ ip++;
 				case IL2CPP_TYPE_BYREF: { CI_stele0(i8); break; }
 				default:
 				{
-					if (objKlass->valuetype)
+					if (IS_CLASS_VALUE_TYPE(objKlass))
 					{
 						if (objKlass->enumtype)
 						{
@@ -4983,23 +5045,23 @@ ip++;
 						{
 						case 1:
 						{
-							CI_stele0(u1)
-                            break;
+							CI_stele0(u1);
+							break;
 						}
 						case 2:
 						{
-							CI_stele0(u2)
-                            break;
+							CI_stele0(u2);
+							break;
 						}
 						case 4:
 						{
-							CI_stele0(u4)
-                            break;
+							CI_stele0(u4);
+							break;
 						}
 						case 8:
 						{
-							CI_stele0(u8)
-                            break;
+							CI_stele0(u8);
+							break;
 						}
 						case 12:
 						{
@@ -5050,7 +5112,7 @@ ip++;
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 
-				if (objKlass->valuetype)
+				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
 					CreateAddIR(ir, UnBoxAnyVarVar);
 					ir->dst = ir->obj = GetEvalStackTopOffset();
@@ -5362,7 +5424,7 @@ ip++;
 
 					int32_t selfIdx = evalStackTop - resolvedTotalArgdNum;
 					EvalStackVarInfo& self = evalStack[selfIdx];
-					if (conKlass->valuetype)
+					if (IS_CLASS_VALUE_TYPE(conKlass))
 					{
 						// impl in self
 						const MethodInfo* implMethod = image->FindImplMethod(conKlass, shareMethod);

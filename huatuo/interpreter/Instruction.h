@@ -394,6 +394,9 @@ namespace interpreter
 		AdjustValueTypeRefVar,
 		BoxRefVarVar,
 		LdvirftnVarVar,
+		RetVar_ret_1,
+		RetVar_ret_2,
+		RetVar_ret_4,
 		RetVar_ret_8,
 		RetVar_ret_12,
 		RetVar_ret_16,
@@ -3412,6 +3415,24 @@ namespace interpreter
 	};
 
 
+	struct IRRetVar_ret_1 : IRCommon
+	{
+		uint16_t ret;
+	};
+
+
+	struct IRRetVar_ret_2 : IRCommon
+	{
+		uint16_t ret;
+	};
+
+
+	struct IRRetVar_ret_4 : IRCommon
+	{
+		uint16_t ret;
+	};
+
+
 	struct IRRetVar_ret_8 : IRCommon
 	{
 		uint16_t ret;
@@ -5464,7 +5485,7 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t data;
-		uint32_t size;
+		Il2CppClass* klass;
 	};
 
 
@@ -5472,7 +5493,7 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t data;
-		uint32_t size;
+		Il2CppClass* klass;
 	};
 
 
@@ -5480,7 +5501,7 @@ namespace interpreter
 	{
 		uint16_t result;
 		uint16_t obj;
-		uint32_t offset;
+		Il2CppClass* klass;
 	};
 
 
@@ -5488,7 +5509,7 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t obj;
-		uint32_t size;
+		Il2CppClass* klass;
 	};
 
 
@@ -5497,7 +5518,7 @@ namespace interpreter
 		uint16_t dst;
 		uint16_t obj;
 		uint16_t defaultValue;
-		uint32_t size;
+		Il2CppClass* klass;
 	};
 
 
@@ -5505,7 +5526,7 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t obj;
-		uint32_t size;
+		Il2CppClass* klass;
 	};
 
 
