@@ -766,6 +766,23 @@ namespace metadata
         }
     }
 
+    Il2CppReflectionType* ReadSystemType(BlobReader& reader)
+    {
+        Il2CppString* fullName = ReadSerString(reader);
+        if (!fullName)
+        {
+            return nullptr;
+        }
+        Il2CppReflectionType* type = GetReflectionTypeFromName(fullName);
+        if (!type)
+        {
+            std::string stdTypeName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
+            TEMP_FORMAT(errMsg, "CustomAttribute fixed arg type:System.Type fullName:'%s' not find", stdTypeName.c_str());
+            il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
+        }
+        return type;
+    }
+
     void ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data)
     {
         switch (argType->type)
@@ -869,15 +886,7 @@ namespace metadata
             }
             else if (klass == il2cpp_defaults.systemtype_class)
             {
-                Il2CppString* fullName = ReadSerString(reader);
-                Il2CppReflectionType* type = GetReflectionTypeFromName(fullName);
-                if (!type)
-                {
-                    std::string stdTypeName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
-                    TEMP_FORMAT(errMsg, "CustomAttribute fixed arg type:System.Type fullName:'%s' not find", stdTypeName.c_str());
-                    il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
-                }
-                *(Il2CppReflectionType**)data = type;
+                *(Il2CppReflectionType**)data = ReadSystemType(reader);
             }
             else
             {
@@ -895,15 +904,7 @@ namespace metadata
         }
         case IL2CPP_TYPE_SYSTEM_TYPE:
         {
-            Il2CppString* fullName = ReadSerString(reader);
-            Il2CppReflectionType* type = GetReflectionTypeFromName(fullName);
-            if (!type)
-            {
-                std::string stdTypeName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
-                TEMP_FORMAT(errMsg, "CustomAttribute fixed arg type:System.Type fullName:'%s' not find", stdTypeName.c_str());
-                il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
-            }
-            *(Il2CppReflectionType**)data = type;
+            *(Il2CppReflectionType**)data = ReadSystemType(reader);
             break;
         }
         case IL2CPP_TYPE_BOXED_OBJECT:
@@ -939,6 +940,22 @@ namespace metadata
 
         switch (type.type)
         {
+        case IL2CPP_TYPE_BOOLEAN:
+        case IL2CPP_TYPE_CHAR:
+        case IL2CPP_TYPE_I1:
+        case IL2CPP_TYPE_U1:
+        case IL2CPP_TYPE_I2:
+        case IL2CPP_TYPE_U2:
+        case IL2CPP_TYPE_I4:
+        case IL2CPP_TYPE_U4:
+        case IL2CPP_TYPE_I8:
+        case IL2CPP_TYPE_U8:
+        case IL2CPP_TYPE_R4:
+        case IL2CPP_TYPE_R8:
+        case IL2CPP_TYPE_STRING:
+        {
+            break;
+        }
         case IL2CPP_TYPE_SZARRAY:
         {
             // FIXME MEMORY LEAK
