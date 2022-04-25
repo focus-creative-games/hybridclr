@@ -262,7 +262,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		}
 	}
 
-	inline void CheckArrayElementTypeCompatible(Il2CppClass* arrKlass, Il2CppClass* eleKlass)
+	inline void CheckArrayElementTypeMatch(Il2CppClass* arrKlass, Il2CppClass* eleKlass)
 	{
 		if (il2cpp::vm::Class::GetElementClass(arrKlass) != eleKlass)
 		{
@@ -270,8 +270,13 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		}
 	}
 
-#define CHECK_ARRAY_INDEX_IN_RANGE_ELSE_THROW(obj, length) if (length >= il2cpp::vm::Array::GetLength(obj)) { il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException()); }
-#define CHECK_ARRAY_TYPE_COMPATIBLE(arr, klazz) if (!il2cpp::vm::Class::IsAssignableFrom((arr)->klass->element_class, klazz)) { il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArrayTypeMismatchException()); }
+	inline void CheckArrayElementTypeCompatible(Il2CppArray* arr, Il2CppObject* ele)
+	{
+		if (ele && !il2cpp::vm::Class::IsAssignableFrom(arr->klass->element_class, ele->klass))
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArrayTypeMismatchException());
+		}
+	}
 
 	inline MethodInfo* GET_OBJECT_VIRTUAL_METHOD(Il2CppObject* obj, const MethodInfo* method)
 	{
@@ -6823,7 +6828,7 @@ else \
 					Il2CppClass* __eleKlass = *(Il2CppClass**)(ip + 8);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
 				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int32_t*)(localVarBase + __index)));
-				    CheckArrayElementTypeCompatible(arr->klass, __eleKlass);
+				    CheckArrayElementTypeMatch(arr->klass, __eleKlass);
 				    (*(void**)(localVarBase + __addr)) = GET_ARRAY_ELEMENT_ADDRESS(arr, (*(int32_t*)(localVarBase + __index)), il2cpp::vm::Array::GetElementSize(arr->klass));
 				    ip += 16;
 				    continue;
@@ -6836,7 +6841,7 @@ else \
 					Il2CppClass* __eleKlass = *(Il2CppClass**)(ip + 8);
 				    Il2CppArray* arr = (*(Il2CppArray**)(localVarBase + __arr));
 				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(arr, (*(int64_t*)(localVarBase + __index)));
-				    CheckArrayElementTypeCompatible(arr->klass, __eleKlass);
+				    CheckArrayElementTypeMatch(arr->klass, __eleKlass);
 				    (*(void**)(localVarBase + __addr)) = GET_ARRAY_ELEMENT_ADDRESS(arr, (*(int64_t*)(localVarBase + __index)), il2cpp::vm::Array::GetElementSize(arr->klass));
 				    ip += 16;
 				    continue;
@@ -7171,7 +7176,7 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
 				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
-				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele))->klass);
+				    CheckArrayElementTypeCompatible((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    il2cpp_array_setref((*(Il2CppArray**)(localVarBase + __arr)), (*(int32_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
@@ -7297,7 +7302,7 @@ else \
 					uint16_t __index = *(uint16_t*)(ip + 4);
 					uint16_t __ele = *(uint16_t*)(ip + 6);
 				    CHECK_NOT_NULL_THROW((*(Il2CppArray**)(localVarBase + __arr)));
-				    CHECK_ARRAY_TYPE_COMPATIBLE((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele))->klass);
+				    CheckArrayElementTypeCompatible((*(Il2CppArray**)(localVarBase + __arr)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    il2cpp_array_setref((*(Il2CppArray**)(localVarBase + __arr)), (*(int64_t*)(localVarBase + __index)), (*(Il2CppObject**)(localVarBase + __ele)));
 				    ip += 8;
 				    continue;
