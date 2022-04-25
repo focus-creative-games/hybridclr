@@ -4,7 +4,7 @@
 
 这是unity代码裁剪引起的。你需要在主工程中显式带上类或者函数的使用，如RefTypes.cs所做的那样。
 
-如果你是新使用huatuo的项目。建议将 [huatuo_trail](https://github.com/focus-creative-games/huatuo_trial)/Assets/Main/HuatuoLib 拷贝到你主工程，
+如果你是新使用huatuo的项目。建议将 [huatuo_trial](https://github.com/focus-creative-games/huatuo_trial)/Assets/Main/HuatuoLib 拷贝到你主工程，
 然后再在RefTypes.cs里添加你要引用的类型。
 
 ## 调试时遇到 shareMethod-&gt;methodPointer断言错误
@@ -51,7 +51,7 @@
 
 因为你build了32位程序。 huatuo当前只支持64位。
 
-## 遇到提示Unity: TypeLoadException: Could not load type 'System.Object' from assembly 'netstandard'.
+## 遇到提示Unity: TypeLoadException: Could not load type 'System.Object' from assembly 'netstandard'
 
 原因是加载的HotFix.dll 是 .NET Standard 2.0生成的。从根本上解决这个问题可以参照下面步骤：
 

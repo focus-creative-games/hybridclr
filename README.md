@@ -11,19 +11,19 @@
 
 huatuo是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的Unity全平台原生c#热更方案。
 
-huatuo为il2cpp之类的纯AOT CLR提供了interpreter模块，使基于它们的app不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行，从底层彻底支持了热更新。
+huatuo扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行。从底层彻底支持了热更新。
 
 ## 特性
 
 - 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
-- 零学习和使用成本。 huatuo将纯AOT的运行时增强为完整的CLR运行时，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，即使反射、多线程(volatile、ThreadStatic、Task、async)之类的代码都能够正常工作。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
+- 零学习和使用成本。 huatuo将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
 - 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](docs/benchmark.md)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](docs/memory.md)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
 
 ## 工作原理
 
-huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/)技术中得到启发，为unity的il2cpp之类的AOT runtime额外提供了interpreter模块，将它们由纯AOT运行时改造为"AOT + Interpreter"混合运行方式，从底层彻底支持了热更新。
+huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/)技术中得到启发，为unity的il2cpp之类的AOT runtime额外提供了interpreter模块，将它们由纯AOT运行时改造为"AOT + Interpreter"混合运行方式。
 
 ![icon](docs/images/architecture.png)
 
@@ -38,17 +38,15 @@ huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpr
 
 ## 与其他流行的c#热更新方案的区别
 
-简单类比，将il2cpp比作一只没有翅膀的鸭子，只能地面行走或者水里游泳，huatuo则让il2cpp直接长出原生翅膀，可以飞翔。 而其他热更方案则类似于做了一个飞行器，让鸭子可以乘坐飞起来。
-
-再拿使用英语举例，huatuo是直接让il2cpp学会了英语，其他热更方案是给il2cpp配了个翻译。
+简单类比，将il2cpp比作一只没有翅膀的鸟儿，只能地面行走，huatuo则让il2cpp直接长出原生翅膀，可以飞翔。 而其他热更方案则类似于做了一个飞行器，让它可以乘坐飞起来。
 
 ### 本质比较
 
-huatuo是原生的c#热更新方案。原始il2cpp相当于只有aot的mono，而huatuo则给il2cpp新增了原生的interpreter模块，使得il2cpp变成一个全功能的mono，原生（即通过System.Reflection.Assembly.Load可以动态加载dll）支持动态加载dll，从而支持ios平台的热更新。其他热更新方案则是新增了一个独立于il2cpp的第三方vm。
+huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot模块，huatuo相当于mono的interpreter模块，两者合一成为完整mono。huatuo使得il2cpp变成一个全功能的runtime，原生（即通过System.Reflection.Assembly.Load）支持动态加载dll，从而支持ios平台的热更新。
 
 正因为huatuo是原生runtime级别实现，热更新部分的类型与主工程AOT部分类型是完全等价并且无缝统一的。可以随意调用、继承、反射、多线程，不需要生成代码或者写适配器。
 
-其他热更新方案则是独立vm，与il2cpp的关系本质上相当于mono嵌lua的关系。因此类型系统不统一，为了让热更新类型能够继承AOT部分类型，需要写适配器，并且解释器中的类型不能为主工程的类型系统所识别。
+其他热更新方案则是独立vm，与il2cpp的关系本质上相当于mono中嵌入lua的关系。因此类型系统不统一，为了让热更新类型能够继承AOT部分类型，需要写适配器，并且解释器中的类型不能为主工程的类型系统所识别。特性不完整、开发麻烦、运行效率低下。
 
 ### 实际使用体验或者特性比较
 
@@ -80,15 +78,17 @@ huatuo是原生的c#热更新方案。原始il2cpp相当于只有aot的mono，�
 
 ## 稳定性状况
 
-技术评估上目前稳定性处于Alpha版本与Beta版本之间。
+技术评估上目前稳定性处于Alpha版本与Beta版本之间。由于huatuo技术原理的先进性，bug本质不多，稳定得非常快。
 
 - 完成了绝大多数指令的单元测试。只有calli、initblk等少数难以直接在c#里构造的指令未添加对应的单元测试。
 - 对照c#规范完成各项语法测试。
-- 测试了游戏常用库和框架的兼容性，兼容性良好。 参见[兼容性报告](docs/compatible.md)
+- 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在huatuo下正常工作。参见[兼容性报告](docs/compatible.md)
 - 可以正确地加载 [luban](https://github.com/focus-creative-games/luban) 配置
 - 可以正确地运行 [2048](https://github.com/dgkanatsios/2048)这样的轻量小游戏
 - 可以运行 [StarForce](https://github.com/EllanJiang/StarForce) 这样的小型游戏
-- 正在帮助一些小中大型（其中有一个重度MMORPG项目）进行huatuo的迁移和测试工作。预计本月可以顺利运行MMORPG这样的大型游戏项目。
+- **==已经可以在pc平台完整运行重度MMORPG项目==**。目前正在积极推进android、ios、WebGL平台的测试工作。预计5月底会有较稳定的全平台版本。
+
+预计在7月份会有使用huatuo的重度MMORPG项目上线。
 
 ## RoadMap
 
