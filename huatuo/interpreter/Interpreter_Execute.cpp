@@ -146,7 +146,7 @@ namespace interpreter
 
 	inline float HiRem(float a, float b)
 	{
-		return std::fmodf(a, b);
+		return std::fmod(a, b);
 	}
 
 	inline double HiRem(double a, double b)
