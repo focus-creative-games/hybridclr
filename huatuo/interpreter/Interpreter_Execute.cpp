@@ -619,8 +619,6 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 	localVarBase = frame->stackBasePtr; \
 }
 
-
-
 	// maxStackSize包含 arg + local + eval,对于解释器栈来说，可能多余
 #define PREPARE_NEW_FRAME(newMethodInfo, argBasePtr, retPtr, withArgStack) { \
 	imi = newMethodInfo->huatuoData ? (InterpMethodInfo*)newMethodInfo->huatuoData : InterpreterModule::GetInterpMethodInfo(huatuo::metadata::MetadataModule::GetImage(newMethodInfo->klass), newMethodInfo); \
@@ -643,11 +641,30 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 	} \
 }
 
-#define CALL_INTERP(nextIp, methodInfo, argBasePtr, retPtr) { \
+#define SET_RET_AND_LEAVE_FRAME(nativeSize, interpSize) { \
+	void* _curRet = frame->ret; \
+	frame = interpFrameGroup.LeaveFrame(); \
+	if (frame) \
+	{ \
+        Copy##interpSize(_curRet, (void*)(localVarBase + __ret)); \
+		LOAD_PREV_FRAME(); \
+	}\
+	else \
+	{ \
+        Copy##nativeSize(_curRet, (void*)(localVarBase + __ret)); \
+		goto ExitEvalLoop; \
+	} \
+}
+
+#define CALL_INTERP_VOID(nextIp, methodInfo, argBasePtr) { \
+	SAVE_CUR_FRAME(nextIp) \
+	PREPARE_NEW_FRAME(methodInfo, argBasePtr, nullptr, true); \
+}
+
+#define CALL_INTERP_RET(nextIp, methodInfo, argBasePtr, retPtr) { \
 	SAVE_CUR_FRAME(nextIp) \
 	PREPARE_NEW_FRAME(methodInfo, argBasePtr, retPtr, true); \
 }
-
 
 #define CALL_DELEGATE(_resolvedArgIdxs, _del, _managed2NativeStaticCall, _managed2NativeInstanceCall, _ret) \
 if (_del->delegates == nullptr) \
@@ -4759,7 +4776,7 @@ else \
 				    std::memcpy(_frameBasePtr + 1, (void*)(localVarBase + __argBase), __argStackObjectNum * sizeof(StackObject)); // move arg
 				    _frameBasePtr->obj = _newObj; // prepare this 
 				    (*(Il2CppObject**)(localVarBase + __obj)) = _newObj; // set must after move
-				    CALL_INTERP((ip + 18), __method, _frameBasePtr, nullptr);
+				    CALL_INTERP_VOID((ip + 18), __method, _frameBasePtr);
 				    continue;
 				}
 				case HiOpcodeEnum::NewClassInterpVar_Ctor_0:
@@ -4772,7 +4789,7 @@ else \
 				    StackObject* _frameBasePtr = (StackObject*)(void*)(localVarBase + __ctorFrameBase);
 				    _frameBasePtr->obj = _newObj; // prepare this 
 				    (*(Il2CppObject**)(localVarBase + __obj)) = _newObj;
-				    CALL_INTERP((ip + 14), __method, _frameBasePtr, nullptr);
+				    CALL_INTERP_VOID((ip + 14), __method, _frameBasePtr);
 				    continue;
 				}
 				case HiOpcodeEnum::NewValueTypeInterpVar:
@@ -4792,7 +4809,7 @@ else \
 				#endif
 				    int32_t _typeSize = GetTypeValueSize(__method->klass);
 				    InitDefaultN((void*)(localVarBase + __obj), _typeSize); // init after move
-				    CALL_INTERP((ip + 18), __method, _frameBasePtr, nullptr);
+				    CALL_INTERP_VOID((ip + 18), __method, _frameBasePtr);
 				    continue;
 				}
 				case HiOpcodeEnum::AdjustValueTypeRefVar:
@@ -4825,84 +4842,74 @@ else \
 				case HiOpcodeEnum::RetVar_ret_1:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy1(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(1, 8);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_2:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy2(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(2, 8);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_4:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy4(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(4, 8);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_8:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy8(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(8, 8);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_12:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy12(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(12, 12);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_16:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy16(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(16, 16);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_20:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy20(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(20, 20);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_24:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy24(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(24, 24);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_28:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy28(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(28, 28);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_32:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    Copy32(frame->ret, (void*)(localVarBase + __ret));
-				    LEAVE_FRAME();
+				    SET_RET_AND_LEAVE_FRAME(32, 32);
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_ret_n:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __size = *(uint16_t*)(ip + 4);
+					uint32_t __size = *(uint32_t*)(ip + 4);
 				    std::memcpy(frame->ret, (void*)(localVarBase + __ret), __size);
-				    LEAVE_FRAME();
+					LEAVE_FRAME();
 				    continue;
 				}
 				case HiOpcodeEnum::RetVar_void:
 				{
-				    LEAVE_FRAME();
+					LEAVE_FRAME();
 				    continue;
 				}
 				case HiOpcodeEnum::CallNative_void:
@@ -4928,7 +4935,7 @@ else \
 				{
 					MethodInfo* __methodInfo = *(MethodInfo**)(ip + 2);
 					uint16_t __argBase = *(uint16_t*)(ip + 10);
-				    CALL_INTERP((ip + 12), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase), nullptr);
+				    CALL_INTERP_VOID((ip + 12), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase));
 				    continue;
 				}
 				case HiOpcodeEnum::CallInterp_ret:
@@ -4936,7 +4943,7 @@ else \
 					MethodInfo* __methodInfo = *(MethodInfo**)(ip + 2);
 					uint16_t __argBase = *(uint16_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 12);
-				    CALL_INTERP((ip + 14), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase), (void*)(localVarBase + __ret));
+				    CALL_INTERP_RET((ip + 14), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase), (void*)(localVarBase + __ret));
 				    continue;
 				}
 				case HiOpcodeEnum::CallVirtual_void:
@@ -4961,7 +4968,7 @@ else \
 				            _objPtr->obj += 1;
 				        }
 				#endif
-				        CALL_INTERP((ip + 14), _actualMethod, _objPtr, nullptr);
+				        CALL_INTERP_VOID((ip + 14), _actualMethod, _objPtr);
 				    }
 				    else 
 				    {
@@ -4994,7 +5001,7 @@ else \
 				            _objPtr->obj += 1;
 				        }
 				#endif
-				        CALL_INTERP((ip + 16), _actualMethod, _objPtr, ret);
+				        CALL_INTERP_RET((ip + 16), _actualMethod, _objPtr, ret);
 				    }
 				    else 
 				    {
@@ -5013,7 +5020,7 @@ else \
 				    {
 				        _argBasePtr->obj += 1;
 				    }
-				    CALL_INTERP((ip + 12), _actualMethod, _argBasePtr, nullptr);
+				    CALL_INTERP_VOID((ip + 12), _actualMethod, _argBasePtr);
 				    continue;
 				}
 				case HiOpcodeEnum::CallInterpVirtual_ret:
@@ -5027,7 +5034,7 @@ else \
 				    {
 				        _argBasePtr->obj += 1;
 				    }
-				    CALL_INTERP((ip + 14), _actualMethod, _argBasePtr, (void*)(localVarBase + __ret));
+				    CALL_INTERP_RET((ip + 14), _actualMethod, _argBasePtr, (void*)(localVarBase + __ret));
 				    continue;
 				}
 				case HiOpcodeEnum::CallInd_void:

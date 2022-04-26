@@ -6,8 +6,6 @@ namespace huatuo
 namespace interpreter
 {
 
-#pragma region memory
-
 	inline void Copy1(void* dst, void* src)
 	{
 		*(uint8_t*)dst = *(uint8_t*)src;
@@ -170,7 +168,15 @@ namespace interpreter
 	{
 		*(int64_t*)dst = value;
 	}
-#pragma endregion
 
+	void FixValueByTypeSlow(void* retValue, const Il2CppType* type);
+
+	inline void FixValueByTypeFast(void* retValue, const Il2CppType* type)
+	{
+		if (type->type <= IL2CPP_TYPE_U2 && !type->byref)
+		{
+			FixValueByTypeSlow(retValue, type);
+		}
+	}
 }
 }
