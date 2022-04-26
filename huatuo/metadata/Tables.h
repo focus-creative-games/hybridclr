@@ -148,7 +148,7 @@ namespace metadata
     struct TbConstant
     {
         uint8_t type; // 实际上占2字节
-        uint16_t parent;
+        uint32_t parent;
         uint32_t value;
     };
 
