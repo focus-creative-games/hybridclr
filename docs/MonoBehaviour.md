@@ -2,7 +2,16 @@
 
 文档中提及的代码文件在[huatuo_trail](https://github.com/focus-creative-games/huatuo_trial)
 
-## 原理
+
+## 通过代码使用
+
+AddComponent&lt;T&gt;()或者AddComponent(Type type)任何时候都是完美支持的。不需要像资源上挂载脚本那样做一些特殊处理。
+
+## 在资源上挂载MonoBehaviour
+
+如果想在资源上挂载热更新脚本，由于unity资源管理的限制，需要在打包时做少量特殊处理。
+
+### 原理
 
 Unity资源管理在反序列化资源中的脚本时，要求满足两个条件
 
@@ -20,15 +29,9 @@ assembly def只导出给editor目标，则Unity会认为它是纯editor模块，
 比较麻烦，因此我们又在 HuaTuo_BuildProcessor_XXX 脚本中处理了 IFilterBuildAssemblies.OnFilterAssemblies 事件，将热更新dll忽略。
 这样一样，直接将热更新assembly def像普通的assembly那样，标记为导出给所有平台，也不会在打包时导出了。
 
-## 通过代码使用
-
-AddComponent&lt;T&gt;()或者AddComponent(Type type)都是完美支持的。
-
-## 在资源上挂载MonoBehaviour
-
-如果想在资源上挂载热更新脚本，由于unity资源管理的限制，需要在打包时做少量特殊处理。
-
 ### 准备工作
+
+- 将huatuo_trial项目中Assets/Editor/Huatuo复制到你项目的某个Editor目录，假设为`Assets/Editor/HuaTuo`
 
 - 根据项目Unity版本不同，打开文件 `Assets/Editor/HuaTuo/HuaTuo_BuildProcessor_2020_1_OR_NEWER.cs` 或 `HuaTuo_BuildProcessor_2019.cs`，将需要在资源上挂脚本的所在热更dll名称填入 `monoDllNames` 字段，示例:
 
