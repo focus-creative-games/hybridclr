@@ -3478,7 +3478,7 @@ namespace interpreter
 	struct IRRetVar_ret_n : IRCommon
 	{
 		uint16_t ret;
-		uint16_t size;
+		uint32_t size;
 	};
 
 

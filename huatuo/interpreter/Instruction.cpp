@@ -388,7 +388,7 @@ namespace interpreter
 		4,
 		4,
 		4,
-		6,
+		8,
 		2,
 		14,
 		16,
