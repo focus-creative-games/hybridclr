@@ -408,16 +408,20 @@ namespace interpreter
 		RetVar_void,
 		CallNative_void,
 		CallNative_ret,
+		CallNative_ret_expand,
 		CallInterp_void,
 		CallInterp_ret,
 		CallVirtual_void,
 		CallVirtual_ret,
+		CallVirtual_ret_expand,
 		CallInterpVirtual_void,
 		CallInterpVirtual_ret,
 		CallInd_void,
 		CallInd_ret,
+		CallInd_ret_expand,
 		CallDelegate_void,
 		CallDelegate_ret,
+		CallDelegate_ret_expand,
 		NewDelegate,
 		BoxVarVar,
 		UnBoxVarVar,
@@ -3505,6 +3509,17 @@ namespace interpreter
 	};
 
 
+	struct IRCallNative_ret_expand : IRCommon
+	{
+		uint32_t managed2NativeMethod;
+		uint32_t methodInfo;
+		uint32_t argIdxs;
+		uint16_t ret;
+		uint8_t retLocaltionType;
+		uint8_t __pad__;
+	};
+
+
 	struct IRCallInterp_void : IRCommon
 	{
 		MethodInfo* methodInfo;
@@ -3534,6 +3549,17 @@ namespace interpreter
 		uint32_t methodInfo;
 		uint32_t argIdxs;
 		uint16_t ret;
+	};
+
+
+	struct IRCallVirtual_ret_expand : IRCommon
+	{
+		uint32_t managed2NativeMethod;
+		uint32_t methodInfo;
+		uint32_t argIdxs;
+		uint16_t ret;
+		uint8_t retLocaltionType;
+		uint8_t __pad__;
 	};
 
 
@@ -3569,6 +3595,17 @@ namespace interpreter
 	};
 
 
+	struct IRCallInd_ret_expand : IRCommon
+	{
+		uint32_t managed2NativeMethod;
+		uint32_t methodInfo;
+		uint32_t argIdxs;
+		uint16_t ret;
+		uint8_t retLocaltionType;
+		uint8_t __pad__;
+	};
+
+
 	struct IRCallDelegate_void : IRCommon
 	{
 		uint32_t managed2NativeStaticMethod;
@@ -3585,6 +3622,18 @@ namespace interpreter
 		uint32_t argIdxs;
 		uint16_t ret;
 		uint16_t invokeParamCount;
+	};
+
+
+	struct IRCallDelegate_ret_expand : IRCommon
+	{
+		uint32_t managed2NativeStaticMethod;
+		uint32_t managed2NativeInstanceMethod;
+		uint32_t argIdxs;
+		uint16_t ret;
+		uint16_t invokeParamCount;
+		uint8_t retLocaltionType;
+		uint8_t __pad__;
 	};
 
 

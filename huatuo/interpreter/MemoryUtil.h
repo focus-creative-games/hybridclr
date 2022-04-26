@@ -1,5 +1,5 @@
 #pragma once
-#include "../CommonDef.h"
+#include "InterpreterDefs.h"
 
 namespace huatuo
 {
@@ -167,16 +167,6 @@ namespace interpreter
 	inline void SetConst8(void* dst, int64_t value)
 	{
 		*(int64_t*)dst = value;
-	}
-
-	void FixValueByTypeSlow(void* retValue, const Il2CppType* type);
-
-	inline void FixValueByTypeFast(void* retValue, const Il2CppType* type)
-	{
-		if (type->type <= IL2CPP_TYPE_U2 && !type->byref)
-		{
-			FixValueByTypeSlow(retValue, type);
-		}
 	}
 }
 }

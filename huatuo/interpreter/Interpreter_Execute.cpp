@@ -4927,8 +4927,23 @@ else \
 					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, (void*)(localVarBase + __ret));
+				    void* _ret = (void*)(localVarBase + __ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
 				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallNative_ret_expand:
+				{
+					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 2);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 14);
+					uint8_t __retLocaltionType = *(uint8_t*)(ip + 16);
+					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
+				    void* _ret = (void*)(localVarBase + __ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				    ip += 18;
 				    continue;
 				}
 				case HiOpcodeEnum::CallInterp_void:
@@ -4986,7 +5001,7 @@ else \
 				    uint16_t* _argIdxData = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
 					StackObject* _objPtr = localVarBase + _argIdxData[0];
 				    MethodInfo* _actualMethod = GET_OBJECT_VIRTUAL_METHOD(_objPtr->obj, ((MethodInfo*)imi->resolveDatas[__methodInfo]));
-				    void* ret = (void*)(localVarBase + __ret);
+				    void* _ret = (void*)(localVarBase + __ret);
 				#if !VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				    if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
 				    {
@@ -5001,12 +5016,48 @@ else \
 				            _objPtr->obj += 1;
 				        }
 				#endif
-				        CALL_INTERP_RET((ip + 16), _actualMethod, _objPtr, ret);
+				        CALL_INTERP_RET((ip + 16), _actualMethod, _objPtr, _ret);
 				    }
 				    else 
 				    {
-				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, ret);
+				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, _ret);
 				        ip += 16;
+				    }
+				    continue;
+				}
+				case HiOpcodeEnum::CallVirtual_ret_expand:
+				{
+					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 2);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 14);
+					uint8_t __retLocaltionType = *(uint8_t*)(ip + 16);
+					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
+				    uint16_t* _argIdxData = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject* _objPtr = localVarBase + _argIdxData[0];
+				    MethodInfo* _actualMethod = GET_OBJECT_VIRTUAL_METHOD(_objPtr->obj, ((MethodInfo*)imi->resolveDatas[__methodInfo]));
+				    void* _ret = (void*)(localVarBase + __ret);
+				#if !VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
+				    if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
+				    {
+				        _objPtr->obj += 1;
+				    }
+				#endif
+				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    {
+				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
+				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
+				        {
+				            _objPtr->obj += 1;
+				        }
+				#endif
+				        CALL_INTERP_RET((ip + 18), _actualMethod, _objPtr, _ret);
+				    }
+				    else 
+				    {
+				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, _ret);
+				        ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				        ip += 18;
 				    }
 				    continue;
 				}
@@ -5052,8 +5103,23 @@ else \
 					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, (void*)(localVarBase + __argIdxs));
+				    void* _ret = (void*)(localVarBase + __ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
 				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallInd_ret_expand:
+				{
+					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 2);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 14);
+					uint8_t __retLocaltionType = *(uint8_t*)(ip + 16);
+					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
+				    void* _ret = (void*)(localVarBase + __ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				    ip += 18;
 				    continue;
 				}
 				case HiOpcodeEnum::CallDelegate_void:
@@ -5062,9 +5128,9 @@ else \
 					uint32_t __managed2NativeInstanceMethod = *(uint32_t*)(ip + 6);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 14);
-				    uint16_t* resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-				    Il2CppObject* __obj = localVarBase[resolvedArgIdxs[0]].obj;
-				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), resolvedArgIdxs, localVarBase, nullptr);
+				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
+				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, nullptr);
 				    ip += 16;
 				    continue;
 				}
@@ -5075,10 +5141,28 @@ else \
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 16);
-				    uint16_t* resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-				    Il2CppObject* __obj = localVarBase[resolvedArgIdxs[0]].obj;
-				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), resolvedArgIdxs, localVarBase, (void*)(localVarBase + __ret));
+				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
+				    void* _ret = (void*)(localVarBase + __ret);
+				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, _ret);
 				    ip += 18;
+				    continue;
+				}
+				case HiOpcodeEnum::CallDelegate_ret_expand:
+				{
+					uint32_t __managed2NativeStaticMethod = *(uint32_t*)(ip + 2);
+					uint32_t __managed2NativeInstanceMethod = *(uint32_t*)(ip + 6);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 14);
+					uint16_t __invokeParamCount = *(uint16_t*)(ip + 16);
+					uint8_t __retLocaltionType = *(uint8_t*)(ip + 18);
+					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
+				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
+				    void* _ret = (void*)(localVarBase + __ret);
+				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, _ret);
+				    ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				    ip += 20;
 				    continue;
 				}
 				case HiOpcodeEnum::NewDelegate:
