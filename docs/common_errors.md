@@ -17,7 +17,7 @@
 
 解决办法：
 
-  1. 确定已经将了huatuo代码中的 libil2cpp 目录替换了对应的Editor 中的 libil2cpp 目录
+  1. 确定已经替换了对应的Editor 中的libil2cpp 目录
   2. 删除Unity工程中的Library目录，重新构建即可
 
 ## Assembly.Load(byte[]) 出错: NotSupportedException
@@ -53,9 +53,13 @@
 
 ## 遇到提示Unity: TypeLoadException: Could not load type 'System.Object' from assembly 'netstandard'
 
-原因是加载的HotFix.dll 是 .NET Standard 2.0生成的。从根本上解决这个问题可以参照下面步骤：
+原因是热更新部分的Api compatible level与主工程的不一致，热更新工程使用net standard而主工程使用.net 4.x(.net framework)。一般发生在你使用独立的vs工程而不是使用unity assembly def产生的。
+解决办法为将热更新部分api compatible level切换为与主工程一致即可。
 
-  1. 确定unity设置了 .NET 4.x
-  2. 删除Library目录
-  3. 拷贝Library\ScriptAssemblies\HotFix.dll 文件到 Assets\StreamingAssets目录
-  4. 重新打包
+如果还发生错误，则删除Library目录，重新操作一次。
+
+## 遇到提示Unity: TypeLoadException: Could not load type 'System.Object' from assembly 'mscorlib'
+
+与上面的原因相似，主工程的api compatible level为 net standard而热更新工程使用.net 4.x或其他。
+
+解决办法与上一条相同。

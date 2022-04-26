@@ -13,7 +13,7 @@
 
 - 为你所用的Unity版本安装适当的il2cpp模块，（如果你发布其他平台，要选择相应平台的il2cpp模块）。
 - 从[il2cpp_huatuo](https://github.com/pirunxi/il2cpp_huatuo) clone你所用的unity版本对应的分支
-- 将huatuo项目下的huatuo目录（注意不是huatuo项目根目录，而是根目录下的huatuo目录）复制（**推荐用建立目录链接的方法，linux下用ln，Win下用mlink**）到 il2cpp_huatuo/libil2cpp下，最终目录为il2cpp_huatuo/libil2cpp/huatuo。
+- 将huatuo项目下的huatuo目录（注意不是huatuo项目根目录，而是根目录下的huatuo目录）复制（**可以用建立目录链接的方法，linux下用ln，Win下用mlink**）到 il2cpp_huatuo/libil2cpp下，最终目录为il2cpp_huatuo/libil2cpp/huatuo。
 - 将这个添加了huatuo目录的libil2cpp目录替换你当前所用的Unity的Editor安装目录下的 Editor/Data/il2cpp/libil2cpp 目录。
 
 **简单来说，就是将 il2cpp_huatuo 项目的libil2cpp与 huatuo项目的huatuo目录合并，形成最终的libil2cpp目录，再替换安装目录的原始libil2cpp目录。**
@@ -88,6 +88,7 @@ public class LoadDll : MonoBehaviour
   - 将 HotFix.dll拷到StreamingAssets下
   - 发布选项设置
     - Scripting Backend 选择 il2cpp backend
+    - Api Compatible Level net standard或.net 4.x(unity 2021及后改名为.net framework)都可以，但务必要保证**主工程和热更新部分的Api compatible level一致**。
     - 取消 use incremental GC
   - 发布 (必须选择相应平台64位版本)
   - 进入场景后，应该能看到日志 "hello,huatuo"

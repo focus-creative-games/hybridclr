@@ -2,6 +2,24 @@
 
 文档中提及的代码文件在[huatuo_trail](https://github.com/focus-creative-games/huatuo_trial)
 
+## 原理
+
+Unity资源管理在反序列化资源中的脚本时，要求满足两个条件
+
+- 脚本所在的dll必须在打包生成的 ScriptingAssemblies.json中存在。这个列表是unity启动时即加载的，不可变数据。
+- 脚本所有的dll已经加载到AppDomain中
+
+如果对打包流程不作任何改变，由于热更新dll肯定不会出现在ScriptingAssemblies.json中，挂载在热更新资源中的热更新脚本肯定是无法被
+还原的，因此我们在 HuaTuo_BuildProcessor_XXX 脚本中处理了OnPostprocessBuild事件，把热更新dll加入到json文件的dll列表中。
+
+由于只需要满足这两个条件即成正确恢复资源上的脚本，热更新脚本可以按照项目需求**自由选择热更新方式**，可以将dll打包到ab中，或者裸数据
+文件，或者加密压缩等等。只要能保证在加载热更新资源前使用Assembly.Load将其加载即可。
+
+另外，为了不让热更新dll在打包时导出，标准做法是需要将热更新dll标记为editor以及至少一个其他平台(如XBox)。不能只有Editor，因为如果某个
+assembly def只导出给editor目标，则Unity会认为它是纯editor模块，Unity不允许加载editor模块的MonoBehaviour到GameObject上。但这么做
+比较麻烦，因此我们又在 HuaTuo_BuildProcessor_XXX 脚本中处理了 IFilterBuildAssemblies.OnFilterAssemblies 事件，将热更新dll忽略。
+这样一样，直接将热更新assembly def像普通的assembly那样，标记为导出给所有平台，也不会在打包时导出了。
+
 ## 通过代码使用
 
 AddComponent&lt;T&gt;()或者AddComponent(Type type)都是完美支持的。

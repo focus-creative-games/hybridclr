@@ -75,3 +75,7 @@ huatuo是特性完整的运行时。不需要写任何额外的代码，随便�
 ## 支持调试吗？
 
 暂时不支持真机上的c#源码调试，但可以自己断点跟踪huatuo指令集的执行过程。另外editor下直接使用mono的调试方式。
+
+## 支持 api compatible level .net standard 2.0 吗？
+
+支持。但请注意，主工程和热更新工程的api compatible要一致。
