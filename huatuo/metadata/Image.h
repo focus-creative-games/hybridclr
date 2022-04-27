@@ -368,6 +368,12 @@ namespace metadata
 			return GenerateCustomAttributesCacheInternal(index);
 		}
 
+		bool HasAttribute(const Il2CppCustomAttributeTypeRange* typeRange, Il2CppClass* attribute)
+		{
+			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(typeRange);
+			return HasAttribute(attrCache, attribute);
+		}
+
 		bool HasAttribute(uint32_t token, Il2CppClass* attribute)
 		{
 			CustomAttributeIndex index = GetCustomAttributeIndex(token);
@@ -376,6 +382,11 @@ namespace metadata
 				return false;
 			}
 			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(index);
+			return HasAttribute(attrCache, attribute);
+		}
+
+		bool HasAttribute(CustomAttributesCache* attrCache, Il2CppClass* attribute)
+		{
 			for (int i = 0; i < attrCache->count; i++)
 			{
 				Il2CppObject* attrObj = attrCache->attributes[i];

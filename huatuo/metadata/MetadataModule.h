@@ -44,6 +44,11 @@ namespace metadata
 			return GetImage(DecodeImageIndex(typeDef->nameIndex));
 		}
 
+		static Image* GetImageByEncodedIndex(uint32_t encodedIndex)
+		{
+			return GetImage(DecodeImageIndex(encodedIndex));
+		}
+
 		static void RegisterImage(Image* image);
 
 		static const char* GetStringFromEncodeIndex(StringIndex index)
