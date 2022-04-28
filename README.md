@@ -72,9 +72,6 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 - [示例项目](https://github.com/focus-creative-games/huatuo_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
 - [==>致谢名单<==](docs/donate.md)
-- 支持与联系
-  - QQ群: 651188171（huatuo c#热更新 开发交流群）
-  - 邮箱: taojingjian#gmail.com
 
 ## 稳定性状况
 
@@ -89,6 +86,17 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 - **==已经可以在pc平台完整运行重度MMORPG项目==**。目前正在积极推进android、ios、WebGL平台的测试工作。预计5月底会有较稳定的全平台版本。
 
 预计在7月份会有使用huatuo的重度MMORPG项目上线。
+
+## 支持与联系
+
+* 开发交流，欢迎加QQ群或邮件联系walon
+  * QQ群: 651188171（huatuo c#热更新 开发交流群）
+  * 邮箱: taojingjian#gmail.com
+
+* 商务合作，请联系Lucas Zhang
+  * 电话：15201249045
+  * 微信：lucaszhang1993
+  * 邮箱：zhangshuo@tuyoogame.com
 
 ## RoadMap
 
