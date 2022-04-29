@@ -2508,7 +2508,7 @@ ip++;
 
 							CreateAddIR(ir, InterlockedCompareExchangeVarVarVarVar_pointer);
 							ir->ret = retIdx;
-							ir->localtion = locationIdx;
+							ir->location = locationIdx;
 							ir->value = valueIdx;
 							ir->comparand = comparandIdx;
 
@@ -2547,7 +2547,7 @@ ip++;
 
 							CreateAddIR(ir, InterlockedExchangeVarVarVar_pointer);
 							ir->ret = retIdx;
-							ir->localtion = locationIdx;
+							ir->location = locationIdx;
 							ir->value = valueIdx;
 
 							const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
@@ -2798,7 +2798,7 @@ ip++;
 						ir->methodInfo = methodDataIndex;
 						ir->argIdxs = argIdxDataIndex;
 						ir->ret = GetEvalStackTopOffset();
-						ir->retLocaltionType = (uint8_t)locDataType;
+						ir->retLocationType = (uint8_t)locDataType;
 					}
 					else
 					{
@@ -2928,7 +2928,7 @@ ip++;
 							ir->methodInfo = methodDataIndex;
 							ir->argIdxs = argIdxDataIndex;
 							ir->ret = retIdx;
-							ir->retLocaltionType = (uint8_t)locDataType;
+							ir->retLocationType = (uint8_t)locDataType;
 						}
 						else
 						{
@@ -2965,7 +2965,7 @@ ip++;
 							ir->argIdxs = argIdxDataIndex;
 							ir->ret = retIdx;
 							ir->invokeParamCount = shareMethod->parameters_count;
-							ir->retLocaltionType = (uint8_t)locDataType;
+							ir->retLocationType = (uint8_t)locDataType;
 						}
 						else
 						{
@@ -3042,7 +3042,7 @@ ip++;
 						ir->methodInfo = methodIdx;
 						ir->argIdxs = argIdxDataIndex;
 						ir->ret = GetEvalStackTopOffset();
-						ir->retLocaltionType = (uint8_t)locDataType;
+						ir->retLocationType = (uint8_t)locDataType;
 					}
 					else
 					{

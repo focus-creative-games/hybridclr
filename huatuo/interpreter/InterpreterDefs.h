@@ -126,7 +126,7 @@ namespace huatuo
 			return GetTypeArgDesc(type).type;
 		}
 
-		inline void ExpandLocaltionData2StackDataByType(void* retValue, LocationDataType type)
+		inline void ExpandLocationData2StackDataByType(void* retValue, LocationDataType type)
 		{
 			switch (type)
 			{

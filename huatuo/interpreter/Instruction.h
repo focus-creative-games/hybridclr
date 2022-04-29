@@ -3515,7 +3515,7 @@ namespace interpreter
 		uint32_t methodInfo;
 		uint32_t argIdxs;
 		uint16_t ret;
-		uint8_t retLocaltionType;
+		uint8_t retLocationType;
 		uint8_t __pad__;
 	};
 
@@ -3558,7 +3558,7 @@ namespace interpreter
 		uint32_t methodInfo;
 		uint32_t argIdxs;
 		uint16_t ret;
-		uint8_t retLocaltionType;
+		uint8_t retLocationType;
 		uint8_t __pad__;
 	};
 
@@ -3601,7 +3601,7 @@ namespace interpreter
 		uint32_t methodInfo;
 		uint32_t argIdxs;
 		uint16_t ret;
-		uint8_t retLocaltionType;
+		uint8_t retLocationType;
 		uint8_t __pad__;
 	};
 
@@ -3632,7 +3632,7 @@ namespace interpreter
 		uint32_t argIdxs;
 		uint16_t ret;
 		uint16_t invokeParamCount;
-		uint8_t retLocaltionType;
+		uint8_t retLocationType;
 		uint8_t __pad__;
 	};
 
@@ -5582,7 +5582,7 @@ namespace interpreter
 	struct IRInterlockedCompareExchangeVarVarVarVar_i4 : IRCommon
 	{
 		uint16_t ret;
-		uint16_t localtion;
+		uint16_t location;
 		uint16_t value;
 		uint16_t comparand;
 	};
@@ -5591,7 +5591,7 @@ namespace interpreter
 	struct IRInterlockedCompareExchangeVarVarVarVar_i8 : IRCommon
 	{
 		uint16_t ret;
-		uint16_t localtion;
+		uint16_t location;
 		uint16_t value;
 		uint16_t comparand;
 	};
@@ -5600,7 +5600,7 @@ namespace interpreter
 	struct IRInterlockedCompareExchangeVarVarVarVar_pointer : IRCommon
 	{
 		uint16_t ret;
-		uint16_t localtion;
+		uint16_t location;
 		uint16_t value;
 		uint16_t comparand;
 	};
@@ -5609,7 +5609,7 @@ namespace interpreter
 	struct IRInterlockedExchangeVarVarVar_i4 : IRCommon
 	{
 		uint16_t ret;
-		uint16_t localtion;
+		uint16_t location;
 		uint16_t value;
 	};
 
@@ -5617,7 +5617,7 @@ namespace interpreter
 	struct IRInterlockedExchangeVarVarVar_i8 : IRCommon
 	{
 		uint16_t ret;
-		uint16_t localtion;
+		uint16_t location;
 		uint16_t value;
 	};
 
@@ -5625,7 +5625,7 @@ namespace interpreter
 	struct IRInterlockedExchangeVarVarVar_pointer : IRCommon
 	{
 		uint16_t ret;
-		uint16_t localtion;
+		uint16_t location;
 		uint16_t value;
 	};
 

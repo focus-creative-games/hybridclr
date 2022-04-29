@@ -1790,7 +1790,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(float*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int8_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1798,7 +1798,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(float*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint8_t, int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1806,7 +1806,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(float*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int16_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1814,7 +1814,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(float*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint16_t, int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1822,7 +1822,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(float*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1830,7 +1830,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(float*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint32_t, int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1838,7 +1838,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(float*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int64_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1846,7 +1846,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(float*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint64_t, int64_t>((*(float*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1870,7 +1870,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(double*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int8_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1878,7 +1878,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(double*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint8_t, int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1886,7 +1886,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(double*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int16_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1894,7 +1894,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(double*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint16_t, int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1902,7 +1902,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(double*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1910,7 +1910,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(double*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint32_t, int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1918,7 +1918,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(double*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int64_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -1926,7 +1926,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(double*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint64_t, int64_t>((*(double*)(localVarBase + __src)));
 				    ip += 6;
 				    continue;
 				}
@@ -4938,11 +4938,11 @@ else \
 					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
-					uint8_t __retLocaltionType = *(uint8_t*)(ip + 16);
+					uint8_t __retLocationType = *(uint8_t*)(ip + 16);
 					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
 				    void* _ret = (void*)(localVarBase + __ret);
 				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
-				    ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 18;
 				    continue;
 				}
@@ -5031,7 +5031,7 @@ else \
 					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
-					uint8_t __retLocaltionType = *(uint8_t*)(ip + 16);
+					uint8_t __retLocationType = *(uint8_t*)(ip + 16);
 					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
 				    uint16_t* _argIdxData = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
 					StackObject* _objPtr = localVarBase + _argIdxData[0];
@@ -5056,7 +5056,7 @@ else \
 				    else 
 				    {
 				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, _ret);
-				        ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				        ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				        ip += 18;
 				    }
 				    continue;
@@ -5114,11 +5114,11 @@ else \
 					uint32_t __methodInfo = *(uint32_t*)(ip + 6);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
-					uint8_t __retLocaltionType = *(uint8_t*)(ip + 16);
+					uint8_t __retLocationType = *(uint8_t*)(ip + 16);
 					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
 				    void* _ret = (void*)(localVarBase + __ret);
 				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
-				    ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 18;
 				    continue;
 				}
@@ -5155,13 +5155,13 @@ else \
 					uint32_t __argIdxs = *(uint32_t*)(ip + 10);
 					uint16_t __ret = *(uint16_t*)(ip + 14);
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 16);
-					uint8_t __retLocaltionType = *(uint8_t*)(ip + 18);
+					uint8_t __retLocationType = *(uint8_t*)(ip + 18);
 					uint8_t ____pad__ = *(uint8_t*)(ip + 0);
 				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
 				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
 				    void* _ret = (void*)(localVarBase + __ret);
 				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, _ret);
-				    ExpandLocaltionData2StackDataByType(_ret, (LocationDataType)__retLocaltionType);
+				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 20;
 				    continue;
 				}
@@ -7578,57 +7578,57 @@ else \
 				case HiOpcodeEnum::InterlockedCompareExchangeVarVarVarVar_i4:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __localtion = *(uint16_t*)(ip + 4);
+					uint16_t __location = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
 					uint16_t __comparand = *(uint16_t*)(ip + 8);
-				    (*(int32_t*)(localVarBase + __ret)) = HiInterlockedCompareExchange((int32_t*)(*(void**)(localVarBase + __localtion)), (*(int32_t*)(localVarBase + __value)), (*(int32_t*)(localVarBase + __comparand)));
+				    (*(int32_t*)(localVarBase + __ret)) = HiInterlockedCompareExchange((int32_t*)(*(void**)(localVarBase + __location)), (*(int32_t*)(localVarBase + __value)), (*(int32_t*)(localVarBase + __comparand)));
 				    ip += 10;
 				    continue;
 				}
 				case HiOpcodeEnum::InterlockedCompareExchangeVarVarVarVar_i8:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __localtion = *(uint16_t*)(ip + 4);
+					uint16_t __location = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
 					uint16_t __comparand = *(uint16_t*)(ip + 8);
-				    (*(int64_t*)(localVarBase + __ret)) = HiInterlockedCompareExchange((int64_t*)(*(void**)(localVarBase + __localtion)), (*(int64_t*)(localVarBase + __value)), (*(int64_t*)(localVarBase + __comparand)));
+				    (*(int64_t*)(localVarBase + __ret)) = HiInterlockedCompareExchange((int64_t*)(*(void**)(localVarBase + __location)), (*(int64_t*)(localVarBase + __value)), (*(int64_t*)(localVarBase + __comparand)));
 				    ip += 10;
 				    continue;
 				}
 				case HiOpcodeEnum::InterlockedCompareExchangeVarVarVarVar_pointer:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __localtion = *(uint16_t*)(ip + 4);
+					uint16_t __location = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
 					uint16_t __comparand = *(uint16_t*)(ip + 8);
-				    (*(void**)(localVarBase + __ret)) = HiInterlockedCompareExchange((void**)(*(void**)(localVarBase + __localtion)), (*(void**)(localVarBase + __value)), (*(void**)(localVarBase + __comparand)));
+				    (*(void**)(localVarBase + __ret)) = HiInterlockedCompareExchange((void**)(*(void**)(localVarBase + __location)), (*(void**)(localVarBase + __value)), (*(void**)(localVarBase + __comparand)));
 				    ip += 10;
 				    continue;
 				}
 				case HiOpcodeEnum::InterlockedExchangeVarVarVar_i4:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __localtion = *(uint16_t*)(ip + 4);
+					uint16_t __location = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    (*(int32_t*)(localVarBase + __ret)) = HiInterlockedExchange((int32_t*)(*(void**)(localVarBase + __localtion)), (*(int32_t*)(localVarBase + __value)));
+				    (*(int32_t*)(localVarBase + __ret)) = HiInterlockedExchange((int32_t*)(*(void**)(localVarBase + __location)), (*(int32_t*)(localVarBase + __value)));
 				    ip += 8;
 				    continue;
 				}
 				case HiOpcodeEnum::InterlockedExchangeVarVarVar_i8:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __localtion = *(uint16_t*)(ip + 4);
+					uint16_t __location = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    (*(int64_t*)(localVarBase + __ret)) = HiInterlockedExchange((int64_t*)(*(void**)(localVarBase + __localtion)), (*(int64_t*)(localVarBase + __value)));
+				    (*(int64_t*)(localVarBase + __ret)) = HiInterlockedExchange((int64_t*)(*(void**)(localVarBase + __location)), (*(int64_t*)(localVarBase + __value)));
 				    ip += 8;
 				    continue;
 				}
 				case HiOpcodeEnum::InterlockedExchangeVarVarVar_pointer:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-					uint16_t __localtion = *(uint16_t*)(ip + 4);
+					uint16_t __location = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    (*(void**)(localVarBase + __ret)) = HiInterlockedExchange((void**)(*(void**)(localVarBase + __localtion)), (*(void**)(localVarBase + __value)));
+				    (*(void**)(localVarBase + __ret)) = HiInterlockedExchange((void**)(*(void**)(localVarBase + __location)), (*(void**)(localVarBase + __value)));
 				    ip += 8;
 				    continue;
 				}
