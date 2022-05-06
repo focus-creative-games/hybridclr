@@ -401,6 +401,94 @@ namespace metadata
 		return false;
 	}
 
+	bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv)
+	{
+		if (dstType->byref != sigType->byref)
+		{
+			return false;
+		}
+
+		if (sigType->type == IL2CPP_TYPE_VAR)
+		{
+			sigType = klassInstArgv[sigType->data.__genericParameterIndex];
+		}
+		else if (sigType->type == IL2CPP_TYPE_MVAR)
+		{
+			sigType = methodInstArgv[sigType->data.__genericParameterIndex];
+		}
+
+		if (dstType->type != sigType->type)
+		{
+			return false;
+		}
+		switch (sigType->type)
+		{
+		case IL2CPP_TYPE_VALUETYPE:
+		case IL2CPP_TYPE_CLASS:
+			return dstType->data.typeHandle == sigType->data.typeHandle;
+		case IL2CPP_TYPE_PTR:
+		case IL2CPP_TYPE_SZARRAY:
+			return IsMatchSigType(dstType->data.type, sigType->data.type, klassInstArgv, methodInstArgv);
+
+		case IL2CPP_TYPE_ARRAY:
+		{
+			if (dstType->data.array->rank < sigType->data.array->rank)
+			{
+				return false;
+			}
+			return IsMatchSigType(dstType->data.array->etype, sigType->data.array->etype, klassInstArgv, methodInstArgv);
+		}
+		case IL2CPP_TYPE_GENERICINST:
+		{
+			const Il2CppGenericInst* i1 = dstType->data.generic_class->context.class_inst;
+			const Il2CppGenericInst* i2 = sigType->data.generic_class->context.class_inst;
+
+			// this happens when maximum generic recursion is hit
+			if (i1 == NULL || i2 == NULL)
+			{
+				return i1 == i2;
+			}
+
+			if (i1->type_argc != i2->type_argc)
+				return false;
+
+			if (!IsMatchSigType(dstType->data.generic_class->type, sigType->data.generic_class->type, klassInstArgv, methodInstArgv))
+				return false;
+
+			/* FIXME: we should probably just compare the instance pointers directly.  */
+			for (uint32_t i = 0; i < i1->type_argc; ++i)
+			{
+				if (!IsMatchSigType(i1->type_argv[i], i2->type_argv[i], klassInstArgv, methodInstArgv))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		case IL2CPP_TYPE_VAR:
+		{
+			/*Il2CppMetadataGenericParameterHandle sigGph = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(
+				(Il2CppMetadataGenericContainerHandle)klassGenericContainer, sigType->data.__genericParameterIndex);
+			return dstType->data.genericParameterHandle == sigType->data.__genericParameterIndex;*/
+			RaiseHuatuoNotSupportedException("");
+			break;
+		}
+		case IL2CPP_TYPE_MVAR:
+		{
+			/*Il2CppMetadataGenericParameterHandle sigGph = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(
+				(Il2CppMetadataGenericContainerHandle)methodGenericContainer, sigType->data.__genericParameterIndex);
+			return dstType->data.genericParameterHandle == sigGph;*/
+			RaiseHuatuoNotSupportedException("");
+			break;
+		}
+		default: return true;
+		}
+		IL2CPP_ASSERT(false);
+		return false;
+	}
+
+
 	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer, uint32_t genericArgCount)
 	{
 		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
@@ -473,6 +561,32 @@ namespace metadata
 		}
 		return true;
 	}
+
+	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv)
+	{
+		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
+		{
+			return false;
+		}
+		Il2CppGenericContainer* methodGenericContainer = nullptr;
+		const Il2CppType* returnType1 = &resolveSig.returnType;
+		const Il2CppType* returnType2 = methodDef->return_type;
+		if (!IsMatchSigType(returnType2, returnType1, klassInstArgv, methodInstArgv))
+		{
+			return false;
+		}
+		for (uint32_t i = 0; i < methodDef->parameters_count; i++)
+		{
+			const Il2CppType* paramType1 = &resolveSig.params[i];
+			const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(methodDef->parameters[i]);
+			if (!IsMatchSigType(paramType2, paramType1, klassInstArgv, methodInstArgv))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 
 	const Il2CppMethodDefinition* ResolveMethodDefinition(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, const Il2CppGenericInst* genericInstantiation)
 	{
