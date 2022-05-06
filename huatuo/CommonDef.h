@@ -70,6 +70,12 @@ namespace huatuo
 		return il2cpp::utils::StringView<char>(str, std::strlen(str));
 	}
 
+	inline std::string GetKlassCStringFullName(const Il2CppType* type)
+	{
+		Il2CppString* typeName = GetKlassFullName(type);
+		return il2cpp::utils::StringUtils::Utf16ToUtf8(typeName->chars);
+	}
+
 	inline void RaiseHuatuoNotSupportedException(const char* msg)
 	{
 		return il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetNotSupportedException(msg));
@@ -87,16 +93,14 @@ namespace huatuo
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException("type not exists"));
 		}
 
-		Il2CppString* fullName = GetKlassFullName(type);
-		std::string stdFullName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
-		TEMP_FORMAT(errMsg, "MethodNotFind %s::%s", stdFullName.c_str(), methodName);
+		std::string fullName = GetKlassCStringFullName(type);
+		TEMP_FORMAT(errMsg, "MethodNotFind %s::%s", fullName.c_str(), methodName);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(errMsg));
 	}
 
 	inline void AppendTypeName(std::string& s, const Il2CppType* type)
 	{
-		Il2CppString* typeName = GetKlassFullName(type);
-		s.append(il2cpp::utils::StringUtils::Utf16ToUtf8(typeName->chars));
+		s.append(GetKlassCStringFullName(type));
 	}
 
 	inline std::string GetMethodNameWithSignature(const MethodInfo* method)
@@ -105,8 +109,7 @@ namespace huatuo
 		AppendTypeName(name, method->return_type);
 		name.append(" ");
 		
-		Il2CppString* klassName = GetKlassFullName(&method->klass->byval_arg);
-		name.append(il2cpp::utils::StringUtils::Utf16ToUtf8(klassName->chars));
+		name.append(GetKlassCStringFullName(&method->klass->byval_arg));
 		name.append("::");
 		name.append(method->name);
 		if (method->genericMethod && method->genericMethod->context.method_inst)
@@ -149,8 +152,7 @@ namespace huatuo
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException("type not exists"));
 		}
-		Il2CppString* fullName = GetKlassFullName(type);
-		std::string stdFullName = il2cpp::utils::StringUtils::Utf16ToUtf8(fullName->chars);
+		std::string stdFullName = GetKlassCStringFullName(type);
 		TEMP_FORMAT(errMsg, "field %s::%s not exists", stdFullName.c_str(), fieldName);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingFieldException(errMsg));
 	}

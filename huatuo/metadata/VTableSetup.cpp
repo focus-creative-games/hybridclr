@@ -233,6 +233,7 @@ namespace metadata
 				}
 			}
 		}
+		RaiseMethodNotFindException(containerType, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex));
 		return nullptr;
 	}
 
@@ -375,8 +376,12 @@ namespace metadata
 							break;
 						}
 					}
-
-					IL2CPP_ASSERT(matchImpl);
+					if (!matchImpl)
+					{
+						std::string csTypeName = GetKlassCStringFullName(_type);
+						TEMP_FORMAT(errMsg, "explicit implements method %s::%s can't find match MethodImpl", csTypeName.c_str(), vm.name);
+						RaiseBadImageException(errMsg);
+					}
 
 					bool overrideIntMethod = false;
 					for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
@@ -403,7 +408,12 @@ namespace metadata
 							break;
 						}
 					}
-					IL2CPP_ASSERT(overrideIntMethod);
+					if (!overrideIntMethod)
+					{
+						std::string typeName = GetKlassCStringFullName(_type);
+						TEMP_FORMAT(errMsg, "method %s::%s can't find override method in parent", typeName.c_str(), vm.name);
+						RaiseBadImageException(errMsg);
+					}
 				}
 				else
 				{
@@ -503,22 +513,20 @@ namespace metadata
 					continue;
 				}
 
-				bool findOverride = false;
-				for (VTableSetUp* cur = _parent; cur && !findOverride; cur = cur->_parent)
+				const GenericClassMethod* implVm = _parent->FindImplMethod(vmi.type, vmi.method);
+				if (implVm)
 				{
-					for (auto& vm : cur->_virtualMethods)
-					{
-						if (IsOverrideMethod(vm.type, vm.method, vmi.type, vmi.method))
-						{
-							//IL2CPP_ASSERT(impl.body.methodDef->slot == kInvalidIl2CppMethodSlot);
-							vmi.type = vm.type;
-							vmi.method = vm.method;
-							findOverride = true;
-							break;
-						}
-					}
+					vmi.type = implVm->type;
+					vmi.method = implVm->method;
+					vmi.name = implVm->name;
 				}
-				IL2CPP_ASSERT(findOverride);
+				else
+				{
+					std::string implClassName = GetKlassCStringFullName(_type);
+					std::string intfName = GetKlassCStringFullName(rioi.type);
+					TEMP_FORMAT(errMsg, "method %s::%s can't find override method in impl class:%s", intfName.c_str(), vmi.name, implClassName.c_str());
+					RaiseBadImageException(errMsg);
+				}
 			}
 		}
 
