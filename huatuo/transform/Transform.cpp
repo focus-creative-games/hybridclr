@@ -5511,7 +5511,8 @@ ip++;
 				{
 					prefixFlags |= (int32_t)PrefixFlags::ReadOnly;
 					ip += 2;
-					IL2CPP_ASSERT(*ip == (byte)OpcodeValue::LDELEMA && "According to the ECMA spec, READONLY may only precede LDELEMA");
+					// generic md array also can follow readonly
+					//IL2CPP_ASSERT(*ip == (byte)OpcodeValue::LDELEMA && "According to the ECMA spec, READONLY may only precede LDELEMA");
 					continue;
 				}
 				case OpcodeValue::INITBLK:
