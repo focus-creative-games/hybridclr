@@ -68,6 +68,7 @@ namespace metadata
 		void ComputInterfaceVtables();
 
 		const Il2CppType* FindImplType(const Il2CppMethodDefinition* methodDef);
+		const GenericClassMethod* FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef);
 		const std::vector<RawInterfaceOffsetInfo>& GetInterfaceOffsetInfos() const { return _interfaceOffsetInfos; }
 		const std::vector<VirtualMethodImpl>& GetVirtualMethodImpls() const { return _methodImpls; }
 		const Il2CppType* GetType() const { return _type; }

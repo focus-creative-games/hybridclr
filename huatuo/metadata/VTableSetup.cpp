@@ -220,6 +220,22 @@ namespace metadata
 		return nullptr;
 	}
 
+	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef)
+	{
+		for (VTableSetUp* curTdt = this; curTdt ; curTdt = curTdt->_parent)
+		{
+			for (int idx = (int)curTdt->_virtualMethods.size() - 1; idx >= 0; idx--)
+			{
+				GenericClassMethod& pvm = curTdt->_virtualMethods[idx];
+				if (huatuo::metadata::IsOverrideMethod(containerType, methodDef, pvm.type, pvm.method))
+				{
+					return &pvm;
+				}
+			}
+		}
+		return nullptr;
+	}
+
 	void VTableSetUp::ComputAotTypeVtables()
 	{
 		for (uint16_t i = 0; i < _typeDef->interface_offsets_count; i++)
@@ -228,18 +244,73 @@ namespace metadata
 			_interfaceOffsetInfos.push_back({ TryInflateIfNeed(_type, ioi.interfaceType), nullptr, (uint16_t)ioi.offset });
 		}
 
+		int nullVtableSlotCount = 0;
 		for (uint16_t i = 0; i < _typeDef->vtable_count; i++)
 		{
 			const Il2CppMethodDefinition* overideMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromVTableSlot(_typeDef, i);
 			if (overideMethodDef == nullptr)
 			{
-				_methodImpls.push_back({ nullptr, nullptr, i, "==null=="});
+				if (_parent && i < _parent->_typeDef->vtable_count)
+				{
+					IL2CPP_ASSERT(_parent->_methodImpls[i].method);
+					_methodImpls.push_back(_parent->_methodImpls[i]);
+				}
+				else
+				{
+					_methodImpls.push_back({ nullptr, nullptr, i, nullptr });
+					++nullVtableSlotCount;
+				}
 				continue;
 			}
 			const Il2CppType* implType = FindImplType(overideMethodDef);
 			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(overideMethodDef->nameIndex);
 			uint16_t slot = i;
 			_methodImpls.push_back({ overideMethodDef, implType, slot, methodName });
+		}
+
+		// il2cpp set vtable slot to nullptr if method is abstract, so we fill correct type and method
+		if (nullVtableSlotCount > 0)
+		{
+			for (GenericClassMethod& gcm : _virtualMethods)
+			{
+				IL2CPP_ASSERT(gcm.method->slot != kInvalidIl2CppMethodSlot);
+				VirtualMethodImpl& vmi = _methodImpls[gcm.method->slot];
+				if (vmi.method == nullptr)
+				{
+					vmi.type = _type;
+					vmi.method = gcm.method;
+					vmi.name = gcm.name;
+					--nullVtableSlotCount;
+				}
+			}
+			for (RawInterfaceOffsetInfo& rioi : _interfaceOffsetInfos)
+			{
+				bool findInterf = false;
+				for (VTableSetUp* interf : _interfaces)
+				{
+					if (IsTypeEqual(interf->_type, rioi.type))
+					{
+						for (size_t i = 0; i < interf->_virtualMethods.size(); i++)
+						{
+							VirtualMethodImpl& vmi = _methodImpls[rioi.offset + i];
+							if (vmi.method == nullptr)
+							{
+								GenericClassMethod& igcm = interf->_virtualMethods[i];
+								const GenericClassMethod* implVirtualMethod = FindImplMethod(interf->_type, igcm.method);
+								IL2CPP_ASSERT(implVirtualMethod);
+								vmi.name = igcm.name;
+								vmi.type = implVirtualMethod->type;
+								vmi.method = implVirtualMethod->method;
+								--nullVtableSlotCount;
+							}
+						}
+						findInterf = true;
+						break;
+					}
+				}
+				IL2CPP_ASSERT(findInterf);
+			}
+			IL2CPP_ASSERT(nullVtableSlotCount == 0);
 		}
 
 		IL2CPP_ASSERT(_typeDef->vtable_count == (uint16_t)_methodImpls.size());
@@ -379,26 +450,13 @@ namespace metadata
 				IL2CPP_ASSERT(_parent);
 
 				// find override parent virtual methods
-				bool find = false;
-				for (VTableSetUp* curTdt = _parent; curTdt && !find; curTdt = curTdt->_parent)
-				{
-					for (int idx = (int)curTdt->_virtualMethods.size() - 1; idx >= 0; idx--)
-					{
-						GenericClassMethod& pvm = curTdt->_virtualMethods[idx];
-						if (huatuo::metadata::IsOverrideMethod(_type, vm.method, pvm.type, pvm.method))
-						{
-							IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == pvm.method->slot);
-							const_cast<Il2CppMethodDefinition*>(vm.method)->slot = pvm.method->slot;
-							find = true;
-							break;
-						}
-					}
-				}
-				IL2CPP_ASSERT(find);
-				IL2CPP_ASSERT(vm.method->slot != kInvalidIl2CppMethodSlot);
-
+				const GenericClassMethod* overrideParentMethod = _parent->FindImplMethod(_type, vm.method);
+				IL2CPP_ASSERT(overrideParentMethod);
+				IL2CPP_ASSERT(overrideParentMethod->method->slot != kInvalidIl2CppMethodSlot);
+				const_cast<Il2CppMethodDefinition*>(vm.method)->slot = overrideParentMethod->method->slot;
 				uint16_t slotIdx = vm.method->slot;
 				const Il2CppMethodDefinition* overrideAncestorMethod = _parent->_methodImpls[slotIdx].method;
+				IL2CPP_ASSERT(overrideAncestorMethod);
 
 				VirtualMethodImpl& curImpl = _methodImpls[slotIdx];
 				curImpl.type = _type;
@@ -414,15 +472,6 @@ namespace metadata
 						vmi.type = _type;
 						vmi.method = vm.method;
 					}
-					//if (!vmi.method)
-					//{
-					//	continue;
-					//}
-					//if (vmi.method->slot == slotIdx)
-					//{
-					//	vmi.type = _type;
-					//	vmi.method = vm.method;
-					//}
 				}
 
 				// check override implicite implements interface
