@@ -6,7 +6,6 @@
 
 #include "huatuo-compatible-adaptor.h"
 
-#include "codegen/il2cpp-codegen.h"
 #include "utils/Memory.h"
 #include "utils/StringView.h"
 #include "vm/GlobalMetadataFileInternals.h"

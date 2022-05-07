@@ -15,21 +15,21 @@ function SearchCppFile()
         fi
     done
 
-    MM_FILE_NUM=`ls -l $1/ | grep "\.mm$"|wc -l`
-    if (( ${MM_FILE_NUM} > 0 ))
-    then
-        for f in $1/*.mm
-        do
-            echo "#include \""$f"\"" >> ${OBJECTIVE_FILE_NAME}
-        done
-    fi
-
     CPP_FILE_NUM=`ls -l $1/ | grep "\.cpp$"|wc -l`
     if (( ${CPP_FILE_NUM} > 0 ))
     then
         for f in $1/*.cpp
         do
             echo "#include \""$f"\"" >> ${OUTPUT_FILE_NAME}
+        done
+    fi
+
+    MM_FILE_NUM=`ls -l $1/ | grep "\.mm$"|wc -l`
+    if (( ${MM_FILE_NUM} > 0 ))
+    then
+        for f in $1/*.mm
+        do
+            echo "#include \""$f"\"" >> ${OBJECTIVE_FILE_NAME}
         done
     fi
 }
@@ -47,6 +47,10 @@ for FOLDER in huatuo vm pch utils vm-utils codegen metadata os debugger mono gc 
 do
     OUTPUT_FILE_NAME=${GEN_SOURCE_DIR}/lump_cpp/lump_libil2cpp_${FOLDER}.cpp
     echo "#include \"${BASE_DIR}/il2cpp-config.h\"" > ${OUTPUT_FILE_NAME}
+    if  [ $FOLDER = huatuo ] || [ $FOLDER = vm ]
+    then
+        echo "#include \"${BASE_DIR}/codegen/il2cpp-codegen.h\"" >> ${OUTPUT_FILE_NAME}
+    fi
     SearchCppFile ${BASE_DIR}/${FOLDER}
     echo gen file: ${OUTPUT_FILE_NAME}
 done
