@@ -4,6 +4,7 @@
 #include "MethodBridge.h"
 #include "Engine.h"
 #include "../metadata/Image.h"
+#include "os/ThreadLocalValue.h"
 
 namespace huatuo
 {

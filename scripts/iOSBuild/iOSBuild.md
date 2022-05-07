@@ -5,14 +5,11 @@ huatuo 编译需要的shell和cmake脚本依赖于下面两个环境变量。
 
 * HUATUO_IL2CPP_SOURCE_DIR
 
-* HUATUO_EXTERNAL_SOURCE_DIR
 
-
-可以通过下面命令增加环境变量或将环境变量设置到 .bashrc 中。使用环境变量编译的好处在于编译过程中不必强行要求把拷贝移动libil2cpp目录，并且libil2cpp和external源码目录可以在不同的位置。
+可以通过下面命令增加环境变量或将环境变量设置到 .bashrc 中。使用环境变量编译的好处在于编译过程中不必强行要求把拷贝移动libil2cpp目录。
 
 ```shell
 export HUATUO_IL2CPP_SOURCE_DIR=/Applications/Unity/Unity.app/Contents/il2cpp/
-export HUATUO_EXTERNAL_SOURCE_DIR=/Applications/Unity/Unity.app/Contents/il2cpp/
 ```
 
 ## 编译il2cpp

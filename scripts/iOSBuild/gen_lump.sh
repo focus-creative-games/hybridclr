@@ -7,24 +7,6 @@ echo " "
 #BASE_DIR=${HUATUO_IL2CPP_SOURCE_DIR}/libil2cpp
 function SearchCppFile()
 {
-    CPP_FILE_NUM=`ls -l $1 | grep "\.cpp$"|wc -l`
-    if (( ${CPP_FILE_NUM} > 0 ))
-    then
-        for f in $1/*.cpp
-        do
-            echo "#include \""$f"\"" >> ${OUTPUT_FILE_NAME}
-        done
-    fi
-
-    MM_FILE_NUM=`ls -l $1 | grep "\.mm$"|wc -l`
-    if (( ${MM_FILE_NUM} > 0 ))
-    then
-        for f in $1/*.mm
-        do
-            echo "#include \""$f"\"" >> ${OBJECTIVE_FILE_NAME}
-        done
-    fi
-    
     for f in $(ls $1)
     do
         SUB_DIR=$1/$f
@@ -32,6 +14,24 @@ function SearchCppFile()
             SearchCppFile ${SUB_DIR}
         fi
     done
+
+    MM_FILE_NUM=`ls -l $1/ | grep "\.mm$"|wc -l`
+    if (( ${MM_FILE_NUM} > 0 ))
+    then
+        for f in $1/*.mm
+        do
+            echo "#include \""$f"\"" >> ${OBJECTIVE_FILE_NAME}
+        done
+    fi
+
+    CPP_FILE_NUM=`ls -l $1/ | grep "\.cpp$"|wc -l`
+    if (( ${CPP_FILE_NUM} > 0 ))
+    then
+        for f in $1/*.cpp
+        do
+            echo "#include \""$f"\"" >> ${OUTPUT_FILE_NAME}
+        done
+    fi
 }
 
 rm -rf ${GEN_SOURCE_DIR}/lump_cpp
