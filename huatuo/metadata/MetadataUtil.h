@@ -99,7 +99,7 @@ namespace metadata
 
     inline bool IsInterpreterType(const Il2CppClass* klass)
     {
-        return IsInterpreterIndex(klass->image->token);
+        return IsInterpreterIndex(klass->image->token) && klass->rank == 0;
     }
 
     inline bool IsInterpreterImage(const Il2CppImage* image)
