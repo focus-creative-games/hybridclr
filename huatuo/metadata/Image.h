@@ -474,7 +474,11 @@ namespace metadata
 		void InitEvents();
 		void InitMethodSemantics();
 		void InitInterfaces();
-		void InitVtables();
+		void InitVTables_1();
+		void InitVTables_2();
+
+		void ComputeVTable1(TypeDefinitionDetail* tdd);
+		void ComputeVTable2(TypeDefinitionDetail* tdd);
 
 		void SetIl2CppImage(Il2CppImage* image)
 		{
@@ -626,6 +630,7 @@ namespace metadata
 
 		// runtime data 
 		std::vector<Il2CppClass*> _classList;
+		Il2CppType2TypeDeclaringTreeMap _cacheTrees;
 
 		std::unordered_map<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> _token2ResolvedDataCache;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, std::hash<uint32_t>> _il2cppStringCache;

@@ -147,51 +147,126 @@ namespace metadata
 		}
 	}
 
+	void Image::ComputeVTable1(TypeDefinitionDetail* tdd)
+	{
+		Il2CppTypeDefinition& typeDef = *tdd->typeDef;
+		if (IsInterface(typeDef.flags) || typeDef.vtableStart != 0)
+		{
+			return;
+		}
 
+		const Il2CppType* type = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(typeDef.byvalTypeIndex));
 
-	void Image::InitVtables()
+		int32_t vtableCount = 0;
+
+		if (typeDef.parentIndex != kInvalidIndex)
+		{
+			const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef.parentIndex);
+			const Il2CppTypeDefinition* parentTypeDef = GetUnderlyingTypeDefinition(parentType);
+			if (IsInterpreterType(parentTypeDef) && parentTypeDef->vtableStart == 0)
+			{
+				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
+				ComputeVTable1(&_typeDetails[DecodeMetadataIndex(parentTypeDef->byvalTypeIndex)]);
+			}
+			vtableCount += parentTypeDef->vtable_count;
+		}
+
+		for (uint32_t i = 0; i < typeDef.interfaces_count; i++)
+		{
+			const Il2CppType* intType = il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(&typeDef, i);
+			const Il2CppTypeDefinition* intTypeDef = GetUnderlyingTypeDefinition(intType);
+			vtableCount += intTypeDef->method_count;
+		}
+
+		for (uint32_t i = 0; i < typeDef.method_count; i++)
+		{
+			const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef.methodStart + i);
+			if (huatuo::metadata::IsVirtualMethod(methodDef->flags))
+			{
+				++vtableCount;
+			}
+		}
+
+		typeDef.vtableStart = EncodeWithIndex(0);
+		// 计算出的vtableCount是一个保守上界,并非准确值.
+		// 在ComputVTable2中会重新修正
+		typeDef.vtable_count = vtableCount;
+	}
+
+	void Image::InitVTables_1()
 	{
 		Table& typeDefTb = _tables[(int)TableType::TYPEDEF];
 
-		Il2CppType2TypeDeclaringTreeMap cacheTrees;
+		for (TypeDefinitionDetail& td : _typeDetails)
+		{
+			ComputeVTable1(&td);
+		}
+	}
+
+	void Image::ComputeVTable2(TypeDefinitionDetail* tdd)
+	{
+		Il2CppTypeDefinition& typeDef = *tdd->typeDef;
+		if (IsInterface(typeDef.flags) || typeDef.interfaceOffsetsStart != 0)
+		{
+			return;
+		}
+
+		if (typeDef.parentIndex != kInvalidIndex)
+		{
+			const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef.parentIndex);
+			const Il2CppTypeDefinition* parentTypeDef = GetUnderlyingTypeDefinition(parentType);
+			if (IsInterpreterType(parentTypeDef) && parentTypeDef->interfaceOffsetsStart == 0)
+			{
+				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
+				ComputeVTable2(&_typeDetails[DecodeMetadataIndex(parentTypeDef->byvalTypeIndex)]);
+			}
+		}
+
+		const Il2CppType* type = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(typeDef.byvalTypeIndex));
+		VTableSetUp* typeTree = VTableSetUp::BuildByType(_cacheTrees, type);
+
+		uint32_t offsetsStart = (uint32_t)_interfaceOffsets.size();
+
+		auto& vms = typeTree->GetVirtualMethodImpls();
+		IL2CPP_ASSERT(tdd->vtable.empty());
+		tdd->vtable = vms;
+
+		auto& interfaceOffsetInfos = typeTree->GetInterfaceOffsetInfos();
+		for (auto ioi : interfaceOffsetInfos)
+		{
+			_interfaceOffsets.push_back({ ioi.type, ioi.offset });
+		}
+
+		typeDef.vtable_count = (uint16_t)vms.size();
+		typeDef.interfaceOffsetsStart = EncodeWithIndex(offsetsStart);
+		typeDef.interface_offsets_count = (uint32_t)interfaceOffsetInfos.size();
+
+		// klass may create by prev BuildTree
+		Il2CppClass* klass = _classList[tdd->index];
+		if (klass)
+		{
+			IL2CPP_ASSERT(klass->vtable_count >= typeDef.vtable_count);
+			klass->vtable_count = typeDef.vtable_count;
+			IL2CPP_ASSERT(klass->interface_offsets_count == 0);
+			klass->interface_offsets_count = typeDef.interface_offsets_count;
+		}
+	}
+
+	void Image::InitVTables_2()
+	{
+		Table& typeDefTb = _tables[(int)TableType::TYPEDEF];
 
 		for (TypeDefinitionDetail& td : _typeDetails)
 		{
-			Il2CppTypeDefinition& typeDef = *td.typeDef;
-			const Il2CppType* type = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(typeDef.byvalTypeIndex));
-			VTableSetUp* typeTree = VTableSetUp::BuildByType(cacheTrees, type);
-
-			if (IsInterface(typeDef.flags))
-			{
-				typeDef.interfaceOffsetsStart = EncodeWithIndex(0);
-				typeDef.interface_offsets_count = 0;
-				typeDef.vtableStart = EncodeWithIndex(0);
-				typeDef.vtable_count = 0;
-				continue;
-			}
-
-			uint32_t offsetsStart = (uint32_t)_interfaceOffsets.size();
-
-			auto& vms = typeTree->GetVirtualMethodImpls();
-			IL2CPP_ASSERT(td.vtable.empty());
-			td.vtable = vms;
-
-			auto& interfaceOffsetInfos = typeTree->GetInterfaceOffsetInfos();
-			for (auto ioi : interfaceOffsetInfos)
-			{
-				_interfaceOffsets.push_back({ ioi.type, ioi.offset });
-			}
-
-			typeDef.vtableStart = EncodeWithIndex(0);
-			typeDef.interfaceOffsetsStart = EncodeWithIndex(offsetsStart);
-			typeDef.vtable_count = (uint16_t)td.vtable.size();
-			typeDef.interface_offsets_count = (uint32_t)interfaceOffsetInfos.size();
+			ComputeVTable2(&td);
 		}
-		for (auto& e : cacheTrees)
+
+		for (auto& e : _cacheTrees)
 		{
 			e.second->~VTableSetUp();
 			IL2CPP_FREE(e.second);
 		}
+		_cacheTrees.clear();
 	}
 
 

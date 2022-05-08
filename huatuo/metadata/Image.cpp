@@ -117,7 +117,8 @@ namespace metadata
 
 		InitClass();
 
-		InitVtables();
+		InitVTables_1();
+		InitVTables_2();
 	}
 
 	void Image::InitTypeDefs_0()
@@ -150,6 +151,21 @@ namespace metadata
 			SET_IL2CPPTYPE_VALUE_TYPE(cppType, isValueType);
 			cppType.data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
+
+			if (IsInterface(cur.flags))
+			{
+				cur.interfaceOffsetsStart = EncodeWithIndex(0);
+				cur.interface_offsets_count = 0;
+				cur.vtableStart = EncodeWithIndex(0);
+				cur.vtable_count = 0;
+			}
+			else
+			{
+				cur.interfaceOffsetsStart = 0;
+				cur.interface_offsets_count = 0;
+				cur.vtableStart = 0;
+				cur.vtable_count = 0;
+			}
 		}
 	}
 
@@ -213,7 +229,6 @@ namespace metadata
 			}
 
 			cur.elementTypeIndex = kInvalidIndex;
-			cur.vtableStart = kInvalidIndex;
 		}
 	}
 
@@ -944,13 +959,8 @@ namespace metadata
 		{
 			return klass;
 		}
-		klass = _classList[index];
-		if (klass)
-		{
-			return klass;
-		}
-
 		klass = il2cpp::vm::GlobalMetadata::FromTypeDefinition(EncodeWithIndex(index));
+		IL2CPP_ASSERT(klass->interfaces_count <= klass->interface_offsets_count || _typesDefines[index].interfaceOffsetsStart == 0);
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		_classList[index] = klass;
 		return klass;

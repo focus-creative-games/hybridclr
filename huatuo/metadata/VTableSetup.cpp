@@ -84,7 +84,7 @@ namespace metadata
 		// FIXME. cache 
 		if (typeDef->parentIndex != kInvalidIndex)
 		{
-			parentType = TryInflateIfNeed(type, il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex));
+			parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
 		}
 		tdt->_type = type;
 		tdt->_typeDef = typeDef;
@@ -93,7 +93,7 @@ namespace metadata
 
 		for (uint32_t i = 0; i < typeDef->interfaces_count; i++)
 		{
-			const Il2CppType* intType = TryInflateIfNeed(type, il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(typeDef, i));
+			const Il2CppType* intType = il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(typeDef, i);
 			VTableSetUp* intf = BuildByType(cache, intType);
 			tdt->_interfaces.push_back(intf);
 		}
