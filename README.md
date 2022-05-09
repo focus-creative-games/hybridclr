@@ -17,8 +17,8 @@ huatuo扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki
 
 - 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
 - 零学习和使用成本。 huatuo将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
-- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](docs/benchmark.md)
-- 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](docs/memory.md)
+- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://github.com/focus-creative-games/huatuo/wiki/benchmark)
+- 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://github.com/focus-creative-games/huatuo/wiki/memory)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
 
 ## 工作原理
@@ -62,16 +62,16 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 
 ## 文档
 
-- [wiki](docs/home.md)
-- [快速上手](docs/start_up.md)
-- [FAQ](docs/FAQ.md)
-- [限制和注意事项](docs/limit.md)
-- [常见错误](docs/common_errors.md)
-- [最佳实践](docs/best_practices.md)
-- [源码结构与跟踪调试](docs/source_inspect.md)
+- [wiki](https://github.com/focus-creative-games/huatuo/wiki/home)
+- [快速上手](https://github.com/focus-creative-games/huatuo/wiki/start_up)
+- [FAQ](https://github.com/focus-creative-games/huatuo/wiki/FAQ)
+- [限制和注意事项](https://github.com/focus-creative-games/huatuo/wiki/limit)
+- [常见错误](https://github.com/focus-creative-games/huatuo/wiki/common_errors)
+- [最佳实践](https://github.com/focus-creative-games/huatuo/wiki/best_practices)
+- [源码结构与跟踪调试](https://github.com/focus-creative-games/huatuo/wiki/source_inspect)
 - [示例项目](https://github.com/focus-creative-games/huatuo_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
-- [==>致谢名单<==](docs/donate.md)
+- [==>致谢名单<==](https://github.com/focus-creative-games/huatuo/wiki/donate)
 
 ## 稳定性状况
 
@@ -79,7 +79,7 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 
 - 完成了绝大多数指令的单元测试。只有calli、initblk等少数难以直接在c#里构造的指令未添加对应的单元测试。
 - 对照c#规范完成各项语法测试。
-- 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在huatuo下正常工作。参见[兼容性报告](docs/compatible.md)
+- 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在huatuo下正常工作。参见[兼容性报告](https://github.com/focus-creative-games/huatuo/wiki/compatible)
 - 可以正确地加载 [luban](https://github.com/focus-creative-games/luban) 配置
 - 可以正确地运行 [2048](https://github.com/dgkanatsios/2048)这样的轻量小游戏
 - 可以运行 [StarForce](https://github.com/EllanJiang/StarForce) 这样的小型游戏
@@ -103,7 +103,7 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 huatuo虽然与il2cpp相关，但绝大多数核心代码独立于il2cpp，很容易移植（预计一个月）到其他不支持AOT+Interpreter的CLR平台。无论unity如何版本变迁，哪怕废弃了il2cpp改用.net 6+，huatuo会持续跟进，稳定地提供跨平台的CLR热更新服务，直至某天.net官方直接支持AOT+Interpreter，则huatuo完成其历史使命。
 
 - 持续修复bug，在Win平台能正常运行一个中大型游戏 (2022.4)
-- 持续跟进unity的版本更新，支持更多的unity版本。查看[现在支持的Unity版本](docs/support_versions.md) (2022.4)
+- 持续跟进unity的版本更新，支持更多的unity版本。查看[现在支持的Unity版本](https://github.com/focus-creative-games/huatuo/wiki/support_versions) (2022.4)
 - 推进Android与ios的全平台测试 (2022.5)
 - 支持 hotfix AOT部分的bug (2022.6)
 - 除去大多数普通AOT泛型类限制 (2022.6)
