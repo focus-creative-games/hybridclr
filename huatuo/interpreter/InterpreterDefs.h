@@ -15,10 +15,13 @@ namespace huatuo
 			I2,
 			U2,
 			U8,
+			S_12,
 			S_16, // struct size == 16
+			S_20,
 			S_24, // struct size == 24
+			S_28,
 			S_32, // struct size == 32
-			S_N,  // struct size > 32, size is described by stackObjectSize
+			S_N,  // struct size = 3，5，6，7， > 8, size is described by stackObjectSize
 		};
 
 		union StackObject
@@ -153,5 +156,7 @@ namespace huatuo
 		{
 			return type == LocationDataType::U8;
 		}
+
+		void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize);
 	}
 }

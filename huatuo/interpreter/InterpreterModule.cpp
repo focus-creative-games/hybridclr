@@ -60,6 +60,19 @@ namespace interpreter
 		}
 	}
 
+
+	static void AppendValueTypeSignature(int typeSize, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
+	{
+		if (returnType)
+		{
+			pos += std::sprintf(sigBuf + pos, "s%d", typeSize);
+		}
+		else
+		{
+			AppendString(sigBuf, bufferSize, pos, "i");
+		}
+	}
+
 	void AppendSignature(const Il2CppType* type, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
 	{
 		if (type->byref)
@@ -74,63 +87,30 @@ namespace interpreter
 		case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "f"); break;
 		case IL2CPP_TYPE_TYPEDBYREF:
 		{
-			if (returnType)
-			{
-				IL2CPP_ASSERT(sizeof(Il2CppTypedRef) == 24);
-				AppendString(sigBuf, bufferSize, pos, "s3");
-			}
-			else
-			{
-				AppendString(sigBuf, bufferSize, pos, "i");
-			}
+			IL2CPP_ASSERT(sizeof(Il2CppTypedRef) == sizeof(void*) * 3);
+			AppendValueTypeSignature(sizeof(Il2CppTypedRef), returnType, sigBuf, bufferSize, pos);
 			break;
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
-			if (returnType)
-			{
-				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				il2cpp::vm::Class::SetupFields(klass);
-				if (klass->instance_size <= sizeof(Il2CppObject) + 8)
-				{
-					AppendString(sigBuf, bufferSize, pos, "i");
-				}
-				else
-				{
-					pos += std::sprintf(sigBuf + pos, "s%d", (int)((klass->instance_size - sizeof(Il2CppObject) + 7) / 8));
-				}
-			}
-			else
-			{
-				AppendString(sigBuf, bufferSize, pos, "i");
-			}
+			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+			AppendValueTypeSignature(il2cpp::vm::Class::GetValueSize(klass, nullptr), returnType, sigBuf, bufferSize, pos);
 			break;
 		}
 		case IL2CPP_TYPE_GENERICINST:
 		{
-			if (returnType)
+			const Il2CppType* underlyingGenericType = type->data.generic_class->type;
+			if (underlyingGenericType->type == IL2CPP_TYPE_CLASS)
 			{
-				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				if (IS_CLASS_VALUE_TYPE(klass))
-				{
-					il2cpp::vm::Class::SetupFields(klass);
-					if (klass->instance_size > sizeof(Il2CppObject) + 8)
-					{
-						pos += std::sprintf(sigBuf + pos, "s%d", (int)(klass->instance_size - sizeof(Il2CppObject) + 7) / 8);
-					}
-					else
-					{
-						AppendString(sigBuf, bufferSize, pos, "i");
-					}
-				}
-				else
-				{
-					AppendString(sigBuf, bufferSize, pos, "i");
-				}
+				AppendString(sigBuf, bufferSize, pos, "i");
 			}
 			else
 			{
-				AppendString(sigBuf, bufferSize, pos, "i");
+				IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
+				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+				AppendValueTypeSignature(il2cpp::vm::Class::GetValueSize(klass, nullptr), returnType, sigBuf, bufferSize, pos);
 			}
 			break;
 		}
