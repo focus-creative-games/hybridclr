@@ -2021,7 +2021,7 @@ ip++;
 
 
 		// init local vars
-		if (methodInfo->flags & (uint32_t)CorILMethodFormat::InitLocals)
+		if (body.flags & (uint32_t)CorILMethodFormat::InitLocals)
 		{
 			AddInst(CreateInitLocals(pool, totalLocalSize * sizeof(StackObject)));
 		}
