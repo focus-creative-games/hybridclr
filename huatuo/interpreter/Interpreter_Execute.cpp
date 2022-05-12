@@ -588,6 +588,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 
 	inline void HiCallDelegate(Il2CppMulticastDelegate* del, uint16_t invokeParamCount, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t* argIdxs, StackObject* localVarBase, void* ret)
 	{
+		CHECK_NOT_NULL_THROW(del);
 		if (del->delegates == nullptr)
 		{
 			CallDelegateMethod(invokeParamCount, del->delegate.method, del->delegate.target, staticM2NMethod, instanceM2NMethod, argIdxs, localVarBase, ret);
