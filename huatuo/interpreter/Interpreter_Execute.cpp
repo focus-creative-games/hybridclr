@@ -7288,7 +7288,7 @@ else \
 				    CHECK_NOT_NULL_THROW(_arr);
 				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, (*(int32_t*)(localVarBase + __index)));
 				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
-				    il2cpp_array_setrefwithsize(_arr, _eleSize, __index, (void*)(localVarBase + __ele));
+				    il2cpp_array_setrefwithsize(_arr, _eleSize, (*(int32_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
@@ -7414,7 +7414,7 @@ else \
 				    CHECK_NOT_NULL_THROW(_arr);
 				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, (*(int64_t*)(localVarBase + __index)));
 				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
-				    il2cpp_array_setrefwithsize(_arr, _eleSize, __index, (void*)(localVarBase + __ele));
+				    il2cpp_array_setrefwithsize(_arr, _eleSize, (*(int64_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
