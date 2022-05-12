@@ -96,7 +96,31 @@ namespace metadata
 			return -1;
 		}
 		}
+	}
 
+	bool IsValueType(const Il2CppType* type)
+	{
+		switch (type->type)
+		{
+		case IL2CPP_TYPE_BOOLEAN:
+		case IL2CPP_TYPE_I1:
+		case IL2CPP_TYPE_U1:
+		case IL2CPP_TYPE_CHAR:
+		case IL2CPP_TYPE_I2:
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		case IL2CPP_TYPE_R4:
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+		case IL2CPP_TYPE_TYPEDBYREF:
+		case IL2CPP_TYPE_VALUETYPE: return true;
+		case IL2CPP_TYPE_GENERICINST: return type->data.generic_class->type->type == IL2CPP_TYPE_VALUETYPE;
+		default: return false;
+		}
 	}
 
 	bool IsTypeSameByTypeIndex(TypeIndex t1, TypeIndex t2)

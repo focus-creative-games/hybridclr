@@ -1412,7 +1412,7 @@ ip++;
 
 		Il2CppClass* parent = fieldInfo->parent;
 		uint16_t offset = fieldInfo->offset;
-		IL2CPP_ASSERT(offset < (1 << 16));
+		IL2CPP_ASSERT(fieldInfo->offset < (1 << 16));
 
 		if (type->byref)
 		{
@@ -1906,12 +1906,6 @@ ip++;
 			// FIXME memory leak
 			return il2cpp::metadata::GenericMetadata::InflateIfNeeded(type, context, inflateMethodVars);
 		}
-	}
-
-	bool IsPassArgAsRef(const Il2CppType* type)
-	{
-		ArgDesc argDesc = interpreter::GetTypeArgDesc(type);
-		return argDesc.type <= LocationDataType::U8;
 	}
 
 	void HiTransform::Transform(metadata::Image* image, const MethodInfo* methodInfo, metadata::MethodBody& body, interpreter::InterpMethodInfo& result)
@@ -2769,7 +2763,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + resolvedIsInstanceMethod;
-					if (IsPassArgAsRef(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
+					if (IsPassArgAsValue(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 					}
@@ -2878,7 +2872,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + 1;
-					if (IsPassArgAsRef(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
+					if (IsPassArgAsValue(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 					}
@@ -3011,7 +3005,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i;
-					if (IsPassArgAsRef(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
+					if (IsPassArgAsValue(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
 					{
 						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 					}

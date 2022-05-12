@@ -8,10 +8,11 @@
 #include "vm/MetadataLock.h"
 #include "vm/Class.h"
 
-#include "MethodBridge.h"
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
 #include "../transform/Transform.h"
+
+#include "MethodBridge.h"
 
 namespace huatuo
 {
@@ -22,6 +23,17 @@ namespace interpreter
 	static std::unordered_map<const char*, NativeCallMethod, CStringHash, CStringEqualTo> s_calls;
 	static std::unordered_map<const char*, NativeInvokeMethod, CStringHash, CStringEqualTo> s_invokes;
 
+	MachineState& InterpreterModule::GetCurrentThreadMachineState()
+	{
+		MachineState* state = nullptr;
+		s_machineState.GetValue((void**)&state);
+		if (!state)
+		{
+			state = new MachineState();
+			s_machineState.SetValue(state);
+		}
+		return *state;
+	}
 
 	void InterpreterModule::Initialize()
 	{
@@ -44,137 +56,6 @@ namespace interpreter
 			}
 			s_invokes.insert({ method.signature, method });
 		}
-	}
-
-	void AppendString(char* sigBuf, size_t bufSize, size_t& pos, const char* str)
-	{
-		size_t len = std::strlen(str);
-		if (pos + len < bufSize)
-		{
-			std::strcpy(sigBuf + pos, str);
-			pos += len;
-		}
-		else
-		{
-			IL2CPP_ASSERT(false);
-		}
-	}
-
-
-	static void AppendValueTypeSignature(int typeSize, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
-	{
-		if (returnType)
-		{
-			pos += std::sprintf(sigBuf + pos, "s%d", typeSize);
-		}
-		else
-		{
-			AppendString(sigBuf, bufferSize, pos, "i");
-		}
-	}
-
-	void AppendSignature(const Il2CppType* type, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
-	{
-		if (type->byref)
-		{
-			AppendString(sigBuf, bufferSize, pos, "i");
-			return;
-		}
-		switch (type->type)
-		{
-		case IL2CPP_TYPE_VOID: AppendString(sigBuf, bufferSize, pos, "v"); break;
-		case IL2CPP_TYPE_R4:
-		case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "f"); break;
-		case IL2CPP_TYPE_TYPEDBYREF:
-		{
-			IL2CPP_ASSERT(sizeof(Il2CppTypedRef) == sizeof(void*) * 3);
-			AppendValueTypeSignature(sizeof(Il2CppTypedRef), returnType, sigBuf, bufferSize, pos);
-			break;
-		}
-		case IL2CPP_TYPE_VALUETYPE:
-		{
-			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-			AppendValueTypeSignature(il2cpp::vm::Class::GetValueSize(klass, nullptr), returnType, sigBuf, bufferSize, pos);
-			break;
-		}
-		case IL2CPP_TYPE_GENERICINST:
-		{
-			const Il2CppType* underlyingGenericType = type->data.generic_class->type;
-			if (underlyingGenericType->type == IL2CPP_TYPE_CLASS)
-			{
-				AppendString(sigBuf, bufferSize, pos, "i");
-			}
-			else
-			{
-				IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
-				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-				AppendValueTypeSignature(il2cpp::vm::Class::GetValueSize(klass, nullptr), returnType, sigBuf, bufferSize, pos);
-			}
-			break;
-		}
-		default: AppendString(sigBuf, bufferSize, pos, "i"); break;
-		}
-	}
-
-	bool ComputSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize)
-	{
-		size_t pos = 0;
-		AppendSignature(ret, true, sigBuf, bufferSize, pos);
-
-		if (instanceCall)
-		{
-			AppendString(sigBuf, bufferSize, pos, "i");
-		}
-
-		for (uint8_t i = 0; i < paramCount; i++)
-		{
-			AppendSignature(params + i, false, sigBuf, bufferSize, pos);
-		}
-		sigBuf[pos] = 0;
-		return true;
-	}
-
-	bool ComputSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize)
-	{
-		size_t pos = 0;
-
-		const Il2CppImage* image = huatuo::metadata::MetadataModule::GetImage(method)->GetIl2CppImage();
-
-		AppendSignature(huatuo::metadata::MetadataModule::GetIl2CppTypeFromEncodeIndex(method->returnType), true, sigBuf, bufferSize, pos);
-
-		if (call && metadata::IsInstanceMethod(method))
-		{
-			AppendString(sigBuf, bufferSize, pos, "i");
-		}
-
-		for (uint8_t i = 0; i < method->parameterCount; i++)
-		{
-			TypeIndex paramTypeIndex = huatuo::metadata::MetadataModule::GetParameterDefinitionFromIndex(image, method->parameterStart + i)->typeIndex;
-			AppendSignature(huatuo::metadata::MetadataModule::GetIl2CppTypeFromEncodeIndex(paramTypeIndex), false, sigBuf, bufferSize, pos);
-		}
-		sigBuf[pos] = 0;
-		return true;
-	}
-
-	bool ComputSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize)
-	{
-		size_t pos = 0;
-
-		AppendSignature(method->return_type, true, sigBuf, bufferSize, pos);
-
-		if (call && metadata::IsInstanceMethod(method))
-		{
-			AppendString(sigBuf, bufferSize, pos, "i");
-		}
-
-		for (uint8_t i = 0; i < method->parameters_count; i++)
-		{
-			AppendSignature(GET_METHOD_PARAMETER_TYPE(method->parameters[i]), false, sigBuf, bufferSize, pos);
-		}
-		sigBuf[pos] = 0;
-		return true;
 	}
 
 	template<typename T>

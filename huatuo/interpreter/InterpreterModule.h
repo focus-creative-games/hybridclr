@@ -1,10 +1,11 @@
 #pragma once
 
+#include "os/ThreadLocalValue.h"
+
 #include "../CommonDef.h"
 #include "MethodBridge.h"
 #include "Engine.h"
 #include "../metadata/Image.h"
-#include "os/ThreadLocalValue.h"
 
 namespace huatuo
 {
@@ -17,17 +18,7 @@ namespace interpreter
 		static void Initialize();
 
 
-		static MachineState& GetCurrentThreadMachineState()
-		{
-			MachineState* state = nullptr;
-			s_machineState.GetValue((void**)&state);
-			if (!state)
-			{
-				state = new MachineState();
-				s_machineState.SetValue(state);
-			}
-			return *state;
-		}
+		static MachineState& GetCurrentThreadMachineState();
 
 		static InterpMethodInfo* GetInterpMethodInfo(metadata::Image* image, const MethodInfo* methodInfo);
 

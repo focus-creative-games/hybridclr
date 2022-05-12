@@ -167,6 +167,8 @@ namespace metadata
         return flags & TYPE_ATTRIBUTE_INTERFACE;
     }
 
+    bool IsValueType(const Il2CppType* type);
+
     inline const Il2CppTypeDefinition* GetUnderlyingTypeDefinition(const Il2CppType* type)
     {
         if (IsGenericIns(type))

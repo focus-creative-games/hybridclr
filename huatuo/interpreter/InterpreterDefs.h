@@ -15,6 +15,7 @@ namespace huatuo
 			I2,
 			U2,
 			U8,
+			U16,
 			S_12,
 			S_16, // struct size == 16
 			S_20,
@@ -81,8 +82,6 @@ namespace huatuo
 			//std::vector<void*> *bigLocalAllocs;
 		};
 
-
-
 		struct InterpExceptionClause
 		{
 			metadata::CorILExceptionClauseType flags;
@@ -116,47 +115,5 @@ namespace huatuo
 			std::vector<InterpExceptionClause*> exClauses;
 			uint32_t isTrivialCopyArgs : 1;
 		};
-
-		inline bool IsNeedExpandLocationType(LocationDataType type)
-		{
-			return type < LocationDataType::U8;
-		}
-
-		ArgDesc GetTypeArgDesc(const Il2CppType* type);
-
-		inline LocationDataType GetLocationDataTypeByType(const Il2CppType* type)
-		{
-			return GetTypeArgDesc(type).type;
-		}
-
-		inline void ExpandLocationData2StackDataByType(void* retValue, LocationDataType type)
-		{
-			switch (type)
-			{
-			case huatuo::interpreter::LocationDataType::I1:
-				*(int32_t*)retValue = *(int8_t*)retValue;
-				break;
-			case huatuo::interpreter::LocationDataType::U1:
-				*(int32_t*)retValue = *(uint8_t*)retValue;
-				break;
-			case huatuo::interpreter::LocationDataType::I2:
-				*(int32_t*)retValue = *(int16_t*)retValue;
-				break;
-			case huatuo::interpreter::LocationDataType::U2:
-				*(int32_t*)retValue = *(uint16_t*)retValue;
-				break;
-			default:
-				break;
-			}
-		}
-
-		ArgDesc GetValueTypeArgDescBySize(uint32_t size);
-
-		inline bool IsSimpleStackObjectCopyArg(LocationDataType type)
-		{
-			return type == LocationDataType::U8;
-		}
-
-		void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize);
 	}
 }
