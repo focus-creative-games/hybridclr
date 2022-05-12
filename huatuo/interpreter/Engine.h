@@ -90,6 +90,11 @@ namespace interpreter
 			_stackTopIdx = oldTop;
 		}
 
+		uint32_t GetFrameTopIdx() const
+		{
+			return _frameTopIdx;
+		}
+
 		InterpFrame* PushFrame()
 		{
 			if (_frameTopIdx >= _frameCount)
@@ -111,7 +116,7 @@ namespace interpreter
 			_frameTopIdx -= count;
 		}
 
-		const InterpFrame* GetTopFrame() const
+		InterpFrame* GetTopFrame() const
 		{
 			if (_frameTopIdx > 0)
 			{
@@ -205,29 +210,21 @@ namespace interpreter
 	class InterpFrameGroup
 	{
 	public:
-		InterpFrameGroup(MachineState& ms) : _machineState(ms), _stackBaseIdx(ms.GetStackTop())
+		InterpFrameGroup(MachineState& ms) : _machineState(ms), _stackBaseIdx(ms.GetStackTop()), _frameBaseIdx(ms.GetFrameTopIdx())
 		{
 
 		}
 
 		void CleanUpFrames()
 		{
-			uint32_t n = (uint32_t)_frames.size();
-			switch (n)
-			{
-			case 0: break;
-			case 1:
-			{
-				LeaveFrame();
-				break;
-			}
-			default:
+			IL2CPP_ASSERT(_machineState.GetFrameTopIdx() >= _frameBaseIdx);
+			uint32_t n = _machineState.GetFrameTopIdx() - _frameBaseIdx;
+			if (n > 0)
 			{
 				for (uint32_t i = 0; i < n; i++)
 				{
 					LeaveFrame();
 				}
-			}
 			}
 		}
 
@@ -235,9 +232,9 @@ namespace interpreter
 
 		InterpFrame* LeaveFrame()
 		{
-			IL2CPP_ASSERT(!_frames.empty());
+			IL2CPP_ASSERT(_machineState.GetFrameTopIdx() > _frameBaseIdx);
 			POP_STACK_FRAME();
-			InterpFrame* frame = _frames.top();
+			InterpFrame* frame = _machineState.GetTopFrame();
 			if (frame->exHandleStack)
 			{
 				frame->exHandleStack->~vector();
@@ -246,8 +243,7 @@ namespace interpreter
 			}
 			_machineState.PopFrame();
 			_machineState.SetStackTop(frame->oldStackTop);
-			_frames.pop();
-			return _frames.empty() ? nullptr : _frames.top();
+			return _machineState.GetFrameTopIdx() > _frameBaseIdx ? _machineState.GetTopFrame() : nullptr;
 		}
 
 		void* AllocLoc(size_t size)
@@ -256,11 +252,11 @@ namespace interpreter
 			return _machineState.AllocStackSlot(soNum);
  		}
 
-		size_t GetFrameCount() const { return _frames.size(); }
+		size_t GetFrameCount() const { return _machineState.GetFrameTopIdx() - _frameBaseIdx; }
 	private:
 		MachineState& _machineState;
 		ptrdiff_t _stackBaseIdx;
-		std::stack<InterpFrame*> _frames;
+		uint32_t _frameBaseIdx;
 	};
 }
 }

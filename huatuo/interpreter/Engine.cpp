@@ -18,7 +18,6 @@ namespace interpreter
 
 			newFrame = _machineState.PushFrame();
 			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, {}, {} };
-			_frames.push(newFrame);
 		}
 		else
 		{
@@ -26,7 +25,6 @@ namespace interpreter
 
 			newFrame = _machineState.PushFrame();
 			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, {}, {} };
-			_frames.push(newFrame);
 
 			// if not prepare arg stack. copy from args
 			if (!withArgStack && imi->args)
