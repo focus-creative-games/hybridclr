@@ -4787,11 +4787,7 @@ else \
 				    IL2CPP_ASSERT(__obj < __ctorFrameBase);
 				    StackObject* _frameBasePtr = (StackObject*)(void*)(localVarBase + __ctorFrameBase);
 				    std::memcpy(_frameBasePtr + 1, (void*)(localVarBase + __argBase), __argStackObjectNum * sizeof(StackObject)); // move arg
-				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
-				    _frameBasePtr->ptr = ((StackObject*)(void*)(localVarBase + __obj)) - 1;
-				#else
 				    _frameBasePtr->ptr = (StackObject*)(void*)(localVarBase + __obj);
-				#endif
 				    int32_t _typeSize = GetTypeValueSize(__method->klass);
 				    InitDefaultN((void*)(localVarBase + __obj), _typeSize); // init after move
 				    CALL_INTERP_VOID((ip + 18), __method, _frameBasePtr);
