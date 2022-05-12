@@ -317,19 +317,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 			}
 			klass = il2cpp::vm::Class::GetNullableArgument(klass);
 		}
-		else
-		{
-			if (obj == nullptr)
-			{
-				il2cpp::vm::Exception::RaiseNullReferenceException();
-			}
-		}
-
-		if (klass != obj->klass)
-		{
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetInvalidCastException("cast fail"), nullptr);
-		}
-		return il2cpp::vm::Object::Unbox(obj);
+		return UnBox(obj, klass);
 	}
 
 	inline void HiUnboxAny(Il2CppObject* obj, Il2CppClass* klass, void* data)
@@ -341,11 +329,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		else
 		{
 			CHECK_NOT_NULL_THROW(obj);
-			if (klass != obj->klass)
-			{
-				il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetInvalidCastException("cast fail"), nullptr);
-			}
-			std::memcpy(data, il2cpp::vm::Object::Unbox(obj), klass->instance_size - sizeof(Il2CppObject));
+			std::memcpy(data, UnBox(obj, klass), klass->instance_size - sizeof(Il2CppObject));
 		}
 	}
 
