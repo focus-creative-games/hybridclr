@@ -284,10 +284,10 @@ namespace metadata
 					--nullVtableSlotCount;
 				}
 			}
-			for (RawInterfaceOffsetInfo& rioi : _interfaceOffsetInfos)
+			for (VTableSetUp* interf : _interfaces)
 			{
 				bool findInterf = false;
-				for (VTableSetUp* interf : _interfaces)
+				for (RawInterfaceOffsetInfo& rioi : _interfaceOffsetInfos)
 				{
 					if (IsTypeEqual(interf->_type, rioi.type))
 					{
