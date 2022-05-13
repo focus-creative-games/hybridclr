@@ -333,6 +333,12 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		}
 	}
 
+	inline void HiUnboxAny2StackObject(Il2CppObject* obj, Il2CppClass* klass, void* data)
+	{
+		HiUnboxAny(obj, klass, data);
+		ExpandLocationData2StackDataByType(data, klass->byval_arg.type);
+	}
+
 	inline void HiCastClass(Il2CppObject* obj, Il2CppClass* klass)
 	{
 		if (obj != nullptr && !il2cpp::vm::Class::IsAssignableFrom(klass, obj->klass))
@@ -5187,7 +5193,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __obj = *(uint16_t*)(ip + 4);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 6);
-				    HiUnboxAny((*(Il2CppObject**)(localVarBase + __obj)), __klass, (void*)(localVarBase + __dst));
+				    HiUnboxAny2StackObject((*(Il2CppObject**)(localVarBase + __obj)), __klass, (void*)(localVarBase + __dst));
 				    ip += 14;
 				    continue;
 				}
