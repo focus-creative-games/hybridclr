@@ -464,6 +464,7 @@ namespace metadata
 		void InitFieldDefs();
 		void InitFieldLayouts();
 		void InitFieldRVAs();
+		void InitBlittables();
 		void InitMethodDefs0();
 		void InitMethodDefs();
 		void InitMethodImpls0();
@@ -476,6 +477,8 @@ namespace metadata
 		void InitInterfaces();
 		void InitVTables_1();
 		void InitVTables_2();
+
+		void ComputeBlittable(Il2CppTypeDefinition* def, std::vector<bool>& computFlags);
 
 		void ComputeVTable1(TypeDefinitionDetail* tdd);
 		void ComputeVTable2(TypeDefinitionDetail* tdd);

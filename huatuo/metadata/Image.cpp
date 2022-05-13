@@ -103,6 +103,7 @@ namespace metadata
 		InitFieldDefs();
 		InitFieldLayouts();
 		InitFieldRVAs();
+		InitBlittables();
 		InitMethodImpls0();
 		InitProperties();
 		InitEvents();
@@ -361,6 +362,93 @@ namespace metadata
 		}
 	}
 
+	void Image::InitBlittables()
+	{
+		Table& typeDefTb = _tables[(int)TableType::TYPEDEF];
+
+		std::vector<bool> computFlags(typeDefTb.rowNum, false);
+
+		for (uint32_t i = 0, n = typeDefTb.rowNum; i < n; i++)
+		{
+			ComputeBlittable(&_typesDefines[i], computFlags);
+		}
+	}
+
+	void Image::ComputeBlittable(Il2CppTypeDefinition* def, std::vector<bool>& computFlags)
+	{
+		if (DecodeImageIndex(def->byvalTypeIndex) != GetIndex())
+		{
+			return;
+		}
+		uint32_t typeIndex = GetTypeRawIndex(def);
+		if (computFlags[typeIndex])
+		{
+			return;
+		}
+		computFlags[typeIndex] = true;
+		
+		const Il2CppType* type = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(def->byvalTypeIndex));
+
+		const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(def->nameIndex);
+		
+
+		bool blittable = false;
+		if (type->type == IL2CPP_TYPE_VALUETYPE)
+		{
+			blittable = true;
+			for (int i = 0; i < def->field_count; i++)
+			{
+				const Il2CppFieldDefinition* field = GetFieldDefinitionFromRawIndex(DecodeMetadataIndex(def->fieldStart + i));
+				const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(field->typeIndex);
+				if (!huatuo::metadata::IsInstanceField(fieldType))
+				{
+					continue;
+				}
+
+				switch (fieldType->type)
+				{
+				case IL2CPP_TYPE_BOOLEAN:
+				case IL2CPP_TYPE_CHAR:
+				case IL2CPP_TYPE_I1:
+				case IL2CPP_TYPE_U1:
+				case IL2CPP_TYPE_I2:
+				case IL2CPP_TYPE_U2:
+				case IL2CPP_TYPE_I4:
+				case IL2CPP_TYPE_U4:
+				case IL2CPP_TYPE_I:
+				case IL2CPP_TYPE_U:
+				case IL2CPP_TYPE_I8:
+				case IL2CPP_TYPE_U8:
+				case IL2CPP_TYPE_R4:
+				case IL2CPP_TYPE_R8:
+				case IL2CPP_TYPE_PTR:
+				case IL2CPP_TYPE_FNPTR:
+				{
+					break;
+				}
+				case IL2CPP_TYPE_VALUETYPE:
+				{
+					Il2CppTypeDefinition* fieldDef = (Il2CppTypeDefinition*)fieldType->data.typeHandle;
+					ComputeBlittable(fieldDef, computFlags);
+					blittable = fieldDef->bitfield & (1 << (il2cpp::vm::kBitIsBlittable - 1));
+					break;
+				}
+				default:
+				{
+					blittable = false;
+				}
+				}
+				if (!blittable)
+				{
+					break;
+				}
+			}
+		}
+		if (blittable)
+		{
+			def->bitfield |= (1 << (il2cpp::vm::kBitIsBlittable - 1));
+		}
+	}
 
 	void Image::InitConsts()
 	{
