@@ -1939,7 +1939,8 @@ ip++;
 			}
 			lastSplitBegin = offset;
 		}
-		ip2bb[body.codeSize] = nullptr;
+		IRBasicBlock endBb = { true, false, body.codeSize, 0 };
+		ip2bb[body.codeSize] = &endBb;
 
 		IRBasicBlock* curbb = irbbs[0];
 
@@ -5608,6 +5609,7 @@ ip++;
 				totalSize += g_instructionSizes[(int)ir->type];
 			}
 		}
+		endBb.codeOffset = totalSize;
 
 		for (int32_t* relocOffsetPtr : relocationOffsets)
 		{
