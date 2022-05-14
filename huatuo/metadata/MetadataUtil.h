@@ -25,7 +25,7 @@ namespace metadata
         }
         else
         {
-            return (void*)((p + N) / N * N);
+            return (void*)((p + N - 1) / N * N);
         }
     }
 
