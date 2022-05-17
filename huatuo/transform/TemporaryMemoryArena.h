@@ -103,7 +103,7 @@ namespace huatuo
 					_useOuts.push_back({ (void*)_buf, _size});
 				}
 
-				Block newBlock = AllocBlock(std::min(size, kMinBlockSize));
+				Block newBlock = AllocBlock(std::max(size, kMinBlockSize));
 				_buf = (byte*)newBlock.data;
 				_size = newBlock.size;
 				_pos = 0;
