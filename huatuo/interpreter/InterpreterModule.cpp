@@ -79,19 +79,14 @@ namespace interpreter
 	static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
 	{
 		TEMP_FORMAT(errMsg, "%s not support. %s.%s::%s", desc, method->klass->namespaze, method->klass->name, method->name);
-		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
 	static void RaiseMethodNotSupportException(const Il2CppMethodDefinition* method, const char* desc)
 	{
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
 		TEMP_FORMAT(errMsg, "%s not support. %s.%s::%s", desc, klass->namespaze, klass->name, il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex));
-		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
-	}
-
-	static void NotSupportAOTSignature()
-	{
-		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeInitializationException("", nullptr));
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
 	void NotSupportManaged2Native(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
