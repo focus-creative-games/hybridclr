@@ -2764,25 +2764,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + resolvedIsInstanceMethod;
-					if (IsPassArgAsValue(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
-					{
-						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
-					}
-					else
-					{
-						// call convention. push ref if size > 8
-						CreateAddIR(ir, LdlocVarAddress);
-						ir->dst = (uint16_t)bigValueTypeRefStackIdx;
-						ir->src = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
-						IL2CPP_ASSERT(bigValueTypeRefStackIdx < MAX_STACK_SIZE);
-						__argIdxs[curArgIdx] = (uint16_t)bigValueTypeRefStackIdx;
-						++bigValueTypeRefStackIdx;
-						// update max stack size
-						if (bigValueTypeRefStackIdx > maxStackSize)
-						{
-							maxStackSize = bigValueTypeRefStackIdx;
-						}
-					}
+					__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 				}
 
 				PopStackN(resolvedTotalArgdNum);
@@ -2873,25 +2855,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + 1;
-					if (IsPassArgAsValue(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
-					{
-						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
-					}
-					else
-					{
-						// call convention. push ref if size > 8
-						IL2CPP_ASSERT(bigValueTypeRefStackIdx < MAX_STACK_SIZE);
-						CreateAddIR(ir, LdlocVarAddress);
-						ir->dst = (uint16_t)bigValueTypeRefStackIdx;
-						ir->src = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
-						__argIdxs[curArgIdx] = (uint16_t)bigValueTypeRefStackIdx;
-						++bigValueTypeRefStackIdx;
-						// update max stack size
-						if (bigValueTypeRefStackIdx > maxStackSize)
-						{
-							maxStackSize = bigValueTypeRefStackIdx;
-						}
-					}
+					__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 				}
 
 				PopStackN(resolvedTotalArgdNum);
@@ -3006,25 +2970,7 @@ ip++;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i;
-					if (IsPassArgAsValue(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
-					{
-						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
-					}
-					else
-					{
-						// call convention. push ref if size > 8
-						IL2CPP_ASSERT(bigValueTypeRefStackIdx < MAX_STACK_SIZE);
-						CreateAddIR(ir, LdlocVarAddress);
-						ir->dst = (uint16_t)bigValueTypeRefStackIdx;
-						ir->src = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
-						__argIdxs[curArgIdx] = (uint16_t)bigValueTypeRefStackIdx;
-						++bigValueTypeRefStackIdx;
-						// update max stack size
-						if (bigValueTypeRefStackIdx > maxStackSize)
-						{
-							maxStackSize = bigValueTypeRefStackIdx;
-						}
-					}
+					__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 				}
 
 				PopStackN(resolvedTotalArgdNum + 1);

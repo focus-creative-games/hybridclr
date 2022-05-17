@@ -17,25 +17,25 @@ namespace huatuo
 	{
 		ArgDesc GetValueTypeArgDescBySize(uint32_t size)
 		{
-#if HUATUO_TARGET_ARM
-			if (size <= 8)
-			{
-				return { LocationDataType::U8, 1 };
-			}
-			else if (size <= 16)
-			{
-				return { LocationDataType::U16, 2 };
-			}
-			switch (size)
-			{
-			case 16: return { LocationDataType::S_16, 2 };
-			case 20: return { LocationDataType::S_20, 3 };
-			case 24: return { LocationDataType::S_24, 3 };
-			case 28: return { LocationDataType::S_28, 4 };
-			case 32: return { LocationDataType::S_32, 4 };
-			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
-			}
-#else
+//#if HUATUO_TARGET_ARM
+//			if (size <= 8)
+//			{
+//				return { LocationDataType::U8, 1 };
+//			}
+//			else if (size <= 16)
+//			{
+//				return { LocationDataType::U16, 2 };
+//			}
+//			switch (size)
+//			{
+//			case 16: return { LocationDataType::S_16, 2 };
+//			case 20: return { LocationDataType::S_20, 3 };
+//			case 24: return { LocationDataType::S_24, 3 };
+//			case 28: return { LocationDataType::S_28, 4 };
+//			case 32: return { LocationDataType::S_32, 4 };
+//			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
+//			}
+//#else
 			switch (size)
 			{
 			case 1:
@@ -50,7 +50,7 @@ namespace huatuo
 			case 32: return { LocationDataType::S_32, 4 };
 			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 			}
-#endif
+//#endif
 		}
 
 		ArgDesc GetTypeArgDesc(const Il2CppType* type)
@@ -126,115 +126,115 @@ namespace huatuo
 		void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize)
 		{
 			uint32_t dstOffset = 0;
-#if HUATUO_TARGET_ARM
-			uint32_t srcOffset = 0;
-			for (uint32_t i = 0, n = paramCount; i < n; i++)
-			{
-				ArgDesc& arg = args[i];
-				StackObject* dst = dstBase + dstOffset;
-				StackObject* src = argBase + srcOffset;
-				switch (arg.type)
-				{
-				case LocationDataType::I1:
-				{
-					dst->i64 = *(int8_t*)src;
-					++srcOffset;
-					++dstOffset;
-					break;
-				}
-				case LocationDataType::U1:
-				{
-					dst->i64 = *(uint8_t*)src;
-					++srcOffset;
-					++dstOffset;
-					break;
-				}
-				case LocationDataType::I2:
-				{
-					dst->i64 = *(int16_t*)src;
-					++srcOffset;
-					++dstOffset;
-					break;
-				}
-				case LocationDataType::U2:
-				{
-					dst->i64 = *(uint16_t*)src;
-					++srcOffset;
-					++dstOffset;
-					break;
-				}
-				case LocationDataType::U8:
-				{
-					dst->i64 = *(int64_t*)src;
-					++srcOffset;
-					++dstOffset;
-					break;
-				}
-				case LocationDataType::U16:
-				{
-					*(ValueTypeSize16*)dst = *(ValueTypeSize16*)src;
-					srcOffset += 2;
-					dstOffset += 2;
-					break;
-				}
-				case LocationDataType::S_12:
-				{
-					// when size > 8, arg is ref to struct
-					Copy12(dst, src->ptr);
-					++srcOffset;
-					dstOffset += 2;
-					break;
-				}
-				case LocationDataType::S_16:
-				{
-					// when size > 8, arg is ref to struct
-					Copy16(dst, src->ptr);
-					++srcOffset;
-					dstOffset += 2;
-					break;
-				}
-				case LocationDataType::S_20:
-				{
-					Copy20(dst, src->ptr);
-					++srcOffset;
-					dstOffset += 3;
-					break;
-				}
-				case LocationDataType::S_24:
-				{
-					Copy24(dst, src->ptr);
-					++srcOffset;
-					dstOffset += 3;
-					break;
-				}
-				case LocationDataType::S_28:
-				{
-					Copy28(dst, src->ptr);
-					++srcOffset;
-					dstOffset += 4;
-					break;
-				}
-				case LocationDataType::S_32:
-				{
-					Copy32(dst, src->ptr);
-					++srcOffset;
-					dstOffset += 4;
-					break;
-				}
-				case LocationDataType::S_N:
-				{
-					std::memcpy(dst, src->ptr, arg.stackObjectSize * sizeof(StackObject));
-					++srcOffset;
-					dstOffset += arg.stackObjectSize;
-					break;
-				}
-				default:
-				{
-					RaiseHuatuoExecutionEngineException("CopyArgs not support data type");
-				}
-				}
-			}
-#else
+//#if HUATUO_TARGET_ARM
+//			uint32_t srcOffset = 0;
+//			for (uint32_t i = 0, n = paramCount; i < n; i++)
+//			{
+//				ArgDesc& arg = args[i];
+//				StackObject* dst = dstBase + dstOffset;
+//				StackObject* src = argBase + srcOffset;
+//				switch (arg.type)
+//				{
+//				case LocationDataType::I1:
+//				{
+//					dst->i64 = *(int8_t*)src;
+//					++srcOffset;
+//					++dstOffset;
+//					break;
+//				}
+//				case LocationDataType::U1:
+//				{
+//					dst->i64 = *(uint8_t*)src;
+//					++srcOffset;
+//					++dstOffset;
+//					break;
+//				}
+//				case LocationDataType::I2:
+//				{
+//					dst->i64 = *(int16_t*)src;
+//					++srcOffset;
+//					++dstOffset;
+//					break;
+//				}
+//				case LocationDataType::U2:
+//				{
+//					dst->i64 = *(uint16_t*)src;
+//					++srcOffset;
+//					++dstOffset;
+//					break;
+//				}
+//				case LocationDataType::U8:
+//				{
+//					dst->i64 = *(int64_t*)src;
+//					++srcOffset;
+//					++dstOffset;
+//					break;
+//				}
+//				case LocationDataType::U16:
+//				{
+//					*(ValueTypeSize16*)dst = *(ValueTypeSize16*)src;
+//					srcOffset += 2;
+//					dstOffset += 2;
+//					break;
+//				}
+//				case LocationDataType::S_12:
+//				{
+//					// when size > 8, arg is ref to struct
+//					Copy12(dst, src->ptr);
+//					++srcOffset;
+//					dstOffset += 2;
+//					break;
+//				}
+//				case LocationDataType::S_16:
+//				{
+//					// when size > 8, arg is ref to struct
+//					Copy16(dst, src->ptr);
+//					++srcOffset;
+//					dstOffset += 2;
+//					break;
+//				}
+//				case LocationDataType::S_20:
+//				{
+//					Copy20(dst, src->ptr);
+//					++srcOffset;
+//					dstOffset += 3;
+//					break;
+//				}
+//				case LocationDataType::S_24:
+//				{
+//					Copy24(dst, src->ptr);
+//					++srcOffset;
+//					dstOffset += 3;
+//					break;
+//				}
+//				case LocationDataType::S_28:
+//				{
+//					Copy28(dst, src->ptr);
+//					++srcOffset;
+//					dstOffset += 4;
+//					break;
+//				}
+//				case LocationDataType::S_32:
+//				{
+//					Copy32(dst, src->ptr);
+//					++srcOffset;
+//					dstOffset += 4;
+//					break;
+//				}
+//				case LocationDataType::S_N:
+//				{
+//					std::memcpy(dst, src->ptr, arg.stackObjectSize * sizeof(StackObject));
+//					++srcOffset;
+//					dstOffset += arg.stackObjectSize;
+//					break;
+//				}
+//				default:
+//				{
+//					RaiseHuatuoExecutionEngineException("CopyArgs not support data type");
+//				}
+//				}
+//			}
+//#else
 			for (uint32_t i = 0, n = paramCount; i < n; i++)
 			{
 				ArgDesc& arg = args[i];
@@ -272,11 +272,13 @@ namespace huatuo
 					++dstOffset;
 					break;
 				}
-				case LocationDataType::U16:
-				{
-					RaiseHuatuoExecutionEngineException("CopyArgs not support U16");
-					break;
-				}
+				//case LocationDataType::U16:
+				//{
+				//	RaiseHuatuoExecutionEngineException("CopyArgs not support U16");
+				//	Copy12(dst, src->ptr);
+				//	dstOffset += 2;
+				//	break;
+				//}
 				case LocationDataType::S_12:
 				{
 					// when size > 8, arg is ref to struct
@@ -327,7 +329,7 @@ namespace huatuo
 				}
 				}
 			}
-#endif
+// #endif
 			IL2CPP_ASSERT(dstOffset == totalParamStackObjectSize);
 		}
 
@@ -338,7 +340,7 @@ namespace huatuo
 			{
 				*locType = argDesc.type;
 			}
-			return argDesc.type <= LocationDataType::U16;
+			return argDesc.type <= LocationDataType::U8;
 		}
 
 		Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value)
@@ -470,13 +472,20 @@ namespace huatuo
 				}
 			}
 #else
-			if (returnType)
+			switch (typeSize)
 			{
-				pos += std::sprintf(sigBuf + pos, "s%d", typeSize);
+			case 1:
+			case 2:
+			case 4:
+			case 8:
+			{
+				AppendString(sigBuf, bufferSize, pos, "i8");
+				break;
 			}
-			else
+			default:
 			{
-				AppendString(sigBuf, bufferSize, pos, "i");
+				AppendString(sigBuf, bufferSize, pos, "sr");
+			}
 			}
 #endif
 		}
@@ -485,14 +494,14 @@ namespace huatuo
 		{
 			if (type->byref)
 			{
-				AppendString(sigBuf, bufferSize, pos, "i");
+				AppendString(sigBuf, bufferSize, pos, "i8");
 				return;
 			}
 			switch (type->type)
 			{
 			case IL2CPP_TYPE_VOID: AppendString(sigBuf, bufferSize, pos, "v"); break;
 			case IL2CPP_TYPE_R4:
-			case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "f"); break;
+			case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "r8"); break;
 			case IL2CPP_TYPE_TYPEDBYREF:
 			{
 				IL2CPP_ASSERT(sizeof(Il2CppTypedRef) == sizeof(void*) * 3);
@@ -511,7 +520,7 @@ namespace huatuo
 				const Il2CppType* underlyingGenericType = type->data.generic_class->type;
 				if (underlyingGenericType->type == IL2CPP_TYPE_CLASS)
 				{
-					AppendString(sigBuf, bufferSize, pos, "i");
+					AppendString(sigBuf, bufferSize, pos, "i8");
 				}
 				else
 				{
@@ -522,7 +531,7 @@ namespace huatuo
 				}
 				break;
 			}
-			default: AppendString(sigBuf, bufferSize, pos, "i"); break;
+			default: AppendString(sigBuf, bufferSize, pos, "i8"); break;
 			}
 		}
 
@@ -533,7 +542,7 @@ namespace huatuo
 
 			if (instanceCall)
 			{
-				AppendString(sigBuf, bufferSize, pos, "i");
+				AppendString(sigBuf, bufferSize, pos, "i8");
 			}
 
 			for (uint8_t i = 0; i < paramCount; i++)
@@ -554,7 +563,7 @@ namespace huatuo
 
 			if (call && metadata::IsInstanceMethod(method))
 			{
-				AppendString(sigBuf, bufferSize, pos, "i");
+				AppendString(sigBuf, bufferSize, pos, "i8");
 			}
 
 			for (uint8_t i = 0; i < method->parameterCount; i++)
@@ -574,7 +583,7 @@ namespace huatuo
 
 			if (call && metadata::IsInstanceMethod(method))
 			{
-				AppendString(sigBuf, bufferSize, pos, "i");
+				AppendString(sigBuf, bufferSize, pos, "i8");
 			}
 
 			for (uint8_t i = 0; i < method->parameters_count; i++)
