@@ -392,10 +392,17 @@ namespace metadata
 							continue;
 						}
 
-						for (uint16_t idx = rioi.offset, end = rioi.offset + (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
+						for (uint16_t idx = 0, end = (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
 						{
-							VirtualMethodImpl& ivmi = _methodImpls[idx];
-							if (IsOverrideMethod(&matchImpl->declaration.containerType, matchImpl->declaration.methodDef, ivmi.type, ivmi.method))
+							GenericClassMethod& rvm = rioi.tree->_virtualMethods[idx];
+							VirtualMethodImpl& ivmi = _methodImpls[idx + rioi.offset];
+							const char* name1 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(matchImpl->declaration.methodDef->nameIndex);
+							const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
+							if (std::strcmp(name1, name2))
+							{
+								continue;
+							}
+							if (IsOverrideMethodIgnoreName(&matchImpl->declaration.containerType, matchImpl->declaration.methodDef, ivmi.type, ivmi.method))
 							{
 								ivmi.type = vm.type;
 								ivmi.method = vm.method;
