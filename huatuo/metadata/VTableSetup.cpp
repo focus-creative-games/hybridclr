@@ -112,12 +112,12 @@ namespace metadata
 		{
 			if (tdt->IsInterType())
 			{
-				tdt->ComputInterfaceVtables();
+				tdt->ComputInterfaceVtables(cache);
 			}
 		}
 		else
 		{
-			tdt->ComputVtables();
+			tdt->ComputVtables(cache);
 		}
 		cache[type] = tdt;
 		return tdt;
@@ -177,7 +177,7 @@ namespace metadata
 		return false;
 	}
 
-	void VTableSetUp::ComputInterfaceVtables()
+	void VTableSetUp::ComputInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
 		IL2CPP_ASSERT(huatuo::metadata::IsInterface(_typeDef->flags));
 		uint16_t slotIdx = 0;
@@ -187,15 +187,15 @@ namespace metadata
 		}
 	}
 
-	void VTableSetUp::ComputVtables()
+	void VTableSetUp::ComputVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
 		if (IsInterType())
 		{
-			ComputInterpTypeVtables();
+			ComputInterpTypeVtables(cache);
 		}
 		else
 		{
-			ComputAotTypeVtables();
+			ComputAotTypeVtables(cache);
 		}
 
 		uint16_t idx = 0;
@@ -237,12 +237,12 @@ namespace metadata
 		return nullptr;
 	}
 
-	void VTableSetUp::ComputAotTypeVtables()
+	void VTableSetUp::ComputAotTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
 		for (uint16_t i = 0; i < _typeDef->interface_offsets_count; i++)
 		{
 			Il2CppInterfaceOffsetInfo ioi = il2cpp::vm::GlobalMetadata::GetInterfaceOffsetInfo(_typeDef, i);
-			_interfaceOffsetInfos.push_back({ TryInflateIfNeed(_type, ioi.interfaceType), nullptr, (uint16_t)ioi.offset });
+			_interfaceOffsetInfos.push_back({ ioi.interfaceType, BuildByType(cache, ioi.interfaceType), (uint16_t)ioi.offset});
 		}
 
 		int nullVtableSlotCount = 0;
@@ -317,7 +317,7 @@ namespace metadata
 		IL2CPP_ASSERT(_typeDef->vtable_count == (uint16_t)_methodImpls.size());
 	}
 
-	void VTableSetUp::ComputInterpTypeVtables()
+	void VTableSetUp::ComputInterpTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
 		uint16_t curOffset = 0;
 		if (_parent)

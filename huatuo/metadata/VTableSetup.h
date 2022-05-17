@@ -62,10 +62,10 @@ namespace metadata
 
 		const VTableSetUp* GetParent() const { return _parent; }
 
-		void ComputVtables();
-		void ComputAotTypeVtables();
-		void ComputInterpTypeVtables();
-		void ComputInterfaceVtables();
+		void ComputVtables(Il2CppType2TypeDeclaringTreeMap& cache);
+		void ComputAotTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
+		void ComputInterpTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
+		void ComputInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache);
 
 		const Il2CppType* FindImplType(const Il2CppMethodDefinition* methodDef);
 		const GenericClassMethod* FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef);
