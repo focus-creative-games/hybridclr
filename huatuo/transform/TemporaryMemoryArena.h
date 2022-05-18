@@ -53,7 +53,7 @@ namespace huatuo
 			template<typename T>
 			T* NewAny()
 			{
-				const int needSize = AligndSize(sizeof(T));
+				const size_t needSize = AligndSize(sizeof(T));
 				if (_pos + needSize <= _size)
 				{
 					T* ir = new (_buf + _pos) T();
@@ -75,7 +75,7 @@ namespace huatuo
 			{
 				if (n > 0)
 				{
-					ptrdiff_t bytes = AligndSize(sizeof(T) * n);
+					size_t bytes = AligndSize(sizeof(T) * n);
 					if (_pos + bytes > _size)
 					{
 						RequireSize(bytes);
