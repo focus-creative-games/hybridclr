@@ -89,16 +89,15 @@ namespace interpreter
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
-	void NotSupportManaged2Native(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+	static void NotSupportNative2Managed()
 	{
-		TEMP_FORMAT(errMsg, "Managed2Native method missing. %s.%s::%s", method->klass->namespaze, method->klass->name, method->name);
-		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportNative2Managed"));
 	}
 
 	static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
 	{
 		TEMP_FORMAT(errMsg, "Invoke method missing. %s.%s::%s", method->klass->namespaze, method->klass->name, method->name);
-		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
 	}
 
@@ -110,7 +109,7 @@ namespace interpreter
 			return ncm->method;
 		}
 		//RaiseMethodNotSupportException(method, "GetMethodPointer");
-		return (Il2CppMethodPointer)NotSupportManaged2Native;
+		return (Il2CppMethodPointer)NotSupportNative2Managed;
 	}
 
 	Il2CppMethodPointer InterpreterModule::GetMethodPointer(const MethodInfo* method)
@@ -121,7 +120,7 @@ namespace interpreter
 			return ncm->method;
 		}
 		//RaiseMethodNotSupportException(method, "GetMethodPointer");
-		return (Il2CppMethodPointer)NotSupportManaged2Native;
+		return (Il2CppMethodPointer)NotSupportNative2Managed;
 	}
 
 	Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const Il2CppMethodDefinition* method)
@@ -136,7 +135,7 @@ namespace interpreter
 			return ncm->adjustThunkMethod;
 		}
 		//RaiseMethodNotSupportException(method, "GetAdjustThunkMethodPointer");
-		return (Il2CppMethodPointer)NotSupportManaged2Native;
+		return (Il2CppMethodPointer)NotSupportNative2Managed;
 	}
 
 	Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const MethodInfo* method)
@@ -151,7 +150,7 @@ namespace interpreter
 			return ncm->adjustThunkMethod;
 		}
 		//RaiseMethodNotSupportException(method, "GetAdjustThunkMethodPointer");
-		return (Il2CppMethodPointer)NotSupportManaged2Native;
+		return (Il2CppMethodPointer)NotSupportNative2Managed;
 	}
 
 	Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const MethodInfo* method, bool forceStatic)
