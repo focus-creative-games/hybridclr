@@ -25,10 +25,15 @@ namespace huatuo
 				End();
 			}
 
+			static size_t AligndSize(size_t size)
+			{
+				return (size + 7) & ~7;
+			}
+
 			template<typename T>
 			T* AllocIR()
 			{
-				const size_t aligndSize = (sizeof(T) + 7) & ~7;
+				const size_t aligndSize = AligndSize(sizeof(T));
 				if (_pos + aligndSize <= _size)
 				{
 					T* ir = (T*)(_buf + _pos);
@@ -48,7 +53,7 @@ namespace huatuo
 			template<typename T>
 			T* NewAny()
 			{
-				const int needSize = sizeof(T);
+				const int needSize = AligndSize(sizeof(T));
 				if (_pos + needSize <= _size)
 				{
 					T* ir = new (_buf + _pos) T();
@@ -70,7 +75,7 @@ namespace huatuo
 			{
 				if (n > 0)
 				{
-					ptrdiff_t bytes = sizeof(T) * n;
+					ptrdiff_t bytes = AligndSize(sizeof(T) * n);
 					if (_pos + bytes > _size)
 					{
 						RequireSize(bytes);
