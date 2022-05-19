@@ -17,25 +17,6 @@ namespace huatuo
 	{
 		ArgDesc GetValueTypeArgDescBySize(uint32_t size)
 		{
-//#if HUATUO_TARGET_ARM
-//			if (size <= 8)
-//			{
-//				return { LocationDataType::U8, 1 };
-//			}
-//			else if (size <= 16)
-//			{
-//				return { LocationDataType::U16, 2 };
-//			}
-//			switch (size)
-//			{
-//			case 16: return { LocationDataType::S_16, 2 };
-//			case 20: return { LocationDataType::S_20, 3 };
-//			case 24: return { LocationDataType::S_24, 3 };
-//			case 28: return { LocationDataType::S_28, 4 };
-//			case 32: return { LocationDataType::S_32, 4 };
-//			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
-//			}
-//#else
 			switch (size)
 			{
 			case 1:
@@ -50,7 +31,6 @@ namespace huatuo
 			case 32: return { LocationDataType::S_32, 4 };
 			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 			}
-//#endif
 		}
 
 		ArgDesc GetTypeArgDesc(const Il2CppType* type)
@@ -126,115 +106,6 @@ namespace huatuo
 		void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize)
 		{
 			uint32_t dstOffset = 0;
-//#if HUATUO_TARGET_ARM
-//			uint32_t srcOffset = 0;
-//			for (uint32_t i = 0, n = paramCount; i < n; i++)
-//			{
-//				ArgDesc& arg = args[i];
-//				StackObject* dst = dstBase + dstOffset;
-//				StackObject* src = argBase + srcOffset;
-//				switch (arg.type)
-//				{
-//				case LocationDataType::I1:
-//				{
-//					dst->i64 = *(int8_t*)src;
-//					++srcOffset;
-//					++dstOffset;
-//					break;
-//				}
-//				case LocationDataType::U1:
-//				{
-//					dst->i64 = *(uint8_t*)src;
-//					++srcOffset;
-//					++dstOffset;
-//					break;
-//				}
-//				case LocationDataType::I2:
-//				{
-//					dst->i64 = *(int16_t*)src;
-//					++srcOffset;
-//					++dstOffset;
-//					break;
-//				}
-//				case LocationDataType::U2:
-//				{
-//					dst->i64 = *(uint16_t*)src;
-//					++srcOffset;
-//					++dstOffset;
-//					break;
-//				}
-//				case LocationDataType::U8:
-//				{
-//					dst->i64 = *(int64_t*)src;
-//					++srcOffset;
-//					++dstOffset;
-//					break;
-//				}
-//				case LocationDataType::U16:
-//				{
-//					*(ValueTypeSize16*)dst = *(ValueTypeSize16*)src;
-//					srcOffset += 2;
-//					dstOffset += 2;
-//					break;
-//				}
-//				case LocationDataType::S_12:
-//				{
-//					// when size > 8, arg is ref to struct
-//					Copy12(dst, src->ptr);
-//					++srcOffset;
-//					dstOffset += 2;
-//					break;
-//				}
-//				case LocationDataType::S_16:
-//				{
-//					// when size > 8, arg is ref to struct
-//					Copy16(dst, src->ptr);
-//					++srcOffset;
-//					dstOffset += 2;
-//					break;
-//				}
-//				case LocationDataType::S_20:
-//				{
-//					Copy20(dst, src->ptr);
-//					++srcOffset;
-//					dstOffset += 3;
-//					break;
-//				}
-//				case LocationDataType::S_24:
-//				{
-//					Copy24(dst, src->ptr);
-//					++srcOffset;
-//					dstOffset += 3;
-//					break;
-//				}
-//				case LocationDataType::S_28:
-//				{
-//					Copy28(dst, src->ptr);
-//					++srcOffset;
-//					dstOffset += 4;
-//					break;
-//				}
-//				case LocationDataType::S_32:
-//				{
-//					Copy32(dst, src->ptr);
-//					++srcOffset;
-//					dstOffset += 4;
-//					break;
-//				}
-//				case LocationDataType::S_N:
-//				{
-//					std::memcpy(dst, src->ptr, arg.stackObjectSize * sizeof(StackObject));
-//					++srcOffset;
-//					dstOffset += arg.stackObjectSize;
-//					break;
-//				}
-//				default:
-//				{
-//					RaiseHuatuoExecutionEngineException("CopyArgs not support data type");
-//				}
-//				}
-//			}
-//#else
 			for (uint32_t i = 0, n = paramCount; i < n; i++)
 			{
 				ArgDesc& arg = args[i];
@@ -329,7 +200,6 @@ namespace huatuo
 				}
 				}
 			}
-// #endif
 			IL2CPP_ASSERT(dstOffset == totalParamStackObjectSize);
 		}
 
@@ -358,39 +228,6 @@ namespace huatuo
 
 		void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, void** __args)
 		{
-//#if HUATUO_TARGET_ARM
-//			uint32_t dstOffset = 0;
-//			for (uint8_t i = 0; i < method->parameters_count; i++)
-//			{
-//				const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
-//				StackObject* dst = resultArgs + dstOffset;
-//				++dstOffset;
-//				if (argType->byref)
-//				{
-//					dst->ptr = __args[i];
-//				}
-//				else if (huatuo::metadata::IsValueType(argType))
-//				{
-//					if (IsPassArgAsValue(argType))
-//					{
-//						dst->i64 = *(uint64_t*)__args[i];
-//					}
-//					else
-//					{
-//						dst->ptr = __args[i];
-//					}
-//				}
-//				//else if (argType->type == IL2CPP_TYPE_PTR)
-//				//{
-//				//    dst->ptr = __args[i];
-//				//}
-//				else
-//				{
-//					dst->ptr = __args[i];
-//				}
-//
-//			}
-//#else
 			for (uint8_t i = 0; i < method->parameters_count; i++)
 			{
 				const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
@@ -419,9 +256,7 @@ namespace huatuo
 				{
 					dst->ptr = __args[i];
 				}
-
 			}
-//#endif
 		}
 
 		static void AppendString(char* sigBuf, size_t bufSize, size_t& pos, const char* str)
@@ -575,7 +410,19 @@ namespace huatuo
 			switch (type->type)
 			{
 			case IL2CPP_TYPE_VOID: AppendString(sigBuf, bufferSize, pos, "v"); break;
+#if HUATUO_TARGET_ARM
+			case IL2CPP_TYPE_BOOLEAN:
+			case IL2CPP_TYPE_I1:
+			case IL2CPP_TYPE_U1: AppendString(sigBuf, bufferSize, pos, "i1"); break;
+			case IL2CPP_TYPE_I2:
+			case IL2CPP_TYPE_U2:
+			case IL2CPP_TYPE_CHAR: AppendString(sigBuf, bufferSize, pos, "i2"); break;
+			case IL2CPP_TYPE_I4:
+			case IL2CPP_TYPE_U4: AppendString(sigBuf, bufferSize, pos, "i4"); break;
+			case IL2CPP_TYPE_R4: AppendString(sigBuf, bufferSize, pos, "r4"); break;
+#else
 			case IL2CPP_TYPE_R4:
+#endif
 			case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "r8"); break;
 			case IL2CPP_TYPE_TYPEDBYREF:
 			{
