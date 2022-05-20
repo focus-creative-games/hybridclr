@@ -160,7 +160,11 @@ namespace interpreter
 		{
 			return ncm->managed2NativeMethod;
 		}
-		RaiseMethodNotSupportException(method, "GetManaged2NativeMethodPointer");
+		char sigName[1000];
+		ComputSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+
+		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
+		RaiseMethodNotSupportException(method, errMsg);
 		return nullptr;
 	}
 
@@ -173,7 +177,8 @@ namespace interpreter
 		{
 			return it->second.managed2NativeMethod;
 		}
-		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(sigName));
+		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
 	}
 
