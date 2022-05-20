@@ -394,7 +394,14 @@ namespace huatuo
 			}
 			default:
 			{
-				AppendString(sigBuf, bufferSize, pos, "sr");
+				if (returnType)
+				{
+					pos += std::sprintf(sigBuf + pos, "S%d", typeSize);
+				}
+				else
+				{
+					AppendString(sigBuf, bufferSize, pos, "sr");
+				}
 			}
 			}
 #endif
