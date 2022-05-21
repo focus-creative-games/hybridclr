@@ -62,7 +62,7 @@ namespace interpreter
 	const NativeCallMethod* GetNativeCallMethod(const T* method, bool forceStatic)
 	{
 		char sigName[1000];
-		ComputSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 		auto it = s_calls.find(sigName);
 		return (it != s_calls.end()) ? &it->second : nullptr;
 	}
@@ -71,7 +71,7 @@ namespace interpreter
 	const NativeInvokeMethod* GetNativeInvokeMethod(const T* method)
 	{
 		char sigName[1000];
-		ComputSignature(method, false, sigName, sizeof(sigName) - 1);
+		ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
 		auto it = s_invokes.find(sigName);
 		return (it != s_invokes.end()) ? &it->second : nullptr;
 	}
@@ -161,7 +161,7 @@ namespace interpreter
 			return ncm->managed2NativeMethod;
 		}
 		char sigName[1000];
-		ComputSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 
 		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
 		RaiseMethodNotSupportException(method, errMsg);
@@ -171,7 +171,7 @@ namespace interpreter
 	Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
 	{
 		char sigName[1000];
-		ComputSignature(&method.returnType, method.params, method.paramCount, false, sigName, sizeof(sigName) - 1);
+		ComputeSignature(&method.returnType, method.params, method.paramCount, false, sigName, sizeof(sigName) - 1);
 		auto it = s_calls.find(sigName);
 		if (it != s_calls.end())
 		{

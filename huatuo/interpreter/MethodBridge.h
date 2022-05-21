@@ -117,9 +117,9 @@ namespace interpreter
 	Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value);
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, void** __args);
 
-	bool ComputSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize);
-	bool ComputSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize);
-	bool ComputSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize);
+	bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize);
+	bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize);
+	bool ComputeSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize);
 
 }
 }

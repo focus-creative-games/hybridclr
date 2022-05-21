@@ -259,6 +259,79 @@ namespace huatuo
 			}
 		}
 
+		struct HFATypeInfo
+		{
+			const Il2CppType* eleType;
+			int32_t count;
+		};
+
+
+		static bool ComputeHFATypeInfo0(Il2CppClass* klass, HFATypeInfo& typeInfo)
+		{
+			il2cpp::vm::Class::SetupFields(klass);
+			for (uint16_t i = 0; i < klass->field_count; i++)
+			{
+				FieldInfo* field = klass->fields + i;
+				const Il2CppType* ftype = field->type;
+				if (!metadata::IsInstanceField(ftype))
+				{
+					continue;
+				}
+				if (ftype->byref)
+				{
+					return false;
+				}
+				if ((ftype->type != IL2CPP_TYPE_R4 && ftype->type != IL2CPP_TYPE_R8))
+				{
+					if (ftype->type == IL2CPP_TYPE_VALUETYPE || (ftype->type == IL2CPP_TYPE_GENERICINST && ftype->data.generic_class->type->type == IL2CPP_TYPE_VALUETYPE))
+					{
+						Il2CppClass* fieldKlass = il2cpp::vm::Class::FromIl2CppType(ftype);
+						if (!ComputeHFATypeInfo0(fieldKlass, typeInfo))
+						{
+							return false;
+						}
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else if (typeInfo.eleType == nullptr || metadata::IsTypeEqual(ftype, typeInfo.eleType))
+				{
+					typeInfo.eleType = ftype;
+					++typeInfo.count;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			return typeInfo.count <= 4;
+		}
+
+		static bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo)
+		{
+			typeInfo = {};
+			int32_t size = metadata::GetTypeValueSize(klass);
+			switch (size)
+			{
+			case 8:
+			case 12:
+			case 16:
+			case 24:
+			case 32: break;
+			default: return false;
+			}
+			
+			bool isHFA = ComputeHFATypeInfo0(klass, typeInfo);
+			if (isHFA && typeInfo.count >= 2 && typeInfo.count <= 4)
+			{
+				int32_t fieldSize = typeInfo.eleType->type == IL2CPP_TYPE_R4 ? 4 : 8;
+				return size == fieldSize * typeInfo.count;
+			}
+			return false;
+		}
+
 		static void AppendString(char* sigBuf, size_t bufSize, size_t& pos, const char* str)
 		{
 			size_t len = std::strlen(str);
@@ -277,48 +350,12 @@ namespace huatuo
 		{
 			int typeSize = il2cpp::vm::Class::GetValueSize(klass, nullptr);
 #if HUATUO_TARGET_ARM
-			const Il2CppType* fieldType = nullptr;
-			int32_t fieldSize = 0;
-			int32_t humoFieldCount = 0;
-			bool isHFA = true;
-			for (uint16_t i = 0; i < klass->field_count; i++)
+			HFATypeInfo typeInfo = {};
+			if (ComputeHFATypeInfo(klass, typeInfo))
 			{
-				FieldInfo* field = &klass->fields[i];
-				if (!metadata::IsInstanceField(field->type))
+				if (typeInfo.eleType->type == IL2CPP_TYPE_R4)
 				{
-					continue;
-				}
-				if (fieldType == nullptr)
-				{
-					if (!field->type->byref && (field->type->type == IL2CPP_TYPE_R4 || field->type->type == IL2CPP_TYPE_R8))
-					{
-						fieldType = field->type;
-						fieldSize = field->type->type == IL2CPP_TYPE_R4 ? 4 : 8;
-					}
-					else
-					{
-						isHFA = false;
-						break;
-					}
-				}
-				else if (!metadata::IsTypeEqual(field->type, fieldType))
-				{
-					isHFA = false;
-					break;
-				}
-				int32_t fieldOffsetSinceData = field->offset - sizeof(Il2CppObject);
-				if (fieldOffsetSinceData != humoFieldCount * fieldSize)
-				{
-					isHFA = false;
-					break;
-				}
-				++humoFieldCount;
-			}
-			if (isHFA && humoFieldCount > 0)
-			{
-				if (fieldSize == 4)
-				{
-					switch (humoFieldCount)
+					switch (typeInfo.count)
 					{
 					case 2:
 					{
@@ -339,8 +376,8 @@ namespace huatuo
 				}
 				else
 				{
-					IL2CPP_ASSERT(fieldSize == 8);
-					switch (humoFieldCount)
+					IL2CPP_ASSERT(typeInfo.eleType->type == IL2CPP_TYPE_R8);
+					switch (typeInfo.count)
 					{
 					case 2:
 					{
@@ -464,7 +501,7 @@ namespace huatuo
 			}
 		}
 
-		bool ComputSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize)
+		bool ComputeSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize)
 		{
 			size_t pos = 0;
 			AppendSignature(ret, true, sigBuf, bufferSize, pos);
@@ -482,7 +519,7 @@ namespace huatuo
 			return true;
 		}
 
-		bool ComputSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize)
+		bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize)
 		{
 			size_t pos = 0;
 
@@ -504,7 +541,7 @@ namespace huatuo
 			return true;
 		}
 
-		bool ComputSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize)
+		bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize)
 		{
 			size_t pos = 0;
 
