@@ -2737,7 +2737,7 @@ ip++;
 
 				if (!shareMethod->invoker_method || !shareMethod->methodPointer)
 				{
-					RaiseMethodPointerNotImplementException(shareMethod);
+					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
 				}
 
 				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
@@ -4111,7 +4111,7 @@ ip++;
 
 				if (!shareMethod->methodPointer)
 				{
-					RaiseMethodPointerNotImplementException(shareMethod);
+					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
 				}
 				int32_t callArgEvalStackIdxBase = evalStackTop - shareMethod->parameters_count;
 				IL2CPP_ASSERT(callArgEvalStackIdxBase >= 0);

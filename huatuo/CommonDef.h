@@ -145,10 +145,10 @@ namespace huatuo
 		return name;
 	}
 
-	inline void RaiseMethodPointerNotImplementException(const MethodInfo* method)
+	inline void RaiseAOTGenericMethodNotInstantiatedException(const MethodInfo* method)
 	{
 		std::string methodName = GetMethodNameWithSignature(method);
-		TEMP_FORMAT(errMsg, "MethodPointerNotImplement %s", methodName.c_str());
+		TEMP_FORMAT(errMsg, "AOT generic method isn't instantiated in aot module. %s", methodName.c_str());
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(errMsg));
 	}
 

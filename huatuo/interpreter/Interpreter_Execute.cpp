@@ -4976,7 +4976,7 @@ else \
 				    {
 				        if (_actualMethod->methodPointer == nullptr)
 				        {
-				            RaiseMethodPointerNotImplementException(_actualMethod);
+				            RaiseAOTGenericMethodNotInstantiatedException(_actualMethod);
 				        }
 				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, nullptr);
 				        ip += 14;
@@ -5013,7 +5013,7 @@ else \
 				    {
 				        if (_actualMethod->methodPointer == nullptr)
 				        {
-				            RaiseMethodPointerNotImplementException(_actualMethod);
+				            RaiseAOTGenericMethodNotInstantiatedException(_actualMethod);
 				        }
 				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, _ret);
 				        ip += 16;
@@ -5052,7 +5052,7 @@ else \
 				    {
 				        if (_actualMethod->methodPointer == nullptr)
 				        {
-				            RaiseMethodPointerNotImplementException(_actualMethod);
+				            RaiseAOTGenericMethodNotInstantiatedException(_actualMethod);
 				        }
 				        ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_actualMethod, _argIdxData, localVarBase, _ret);
 				        ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
