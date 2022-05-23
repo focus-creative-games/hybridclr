@@ -2760,7 +2760,7 @@ ip++;
 					}
 #endif
 				}
-				int32_t bigValueTypeRefStackIdx = GetEvalStackNewTopOffset();
+
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + resolvedIsInstanceMethod;
@@ -2849,9 +2849,7 @@ ip++;
 				uint16_t* __argIdxs;
 				AllocResolvedData(resolveDatas, needDataSlotNum, argIdxDataIndex, __argIdxs);
 
-
 				__argIdxs[0] = GetEvalStackOffset(callArgEvalStackIdxBase);
-				int32_t bigValueTypeRefStackIdx = GetEvalStackNewTopOffset();
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + 1;
@@ -2966,7 +2964,6 @@ ip++;
 
 
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgdNum - 1 /*funtion ptr*/;
-				int32_t bigValueTypeRefStackIdx = GetEvalStackNewTopOffset();
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i;
@@ -4191,30 +4188,10 @@ ip++;
 				PushStackByReduceType(EvalStackReduceDataType::Ref);
 				__argIdxs[0] = GetEvalStackTopOffset(); // this
 
-				int32_t bigValueTypeRefStackIdx = curStackSize;
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
 				{
 					int32_t curArgIdx = i + 1;
-					int32_t argSize = GetTypeValueStackObjectCount(GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i]));
-					if (argSize == 1)
-					{
-						__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + i].locOffset;
-					}
-					else
-					{
-						// call convention. push ref if size > 8
-						CreateAddIR(ir, LdlocVarAddress);
-						ir->dst = (uint16_t)bigValueTypeRefStackIdx;
-						ir->src = evalStack[callArgEvalStackIdxBase + i].locOffset;
-						IL2CPP_ASSERT(bigValueTypeRefStackIdx < MAX_STACK_SIZE);
-						__argIdxs[curArgIdx] = (uint16_t)bigValueTypeRefStackIdx;
-						++bigValueTypeRefStackIdx;
-						// update max stack size
-						if (bigValueTypeRefStackIdx > maxStackSize)
-						{
-							maxStackSize = bigValueTypeRefStackIdx;
-						}
-					}
+					__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + i].locOffset;
 				}
 				PopStackN(resolvedTotalArgdNum + 1); // args + obj + this
 				PushStackByType(&klass->byval_arg);
