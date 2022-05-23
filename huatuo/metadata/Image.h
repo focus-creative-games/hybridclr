@@ -339,6 +339,8 @@ namespace metadata
 			return { pd.name, &klass->byval_arg, addOn, removeOn, raiseOn, EncodeToken(TableType::EVENT, rowIndex) };
 		}
 
+		const Il2CppAssembly* GetReferencedAssembly(int32_t referencedAssemblyTableIndex, const Il2CppAssembly assembliesTable[], int assembliesCount);
+
 		Il2CppMetadataCustomAttributeHandle GetCustomAttributeTypeToken(uint32_t token)
 		{
 			auto it = _tokenCustomAttributes.find(token);

@@ -1116,6 +1116,16 @@ namespace metadata
 		return NULL;
 	}
 
+	const Il2CppAssembly* Image::GetReferencedAssembly(int32_t referencedAssemblyTableIndex, const Il2CppAssembly assembliesTable[], int assembliesCount)
+	{
+		auto& table = _tables[(int)TableType::ASSEMBLYREF];
+		IL2CPP_ASSERT(referencedAssemblyTableIndex >= 0 && referencedAssemblyTableIndex < table.rowNum);
+
+		TbAssemblyRef assRef = TableReader::ReadAssemblyRef(*this, referencedAssemblyTableIndex + 1);
+		const char* refAssName = GetStringFromRawIndex(assRef.name);
+		return il2cpp::vm::Assembly::GetLoadedAssembly(refAssName);
+	}
+
 
 	const MethodInfo* Image::FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod)
 	{
