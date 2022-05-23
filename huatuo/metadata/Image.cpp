@@ -1201,7 +1201,7 @@ namespace metadata
 		if (!klass)
 		{
 			TEMP_FORMAT(errMsg, "Image::GetClassFromToken token:%u class not exists", token);
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException());
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
 		}
 		// FIXME free resultType
 		{
