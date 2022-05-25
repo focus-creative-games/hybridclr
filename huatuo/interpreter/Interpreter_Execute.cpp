@@ -485,13 +485,27 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 				{
 					totalIdx = totalIdx * bound.length + idx;
 				}
+				else
+				{
+					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException());
+				}
 			}
 			return arrayStart + totalIdx * eleSize;
 		}
 		}
 	}
 
-	inline void GetMdArrayElement(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	template<typename T> void GetMdArrayElementExpandToStack(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	{
+		*(int32_t*)value = *(T*)GetMdArrayElementAddress(arr, indexs);
+	}
+
+	template<typename T> void GetMdArrayElementCopyToStack(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	{
+		*(T*)value = *(T*)GetMdArrayElementAddress(arr, indexs);
+	}
+
+	inline void GetMdArrayElementBySize(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
 	{
 		CopyBySize(value, GetMdArrayElementAddress(arr, indexs), arr->klass->element_size);
 	}
@@ -7437,7 +7451,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 6);
-				(*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), nullptr);
+				    (*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), nullptr);
 				    ip += 14;
 				    continue;
 				}
@@ -7447,16 +7461,88 @@ else \
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __lowerBoundIdxs = *(uint16_t*)(ip + 6);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 8);
-				(*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (il2cpp_array_size_t*)(void*)(localVarBase + __lowerBoundIdxs));
+				    (*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (il2cpp_array_size_t*)(void*)(localVarBase + __lowerBoundIdxs));
 				    ip += 16;
 				    continue;
 				}
-				case HiOpcodeEnum::GetMdArrElementVarVar:
+				case HiOpcodeEnum::GetMdArrElementVarVar_i1:
 				{
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElement((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementExpandToStack<int8_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_u1:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementExpandToStack<uint8_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_i2:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementExpandToStack<int16_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_u2:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementExpandToStack<uint16_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_i4:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementCopyToStack<int32_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_u4:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementCopyToStack<uint32_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_i8:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementCopyToStack<int64_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_u8:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementCopyToStack<uint64_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetMdArrElementVarVar_size:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    GetMdArrayElementBySize((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}

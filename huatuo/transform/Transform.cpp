@@ -1883,6 +1883,60 @@ ip++;
     PopStackN(3); \
     ip++;
 
+
+	inline HiOpcodeEnum CalcGetMdArrElementVarVarOpcode(const Il2CppType* type)
+	{
+		if (type->byref)
+		{
+			return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+		}
+		switch (type->type)
+		{
+		case IL2CPP_TYPE_I1: return HiOpcodeEnum::GetMdArrElementVarVar_i1;
+		case IL2CPP_TYPE_BOOLEAN:
+		case IL2CPP_TYPE_U1: return HiOpcodeEnum::GetMdArrElementVarVar_u1;
+		case IL2CPP_TYPE_I2: return HiOpcodeEnum::GetMdArrElementVarVar_i2;
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_CHAR: return HiOpcodeEnum::GetMdArrElementVarVar_u2;
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		case IL2CPP_TYPE_R4: return HiOpcodeEnum::GetMdArrElementVarVar_i4;
+		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+		case IL2CPP_TYPE_FNPTR:
+		case IL2CPP_TYPE_PTR:
+		case IL2CPP_TYPE_BYREF: return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+		default:
+		{
+			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+			if (IS_CLASS_VALUE_TYPE(klass))
+			{
+				if (klass->enumtype)
+				{
+					return CalcGetMdArrElementVarVarOpcode(&klass->element_class->byval_arg);
+				}
+
+				uint32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+				switch (size)
+				{
+				case 1: return HiOpcodeEnum::GetMdArrElementVarVar_i1;
+				case 2: return HiOpcodeEnum::GetMdArrElementVarVar_i2;
+				case 4: return HiOpcodeEnum::GetMdArrElementVarVar_i4;
+				case 8:  return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+				default:  return HiOpcodeEnum::GetMdArrElementVarVar_size;
+				}
+			}
+			else
+			{
+				return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+			}
+		}
+		}
+	}
+
 	struct FlowInfo
 	{
 		uint32_t curStackSize;
@@ -2675,7 +2729,8 @@ ip++;
 					uint8_t paramCount = shareMethod->parameters_count + 1;
 					if (strcmp(methodName, "Get") == 0)
 					{
-						CreateAddIR(ir, GetMdArrElementVarVar);
+						CreateAddIR(ir, GetMdArrElementVarVar_size);
+						ir->type = CalcGetMdArrElementVarVarOpcode(&klass->element_class->byval_arg);
 						ir->arr = GetEvalStackOffset(evalStackTop - paramCount);
 						ir->lengthIdxs = ir->arr + 1;
 						PopStackN(paramCount);
