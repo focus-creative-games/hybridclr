@@ -34,7 +34,7 @@ export HUATUO_IL2CPP_SOURCE_DIR=/Applications/Unity/Unity.app/Contents/il2cpp/
 
    ```shell
    cmake ..
-   make j4
+   make -j4
    ```
    静态库编译完成，生成文件libil2cpp_original.a和external/libzlib.a
 
