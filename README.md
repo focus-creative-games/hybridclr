@@ -34,11 +34,9 @@ huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpr
 - 实现了一个IL指令集到自定义的寄存器指令集的compiler
 - 实现了一个高效的寄存器解释器
 - 额外提供大量的instinct函数，提升解释器性能
-- 提供hotfix AOT的支持 （进行中）
+- 提供hotfix AOT的支持
 
 ## 与其他流行的c#热更新方案的区别
-
-简单类比，将il2cpp比作一只没有翅膀的鸟儿，只能地面行走，huatuo则让il2cpp直接长出原生翅膀，可以飞翔。 而其他热更方案则类似于做了一个飞行器，让它可以乘坐飞起来。
 
 ### 本质比较
 
@@ -66,9 +64,6 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 - [快速上手](https://github.com/focus-creative-games/huatuo/wiki/start_up)
 - [FAQ](https://github.com/focus-creative-games/huatuo/wiki/FAQ)
 - [限制和注意事项](https://github.com/focus-creative-games/huatuo/wiki/limit)
-- [常见错误](https://github.com/focus-creative-games/huatuo/wiki/common_errors)
-- [最佳实践](https://github.com/focus-creative-games/huatuo/wiki/best_practices)
-- [源码结构与跟踪调试](https://github.com/focus-creative-games/huatuo/wiki/source_inspect)
 - [示例项目](https://github.com/focus-creative-games/huatuo_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
 - [==>致谢名单<==](https://github.com/focus-creative-games/huatuo/wiki/donate)
@@ -77,40 +72,34 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 
 技术评估上目前稳定性处于Alpha版本与Beta版本之间。由于huatuo技术原理的先进性，bug本质不多，稳定得非常快。
 
-- 完成了绝大多数指令的单元测试。只有calli、initblk等少数难以直接在c#里构造的指令未添加对应的单元测试。
-- 对照c#规范完成各项语法测试。
+- 完成了比较完整的单元测试。
 - 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在huatuo下正常工作。参见[兼容性报告](https://github.com/focus-creative-games/huatuo/wiki/compatible)
-- 可以正确地加载 [luban](https://github.com/focus-creative-games/luban) 配置
-- 可以正确地运行 [2048](https://github.com/dgkanatsios/2048)这样的轻量小游戏
-- 可以运行 [StarForce](https://github.com/EllanJiang/StarForce) 这样的小型游戏
-- **==已经可以在pc平台完整运行重度MMORPG项目==**。目前正在积极推进android、ios、WebGL平台的测试工作。预计5月底会有较稳定的全平台版本。
+- 已经可以全平台(pc、android、ios)完整运行中大型的实际项目，参见[比较完整接入的项目列表](https://github.com/focus-creative-games/huatuo/wiki/go_through_projects)。
 
-预计在7月份会有使用huatuo的重度MMORPG项目上线。
+预计在9月份之前会有使用huatuo的中重度项目上线。
 
 ## 支持与联系
 
-* 开发交流，欢迎加QQ群或邮件联系walon
-  * QQ群: 651188171（huatuo c#热更新 开发交流群）
-  * 邮箱: taojingjian#gmail.com
+- 开发交流，欢迎加QQ群或邮件联系
+  - QQ群：428404198 huatuo新手群。新手使用过程中遇到问题，都可以在群里咨询。
+  - QQ群: 651188171 huatuo技术交流群。可以反馈bug，但**不要在群里咨询基础使用问题**。
+  - 邮箱: taojingjian#gmail.com
 
-* 商务合作，请联系Lucas Zhang
-  * 电话：15201249045
-  * 微信：lucaszhang1993
-  * 邮箱：zhangshuo@tuyoogame.com
+- 商务合作，请联系Lucas Zhang
+  - 电话：15201249045
+  - 微信：lucaszhang1993
+  - 邮箱：zhangshuo@tuyoogame.com
 
 ## RoadMap
 
 huatuo虽然与il2cpp相关，但绝大多数核心代码独立于il2cpp，很容易移植（预计一个月）到其他不支持AOT+Interpreter的CLR平台。无论unity如何版本变迁，哪怕废弃了il2cpp改用.net 6+，huatuo会持续跟进，稳定地提供跨平台的CLR热更新服务，直至某天.net官方直接支持AOT+Interpreter，则huatuo完成其历史使命。
 
-- 持续修复bug，在Win平台能正常运行一个中大型游戏 (2022.4)
-- 持续跟进unity的版本更新，支持更多的unity版本。查看[现在支持的Unity版本](https://github.com/focus-creative-games/huatuo/wiki/support_versions) (2022.4)
-- 推进Android与ios的全平台测试 (2022.5)
-- 支持 hotfix AOT部分的bug (2022.6)
-- 除去大多数普通AOT泛型类限制 (2022.6)
-- 支持增量式gc。 (2022.7)
+- 支持 Unity 2019,2020和2021系列版本
+- 除去大多数普通AOT泛型类限制
+- 支持 hotfix AOT部分的bug
 - 指令优化，编译后指令数减少到原来1/4-1/2，基础指令和大多数对象模型指令有100%-300%的性能提升。 (2022.7 出预览版本)
-- 支持 extern函数 (2022.7)
 - 其他内存和效率优化，以及代码重构
+- 支持增量式gc
 - **===支持godot引擎===**(2022.12)
 
 ## license
