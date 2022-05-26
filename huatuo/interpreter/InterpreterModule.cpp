@@ -78,14 +78,14 @@ namespace interpreter
 
 	static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
 	{
-		TEMP_FORMAT(errMsg, "%s not support. %s.%s::%s", desc, method->klass->namespaze, method->klass->name, method->name);
+		TEMP_FORMAT(errMsg, "%s. %s.%s::%s", desc, method->klass->namespaze, method->klass->name, method->name);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
 	static void RaiseMethodNotSupportException(const Il2CppMethodDefinition* method, const char* desc)
 	{
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
-		TEMP_FORMAT(errMsg, "%s not support. %s.%s::%s", desc, klass->namespaze, klass->name, il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex));
+		TEMP_FORMAT(errMsg, "%s. %s.%s::%s", desc, klass->namespaze, klass->name, il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex));
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
@@ -214,6 +214,11 @@ namespace interpreter
 		}
 
 		metadata::MethodBody& originMethod = image->GetMethodBody(methodInfo->token);
+		if (originMethod.ilcodes == nullptr)
+		{
+			TEMP_FORMAT(errMsg, "%s.%s::%s method body is null. not support external method currently.", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
+		}
 		InterpMethodInfo* imi = new (IL2CPP_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;
 		transform::HiTransform::Transform(image, methodInfo, originMethod, *imi);
 		il2cpp::os::Atomic::FullMemoryBarrier();
