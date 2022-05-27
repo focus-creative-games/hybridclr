@@ -30,7 +30,7 @@ namespace huatuo
 
 	private:
 		static const uint32_t kMaxStackObjectCount = 1024 * 128;
-		static const uint32_t kMaxFrameCount = 1024;
+		static const uint32_t kMaxFrameCount = 1024 * 4;
 	};
 }
 
