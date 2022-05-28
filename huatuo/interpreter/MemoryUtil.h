@@ -28,57 +28,111 @@ namespace interpreter
 
 	inline void Copy12(void* dst, void* src)
 	{
-		*(uint64_t*)dst = *(uint64_t*)src;
-		*(uint32_t*)((byte*)dst + 8) = *(uint32_t*)((byte*)src + 8);
+		if (dst <= src)
+		{
+			*(uint64_t*)dst = *(uint64_t*)src;
+			*(uint32_t*)((byte*)dst + 8) = *(uint32_t*)((byte*)src + 8);
+		}
+		else
+		{
+			*(uint32_t*)((byte*)dst + 8) = *(uint32_t*)((byte*)src + 8);
+			*(uint64_t*)dst = *(uint64_t*)src;
+		}
 	}
 
 	inline void Copy16(void* dst, void* src)
 	{
-		*(uint64_t*)dst = *(uint64_t*)src;
-		*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+		if (dst <= src)
+		{
+			*(uint64_t*)dst = *(uint64_t*)src;
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+		}
+		else
+		{
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)dst = *(uint64_t*)src;
+		}
 	}
 
 	inline void Copy20(void* dst, void* src)
 	{
-		*(uint64_t*)dst = *(uint64_t*)src;
-		*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
-		*(uint32_t*)((byte*)dst + 16) = *(uint32_t*)((byte*)src + 16);
+		if (dst <= src)
+		{
+			*(uint64_t*)dst = *(uint64_t*)src;
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint32_t*)((byte*)dst + 16) = *(uint32_t*)((byte*)src + 16);
+		}
+		else
+		{
+			*(uint32_t*)((byte*)dst + 16) = *(uint32_t*)((byte*)src + 16);
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)dst = *(uint64_t*)src;
+		}
 	}
 
 	inline void Copy24(void* dst, void* src)
 	{
-		*(uint64_t*)dst = *(uint64_t*)src;
-		*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
-		*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+		if (dst <= src)
+		{
+			*(uint64_t*)dst = *(uint64_t*)src;
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+		}
+		else
+		{
+			*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)dst = *(uint64_t*)src;
+		}
 	}
 
 	inline void Copy28(void* dst, void* src)
 	{
-		*(uint64_t*)dst = *(uint64_t*)src;
-		*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
-		*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
-		*(uint32_t*)((byte*)dst + 24) = *(uint32_t*)((byte*)src + 24);
+		if (dst <= src)
+		{
+			*(uint64_t*)dst = *(uint64_t*)src;
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+			*(uint32_t*)((byte*)dst + 24) = *(uint32_t*)((byte*)src + 24);
+		}
+		else
+		{
+			*(uint32_t*)((byte*)dst + 24) = *(uint32_t*)((byte*)src + 24);
+			*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)dst = *(uint64_t*)src;
+		}
 	}
 
 	inline void Copy32(void* dst, void* src)
 	{
-		*(uint64_t*)dst = *(uint64_t*)src;
-		*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
-		*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
-		*(uint64_t*)((byte*)dst + 24) = *(uint64_t*)((byte*)src + 24);
+		if (dst <= src)
+		{
+			*(uint64_t*)dst = *(uint64_t*)src;
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+			*(uint64_t*)((byte*)dst + 24) = *(uint64_t*)((byte*)src + 24);
+		}
+		else
+		{
+			*(uint64_t*)((byte*)dst + 24) = *(uint64_t*)((byte*)src + 24);
+			*(uint64_t*)((byte*)dst + 16) = *(uint64_t*)((byte*)src + 16);
+			*(uint64_t*)((byte*)dst + 8) = *(uint64_t*)((byte*)src + 8);
+			*(uint64_t*)dst = *(uint64_t*)src;
+		}
 	}
 
 	inline void CopyBySize(void* dst, void* src, uint32_t size)
 	{
 		switch (size)
 		{
-		case 4: Copy4(dst, src); break;
-		case 8: Copy8(dst, src); break;
 		case 1: Copy1(dst, src); break;
 		case 2: Copy2(dst, src); break;
+		case 4: Copy4(dst, src); break;
+		case 8: Copy8(dst, src); break;
 		case 12: Copy12(dst, src); break;
 		case 16: Copy16(dst, src); break;
-		default: std::memcpy(dst, src, size); break;
+		default: std::memmove(dst, src, size); break;
 		}
 	}
 
