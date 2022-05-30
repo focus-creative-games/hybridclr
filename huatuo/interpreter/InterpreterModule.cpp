@@ -10,6 +10,7 @@
 
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
+#include "../metadata/InterpreterAssemblyMetadataResolver.h"
 #include "../transform/Transform.h"
 
 #include "MethodBridge.h"
@@ -220,7 +221,8 @@ namespace interpreter
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		}
 		InterpMethodInfo* imi = new (IL2CPP_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;
-		transform::HiTransform::Transform(image, methodInfo, originMethod, *imi);
+		metadata::InterpreterAssemblyMetadataResolver resolver(image);
+		transform::HiTransform::Transform(&resolver, methodInfo, originMethod, *imi);
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		const_cast<MethodInfo*>(methodInfo)->huatuoData = imi;
 		return imi;
