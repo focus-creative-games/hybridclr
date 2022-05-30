@@ -1,7 +1,7 @@
 
 # huatuo
 
-[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/focus-creative-games/huatuo/blob/main/LICENSE)
 
 <br/>
 
@@ -17,8 +17,8 @@ huatuo扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki
 
 - 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
 - 零学习和使用成本。 huatuo将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
-- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://github.com/focus-creative-games/huatuo/wiki/benchmark)
-- 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://github.com/focus-creative-games/huatuo/wiki/memory)
+- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告]([内存与性能报告 | Focus Creative Games (focus-creative-games.github.io)](https://focus-creative-games.github.io/huatuo/performance/benchmark/#性能测试报告)
+- 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#内存占用报告)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
 
 ## 工作原理
@@ -60,21 +60,21 @@ huatuo是原生的c#热更新方案。通俗地说，il2cpp相当于mono的aot�
 
 ## 文档
 
-- [wiki](https://github.com/focus-creative-games/huatuo/wiki/home)
-- [快速上手](https://github.com/focus-creative-games/huatuo/wiki/start_up)
-- [FAQ](https://github.com/focus-creative-games/huatuo/wiki/FAQ)
-- [限制和注意事项](https://github.com/focus-creative-games/huatuo/wiki/limit)
+- ~~[wiki](https://github.com/focus-creative-games/huatuo/wiki/home)~~，不推荐使用
+- [文档站](https://focus-creative-games.github.io/)，**推荐使用**
+- [FAQ](https://focus-creative-games.github.io/huatuo/faq/)
+- [限制和注意事项](https://focus-creative-games.github.io/huatuo/performance/limit/)
 - [示例项目](https://github.com/focus-creative-games/huatuo_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
-- [==>致谢名单<==](https://github.com/focus-creative-games/huatuo/wiki/donate)
+- [==>致谢名单<==](https://focus-creative-games.github.io/huatuo/donate/)
 
 ## 稳定性状况
 
 技术评估上目前稳定性处于Alpha版本与Beta版本之间。由于huatuo技术原理的先进性，bug本质不多，稳定得非常快。
 
 - 完成了比较完整的单元测试。
-- 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在huatuo下正常工作。参见[兼容性报告](https://github.com/focus-creative-games/huatuo/wiki/compatible)
-- 已经可以全平台(pc、android、ios)完整运行中大型的实际项目，参见[比较完整接入的项目列表](https://github.com/focus-creative-games/huatuo/wiki/go_through_projects)。
+- 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在huatuo下正常工作。参见[兼容性报告](https://focus-creative-games.github.io/huatuo/performance/compatible/)
+- 已经可以全平台(pc、android、ios)完整运行中大型的实际项目，参见[比较完整接入的项目列表](https://focus-creative-games.github.io/huatuo/index/#%E5%B7%B2%E7%BB%8F%E6%88%90%E5%8A%9F%E6%8E%A5%E5%85%A5%E5%B9%B6%E4%B8%94%E8%B7%91%E9%80%9A%E5%87%A0%E4%B9%8E%E6%89%80%E6%9C%89%E6%A8%A1%E5%9D%97%E7%9A%84%E9%A1%B9%E7%9B%AE)。
 
 预计在9月份之前会有使用huatuo的中重度项目上线。
 
