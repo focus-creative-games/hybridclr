@@ -300,14 +300,18 @@ namespace metadata
             uint32_t encodeToken = reader.ReadCompressedUint32();
             Il2CppType modType = {};
             ReadTypeFromToken(reader.GetImage(), nullptr, nullptr, DecodeTypeDefOrRefOrSpecCodedIndexTableType(encodeToken), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(encodeToken), modType);
-            Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(&modType);
-            if (std::strcmp(klass->namespaze, "System.Runtime.InteropServices") == 0)
+            IL2CPP_ASSERT(modType.type == IL2CPP_TYPE_CLASS);
+            IL2CPP_ASSERT(modType.data.typeHandle);
+            const Il2CppTypeDefinition* modTypeDef = (const Il2CppTypeDefinition *)modType.data.typeHandle;
+            const char* modTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(modTypeDef->nameIndex);
+            const char* modTypeNamespace = il2cpp::vm::GlobalMetadata::GetStringFromIndex(modTypeDef->namespaceIndex);
+            if (std::strcmp(modTypeNamespace, "System.Runtime.InteropServices") == 0)
             {
-                if (std::strcmp(klass->name, "InAttribute") == 0)
+                if (std::strcmp(modTypeName, "InAttribute") == 0)
                 {
                     type.attrs |= PARAM_ATTRIBUTE_IN;
                 }
-                else if (std::strcmp(klass->name, "OutAttribute") == 0)
+                else if (std::strcmp(modTypeName, "OutAttribute") == 0)
                 {
                     type.attrs |= PARAM_ATTRIBUTE_OUT;
                 }
