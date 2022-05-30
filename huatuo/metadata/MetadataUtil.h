@@ -18,7 +18,7 @@ namespace metadata
     template<int N>
     inline void* GetAlignBorder(const void* pointer)
     {
-        int64_t p = (int64_t)pointer;
+        uint64_t p = (uint64_t)pointer;
         if (p % N == 0)
         {
             return (void*)pointer;
