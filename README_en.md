@@ -16,8 +16,8 @@ huatuo provides interpreter modules for pure AOT CLRs such as il2cpp, so that ap
 
 - Features complete. Nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), except for the features below "Limitations and Notes" are supported.
 - Zero learning and usage costs. huatuo enhances the pure AOT runtime into a full CLR runtime, making hot update code work seamlessly with AOT code. Script classes are in the same runtime as AOT classes, even code like reflection, multi-threading (volatile, ThreadStatic, Task, async) works fine. There is no need to write any special code, no code generation, and no special restrictions.
-- Execute efficiently. Implemented an extremely efficient register interpreter that outperformed other hot update schemes by a large margin by all metrics. [Performance test report](docs/benchmark.md)
-- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary C# classes, which is far superior to other hot update solutions. [Memory usage report](docs/memory.md)
+- Execute efficiently. Implemented an extremely efficient register interpreter that outperformed other hot update schemes by a large margin by all metrics. [Performance test report](https://focus-creative-games.github.io/huatuo/performance/benchmark/)
+- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary C# classes, which is far superior to other hot update solutions. [Memory usage report](https://focus-creative-games.github.io/huatuo/performance/benchmark/#%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8%E6%8A%A5%E5%91%8A)
 - Native support for hotfix to repair part of AOT code. Adds almost no development and runtime overhead.
 
 ## working principle
@@ -37,15 +37,14 @@ More specifically, huatuo does the following:
 
 ## Documentation
 
-- [wiki](docs/home.md)
-- [Quick Start](docs/start_up.md)
-- [FAQ](docs/FAQ.md)
-- [Common Errors](docs/common_errors.md)
-- [Best Practices](docs/best_practices.md)
-- [Source Structure and Trace Debugging](docs/source_inspect.md)
+- ~~[wiki](https://github.com/focus-creative-games/huatuo/wiki/home)~~
+- [Document](https://focus-creative-games.github.io/)，**recommend**
+- [FAQ](https://focus-creative-games.github.io/huatuo/faq/)
+- [Best Practices](https://focus-creative-games.github.io/huatuo/start_up/best_practices/)
+- [Source Structure and Trace Debugging](https://focus-creative-games.github.io/huatuo/source_inspect/)
 - [Sample Project](https://github.com/focus-creative-games/huatuo_trial)
 - [Know the column] (https://www.zhihu.com/column/c_1489549396035870720)
-- [==>Acknowledgments<==](docs/donate.md)
+- [==>Acknowledgments<==](https://focus-creative-games.github.io/huatuo/donate/)
 
 ## Stability status
 
@@ -63,8 +62,8 @@ In terms of technical evaluation, the current stability is between the Alpha ver
 
 **Features not included in the restrictions are all supported by huatuo**. Please stop asking if huatuo supports a certain feature.
 
-- Support 5.x, 2017-2022 full series of versions, but not every minor version. For details, see [Currently Supported Unity Versions](docs/support_versions.md).
-- Unable to create instances of **hot update non-enumeration value types** of ordinary AOT generics (**delegate, Nullable, arrays (including multi-dimensional) are not limited, hot update generics are also completely unlimited**) instance of the type. For example, List&lt;HotUpdateValueType&gt; is not supported but List&lt;int&gt;, List&lt;HotUpdateClass&gt; and List&lt;HotUpdateEnum&gt; are supported. For specific reasons, see [AOT generic limitation and principle introduction](docs/generic_limit.md). This will be more completely resolved in the July version, and there will be no restrictions after that.
+- Support 5.x, 2017-2022 full series of versions, but not every minor version. For details, see [Currently Supported Unity Versions](https://focus-creative-games.github.io/huatuo/support_versions/).
+- Unable to create instances of **hot update non-enumeration value types** of ordinary AOT generics (**delegate, Nullable, arrays (including multi-dimensional) are not limited, hot update generics are also completely unlimited**) instance of the type. For example, List&lt;HotUpdateValueType&gt; is not supported but List&lt;int&gt;, List&lt;HotUpdateClass&gt; and List&lt;HotUpdateEnum&gt; are supported. For specific reasons, see [AOT generic limitation and principle introduction](https://focus-creative-games.github.io/huatuo/performance/generic_limit/). This will be more completely resolved in the July version, and there will be no restrictions after that.
 - The default async task that returns **custom value type** is temporarily not supported, and native value types such as int and enumeration and class types are not restricted. The reason is that the compiler will generate the generic class instantiation of AsyncTaskMethodBuilder&lt;T&gt; for async by default. If you use custom Task and AsyncTaskMethodBuilder like ETask, there are no restrictions. This limitation of native async will be resolved in subsequent versions.
 - **Note to use link.xml or code reference to avoid Unity cutting code. Avoid the error that the function can be called during the development period, but the function cannot be found after the release. We will provide default templates in the future.
 - BeginInvoke and EndInvoke of delegate are not supported. It just doesn't feel necessary to do it.
@@ -89,7 +88,7 @@ In terms of technical evaluation, the current stability is between the Alpha ver
 Although huatuo is related to il2cpp, most of the core code is independent of il2cpp and can be easily ported (expected one month) to other CLR platforms that do not support AOT+Interpreter. No matter how the version of Unity changes, even if il2cpp is abandoned and .net 6+ is used, huatuo will continue to follow up and stably provide cross-platform CLR hot update service until one day when .net officially supports AOT+Interpreter, huatuo will complete its historical mission.
 
 - Continue to fix bugs to make a medium and large game work properly (2022.4)
-- Continue to follow up the version update of Unity and support more Unity versions. See [Currently Supported Unity Versions](docs/support_versions.md)
+- Continue to follow up the version update of Unity and support more Unity versions. See [Currently Supported Unity Versions](https://focus-creative-games.github.io/huatuo/support_versions/)
 - Support hotfix bug in AOT part (2022.6)
 - Remove most common AOT generic class restrictions (2022.6)
 - Support incremental gc. (2022.6)
@@ -100,4 +99,4 @@ Although huatuo is related to il2cpp, most of the core code is independent of il
 
 ## license
 
-Huatuo is licensed under the [MIT](https://github.com/focus-creative-games/luban/blob/main/LICENSE.TXT) license
+Huatuo is licensed under the [MIT](https://github.com/focus-creative-games/huatuo/blob/main/LICENSE) license

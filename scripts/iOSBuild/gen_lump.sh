@@ -1,8 +1,10 @@
-echo ${HUATUO_IL2CPP_SOURCE_DIR}   #/Applications/Unity/Unity.app/Contents/il2cpp/
+echo '====================================================================='
+echo 'gen lump'
+echo '$HUATUO_IL2CPP_SOURCE_DIR='${HUATUO_IL2CPP_SOURCE_DIR}   #/Applications/Unity/Unity.app/Contents/il2cpp/
 
 GEN_SOURCE_DIR=$1
 BASE_DIR=${HUATUO_IL2CPP_SOURCE_DIR}/libil2cpp
-echo gen lump files use base dir: ${BASE_DIR}
+echo base dir: ${BASE_DIR}
 echo " "
 #BASE_DIR=${HUATUO_IL2CPP_SOURCE_DIR}/libil2cpp
 function SearchCppFile()
@@ -56,6 +58,7 @@ do
 done
 
 echo gen done.
+echo '====================================================================='
 echo " "
 
 

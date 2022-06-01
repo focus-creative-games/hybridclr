@@ -104,4 +104,4 @@ huatuo虽然与il2cpp相关，但绝大多数核心代码独立于il2cpp，很�
 
 ## license
 
-Huatuo is licensed under the [MIT](https://github.com/focus-creative-games/luban/blob/main/LICENSE.TXT) license
+Huatuo is licensed under the [MIT](https://github.com/focus-creative-games/huatuo/blob/main/LICENSE) license
