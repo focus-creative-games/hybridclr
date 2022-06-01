@@ -37,8 +37,7 @@ namespace metadata
 
 	const MethodInfo* InterpreterAssemblyMetadataResolver::FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod)
 	{
-
-		return nullptr;
+		return _image->FindImplMethod(klass, matchMethod);
 	}
 }
 }
