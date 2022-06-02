@@ -2,7 +2,7 @@
 
 #include "BasicBlockSpliter.h"
 
-#include "../metadata/IAssemblyMetadataResolver.h"
+#include "../metadata/Image.h"
 #include "../interpreter/Instruction.h"
 #include "../interpreter/Engine.h"
 
@@ -57,7 +57,7 @@ namespace transform
 	class HiTransform
 	{
 	public:
-		static void Transform(metadata::IAssemblyMetadataResolver* metadataResolver, const MethodInfo* methodInfo, metadata::MethodBody& body, interpreter::InterpMethodInfo& result);
+		static void Transform(metadata::Image* image, const MethodInfo* methodInfo, metadata::MethodBody& body, interpreter::InterpMethodInfo& result);
 	};
 }
 }

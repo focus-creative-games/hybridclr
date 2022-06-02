@@ -626,7 +626,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 
 	// maxStackSize包含 arg + local + eval,对于解释器栈来说，可能多余
 #define PREPARE_NEW_FRAME(newMethodInfo, argBasePtr, retPtr, withArgStack) { \
-	imi = newMethodInfo->huatuoData ? (InterpMethodInfo*)newMethodInfo->huatuoData : InterpreterModule::GetInterpMethodInfo(huatuo::metadata::MetadataModule::GetImage(newMethodInfo->klass), newMethodInfo); \
+	imi = newMethodInfo->huatuoData ? (InterpMethodInfo*)newMethodInfo->huatuoData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
 	frame = interpFrameGroup.EnterFrame(imi, argBasePtr, withArgStack); \
 	RuntimeClassCCtorInit(newMethodInfo); \
 	frame->ret = retPtr; \

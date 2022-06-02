@@ -15,7 +15,6 @@
 #include "Image.h"
 #include "MetadataModule.h"
 #include "MetadataUtil.h"
-#include "TableReader.h"
 
 namespace huatuo
 {
@@ -23,6 +22,8 @@ namespace metadata
 {
 
     std::vector<Il2CppAssembly*> s_placeHolderAssembies;
+
+
 
     bool GetMappedFileBuffer(const char* assemblyFile, void*& buf, uint64_t& fileLength)
     {
@@ -154,12 +155,12 @@ namespace metadata
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentNullException("rawAssembly is null"));
         }
 
-        uint32_t imageId = MetadataModule::AllocImageIndex();
+        uint32_t imageId = InterpreterImage::AllocImageIndex();
         if (imageId > kMaxLoadImageCount)
         {
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentException("exceed max image index", ""));
         }
-        Image* image = new Image(imageId);
+        InterpreterImage* image = new InterpreterImage(imageId);
         
         if (copyData)
         {
@@ -179,7 +180,7 @@ namespace metadata
             // when load a bad image, mean a fatal error. we don't clean image on purpose.
         }
 
-        TbAssembly data = TableReader::ReadAssembly(*image, 1);
+        TbAssembly data = image->GetRawImage().ReadAssembly(1);
         const char* nameNoExt = image->GetStringFromRawIndex(data.name);
 
         Il2CppAssembly* ass;

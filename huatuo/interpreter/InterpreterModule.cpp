@@ -10,7 +10,6 @@
 
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
-#include "../metadata/InterpreterAssemblyMetadataResolver.h"
 #include "../transform/Transform.h"
 
 #include "MethodBridge.h"
@@ -205,7 +204,7 @@ namespace interpreter
 		return (InvokerMethod)NotSupportInvoke;
 	}
 
-	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(metadata::Image* image, const MethodInfo* methodInfo)
+	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(const MethodInfo* methodInfo)
 	{
 		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 
@@ -214,15 +213,18 @@ namespace interpreter
 			return (InterpMethodInfo*)methodInfo->huatuoData;
 		}
 
-		metadata::MethodBody& originMethod = image->GetMethodBody(methodInfo->token);
-		if (originMethod.ilcodes == nullptr)
+		metadata::Image* image = metadata::IsInterpreterMethod(methodInfo) ? huatuo::metadata::MetadataModule::GetImage(methodInfo->klass)
+			: (metadata::Image*)huatuo::metadata::AOTHomologousImage::FindImageByAssembly(methodInfo->klass->image->assembly);
+		IL2CPP_ASSERT(image);
+
+		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token);
+		if (methodBody == nullptr || methodBody->ilcodes == nullptr)
 		{
 			TEMP_FORMAT(errMsg, "%s.%s::%s method body is null. not support external method currently.", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		}
 		InterpMethodInfo* imi = new (IL2CPP_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;
-		metadata::InterpreterAssemblyMetadataResolver resolver(image);
-		transform::HiTransform::Transform(&resolver, methodInfo, originMethod, *imi);
+		transform::HiTransform::Transform(image, methodInfo, *methodBody, *imi);
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		const_cast<MethodInfo*>(methodInfo)->huatuoData = imi;
 		return imi;

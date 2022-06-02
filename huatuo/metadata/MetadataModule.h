@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Image.h"
+#include "InterpreterImage.h"
+#include "AOTHomologousImage.h"
 #include "Assembly.h"
 
 namespace huatuo
@@ -15,41 +16,35 @@ namespace metadata
 
 		static void Initialize();
 
-		static uint32_t AllocImageIndex();
-
-		static Image* GetImage(uint32_t imageIndex)
+		static InterpreterImage* GetImage(uint32_t imageIndex)
 		{
-			//os::FastAutoLock lock(&s_imageLock);
-			IL2CPP_ASSERT(imageIndex <= kMaxLoadImageCount);
-			return s_images[imageIndex];
+			return InterpreterImage::GetImage(imageIndex);
 		}
 
-		static Image* GetImage(const Il2CppImage* image)
+		static InterpreterImage* GetImage(const Il2CppImage* image)
 		{
 			return GetImage(DecodeImageIndex(image->token));
 		}
 
-		static Image* GetImage(const Il2CppClass* klass)
+		static InterpreterImage* GetImage(const Il2CppClass* klass)
 		{
 			return GetImage(klass->image);
 		}
 
-		static Image* GetImage(const Il2CppTypeDefinition* typeDef)
+		static InterpreterImage* GetImage(const Il2CppTypeDefinition* typeDef)
 		{
 			return GetImage(DecodeImageIndex(typeDef->byvalTypeIndex));
 		}
 
-		static Image* GetImage(const Il2CppMethodDefinition* typeDef)
+		static InterpreterImage* GetImage(const Il2CppMethodDefinition* typeDef)
 		{
 			return GetImage(DecodeImageIndex(typeDef->nameIndex));
 		}
 
-		static Image* GetImageByEncodedIndex(uint32_t encodedIndex)
+		static InterpreterImage* GetImageByEncodedIndex(uint32_t encodedIndex)
 		{
 			return GetImage(DecodeImageIndex(encodedIndex));
 		}
-
-		static void RegisterImage(Image* image);
 
 		static const char* GetStringFromEncodeIndex(StringIndex index)
 		{
@@ -59,7 +54,7 @@ namespace metadata
 
 		static uint32_t GetTypeEncodeIndex(const Il2CppTypeDefinition* typeDef)
 		{
-			Image* image = GetImage(typeDef);
+			InterpreterImage* image = GetImage(typeDef);
 			return huatuo::metadata::EncodeImageAndMetadataIndex(image->GetIndex(), image->GetTypeRawIndex(typeDef));
 		}
 
@@ -95,7 +90,14 @@ namespace metadata
 			return GetImage(imageIndex)->GetIl2CppTypeFromRawIndex(rawIndex);
 		}
 
-		static Il2CppClass* GetTypeInfoFromTypeDefinitionEncodeIndex(TypeDefinitionIndex index);
+		static Il2CppClass* GetTypeInfoFromTypeDefinitionEncodeIndex(TypeDefinitionIndex index)
+		{
+			uint32_t imageIndex = DecodeImageIndex(index);
+			IL2CPP_ASSERT(imageIndex > 0);
+
+			uint32_t rawIndex = DecodeMetadataIndex(index);
+			return GetImage(imageIndex)->GetTypeInfoFromTypeDefinitionRawIndex(rawIndex);
+		}
 
 		static const Il2CppFieldDefinition* GetFieldDefinitionFromEncodeIndex(uint32_t index)
 		{
@@ -212,9 +214,11 @@ namespace metadata
 			return GetImage(image)->GetCustomAttributeDataRange(token);
 		}
 
+		static bool IsImplementedByInterpreter(MethodInfo* method)
+		{
+			return method && AOTHomologousImage::FindImageByAssembly(method->klass->image->assembly);
+		}
 	private:
-		static uint32_t s_cliImageCount;
-		static Image* s_images[kMaxLoadImageCount + 1];
 	};
 }
 

@@ -6,18 +6,13 @@ namespace huatuo
 {
 namespace metadata
 {
-    class Image;
+
     class BlobReader
     {
     public:
-        BlobReader(Image& image, const byte* buf, uint32_t length) : _image(image), _buf(buf), _length(length), _readPos(0)
+        BlobReader(const byte* buf, uint32_t length) : _buf(buf), _length(length), _readPos(0)
         {
 
-        }
-
-        Image& GetImage() const
-        {
-            return _image;
         }
 
         const byte* GetData() const
@@ -146,7 +141,6 @@ namespace metadata
         }
 
     private:
-        Image& _image;
         const byte* const _buf;
         const uint32_t _length;
         uint32_t _readPos;

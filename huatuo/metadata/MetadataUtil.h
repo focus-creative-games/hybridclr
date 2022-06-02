@@ -228,11 +228,7 @@ namespace metadata
 
     bool ResolveField(const Il2CppType* type, const char* resolveFieldName, Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef);
 
-    const FieldInfo* GetFieldInfoFromFieldRef(Image& image, const Il2CppType& type, const Il2CppFieldDefinition* fieldDef);
-
     const Il2CppGenericContainer* GetGenericContainerFromIl2CppType(const Il2CppType* type);
-
-    void GetClassAndMethodGenericContainerFromGenericContainerIndex(Image& image, GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc);
 
     bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
 

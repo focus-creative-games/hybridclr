@@ -38,13 +38,13 @@ namespace interpreter
 		MachineState()
 		{
 			HuatuoConfig& hc = HuatuoConfig::GetIns();
-			_stackSize = hc.GetMaxStackObjectCount();
-			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetMaxStackObjectCount() * sizeof(StackObject), nullptr);
+			_stackSize = hc.GetInterpreterThreadObjectStackSize();
+			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
 			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
 			_stackTopIdx = 0;
 
-			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetMaxFrameCount(), sizeof(InterpFrame));
-			_frameCount = hc.GetMaxFrameCount();
+			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
+			_frameCount = hc.GetInterpreterThreadFrameStackSize();
 			_frameTopIdx = 0;
 		}
 

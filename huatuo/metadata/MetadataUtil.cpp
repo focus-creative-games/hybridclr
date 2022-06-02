@@ -675,23 +675,6 @@ namespace metadata
 		return false;
 	}
 
-	const FieldInfo* GetFieldInfoFromFieldRef(Image& image, const Il2CppType& type, const Il2CppFieldDefinition* fieldDef)
-	{
-		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(&type);
-		const char* name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(fieldDef->nameIndex);
-		void* iter = nullptr;
-		for (const FieldInfo* cur = nullptr; (cur = il2cpp::vm::Class::GetFields(klass, &iter)) != nullptr; )
-		{
-			if (cur->token == fieldDef->token)
-			{
-				IL2CPP_ASSERT(std::strcmp(cur->name, name) == 0);
-				return cur;
-			}
-		}
-		RaiseMissingFieldException(&type, name);
-		return nullptr;
-	}
-
 	const Il2CppGenericContainer* GetGenericContainerFromIl2CppType(const Il2CppType* type)
 	{
 		switch (type->type)
@@ -709,23 +692,6 @@ namespace metadata
 		{
 			return nullptr;
 		}
-		}
-	}
-
-	void GetClassAndMethodGenericContainerFromGenericContainerIndex(Image& image, GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc)
-	{
-		Il2CppGenericContainer* gc = image.GetGenericContainerByRawIndex(DecodeMetadataIndex(idx));
-		IL2CPP_ASSERT(gc);
-		if (gc->is_method)
-		{
-			const Il2CppMethodDefinition* methodDef = image.GetMethodDefinitionFromRawIndex(DecodeMetadataIndex(gc->ownerIndex));
-			klassGc = image.GetGenericContainerByTypeDefIndex(DecodeMetadataIndex(methodDef->declaringType));
-			methodGc = image.GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef->genericContainerIndex));
-		}
-		else
-		{
-			klassGc = gc;
-			methodGc = nullptr;
 		}
 	}
 

@@ -20,7 +20,7 @@ namespace interpreter
 
 		static MachineState& GetCurrentThreadMachineState();
 
-		static InterpMethodInfo* GetInterpMethodInfo(metadata::Image* image, const MethodInfo* methodInfo);
+		static InterpMethodInfo* GetInterpMethodInfo(const MethodInfo* methodInfo);
 
 		static Il2CppMethodPointer GetMethodPointer(const Il2CppMethodDefinition* method);
 		static Il2CppMethodPointer GetMethodPointer(const MethodInfo* method);

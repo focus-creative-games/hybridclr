@@ -13,24 +13,32 @@ namespace huatuo
 			return _ins;
 		}
 
-		static uint32_t GetMaxStackObjectCount()
+		static uint32_t GetInterpreterThreadObjectStackSize()
 		{
-			return kMaxStackObjectCount;
+			return s_threadObjectStackSize;
 		}
 
-		static uint32_t GetMaxFrameCount()
+		static void SetInterpreterThreadObjectStackSize(uint32_t count)
 		{
-			return kMaxFrameCount;
+			s_threadObjectStackSize = count;
+		}
+
+		static uint32_t GetInterpreterThreadFrameStackSize()
+		{
+			return s_threadFrameStackSize;
+		}
+
+		static void SetInterpreterThreadFrameStackSize(uint32_t count)
+		{
+			s_threadFrameStackSize = count;
 		}
 
 	private:
 		static HuatuoConfig _ins;
 
-
-
 	private:
-		static const uint32_t kMaxStackObjectCount = 1024 * 128;
-		static const uint32_t kMaxFrameCount = 1024 * 4;
+		static uint32_t s_threadObjectStackSize;
+		static uint32_t s_threadFrameStackSize;
 	};
 }
 
