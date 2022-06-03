@@ -711,109 +711,7 @@ namespace metadata
 			}
 
 			MethodBody& body = _methodBodies[index];
-			if (methodData.rva > 0)
-			{
-				uint32_t methodImageOffset = 0;
-				bool ret = _rawImage.TranslateRVAToImageOffset(methodData.rva, methodImageOffset);
-				IL2CPP_ASSERT(ret);
-				const byte* bodyStart = _rawImage.GetDataPtrByImageOffset(methodImageOffset);
-				byte bodyFlags = *bodyStart;
-				byte smallFatFlags = bodyFlags & 0x3;
-
-				if (smallFatFlags == (uint8_t)CorILMethodFormat::Tiny)
-				{
-					body.flags = (uint32_t)(bodyFlags & 0x3);
-					body.ilcodes = bodyStart + 1;
-					body.codeSize = (uint8_t)bodyFlags >> 2;
-					body.maxStack = 8;
-					body.localVarCount = 0;
-					body.localVars = nullptr;
-				}
-				else
-				{
-					IL2CPP_ASSERT(smallFatFlags == (uint8_t)CorILMethodFormat::Fat);
-					const CorILMethodFatHeader* methodHeader = (const CorILMethodFatHeader*)GetAlignBorder<4>(bodyStart);
-					IL2CPP_ASSERT(methodHeader->size == 3);
-					body.flags = methodHeader->flags;
-					body.ilcodes = bodyStart + methodHeader->size * 4;
-					body.codeSize = methodHeader->codeSize;
-					body.maxStack = methodHeader->maxStack;
-
-					if (methodHeader->localVarSigToken)
-					{
-						TbStandAloneSig sigData = _rawImage.ReadStandAloneSig(DecodeTokenRowIndex(methodHeader->localVarSigToken));
-
-						BlobReader reader = _rawImage.GetBlobReaderByRawIndex(sigData.signature);
-						ReadLocalVarSig(reader,
-							GetGenericContainerByTypeDefIndex(DecodeMetadataIndex(md.declaringType)),
-							GetGenericContainerByRawIndex(DecodeMetadataIndex(md.genericContainerIndex)),
-							body.localVars, body.localVarCount);
-					}
-				}
-				if (body.flags & (uint8_t)CorILMethodFormat::MoreSects)
-				{
-					const byte* nextSection = (const byte*)GetAlignBorder<4>(body.ilcodes + body.codeSize);
-					while (true)
-					{
-						byte kind = *nextSection;
-						if (!(kind & (byte)CorILSecion::EHTable))
-						{
-							IL2CPP_ASSERT(false && "not support kind");
-							break;
-						}
-						if (kind & (byte)CorILSecion::FatFormat)
-						{
-							CorILEHSectionHeaderFat* ehSec = (CorILEHSectionHeaderFat*)nextSection;
-							uint32_t dataSize = (uint32_t)ehSec->dataSize0 | ((uint32_t)ehSec->dataSize1 << 8) | ((uint32_t)ehSec->dataSize2 << 16);
-							IL2CPP_ASSERT(dataSize % 24 == 4);
-							uint32_t ehCount = (dataSize - 4) / 24;
-							body.exceptionClauses.reserve(ehCount);
-							for (uint32_t i = 0; i < ehCount; i++)
-							{
-								CorILEHFat& eh = ehSec->clauses[i];
-								IL2CPP_ASSERT(eh.flags >= (uint32_t)CorILExceptionClauseType::Exception && eh.flags <= (uint32_t)CorILExceptionClauseType::Fault);
-								body.exceptionClauses.push_back({
-									(CorILExceptionClauseType)eh.flags,
-									eh.tryOffset,
-									eh.tryLength,
-									eh.handlerOffset,
-									eh.handlerLength,
-									eh.classTokenOrFilterOffset });
-							}
-							nextSection += dataSize;
-						}
-						else
-						{
-							CorILEHSectionHeaderSmall* ehSec = (CorILEHSectionHeaderSmall*)nextSection;
-							IL2CPP_ASSERT(ehSec->dataSize % 12 == 4);
-							uint32_t ehCount = (ehSec->dataSize - 4) / 12;
-							body.exceptionClauses.reserve(ehCount);
-							for (uint32_t i = 0; i < ehCount; i++)
-							{
-								CorILEHSmall& eh = ehSec->clauses[i];
-								IL2CPP_ASSERT(eh.flags >= 0 && eh.flags <= 4);
-								body.exceptionClauses.push_back({
-									(CorILExceptionClauseType)eh.flags,
-									eh.tryOffset,
-									eh.tryLength,
-									((uint32_t)eh.handlerOffset1 << 8) + eh.handlerOffset0,
-									eh.handlerLength,
-									eh.classTokenOrFilterOffset });
-							}
-							nextSection += ehSec->dataSize;
-						}
-						if (!(kind & (byte)CorILSecion::MoreSects))
-						{
-							break;
-						}
-					}
-				}
-			}
-			else
-			{
-				body.ilcodes = nullptr;
-				body.codeSize = 0;
-			}
+			ReadMethodBody(md, methodData, body);
 		}
 
 		for (uint32_t i = 0, n = typeDefTb.rowNum; i < n; i++)
@@ -1144,104 +1042,7 @@ namespace metadata
 		return il2cpp::vm::Assembly::GetLoadedAssembly(refAssName);
 	}
 
-
-	const MethodInfo* InterpreterImage::FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod)
-	{
-		void* iter = nullptr;
-		for (const MethodInfo* cur = nullptr; (cur = il2cpp::vm::Class::GetMethods(klass, &iter)) != nullptr; )
-		{
-			if (std::strcmp(cur->name, matchMethod->name)
-				|| cur->parameters_count != matchMethod->parameters_count
-				|| !il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(cur->return_type, matchMethod->return_type))
-			{
-				continue;
-			}
-			bool match = true;
-			for (uint32_t i = 0; i < cur->parameters_count; i++)
-			{
-				if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(GET_METHOD_PARAMETER_TYPE(cur->parameters[i]), GET_METHOD_PARAMETER_TYPE(matchMethod->parameters[i])))
-				{
-					match = false;
-					break;
-				}
-			}
-			if (match)
-			{
-				return cur;
-			}
-		}
-		return nullptr;
-	}
-
-	const void* InterpreterImage::GetRuntimeHandleFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
-	{
-		TableType ttype = DecodeTokenTableType(token);
-		uint32_t rowIndex = DecodeTokenRowIndex(token);
-		switch (ttype)
-		{
-		case huatuo::metadata::TableType::TYPEREF:
-		case huatuo::metadata::TableType::TYPEDEF:
-		case huatuo::metadata::TableType::TYPESPEC:
-		{
-			// TODO cache
-			Il2CppType* type = (Il2CppType*)IL2CPP_MALLOC_ZERO(sizeof(Il2CppType));
-			ReadTypeFromToken(klassGenericContainer, methodGenericContainer, ttype, rowIndex, *type);
-			if (genericContext)
-			{
-				type = const_cast<Il2CppType*>(TryInflateIfNeed(type, genericContext, true));
-			}
-			return type;
-		}
-		case huatuo::metadata::TableType::FIELD_POINTER:
-		case huatuo::metadata::TableType::FIELD:
-		{
-			return GetFieldInfoFromToken(token, klassGenericContainer, methodGenericContainer, genericContext);
-		}
-		case huatuo::metadata::TableType::METHOD_POINTER:
-		case huatuo::metadata::TableType::METHOD:
-		case huatuo::metadata::TableType::METHODSPEC:
-		{
-			return GetMethodInfoFromToken(token, klassGenericContainer, methodGenericContainer, genericContext);
-		}
-		default:
-		{
-			RaiseHuatuoExecutionEngineException("GetRuntimeHandleFromToken invaild TableType");
-			return nullptr;
-		}
-		}
-	}
-
-	Il2CppClass* InterpreterImage::GetClassFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
-	{
-		auto key = std::tuple<uint32_t, const Il2CppGenericContext*>(token, genericContext);
-		{
-			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-			auto it = _token2ResolvedDataCache.find(key);
-			if (it != _token2ResolvedDataCache.end())
-			{
-				return (Il2CppClass*)it->second;
-			}
-		}
-		Il2CppType originType = {};
-		ReadTypeFromToken(klassGenericContainer, methodGenericContainer, DecodeTokenTableType(token), DecodeTokenRowIndex(token), originType);
-		const Il2CppType* resultType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(&originType, genericContext, true) : &originType;
-		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(resultType);
-		if (!klass)
-		{
-			TEMP_FORMAT(errMsg, "InterpreterImage::GetClassFromToken token:%u class not exists", token);
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
-		}
-		// FIXME free resultType
-		{
-			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-			_token2ResolvedDataCache.insert({ key, (void*)klass });
-		}
-		return klass;
-	}
-
-
 	// FIXME 此处bug较多，仍需要仔细检查
-
 	const MethodInfo* InterpreterImage::GetMethodInfo(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext)
 	{
 		const Il2CppType* finalContainerType = TryInflateIfNeed(containerType, genericContext, true);
@@ -1414,21 +1215,21 @@ namespace metadata
 		}
 	}
 
-	const FieldInfo* InterpreterImage::GetFieldInfoFromFieldRef(const Il2CppType& type, const Il2CppFieldDefinition* fieldDef)
+	void InterpreterImage::ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret)
 	{
-		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(&type);
-		const char* name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(fieldDef->nameIndex);
-		void* iter = nullptr;
-		for (const FieldInfo* cur = nullptr; (cur = il2cpp::vm::Class::GetFields(klass, &iter)) != nullptr; )
+		IL2CPP_ASSERT(rowIndex > 0);
+		if (tableType == TableType::FIELD)
 		{
-			if (cur->token == fieldDef->token)
-			{
-				IL2CPP_ASSERT(std::strcmp(cur->name, name) == 0);
-				return cur;
-			}
+			const FieldDetail& fd = GetFieldDetailFromRawIndex(rowIndex - 1);
+			ret.containerType = *GetIl2CppTypeFromRawTypeDefIndex(DecodeMetadataIndex(fd.typeDefIndex));
+			ret.field = &fd.fieldDef;
+			//ret.classType = *image.GetIl2CppTypeFromRawTypeDefIndex(DecodeMetadataIndex(ret.field->typeIndex));
 		}
-		RaiseMissingFieldException(&type, name);
-		return nullptr;
+		else
+		{
+			IL2CPP_ASSERT(tableType == TableType::MEMBERREF);
+			ReadFieldRefInfoFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, ret);
+		}
 	}
 
 	const FieldInfo* InterpreterImage::GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
@@ -1468,37 +1269,6 @@ namespace metadata
 		{
 			klassGc = gc;
 			methodGc = nullptr;
-		}
-	}
-
-	Il2CppString* InterpreterImage::GetIl2CppUserStringFromRawIndex(StringIndex index)
-	{
-		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-		Il2CppString* clrStr;
-		if (_il2cppStringCache.TryGetValue(index, &clrStr))
-		{
-			return clrStr;
-		}
-		else
-		{
-			const byte* str = _rawImage.GetUserStringBlogByIndex((uint32_t)index);
-			uint32_t lengthSize;
-			uint32_t stringLength = BlobReader::ReadCompressedUint32(str, lengthSize);
-
-			Il2CppString* clrStr;
-			if (stringLength == 0)
-			{
-				clrStr = il2cpp::vm::String::Empty();
-			}
-			else
-			{
-				str += lengthSize;
-				IL2CPP_ASSERT(stringLength % 2 == 1);
-				UserStringEncoding charEncoding = (UserStringEncoding)str[stringLength - 1];
-				clrStr = il2cpp::vm::String::NewUtf16((const Il2CppChar*)str, (stringLength - 1) / 2);
-			}
-			_il2cppStringCache.Add(index, clrStr);
-			return clrStr;
 		}
 	}
 
@@ -2185,6 +1955,38 @@ namespace metadata
 				}
 			}
 		}
+	}
+
+	void InterpreterImage::ReadMethodDefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr)
+	{
+		uint8_t rawSigFlags = reader.ReadByte();
+
+		if (rawSigFlags & (uint8_t)MethodSigFlags::GENERIC)
+		{
+			//IL2CPP_ASSERT(false);
+			uint32_t genParamCount = reader.ReadCompressedUint32();
+			Il2CppGenericContainer* gc = GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef.genericContainerIndex));
+			IL2CPP_ASSERT(gc->type_argc == genParamCount);
+		}
+		uint32_t paramCount = reader.ReadCompressedUint32();
+		//IL2CPP_ASSERT(paramCount >= methodDef.parameterCount);
+
+		Il2CppType returnType = {};
+		ReadType(reader, klassGenericContainer, methodGenericContainer, returnType);
+		methodDef.returnType = AddIl2CppTypeCache(returnType);
+
+		int readParamNum = 0;
+		for (; reader.NonEmpty(); )
+		{
+			ParamDetail curParam = {};
+			Il2CppType paramType = {};
+			ReadType(reader, klassGenericContainer, methodGenericContainer, paramType);
+			curParam.parameterIndex = readParamNum++;
+			curParam.methodDef = &methodDef;
+			curParam.paramDef.typeIndex = AddIl2CppTypeCache(paramType);
+			paramArr.push_back(curParam);
+		}
+		IL2CPP_ASSERT(readParamNum == (int)paramCount);
 	}
 }
 }

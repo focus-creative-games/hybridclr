@@ -216,7 +216,7 @@ namespace metadata
 
 		static bool IsImplementedByInterpreter(MethodInfo* method)
 		{
-			return method && AOTHomologousImage::FindImageByAssembly(method->klass->image->assembly);
+			return AOTHomologousImage::FindImageByAssembly(method->klass->image->assembly);
 		}
 	private:
 	};

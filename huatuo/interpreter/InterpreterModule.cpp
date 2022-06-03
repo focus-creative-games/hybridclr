@@ -217,7 +217,7 @@ namespace interpreter
 			: (metadata::Image*)huatuo::metadata::AOTHomologousImage::FindImageByAssembly(methodInfo->klass->image->assembly);
 		IL2CPP_ASSERT(image);
 
-		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token);
+		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo);
 		if (methodBody == nullptr || methodBody->ilcodes == nullptr)
 		{
 			TEMP_FORMAT(errMsg, "%s.%s::%s method body is null. not support external method currently.", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);

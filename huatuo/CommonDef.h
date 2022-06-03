@@ -84,7 +84,8 @@ namespace huatuo
 
 	inline void RaiseHuatuoNotSupportedException(const char* msg)
 	{
-		return il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetNotSupportedException(msg));
+		TEMP_FORMAT(errMsg, "huatuo doesn't support %s", msg);
+		return il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetNotSupportedException(errMsg));
 	}
 
 	inline void RaiseHuatuoExecutionEngineException(const char* msg)

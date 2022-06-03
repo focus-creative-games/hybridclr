@@ -21,6 +21,23 @@ namespace metadata
 		std::vector<MethodImpl> methodImpls;
 	};
 
+	struct ParamDetail
+	{
+		Il2CppParameterDefinition paramDef;
+		const Il2CppMethodDefinition* methodDef;
+		//uint32_t methodIndex;
+		uint32_t parameterIndex;
+		uint32_t defaultValueIndex; // -1 for invalid
+	};
+
+	struct FieldDetail
+	{
+		Il2CppFieldDefinition fieldDef;
+		uint32_t typeDefIndex;
+		uint32_t offset;
+		uint32_t defaultValueIndex; // -1 for invalid
+	};
+
 	struct PropertyDetail
 	{
 		const char* name;
@@ -49,21 +66,6 @@ namespace metadata
 	struct CustomAtttributesInfo
 	{
 		int32_t typeRangeIndex;
-	};
-
-	typedef std::tuple<uint32_t, const Il2CppGenericContext*> TokenGenericContextType;
-
-	struct TokenGenericContextTypeHash {
-		size_t operator()(const TokenGenericContextType x) const noexcept {
-			return std::get<0>(x) * 0x9e3779b9 + (size_t)std::get<1>(x);
-		}
-	};
-
-	struct TokenGenericContextTypeEqual
-	{
-		bool operator()(const TokenGenericContextType a, const TokenGenericContextType b) const {
-			return std::get<0>(a) == std::get<0>(b) && std::get<1>(a) == std::get<1>(b);
-		}
 	};
 
 	class InterpreterImage : public Image
@@ -130,8 +132,9 @@ namespace metadata
 			return rawIndex != 0 ? EncodeImageAndMetadataIndex(_index, rawIndex) : 0;
 		}
 
-		MethodBody* GetMethodBody(uint32_t token) override
+		MethodBody* GetMethodBody(const MethodInfo* method) override
 		{
+			uint32_t token = method->token;
 			IL2CPP_ASSERT(DecodeTokenTableType(token) == TableType::METHOD);
 			uint32_t rowIndex = DecodeTokenRowIndex(token);
 			IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= (uint32_t)_methodBodies.size());
@@ -165,8 +168,6 @@ namespace metadata
 			return _rawImage.GetStringFromRawIndex(index);
 		}
 
-		Il2CppString* GetIl2CppUserStringFromRawIndex(StringIndex index);
-
 		uint32_t GetTypeRawIndex(const Il2CppTypeDefinition* typeDef) const
 		{
 			return (uint32_t)(typeDef - &_typesDefines[0]);
@@ -196,7 +197,7 @@ namespace metadata
 			return &(_fieldDetails[index].fieldDef);
 		}
 
-		const FieldDetail& GetFieldDetailFromRawIndex(uint32_t index) override
+		const FieldDetail& GetFieldDetailFromRawIndex(uint32_t index)
 		{
 			IL2CPP_ASSERT(index < (uint32_t)_fieldDetails.size());
 			return _fieldDetails[index];
@@ -235,7 +236,7 @@ namespace metadata
 			return nullptr;
 		}
 
-		Il2CppGenericContainer* GetGenericContainerByTypeDefIndex(int32_t typeDefIndex)
+		Il2CppGenericContainer* GetGenericContainerByTypeDefIndex(int32_t typeDefIndex) override
 		{
 			IL2CPP_ASSERT(typeDefIndex < (int32_t)_typeDetails.size());
 			return GetGenericContainerByTypeDefinition(&_typesDefines[typeDefIndex]);
@@ -256,8 +257,6 @@ namespace metadata
 		const MethodInfo* GetMethodInfoFromVTableSlot(const Il2CppClass* klass, int32_t vTableSlot);
 
 		Il2CppTypeDefinition* GetNestedTypes(Il2CppTypeDefinition* handle, void** iter);
-		// const FieldInfo* GetFieldInfoFromMemberRef(const Il2CppType& type, uint32_t name, const Il2CppType& fieldType);
-		const FieldInfo* GetFieldInfoFromFieldRef(const Il2CppType& type, const Il2CppFieldDefinition* fieldDef);
 
 		void GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc);
 
@@ -381,22 +380,20 @@ namespace metadata
 
 		Il2CppInterfaceOffsetInfo GetInterfaceOffsetInfo(const Il2CppTypeDefinition* typeDefine, TypeInterfaceOffsetIndex index);
 
-		Il2CppClass* GetClassFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const MethodInfo* GetMethodInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const FieldInfo* GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
-		const void* GetRuntimeHandleFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		void GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig);
 
-		const MethodInfo* FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod);
-
-		uint32_t AddIl2CppTypeCache(Il2CppType& type) override;
+		uint32_t AddIl2CppTypeCache(Il2CppType& type);
 
 		uint32_t AddIl2CppGenericContainers(Il2CppGenericContainer& geneContainer);
 
+		void ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret);
 		const MethodInfo* ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex);
 		const MethodInfo* GetMethodInfo(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext);
 		const MethodInfo* ResolveMethodInfo(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, const Il2CppGenericInst* genericInstantiation, const Il2CppGenericContext* genericContext);
 		
+		void ReadMethodDefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr);
 		
 
 		void InitBasic(Il2CppImage* image);
@@ -484,8 +481,6 @@ namespace metadata
 		std::vector<Il2CppClass*> _classList;
 		Il2CppType2TypeDeclaringTreeMap _cacheTrees;
 
-		std::unordered_map<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> _token2ResolvedDataCache;
-		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, std::hash<uint32_t>> _il2cppStringCache;
 
 		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
 		std::vector<Il2CppCustomAttributeTypeRange> _customAttributeHandles;
