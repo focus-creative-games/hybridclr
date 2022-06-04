@@ -290,7 +290,6 @@ namespace metadata
             uint32_t encodeToken = reader.ReadCompressedUint32();
             Il2CppType modType = {};
             ReadTypeFromToken(nullptr, nullptr, DecodeTypeDefOrRefOrSpecCodedIndexTableType(encodeToken), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(encodeToken), modType);
-            IL2CPP_ASSERT(modType.type == IL2CPP_TYPE_CLASS);
             IL2CPP_ASSERT(modType.data.typeHandle);
             const Il2CppTypeDefinition* modTypeDef = (const Il2CppTypeDefinition*)modType.data.typeHandle;
             const char* modTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(modTypeDef->nameIndex);
