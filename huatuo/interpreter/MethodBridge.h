@@ -103,7 +103,7 @@ namespace interpreter
 
 	inline bool IsSimpleStackObjectCopyArg(LocationDataType type)
 	{
-		return type == LocationDataType::U8;
+		return type <= LocationDataType::U8;
 	}
 
 	void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize);

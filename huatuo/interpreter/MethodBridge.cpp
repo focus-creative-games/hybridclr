@@ -114,29 +114,29 @@ namespace huatuo
 				switch (arg.type)
 				{
 				case LocationDataType::I1:
-				{
-					dst->i64 = *(int8_t*)src;
-					++dstOffset;
-					break;
-				}
+				//{
+				//	dst->i64 = *(int8_t*)src;
+				//	++dstOffset;
+				//	break;
+				//}
 				case LocationDataType::U1:
-				{
-					dst->i64 = *(uint8_t*)src;
-					++dstOffset;
-					break;
-				}
+				//{
+				//	dst->i64 = *(uint8_t*)src;
+				//	++dstOffset;
+				//	break;
+				//}
 				case LocationDataType::I2:
-				{
-					dst->i64 = *(int16_t*)src;
-					++dstOffset;
-					break;
-				}
+				//{
+				//	dst->i64 = *(int16_t*)src;
+				//	++dstOffset;
+				//	break;
+				//}
 				case LocationDataType::U2:
-				{
-					dst->i64 = *(uint16_t*)src;
-					++dstOffset;
-					break;
-				}
+				//{
+				//	dst->i64 = *(uint16_t*)src;
+				//	++dstOffset;
+				//	break;
+				//}
 				case LocationDataType::U8:
 				{
 					dst->i64 = *(int64_t*)src;

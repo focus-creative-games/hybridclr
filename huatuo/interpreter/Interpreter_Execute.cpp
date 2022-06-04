@@ -926,6 +926,38 @@ else \
 				    ip += 6;
 				    continue;
 				}
+				case HiOpcodeEnum::LdlocExpandVarVar_i1:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __src = *(uint16_t*)(ip + 4);
+					(*(int32_t*)(localVarBase + __dst)) = (*(int8_t*)(localVarBase + __src));
+				    ip += 6;
+				    continue;
+				}
+				case HiOpcodeEnum::LdlocExpandVarVar_u1:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __src = *(uint16_t*)(ip + 4);
+					(*(int32_t*)(localVarBase + __dst)) = (*(uint8_t*)(localVarBase + __src));
+				    ip += 6;
+				    continue;
+				}
+				case HiOpcodeEnum::LdlocExpandVarVar_i2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __src = *(uint16_t*)(ip + 4);
+					(*(int32_t*)(localVarBase + __dst)) = (*(int16_t*)(localVarBase + __src));
+				    ip += 6;
+				    continue;
+				}
+				case HiOpcodeEnum::LdlocExpandVarVar_u2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __src = *(uint16_t*)(ip + 4);
+					(*(int32_t*)(localVarBase + __dst)) = (*(uint16_t*)(localVarBase + __src));
+				    ip += 6;
+				    continue;
+				}
 				case HiOpcodeEnum::LdlocVarVarSize:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);

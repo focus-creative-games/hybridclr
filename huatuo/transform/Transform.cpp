@@ -51,7 +51,7 @@ namespace transform
 #define PopStackN(n) { IL2CPP_ASSERT(evalStackTop >= n && n >= 0); if (n > 0) { evalStackTop -= n; curStackSize = evalStack[evalStackTop].locOffset; } }
 #define PopAllStack() { if (evalStackTop > 0) { evalStackTop = 0; curStackSize = evalStackBaseOffset; } else { IL2CPP_ASSERT(curStackSize == evalStackBaseOffset); } }
 
-#define CI_ldarg(argIdx) ArgVarInfo& __arg = args[argIdx]; IRCommon* ir = CreateAssignVarVar(pool, GetEvalStackNewTopOffset(), __arg.argLocOffset, GetTypeValueSize(__arg.type)); AddInst(ir); PushStackByType(__arg.type);
+#define CI_ldarg(argIdx) ArgVarInfo& __arg = args[argIdx]; IRCommon* ir = CreateLoadExpandDataToStackVarVar(pool, GetEvalStackNewTopOffset(), __arg.argLocOffset, __arg.type, GetTypeValueSize(__arg.type)); AddInst(ir); PushStackByType(__arg.type);
 #define CI_ldarga(argIdx)                     IL2CPP_ASSERT(argIdx < actualParamCount); \
     ArgVarInfo& argInfo = args[argIdx]; \
     CreateAddIR(ir, LdlocVarAddress); \
@@ -65,7 +65,7 @@ namespace transform
     AddInst(ir); \
     PopStack();
 
-#define CI_ldloc(locIdx) LocVarInfo& __loc = locals[locIdx]; IRCommon* ir = CreateAssignVarVar(pool, GetEvalStackNewTopOffset(), __loc.locOffset, GetTypeValueSize(__loc.type)); AddInst(ir); PushStackByType(__loc.type);
+#define CI_ldloc(locIdx) LocVarInfo& __loc = locals[locIdx]; IRCommon* ir = CreateLoadExpandDataToStackVarVar(pool, GetEvalStackNewTopOffset(), __loc.locOffset, __loc.type, GetTypeValueSize(__loc.type)); AddInst(ir); PushStackByType(__loc.type);
 #define CI_stloc(locIdx) LocVarInfo& __loc = locals[locIdx]; IRCommon* ir = CreateAssignVarVar(pool, __loc.locOffset, GetEvalStackTopOffset(), GetTypeValueSize(__loc.type)); AddInst(ir); PopStack();
 #define CI_ldloca(locIdx)                     CreateAddIR(ir, LdlocVarAddress); \
     LocVarInfo& __loc = locals[locIdx]; \
@@ -1063,6 +1063,76 @@ ip++;
 		CreateIR(ir, InitLocals_n_4);
 		ir->size = size;
 		return ir;
+	}
+
+	inline IRCommon* CreateLoadExpandDataToStackVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, const Il2CppType* type, int32_t size)
+	{
+		if (type->byref)
+		{
+			CreateIR(ir, LdlocVarVar);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			return ir;
+		}
+		switch (type->type)
+		{
+		case Il2CppTypeEnum::IL2CPP_TYPE_I1:
+		{
+			CreateIR(ir, LdlocExpandVarVar_i1);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			return ir;
+		}
+		case Il2CppTypeEnum::IL2CPP_TYPE_BOOLEAN:
+		case Il2CppTypeEnum::IL2CPP_TYPE_U1:
+		{
+			CreateIR(ir, LdlocExpandVarVar_u1);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			return ir;
+		}
+		case Il2CppTypeEnum::IL2CPP_TYPE_I2:
+		{
+			CreateIR(ir, LdlocExpandVarVar_i2);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			return ir;
+		}
+		case IL2CPP_TYPE_CHAR:
+		case IL2CPP_TYPE_U2:
+		{
+			CreateIR(ir, LdlocExpandVarVar_u2);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			return ir;
+		}
+		case IL2CPP_TYPE_VALUETYPE:
+		{
+			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+			if (klass->enumtype)
+			{
+				return CreateLoadExpandDataToStackVarVar(pool, dstOffset, srcOffset, &klass->element_class->byval_arg, size);
+			}
+			break;
+		}
+		default: break;
+		}
+		if (size <= 8)
+		{
+			CreateIR(ir, LdlocVarVar);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			return ir;
+		}
+		else
+		{
+			IL2CPP_ASSERT(size <= MAX_VALUE_TYPE_SIZE);
+			CreateIR(ir, LdlocVarVarSize);
+			ir->dst = dstOffset;
+			ir->src = srcOffset;
+			ir->size = size;
+			return ir;
+		}
 	}
 
 	inline IRCommon* CreateAssignVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, int32_t size)
@@ -2549,7 +2619,7 @@ ip++;
 						}
 					}
 				}
-				else if (strcmp(klass->namespaze, "System.Threading") == 0 && shareMethod->methodPointer == nullptr)
+				else if (strcmp(klass->namespaze, "System.Threading") == 0)
 				{
 					if (strcmp(klassName, "Interlocked") == 0)
 					{

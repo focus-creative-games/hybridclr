@@ -26,6 +26,10 @@ namespace interpreter
 		InitLocals_n_2,
 		InitLocals_n_4,
 		LdlocVarVar,
+		LdlocExpandVarVar_i1,
+		LdlocExpandVarVar_u1,
+		LdlocExpandVarVar_i2,
+		LdlocExpandVarVar_u2,
 		LdlocVarVarSize,
 		LdlocVarAddress,
 		LdcVarConst_1,
@@ -718,6 +722,34 @@ namespace interpreter
 
 
 	struct IRLdlocVarVar : IRCommon
+	{
+		uint16_t dst;
+		uint16_t src;
+	};
+
+
+	struct IRLdlocExpandVarVar_i1 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t src;
+	};
+
+
+	struct IRLdlocExpandVarVar_u1 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t src;
+	};
+
+
+	struct IRLdlocExpandVarVar_i2 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t src;
+	};
+
+
+	struct IRLdlocExpandVarVar_u2 : IRCommon
 	{
 		uint16_t dst;
 		uint16_t src;
