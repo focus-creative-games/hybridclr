@@ -444,6 +444,39 @@ namespace huatuo
 #endif
 		}
 
+		static bool IsGenericFullInstantiate(const Il2CppType* type)
+		{
+			switch (type->type)
+			{
+			case IL2CPP_TYPE_VAR:
+			case IL2CPP_TYPE_MVAR: return false;
+			case IL2CPP_TYPE_GENERICINST:
+			{
+				Il2CppGenericContext& gctx = type->data.generic_class->context;
+				const Il2CppGenericInst* gis[] = { gctx.class_inst, gctx.method_inst };
+
+				for (const Il2CppGenericInst* gi : gis)
+				{
+					if (!gi)
+					{
+						continue;
+					}
+					for (uint8_t i = 0; i < gi->type_argc; i++)
+					{
+						const Il2CppType* gtype = gi->type_argv[i];
+						if (!IsGenericFullInstantiate(gtype))
+						{
+							return false;
+						}
+					}
+				}
+				return true;
+			}
+			default: return true;
+
+			}
+		}
+
 		static void AppendSignature(const Il2CppType* type, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
 			if (type->byref)
@@ -491,6 +524,11 @@ namespace huatuo
 				else
 				{
 					IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
+					if (!IsGenericFullInstantiate(type))
+					{
+						AppendString(sigBuf, bufferSize, pos, "#not_full_generic#");
+						return;
+					}
 					Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 					IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 					AppendValueTypeSignature(klass, returnType, sigBuf, bufferSize, pos);

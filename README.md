@@ -17,7 +17,7 @@ huatuo扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki
 
 - 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
 - 零学习和使用成本。 huatuo将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
-- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告]([内存与性能报告 | Focus Creative Games (focus-creative-games.github.io)](https://focus-creative-games.github.io/huatuo/performance/benchmark/#性能测试报告)
+- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#性能测试报告)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#内存占用报告)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
 
