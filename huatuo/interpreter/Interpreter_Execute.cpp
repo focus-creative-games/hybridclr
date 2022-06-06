@@ -6538,6 +6538,14 @@ else \
 				    ip += 14;
 				    continue;
 				}
+				case HiOpcodeEnum::LdsfldaFromFieldDataVarVar:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					void* __src = *(void**)(ip + 4);
+				    (*(void**)(localVarBase + __dst)) = __src;
+				    ip += 12;
+				    continue;
+				}
 				case HiOpcodeEnum::LdthreadlocalaVarVar:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);

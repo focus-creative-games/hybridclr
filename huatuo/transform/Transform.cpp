@@ -9,6 +9,7 @@
 #include "TemporaryMemoryArena.h"
 #include "../metadata/MetadataUtil.h"
 #include "../metadata/Opcodes.h"
+#include "../metadata/MetadataModule.h"
 #include "../interpreter/Instruction.h"
 #include "../interpreter/Interpreter.h"
 #include "../interpreter/InterpreterModule.h"
@@ -4508,10 +4509,26 @@ ip++;
 				uint16_t dstIdx = GetEvalStackNewTopOffset();
 				if (fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET)
 				{
-					CreateAddIR(ir, LdsfldaVarVar);
-					ir->dst = dstIdx;
-					ir->klass = fieldInfo->parent;
-					ir->offset = fieldInfo->offset;
+					bool ldfldFromFieldData = false;
+					if (huatuo::metadata::IsInterpreterType(fieldInfo->parent))
+					{
+						const FieldDetail& fieldDet = huatuo::metadata::MetadataModule::GetImage(fieldInfo->parent)
+							->GetFieldDetailFromRawIndex(huatuo::metadata::DecodeTokenRowIndex(fieldInfo->token - 1));
+						if (fieldDet.defaultValueIndex != kDefaultValueIndexNull)
+						{
+							ldfldFromFieldData = true;
+							CreateAddIR(ir, LdsfldaFromFieldDataVarVar);
+							ir->dst = dstIdx;
+							ir->src = (void*)il2cpp_codegen_get_field_data(fieldInfo);
+						}
+					}
+					if (!ldfldFromFieldData)
+					{
+						CreateAddIR(ir, LdsfldaVarVar);
+						ir->dst = dstIdx;
+						ir->klass = fieldInfo->parent;
+						ir->offset = fieldInfo->offset;
+					}
 				}
 				else
 				{

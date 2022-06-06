@@ -570,6 +570,7 @@ namespace interpreter
 		StsfldVarVar_n_2,
 		StsfldVarVar_n_4,
 		LdsfldaVarVar,
+		LdsfldaFromFieldDataVarVar,
 		LdthreadlocalaVarVar,
 		LdthreadlocalVarVar_i1,
 		LdthreadlocalVarVar_u1,
@@ -4780,6 +4781,13 @@ namespace interpreter
 		uint16_t dst;
 		Il2CppClass* klass;
 		uint16_t offset;
+	};
+
+
+	struct IRLdsfldaFromFieldDataVarVar : IRCommon
+	{
+		uint16_t dst;
+		void* src;
 	};
 
 
