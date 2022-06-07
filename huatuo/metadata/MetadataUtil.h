@@ -254,7 +254,14 @@ namespace metadata
 
     inline int32_t GetTypeValueSize(const Il2CppClass* klass)
     {
-        return GetTypeValueSize(&klass->byval_arg);
+        if (IS_CLASS_VALUE_TYPE(klass))
+        {
+            return il2cpp::vm::Class::GetValueSize((Il2CppClass*)klass, nullptr);
+        }
+        else
+        {
+            return sizeof(Il2CppObject*);
+        }
     }
 
     inline int32_t GetStackSizeByByteSize(int32_t size)
