@@ -131,9 +131,9 @@ namespace metadata
 		for (size_t i = 0; i < _typeDefs.size() ; i++)
 		{
 			Il2CppTypeDefinition* type = _typeDefs[i];
-			for (uint16_t i = 0; i < type->field_count; i++)
+			for (uint16_t j = 0; j < type->field_count; j++)
 			{
-				const Il2CppFieldDefinition* fieldDef = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromTypeDefAndFieldIndex(type, i);
+				const Il2CppFieldDefinition* fieldDef = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromTypeDefAndFieldIndex(type, j);
 				uint32_t rowIndex = DecodeTokenRowIndex(fieldDef->token);
 				IL2CPP_ASSERT(rowIndex > 0);
 				uint32_t fieldIndex = rowIndex - 1;
@@ -172,6 +172,7 @@ namespace metadata
 
 	const Il2CppType* AOTHomologousImage::GetIl2CppTypeFromRawTypeDefIndex(uint32_t index)
 	{
+		IL2CPP_ASSERT((size_t)index < _il2cppTypeForTypeDefs.size());
 		return _il2cppTypeForTypeDefs[index];
 	}
 
@@ -187,17 +188,19 @@ namespace metadata
 
 	const Il2CppMethodDefinition* AOTHomologousImage::GetMethodDefinitionFromRawIndex(uint32_t index)
 	{
+		IL2CPP_ASSERT((size_t)index < _methodDefs.size());
 		return _methodDefs[index];
 	}
 
 	const Il2CppTypeDefinition* AOTHomologousImage::GetTypeFromRawIndex(uint32_t index) const
 	{
+		IL2CPP_ASSERT((size_t)index < _typeDefs.size());
 		return _typeDefs[index];
 	}
 
 	Il2CppGenericContainer* AOTHomologousImage::GetGenericContainerByTypeDefIndex(int32_t typeDefIndex)
 	{
-		Il2CppTypeDefinition* type = _typeDefs[typeDefIndex];
+		Il2CppTypeDefinition* type = (Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(typeDefIndex);
 		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(type->genericContainerIndex);
 	}
 
