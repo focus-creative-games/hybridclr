@@ -216,7 +216,9 @@ namespace metadata
 
 		static bool IsImplementedByInterpreter(MethodInfo* method)
 		{
-			return AOTHomologousImage::FindImageByAssembly(method->klass->image->assembly);
+			Il2CppClass* klass = method->klass;
+			Il2CppClass* parent = klass->parent;
+			return parent != il2cpp_defaults.multicastdelegate_class && parent != il2cpp_defaults.delegate_class && AOTHomologousImage::FindImageByAssembly(klass->image->assembly);
 		}
 	private:
 	};
