@@ -249,7 +249,10 @@ namespace interpreter
 		void* AllocLoc(size_t size)
 		{
 			uint32_t soNum = (uint32_t)((size + sizeof(StackObject) - 1) / sizeof(StackObject));
-			return _machineState.AllocStackSlot(soNum);
+			//void* data = _machineState.AllocStackSlot(soNum);
+			//std::memset(data, 0, soNum * 8);
+			void* data = IL2CPP_MALLOC_ZERO(size);
+			return data;
  		}
 
 		size_t GetFrameCount() const { return _machineState.GetFrameTopIdx() - _frameBaseIdx; }
