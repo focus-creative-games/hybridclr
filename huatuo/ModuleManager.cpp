@@ -16,15 +16,9 @@
 namespace huatuo
 {
 
-    void PostInit()
-    {
-
-    }
-
 	void ModuleManager::Initialize()
 	{
 		metadata::MetadataModule::Initialize();
 		interpreter::InterpreterModule::Initialize();
-        PostInit();
 	}
 }

@@ -155,6 +155,17 @@ namespace interpreter
 			}
 		}
 
+		void CollectFrames(il2cpp::vm::StackFrames* stackFrames)
+		{
+			for (uint32_t i = 0; i < _frameTopIdx; i++)
+			{
+				InterpFrame* frame = _frameBase + i;
+				const MethodInfo* method = frame->method->method;
+				Il2CppStackFrameInfo stackFrameInfo = { method, (uintptr_t)method->methodPointer };
+				stackFrames->push_back(stackFrameInfo);
+			}
+		}
+
 	private:
 
 		StackObject* _stackBase;
