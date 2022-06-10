@@ -929,8 +929,12 @@ namespace metadata
 		for (uint32_t i = 0; i < classLayoutTb.rowNum; i++)
 		{
 			TbClassLayout data = _rawImage.ReadClassLayout(i + 1);
-			Il2CppTypeDefinitionSizes& typeSizes = _typeDetails[data.parent - 1].typeSizes;
-			typeSizes.instance_size = typeSizes.native_size = sizeof(Il2CppObject) + data.classSize;
+			_classLayouts[data.parent - 1] = data;
+			if (data.classSize > 0)
+			{
+				Il2CppTypeDefinitionSizes& typeSizes = _typeDetails[data.parent - 1].typeSizes;
+				typeSizes.instance_size = typeSizes.native_size = sizeof(Il2CppObject) + data.classSize;
+			}
 		}
 	}
 

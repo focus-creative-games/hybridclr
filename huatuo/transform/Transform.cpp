@@ -5557,7 +5557,7 @@ ip++;
 					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
 					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 					IL2CPP_ASSERT(objKlass);
-					int32_t typeSize = GetTypeValueSize(&objKlass->byval_arg);
+					int32_t typeSize = GetTypeValueSize(objKlass);
 					CI_ldc4(typeSize, EvalStackReduceDataType::I4);
 					ip += 6;
 					continue;
