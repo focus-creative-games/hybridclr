@@ -564,7 +564,6 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 	{
 		if (huatuo::metadata::IsInstanceMethod(method))
 		{
-			method = GET_OBJECT_VIRTUAL_METHOD(obj, method);
 #ifdef HUATUO_UNITY_2021_OR_NEW
 			(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
 #else
