@@ -63,7 +63,7 @@ namespace huatuo
 			_PEHeader = (PEHeader*)(ptrSig + 4);
 
 			_isDll = (_PEHeader->characteristics & 0x2000);
-			std::cout << "load " << (_isDll ? "dll" : "exe") << std::endl;
+			// std::cout << "load " << (_isDll ? "dll" : "exe") << std::endl;
 
 			// optional size may be 224(32bit matchine) or 240 (64bit)
 			if (_PEHeader->optionalHeadersize != kOptionalHeaderSize32 && _PEHeader->optionalHeadersize != kOptionalHeaderSize64)
@@ -106,7 +106,7 @@ namespace huatuo
 			{
 				return LoadImageErrorCode::BAD_IMAGE;
 			}
-			std::cout << "version:" << (const char*)&(_ptrMetaRoot->versionFirstByte) << std::endl;
+			//std::cout << "version:" << (const char*)&(_ptrMetaRoot->versionFirstByte) << std::endl;
 			_ptrMetaData = (const byte*)_ptrMetaRoot;
 
 			uint16_t numStreamHeader = *(uint16_t*)(_ptrMetaData + 16 + _ptrMetaRoot->length + 2);
@@ -116,7 +116,7 @@ namespace huatuo
 			const size_t maxStreamNameSize = 16;
 			for (int i = 0; i < numStreamHeader; i++)
 			{
-				std::cout << "name:" << (char*)curSH->name << ", offset:" << curSH->offset << ", size:" << curSH->size << std::endl;
+				//std::cout << "name:" << (char*)curSH->name << ", offset:" << curSH->offset << ", size:" << curSH->size << std::endl;
 
 				if (curSH->offset >= ptrCLIHeader->metaData.size)
 				{
@@ -208,8 +208,8 @@ namespace huatuo
 			//}
 
 			uint32_t validTableNum = GetNotZeroBitCount(ptrTableHeader->valid);
-			std::cout << "valid table num:" << validTableNum << std::endl;
-			printf("#~ size:%0x\n", _streamTables.size);
+			//std::cout << "valid table num:" << validTableNum << std::endl;
+			//printf("#~ size:%0x\n", _streamTables.size);
 			const uint32_t* tableRowNums = (uint32_t*)(_streamTables.data + 24);
 			const byte* tableDataBegin = _streamTables.data + 24 + 4 * validTableNum;
 
