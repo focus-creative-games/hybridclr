@@ -79,6 +79,7 @@ aux_source_directory(${IL2CPP_SOURCE_DIR}/libil2cpp LIBIL2CPP_SOURCE_LIST)
 
 #find_library(zlib ${PROJECT_SOURCE_DIR}/external)
 add_library(il2cpp_original STATIC ${LIBIL2CPP_SOURCE_LIST} ${LUMP_SOURCE_LIST})
+add_dependencies(il2cpp_original external objective)
 
 add_custom_command(TARGET il2cpp_original 
     POST_BUILD
