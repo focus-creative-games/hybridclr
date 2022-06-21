@@ -3419,7 +3419,7 @@ ip++;
 			case OpcodeValue::SWITCH:
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
-				CreateAddIR(ir, BranchSwitch);
+				CreateIR(ir, BranchSwitch);
 
 				uint32_t switchValue = GetEvalStackTopOffset();
 				uint32_t n = (uint32_t)GetI4LittleEndian(ip + 1);
@@ -3433,14 +3433,26 @@ ip++;
 
 				uint32_t instrSize = 1 + (n + 1) * 4;
 				const byte* caseOffsetIp = ip + 5;
+
+				// remove this instrument if all target is same to default.
+				uint32_t nextInstrumentOffset = ipOffset + instrSize;
+				bool anyNotDefaultCase = false;
 				for (uint32_t caseIdx = 0; caseIdx < n; caseIdx++)
 				{
-					int32_t targetOffset = (int32_t)(ipOffset + instrSize + GetI4LittleEndian(caseOffsetIp + caseIdx * 4));
+					int32_t targetOffset = (int32_t)(nextInstrumentOffset + GetI4LittleEndian(caseOffsetIp + caseIdx * 4));
 					caseOffsets[caseIdx] = targetOffset;
 					//PUSH_OFFSET(caseOffsets + caseIdx);
-					PushBranch(targetOffset);
+					if (targetOffset != nextInstrumentOffset)
+					{
+						anyNotDefaultCase = true;
+						PushBranch(targetOffset);
+					}
 				}
-				switchOffsetsInResolveData.push_back({ ir->caseOffsets, n });
+				if (anyNotDefaultCase)
+				{
+					switchOffsetsInResolveData.push_back({ ir->caseOffsets, n });
+					AddInst(ir);
+				}
 				ip += instrSize;
 				continue;
 			}
@@ -5557,7 +5569,7 @@ ip++;
 					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
 					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 					IL2CPP_ASSERT(objKlass);
-					int32_t typeSize = GetTypeValueSize(objKlass);
+					int32_t typeSize = GetTypeValueSize(&objKlass->byval_arg);
 					CI_ldc4(typeSize, EvalStackReduceDataType::I4);
 					ip += 6;
 					continue;
