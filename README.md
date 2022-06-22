@@ -13,6 +13,8 @@ huatuo是一个**特性完整、零成本、高性能、低内存**的**近乎�
 
 huatuo扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行。从底层彻底支持了热更新。
 
+huatuo**开创性地实现了 `differential hybrid dll` 技术**====。即可以对AOT dll任意增删改，huatuo会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平。
+
 ## 特性
 
 - 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
@@ -20,10 +22,11 @@ huatuo扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki
 - 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#性能测试报告)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#内存占用报告)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
+- ====**开创性地实现了 `differential hybrid dll` 技术**====。即可以将某个热更新dll先AOT形式打包，后面可以对该dll任意增删改，huatuo会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行。这意味着热更新的游戏逻辑的运行性能将接近原生AOT的水平。
 
 ## 工作原理
 
-huatuo从mono的[Hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/)技术中得到启发，为unity的il2cpp之类的AOT runtime额外提供了interpreter模块，将它们由纯AOT运行时改造为"AOT + Interpreter"混合运行方式。
+huatuo从mono的[hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/)技术中得到启发，为unity的il2cpp之类的AOT runtime额外提供了interpreter模块，将它们由纯AOT运行时改造为"AOT + Interpreter"混合运行方式。
 
 ![icon](docs/images/architecture.png)
 
