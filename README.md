@@ -22,7 +22,7 @@ huatuo**开创性地实现了 `differential hybrid dll` 技术**====。即可以
 - 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#性能测试报告)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/huatuo/performance/benchmark/#内存占用报告)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
-- ====**开创性地实现了 `differential hybrid dll` 技术**====。即可以将某个热更新dll先AOT形式打包，后面可以对该dll任意增删改，huatuo会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行。这意味着热更新的游戏逻辑的运行性能将接近原生AOT的水平。
+- **开创性地实现了 `differential hybrid dll` 技术**。即可以将某个热更新dll先AOT形式打包，后面可以对该dll任意增删改，huatuo会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行。这意味着热更新的游戏逻辑的运行性能将接近原生AOT的水平。
 
 ## 工作原理
 

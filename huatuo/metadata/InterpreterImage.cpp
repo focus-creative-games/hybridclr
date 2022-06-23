@@ -1043,7 +1043,12 @@ namespace metadata
 
 		TbAssemblyRef assRef = _rawImage.ReadAssemblyRef(referencedAssemblyTableIndex + 1);
 		const char* refAssName = _rawImage.GetStringFromRawIndex(assRef.name);
-		return il2cpp::vm::Assembly::GetLoadedAssembly(refAssName);
+		const Il2CppAssembly* il2cppAssRef = il2cpp::vm::Assembly::GetLoadedAssembly(refAssName);
+		if (!il2cppAssRef)
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetDllNotFoundException(refAssName));
+		}
+		return il2cppAssRef;
 	}
 
 	// FIXME 此处bug较多，仍需要仔细检查
