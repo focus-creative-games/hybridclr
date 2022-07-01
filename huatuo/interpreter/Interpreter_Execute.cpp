@@ -102,6 +102,10 @@ namespace interpreter
 		{
 			il2cpp::vm::Exception::RaiseDivideByZeroException();
 		}
+		else if (a == kIl2CppInt32Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a / b;
 	}
 
@@ -110,6 +114,10 @@ namespace interpreter
 		if (b == 0)
 		{
 			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
+		else if (a == kIl2CppInt64Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
 		}
 		return a / b;
 	}
@@ -136,11 +144,19 @@ namespace interpreter
 
 	inline int32_t HiDivUn(int32_t a, int32_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint32_t)a / (uint32_t)b;
 	}
 
 	inline int64_t HiDivUn(int64_t a, int64_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint64_t)a / (uint64_t)b;
 	}
 
@@ -156,21 +172,45 @@ namespace interpreter
 
 	inline int32_t HiRem(int32_t a, int32_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
+		else if (a == kIl2CppInt32Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a % b;
 	}
 
 	inline int64_t HiRem(int64_t a, int64_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
+		else if (a == kIl2CppInt64Min && b == -1)
+		{
+			il2cpp::vm::Exception::RaiseOverflowException();
+		}
 		return a % b;
 	}
 
 	inline uint32_t HiRemUn(int32_t a, int32_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint32_t)a % (uint32_t)b;
 	}
 
 	inline uint64_t HiRemUn(int64_t a, int64_t b)
 	{
+		if (b == 0)
+		{
+			il2cpp::vm::Exception::RaiseDivideByZeroException();
+		}
 		return (uint64_t)a % (uint64_t)b;
 	}
 
@@ -814,9 +854,6 @@ IL2CPP_ASSERT(efi.exFlowType == ExceptionFlowType::Leave); \
 int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
 for (; efi.nextExClauseIndex < exClauseNum; ) \
 { \
-	if (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None && efi.nextExClauseIndex >= frame->prevExFlowInfo.nextExClauseIndex) {\
-		POP_PREV_EXCEPTION_FLOW_INFO();\
-	}\
 	InterpExceptionClause* iec = imi->exClauses[efi.nextExClauseIndex++]; \
 	if (iec->tryBeginOffset <= efi.throwOffset && efi.throwOffset < iec->tryEndOffset) \
 	{ \
