@@ -2179,8 +2179,8 @@ ip++;
 			}
 			else if (ec.flags == CorILExceptionClauseType::Filter)
 			{
-				PUSH_OFFSET(&iec->filterBeginOffset);
 				iec->filterBeginOffset = ec.classTokenOrFilterOffset;
+				PUSH_OFFSET(&iec->filterBeginOffset);
 				iec->exKlass = nullptr;
 			}
 			else
