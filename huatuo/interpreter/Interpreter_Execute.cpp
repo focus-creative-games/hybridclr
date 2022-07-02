@@ -360,23 +360,17 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		return UnBox(obj, klass);
 	}
 
-	inline void HiUnboxAny(Il2CppObject* obj, Il2CppClass* klass, void* data)
+	inline void HiUnboxAny2StackObject(Il2CppObject* obj, Il2CppClass* klass, void* data)
 	{
 		if (il2cpp::vm::Class::IsNullable(klass))
 		{
-			UnBoxNullable(obj, klass, data);
+			UnBoxNullable(obj, klass->element_class, data);
 		}
 		else
 		{
-			CHECK_NOT_NULL_THROW(obj);
 			std::memmove(data, UnBox(obj, klass), klass->instance_size - sizeof(Il2CppObject));
+			ExpandLocationData2StackDataByType(data, klass->byval_arg.type);
 		}
-	}
-
-	inline void HiUnboxAny2StackObject(Il2CppObject* obj, Il2CppClass* klass, void* data)
-	{
-		HiUnboxAny(obj, klass, data);
-		ExpandLocationData2StackDataByType(data, klass->byval_arg.type);
 	}
 
 	inline void HiCastClass(Il2CppObject* obj, Il2CppClass* klass)
