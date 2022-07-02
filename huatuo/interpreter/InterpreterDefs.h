@@ -15,7 +15,7 @@ namespace huatuo
 			I2,
 			U2,
 			U8,
-			// U16,
+			U16,
 			S_12,
 			S_16, // struct size == 16
 			S_20,

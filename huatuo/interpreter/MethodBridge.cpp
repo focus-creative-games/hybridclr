@@ -17,6 +17,20 @@ namespace huatuo
 	{
 		ArgDesc GetValueTypeArgDescBySize(uint32_t size)
 		{
+#if HUATUO_TARGET_ARM
+			if (size <= 8)
+			{
+				return { LocationDataType::U8, 1 };
+			}
+			else if (size <= 16)
+			{
+				return { LocationDataType::U16, 2 };
+			}
+			else
+			{
+				return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
+			}
+#else
 			switch (size)
 			{
 			case 1:
@@ -31,6 +45,7 @@ namespace huatuo
 			case 32: return { LocationDataType::S_32, 4 };
 			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 			}
+#endif
 		}
 
 		ArgDesc GetTypeArgDesc(const Il2CppType* type)
@@ -143,13 +158,12 @@ namespace huatuo
 					++dstOffset;
 					break;
 				}
-				//case LocationDataType::U16:
-				//{
-				//	RaiseHuatuoExecutionEngineException("CopyArgs not support U16");
-				//	Copy12(dst, src->ptr);
-				//	dstOffset += 2;
-				//	break;
-				//}
+				case LocationDataType::U16:
+				{
+					Copy16(dst, *(void**)src);
+					dstOffset += 2;
+					break;
+				}
 				case LocationDataType::S_12:
 				{
 					// when size > 8, arg is ref to struct
