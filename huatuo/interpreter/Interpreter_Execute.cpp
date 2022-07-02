@@ -785,10 +785,13 @@ while (true) \
 	int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
 	for (; efi.nextExClauseIndex < exClauseNum; ) \
 	{ \
-		if (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None && efi.nextExClauseIndex >= frame->prevExFlowInfo.nextExClauseIndex) {\
-			POP_PREV_EXCEPTION_FLOW_INFO(); \
-		}\
 		InterpExceptionClause* iec = imi->exClauses[efi.nextExClauseIndex++]; \
+		if (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None && efi.nextExClauseIndex >= frame->prevExFlowInfo.nextExClauseIndex) {\
+			InterpExceptionClause* prevIec = imi->exClauses[frame->prevExFlowInfo.nextExClauseIndex - 1]; \
+			if (prevIec->handlerBeginOffset > efi.throwOffset || prevIec->handlerEndOffset <= efi.throwOffset) { \
+				POP_PREV_EXCEPTION_FLOW_INFO();\
+			} \
+		}\
 		if (iec->tryBeginOffset <= efi.throwOffset && efi.throwOffset < iec->tryEndOffset) \
 		{ \
 			switch (iec->flags) \
@@ -849,6 +852,12 @@ int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
 for (; efi.nextExClauseIndex < exClauseNum; ) \
 { \
 	InterpExceptionClause* iec = imi->exClauses[efi.nextExClauseIndex++]; \
+	if (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None && efi.nextExClauseIndex >= frame->prevExFlowInfo.nextExClauseIndex) {\
+		InterpExceptionClause* prevIec = imi->exClauses[frame->prevExFlowInfo.nextExClauseIndex - 1]; \
+		if (prevIec->handlerBeginOffset > efi.throwOffset || prevIec->handlerEndOffset <= efi.throwOffset) { \
+			POP_PREV_EXCEPTION_FLOW_INFO();\
+		} \
+	}\
 	if (iec->tryBeginOffset <= efi.throwOffset && efi.throwOffset < iec->tryEndOffset) \
 	{ \
 		if (iec->tryBeginOffset <= efi.leaveTarget && efi.leaveTarget < iec->tryEndOffset) \
