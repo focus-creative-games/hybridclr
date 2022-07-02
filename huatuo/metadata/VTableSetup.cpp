@@ -427,6 +427,7 @@ namespace metadata
 				else
 				{
 					bool overrideSelfInterface = false;
+					/*
 					for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 					{
 						RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
@@ -453,6 +454,7 @@ namespace metadata
 							}
 						}
 					}
+					*/
 					if (!overrideSelfInterface)
 					{
 						_methodImpls.push_back({ vm.method, _type, curOffset, vm.name });
@@ -522,7 +524,7 @@ namespace metadata
 					continue;
 				}
 
-				const GenericClassMethod* implVm = _parent->FindImplMethod(vmi.type, vmi.method);
+				const GenericClassMethod* implVm = FindImplMethod(vmi.type, vmi.method);
 				if (implVm)
 				{
 					vmi.type = implVm->type;
