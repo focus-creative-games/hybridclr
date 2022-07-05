@@ -572,6 +572,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		return *(GetNulllableHasValueOffset(nullableValueObj, size));
 	}
 
+	/*
 	inline void GetNullableValueOrDefault(void* dst, void* nullableValueObj, Il2CppClass* klass)
 	{
 		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
@@ -601,6 +602,276 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		else
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetInvalidOperationException("Nullable object must have a value."));
+		}
+	}
+	*/
+	// ExpandLocationData2StackDataByType
+	
+	inline void GetNullableValueOrDefault2StackDataByType(void* dst, void* nullableValueObj, Il2CppClass* klass)
+	{
+		Il2CppClass* eleClass = klass->castClass;
+		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
+		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
+		void* srcData = GetNulllableDataOffset(nullableValueObj, size);
+
+		LabelGet:
+		switch (eleClass->byval_arg.type)
+		{
+		case IL2CPP_TYPE_BOOLEAN:
+		{
+			*(int32_t*)dst = notNull ? *(uint8_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_I1:
+		{
+			*(int32_t*)dst = notNull ? *(int8_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_U1:
+		{
+			*(int32_t*)dst = notNull ? *(uint8_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_I2:
+		{
+			*(int32_t*)dst = notNull ? *(int16_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_CHAR:
+		{
+			*(int32_t*)dst = notNull ? *(uint16_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		{
+			*(int32_t*)dst = notNull ? *(int32_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		{
+			*(int64_t*)dst = notNull ? *(int64_t*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_R4:
+		{
+			*(float*)dst = notNull ? *(float*)srcData : 0;
+			break;
+		}
+		case IL2CPP_TYPE_R8:
+		{
+			*(double*)dst = notNull ? *(double*)srcData : 0.0;
+			break;
+		}
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+		{
+#if HUATUO_ARCH_64
+			* (int64_t*)dst = notNull ? *(int64_t*)srcData : 0;
+#else 
+			* (int32_t*)dst = notNull ? *(int32_t*)srcData : 0;
+#endif
+			break;
+		}
+		case IL2CPP_TYPE_VALUETYPE:
+		{
+			if (eleClass->enumtype)
+			{
+				eleClass = eleClass->castClass;
+				goto LabelGet;
+			}
+			if (notNull)
+			{
+				std::memmove(dst, nullableValueObj, size);
+			}
+			else
+			{
+				std::memset(dst, 0, size);
+			}
+			break;
+		}
+		default:
+		{
+			RaiseHuatuoExecutionEngineException("GetNullableValueOrDefault2StackDataByType");
+		}
+		}
+	}
+
+	inline void GetNullableValueOrDefault2StackDataByType(void* dst, void* nullableValueObj, void* defaultData, Il2CppClass* klass)
+	{
+		Il2CppClass* eleClass = klass->castClass;
+		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
+		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
+		void* srcData = notNull ? GetNulllableDataOffset(nullableValueObj, size) : defaultData;
+
+	LabelGet:
+		switch (eleClass->byval_arg.type)
+		{
+		case IL2CPP_TYPE_BOOLEAN:
+		{
+			*(int32_t*)dst = *(uint8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I1:
+		{
+			*(int32_t*)dst = *(int8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_U1:
+		{
+			*(int32_t*)dst = *(uint8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I2:
+		{
+			*(int32_t*)dst = *(int16_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_CHAR:
+		{
+			*(int32_t*)dst = *(uint16_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		{
+			*(int32_t*)dst = *(int32_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		{
+			*(int64_t*)dst = *(int64_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_R4:
+		{
+			*(float*)dst = *(float*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_R8:
+		{
+			*(double*)dst = *(double*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+		{
+#if HUATUO_ARCH_64
+			* (int64_t*)dst = *(int64_t*)srcData;
+#else 
+			* (int32_t*)dst = *(int32_t*)srcData;
+#endif
+			break;
+		}
+		case IL2CPP_TYPE_VALUETYPE:
+		{
+			if (eleClass->enumtype)
+			{
+				eleClass = eleClass->castClass;
+				goto LabelGet;
+			}
+			std::memmove(dst, nullableValueObj, size);
+			break;
+		}
+		default:
+		{
+			RaiseHuatuoExecutionEngineException("GetNullableValue2StackDataByType");
+		}
+		}
+	}
+
+	inline void GetNullableValue2StackDataByType(void* dst, void* nullableValueObj, Il2CppClass* klass)
+	{
+		Il2CppClass* eleClass = klass->castClass;
+		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
+		{
+			bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
+			if (!notNull)
+			{
+				il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetInvalidOperationException("Nullable object must have a value."));
+			}
+		}
+
+		void* srcData = GetNulllableDataOffset(nullableValueObj, size);
+	LabelGet:
+		switch (eleClass->byval_arg.type)
+		{
+		case IL2CPP_TYPE_BOOLEAN:
+		{
+			*(int32_t*)dst = *(uint8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I1:
+		{
+			*(int32_t*)dst = *(int8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_U1:
+		{
+			*(int32_t*)dst = *(uint8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I2:
+		{
+			*(int32_t*)dst = *(int16_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_CHAR:
+		{
+			*(int32_t*)dst = *(uint16_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		{
+			*(int32_t*)dst = *(int32_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		{
+			*(int64_t*)dst = *(int64_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_R4:
+		{
+			*(float*)dst = *(float*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_R8:
+		{
+			*(double*)dst = *(double*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+		{
+#if HUATUO_ARCH_64
+			* (int64_t*)dst = *(int64_t*)srcData;
+#else 
+			* (int32_t*)dst = *(int32_t*)srcData;
+#endif
+			break;
+		}
+		case IL2CPP_TYPE_VALUETYPE:
+		{
+			if (eleClass->enumtype)
+			{
+				eleClass = eleClass->castClass;
+				goto LabelGet;
+			}
+			std::memmove(dst, nullableValueObj, size);
+			break;
+		}
+		default:
+		{
+			RaiseHuatuoExecutionEngineException("GetNullableValue2StackDataByType");
+		}
 		}
 	}
 #pragma endregion
@@ -7787,7 +8058,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __obj = *(uint16_t*)(ip + 4);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 6);
-				    GetNullableValueOrDefault((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), __klass);
+				    GetNullableValueOrDefault2StackDataByType((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), __klass);
 				    ip += 14;
 				    continue;
 				}
@@ -7797,7 +8068,7 @@ else \
 					uint16_t __obj = *(uint16_t*)(ip + 4);
 					uint16_t __defaultValue = *(uint16_t*)(ip + 6);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 8);
-				    GetNullableValueOrDefault((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), (void*)(localVarBase + __defaultValue), __klass);
+				    GetNullableValueOrDefault2StackDataByType((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), (void*)(localVarBase + __defaultValue), __klass);
 				    ip += 16;
 				    continue;
 				}
@@ -7806,7 +8077,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __obj = *(uint16_t*)(ip + 4);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 6);
-				    GetNullableValue((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), __klass);
+				    GetNullableValue2StackDataByType((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), __klass);
 				    ip += 14;
 				    continue;
 				}

@@ -4,7 +4,7 @@
 #include <cstring>
 #include <memory>
 
-#include "huatuo-compatible-adaptor.h"
+#include "Il2cppCompatibleDef.h"
 
 #include "codegen/il2cpp-codegen.h"
 #include "utils/Memory.h"
