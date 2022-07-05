@@ -1324,7 +1324,7 @@ namespace metadata
 			Il2CppGenericParameter& paramDef = _genericParams[i];
 			paramDef.num = data.number;
 			paramDef.flags = data.flags;
-			paramDef.nameIndex = data.name;
+			paramDef.nameIndex = EncodeWithIndex(data.name);
 			// constraintsStart 和 constrantsCount init at InitGenericParamConstrains() latter
 
 			TableType ownerType = DecodeTypeOrMethodDefCodedIndexTableType(data.owner);
