@@ -551,6 +551,59 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 
 #pragma endregion
 
+#pragma region nullable
+
+
+	inline void InitNullableValueType(void* nullableValueTypeObj, void* data, Il2CppClass* klass)
+	{
+		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
+		std::memmove(GetNulllableDataOffset(nullableValueTypeObj, size), data, size);
+		*GetNulllableHasValueOffset(nullableValueTypeObj, size) = 1;
+	}
+
+	inline void NewNullableValueType(void* nullableValueTypeObj, void* data, Il2CppClass* klass)
+	{
+		InitNullableValueType(nullableValueTypeObj, data, klass);
+	}
+
+	inline bool IsNullableHasValue(void* nullableValueObj, Il2CppClass* klass)
+	{
+		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
+		return *(GetNulllableHasValueOffset(nullableValueObj, size));
+	}
+
+	inline void GetNullableValueOrDefault(void* dst, void* nullableValueObj, Il2CppClass* klass)
+	{
+		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
+		if (*GetNulllableHasValueOffset(nullableValueObj, size))
+		{
+			std::memmove(dst, nullableValueObj, size);
+		}
+		else
+		{
+			std::memset(dst, 0, size);
+		}
+	}
+
+	inline void GetNullableValueOrDefault(void* dst, void* nullableValueObj, void* defaultData, Il2CppClass* klass)
+	{
+		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
+		std::memmove(dst, *GetNulllableHasValueOffset(nullableValueObj, size) ? nullableValueObj : defaultData, size);
+	}
+
+	inline void GetNullableValue(void* dst, void* nullableValueObj, Il2CppClass* klass)
+	{
+		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
+		if (*GetNulllableHasValueOffset(nullableValueObj, size))
+		{
+			std::memmove(dst, nullableValueObj, size);
+		}
+		else
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetInvalidOperationException("Nullable object must have a value."));
+		}
+	}
+#pragma endregion
 
 #pragma region misc
 
