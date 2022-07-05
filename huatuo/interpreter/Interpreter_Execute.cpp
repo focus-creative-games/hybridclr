@@ -703,106 +703,31 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 	{
 		Il2CppClass* eleClass = klass->castClass;
 		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
+		void* srcData;
 		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
-		void* srcData = notNull ? GetNulllableDataOffset(nullableValueObj, size) : defaultData;
-
-	LabelGet:
-		switch (eleClass->byval_arg.type)
+		if (notNull)
 		{
-		case IL2CPP_TYPE_BOOLEAN:
-		{
-			*(int32_t*)dst = *(uint8_t*)srcData;
-			break;
+			srcData = GetNulllableDataOffset(nullableValueObj, size);
 		}
-		case IL2CPP_TYPE_I1:
+		else
 		{
-			*(int32_t*)dst = *(int8_t*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_U1:
-		{
-			*(int32_t*)dst = *(uint8_t*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_I2:
-		{
-			*(int32_t*)dst = *(int16_t*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_U2:
-		case IL2CPP_TYPE_CHAR:
-		{
-			*(int32_t*)dst = *(uint16_t*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_I4:
-		case IL2CPP_TYPE_U4:
-		{
-			*(int32_t*)dst = *(int32_t*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_I8:
-		case IL2CPP_TYPE_U8:
-		{
-			*(int64_t*)dst = *(int64_t*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_R4:
-		{
-			*(float*)dst = *(float*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_R8:
-		{
-			*(double*)dst = *(double*)srcData;
-			break;
-		}
-		case IL2CPP_TYPE_I:
-		case IL2CPP_TYPE_U:
-		{
-#if HUATUO_ARCH_64
-			* (int64_t*)dst = *(int64_t*)srcData;
-#else 
-			* (int32_t*)dst = *(int32_t*)srcData;
-#endif
-			break;
-		}
-		case IL2CPP_TYPE_VALUETYPE:
-		{
-			if (eleClass->enumtype)
-			{
-				eleClass = eleClass->castClass;
-				goto LabelGet;
-			}
-			std::memmove(dst, nullableValueObj, size);
-			break;
-		}
-		default:
-		{
-			RaiseHuatuoExecutionEngineException("GetNullableValue2StackDataByType");
-		}
-		}
-	}
-
-	inline void GetNullableValue2StackDataByType(void* dst, void* nullableValueObj, Il2CppClass* klass)
-	{
-		Il2CppClass* eleClass = klass->castClass;
-		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
-		{
-			bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
-			if (!notNull)
+			if (defaultData == nullptr)
 			{
 				il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetInvalidOperationException("Nullable object must have a value."));
 			}
+			srcData = defaultData;
 		}
-
-		void* srcData = GetNulllableDataOffset(nullableValueObj, size);
 	LabelGet:
 		switch (eleClass->byval_arg.type)
 		{
 		case IL2CPP_TYPE_BOOLEAN:
 		{
 			*(int32_t*)dst = *(uint8_t*)srcData;
+			break;
+		}
+		case IL2CPP_TYPE_CHAR:
+		{
+			*(int32_t*)dst = *(uint16_t*)srcData;
 			break;
 		}
 		case IL2CPP_TYPE_I1:
@@ -821,7 +746,6 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 			break;
 		}
 		case IL2CPP_TYPE_U2:
-		case IL2CPP_TYPE_CHAR:
 		{
 			*(int32_t*)dst = *(uint16_t*)srcData;
 			break;
@@ -874,6 +798,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		}
 		}
 	}
+
 #pragma endregion
 
 #pragma region misc
@@ -8077,7 +8002,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __obj = *(uint16_t*)(ip + 4);
 					Il2CppClass* __klass = *(Il2CppClass**)(ip + 6);
-				    GetNullableValue2StackDataByType((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), __klass);
+					GetNullableValueOrDefault2StackDataByType((void*)(localVarBase + __dst), (*(void**)(localVarBase + __obj)), nullptr, __klass);
 				    ip += 14;
 				    continue;
 				}
