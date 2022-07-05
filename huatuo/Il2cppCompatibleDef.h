@@ -10,12 +10,13 @@
 #include "vm/Runtime.h"
 #include "icalls/mscorlib/System/Type.h"
 
-#if HUATUO_UNITY_2020_OR_NEW
+#if HUATUO_UNITY_2020
 #include "icalls/mscorlib/System/MonoType.h"
-#else
-
+#elif HUATUO_UNITY_2021
 #include "icalls/mscorlib/System/RuntimeType.h"
 #include "icalls/mscorlib/System/RuntimeTypeHandle.h"
+#else
+#error "not suppport unity version"
 #endif
 
 #if IL2CPP_BYTE_ORDER != IL2CPP_LITTLE_ENDIAN
@@ -33,7 +34,7 @@
 #define ENABLE_PLACEHOLDER_DLL 1
 #endif
 
-#if HUATUO_UNITY_2020_OR_NEW
+#if HUATUO_UNITY_2020
 
 #define IS_CLASS_VALUE_TYPE(klass) ((klass)->valuetype)
 #define IS_CCTOR_FINISH_OR_NO_CCTOR(klass) ((klass)->cctor_finished) || !((klass)->has_cctor)
@@ -84,7 +85,7 @@ namespace huatuo
 		return il2cpp::icalls::mscorlib::System::MonoType::getFullName(refType, false, false);
 	}
 }
-#else
+#elif HUATUO_UNITY_2021
 
 #define IS_CLASS_VALUE_TYPE(klass) ((klass)->byval_arg.valuetype)
 #define IS_CCTOR_FINISH_OR_NO_CCTOR(klass) ((klass)->cctor_finished_or_no_cctor)
