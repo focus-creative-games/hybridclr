@@ -492,7 +492,7 @@ namespace metadata
 				Il2CppFieldDefaultValue fdv = {};
 				fdv.fieldIndex = rowIndex - 1;
 				fdv.typeIndex = dataTypeIndex;
-				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(data.value);
+				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(type.type, data.value);
 				fdv.dataIndex = (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
 				_fieldDefaultValues.push_back(fdv);
 				break;
@@ -505,7 +505,7 @@ namespace metadata
 				Il2CppParameterDefaultValue pdv = {};
 				pdv.typeIndex = dataTypeIndex;
 				pdv.parameterIndex = fd.parameterIndex;
-				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(data.value);
+				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(type.type, data.value);
 				pdv.dataIndex = (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
 				_paramDefaultValues.push_back(pdv);
 				break;

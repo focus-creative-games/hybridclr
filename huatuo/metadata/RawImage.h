@@ -61,7 +61,7 @@ namespace metadata
 			return _ptrRawData + index;
 		}
 
-		BlobReader DecodeBlob(const byte* buf) const
+		static BlobReader DecodeBlob(const byte* buf)
 		{
 			uint32_t sizeLength;
 			uint32_t length = BlobReader::ReadCompressedUint32(buf, sizeLength);
@@ -75,9 +75,16 @@ namespace metadata
 			return DecodeBlob(buf);
 		}
 
-		uint32_t GetImageOffsetOfBlob(uint32_t index) const
+		uint32_t GetImageOffsetOfBlob(Il2CppTypeEnum type, uint32_t index) const
 		{
-			return (uint32_t)(GetBlobReaderByRawIndex(index).GetData() - _ptrRawData);
+			if (type != IL2CPP_TYPE_STRING)
+			{
+				return (uint32_t)(GetBlobReaderByRawIndex(index).GetData() - _ptrRawData);
+			}
+			else
+			{
+				return (uint32_t)(_streamBlobHeap.data + index - _ptrRawData);
+			}
 		}
 
 		const byte* GetDataPtrByImageOffset(uint32_t imageOffset) const
