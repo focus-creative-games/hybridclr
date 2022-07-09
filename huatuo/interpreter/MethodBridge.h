@@ -37,6 +37,27 @@ namespace interpreter
 		uint8_t  __value[N];
 	};
 
+	template<int N>
+	struct ValueTypeSizeAlign2
+	{
+		static_assert(N % 2 == 0, "need align 2");
+		uint16_t  __value[N/2];
+	};
+
+	template<int N>
+	struct ValueTypeSizeAlign4
+	{
+		static_assert(N % 4 == 0, "need align 4");
+		uint32_t  __value[N/4];
+	};
+
+	template<int N>
+	struct ValueTypeSizeAlign8
+	{
+		static_assert(N % 8 == 0, "need align 8");
+		uint64_t  __value[N/8];
+	};
+
 	struct ValueTypeSize16
 	{
 		uint64_t low;

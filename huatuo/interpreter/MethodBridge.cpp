@@ -17,7 +17,7 @@ namespace huatuo
 	{
 		ArgDesc GetValueTypeArgDescBySize(uint32_t size)
 		{
-#if HUATUO_TARGET_ARM
+#if HUATUO_TARGET_ARM64
 			if (size <= 8)
 			{
 				return { LocationDataType::U8, 1 };
@@ -30,6 +30,8 @@ namespace huatuo
 			{
 				return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 			}
+#elif HUATUO_TARGET_ARMV7
+            return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 #else
 			switch (size)
 			{
@@ -129,29 +131,9 @@ namespace huatuo
 				switch (arg.type)
 				{
 				case LocationDataType::I1:
-				//{
-				//	dst->i64 = *(int8_t*)src;
-				//	++dstOffset;
-				//	break;
-				//}
 				case LocationDataType::U1:
-				//{
-				//	dst->i64 = *(uint8_t*)src;
-				//	++dstOffset;
-				//	break;
-				//}
 				case LocationDataType::I2:
-				//{
-				//	dst->i64 = *(int16_t*)src;
-				//	++dstOffset;
-				//	break;
-				//}
 				case LocationDataType::U2:
-				//{
-				//	dst->i64 = *(uint16_t*)src;
-				//	++dstOffset;
-				//	break;
-				//}
 				case LocationDataType::U8:
 				{
 					dst->i64 = *(int64_t*)src;
@@ -360,10 +342,61 @@ namespace huatuo
 			}
 		}
 
+		static void AppendSignatureObjOrRefOrPointer(char* sigBuf, size_t bufSize, size_t& pos)
+		{
+#if HUATUO_ARCH_64
+			const char* str = "i8";
+#else
+			const char* str = "i4";
+#endif
+			size_t len = std::strlen(str);
+			if (pos + len < bufSize)
+			{
+				std::strcpy(sigBuf + pos, str);
+				pos += len;
+			}
+			else
+			{
+				IL2CPP_ASSERT(false);
+			}
+		}
+		static void AppendValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, char* sigBuf, size_t bufferSize, size_t& pos)
+		{
+			switch (aligment)
+			{
+			case 0:
+			case 1:
+			{
+				pos += std::sprintf(sigBuf + pos, "S%d", typeSize);
+				break;
+			}
+			case 2:
+			{
+				pos += std::sprintf(sigBuf + pos, "A%d", typeSize);
+				break;
+			}
+			case 4:
+			{
+				pos += std::sprintf(sigBuf + pos, "B%d", typeSize);
+				break;
+			}
+			case 8:
+			{
+				pos += std::sprintf(sigBuf + pos, "C%d", typeSize);
+				break;
+			}
+			default:
+			{
+				TEMP_FORMAT(errMsg, "not support aligment:%d size:%d", aligment, typeSize);
+				RaiseHuatuoExecutionEngineException(errMsg);
+			}
+			}
+		}
+
 		static void AppendValueTypeSignature(Il2CppClass* klass, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
-			int typeSize = il2cpp::vm::Class::GetValueSize(klass, nullptr);
-#if HUATUO_TARGET_ARM
+			int32_t typeSize = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+#if HUATUO_TARGET_ARM64
 			HFATypeInfo typeInfo = {};
 			if (ComputeHFATypeInfo(klass, typeInfo))
 			{
@@ -425,13 +458,15 @@ namespace huatuo
 			{
 				if (returnType)
 				{
-					pos += std::sprintf(sigBuf + pos, "S%d", typeSize);
+					AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
 				}
 				else
 				{
 					AppendString(sigBuf, bufferSize, pos, "sr");
 				}
 			}
+#elif HUATUO_TARGET_ARMV7
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
 #else
 			switch (typeSize)
 			{
@@ -447,7 +482,7 @@ namespace huatuo
 			{
 				if (returnType)
 				{
-					pos += std::sprintf(sigBuf + pos, "S%d", typeSize);
+					AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
 				}
 				else
 				{
@@ -495,13 +530,13 @@ namespace huatuo
 		{
 			if (type->byref)
 			{
-				AppendString(sigBuf, bufferSize, pos, "i8");
+				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 				return;
 			}
 			switch (type->type)
 			{
 			case IL2CPP_TYPE_VOID: AppendString(sigBuf, bufferSize, pos, "v"); break;
-#if HUATUO_TARGET_ARM
+#if HUATUO_TARGET_ARM_ANY
 			case IL2CPP_TYPE_BOOLEAN:
 			case IL2CPP_TYPE_I1:
 			case IL2CPP_TYPE_U1: AppendString(sigBuf, bufferSize, pos, "i1"); break;
@@ -515,6 +550,8 @@ namespace huatuo
 			case IL2CPP_TYPE_R4:
 #endif
 			case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "r8"); break;
+			case IL2CPP_TYPE_I8:
+			case IL2CPP_TYPE_U8: AppendString(sigBuf, bufferSize, pos, "i8"); break;
 			case IL2CPP_TYPE_TYPEDBYREF:
 			{
 				IL2CPP_ASSERT(sizeof(Il2CppTypedRef) == sizeof(void*) * 3);
@@ -525,7 +562,14 @@ namespace huatuo
 			{
 				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-				AppendValueTypeSignature(klass, returnType, sigBuf, bufferSize, pos);
+				if (klass->enumtype)
+				{
+					AppendSignature(&klass->castClass->byval_arg, returnType, sigBuf, bufferSize, pos);
+				}
+				else
+				{
+					AppendValueTypeSignature(klass, returnType, sigBuf, bufferSize, pos);
+				}
 				break;
 			}
 			case IL2CPP_TYPE_GENERICINST:
@@ -533,7 +577,7 @@ namespace huatuo
 				const Il2CppType* underlyingGenericType = type->data.generic_class->type;
 				if (underlyingGenericType->type == IL2CPP_TYPE_CLASS)
 				{
-					AppendString(sigBuf, bufferSize, pos, "i8");
+					AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 				}
 				else
 				{
@@ -549,7 +593,7 @@ namespace huatuo
 				}
 				break;
 			}
-			default: AppendString(sigBuf, bufferSize, pos, "i8"); break;
+			default: AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos); break;
 			}
 		}
 
@@ -560,7 +604,7 @@ namespace huatuo
 
 			if (instanceCall)
 			{
-				AppendString(sigBuf, bufferSize, pos, "i8");
+				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 			}
 
 			for (uint8_t i = 0; i < paramCount; i++)
@@ -581,7 +625,7 @@ namespace huatuo
 
 			if (call && metadata::IsInstanceMethod(method))
 			{
-				AppendString(sigBuf, bufferSize, pos, "i8");
+				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 			}
 
 			for (uint8_t i = 0; i < method->parameterCount; i++)
@@ -601,7 +645,7 @@ namespace huatuo
 
 			if (call && metadata::IsInstanceMethod(method))
 			{
-				AppendString(sigBuf, bufferSize, pos, "i8");
+				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 			}
 
 			for (uint8_t i = 0; i < method->parameters_count; i++)

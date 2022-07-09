@@ -23,17 +23,24 @@
 #error "only support litten endian"
 #endif
 
+#if IL2CPP_TARGET_ARM64
+#define HUATUO_TARGET_ARM64 1
+#define HUATUO_TARGET_ARM_ANY 1
+#elif IL2CPP_TARGET_ARMV7
+#define HUATUO_TARGET_ARMV7 1
+#define HUATUO_TARGET_ARM_ANY 1
+#else
+#define HUATUO_TARGET_X64 1
+#define HUATUO_TARGET_ARM_ANY 0
+#endif
+
 #if	PLATFORM_ARCH_64
 #define HUATUO_ARCH_64 1
 #else
 #define HUATUO_ARCH_64 0
 #endif
 
-#if IL2CPP_TARGET_ARM64 || IL2CPP_TARGET_ARMV7
-#define HUATUO_TARGET_ARM 1
-#else
-#define HUATUO_TARGET_ARM 0
-#endif
+#define SIZEOF_PTR sizeof(void*)
 
 #ifndef ENABLE_PLACEHOLDER_DLL
 #define ENABLE_PLACEHOLDER_DLL 1

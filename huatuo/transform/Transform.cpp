@@ -1003,15 +1003,24 @@ ip++;
 		case huatuo::transform::EvalStackReduceDataType::R4:
 			return 4;
 		case huatuo::transform::EvalStackReduceDataType::I8:
-		case huatuo::transform::EvalStackReduceDataType::I:
 		case huatuo::transform::EvalStackReduceDataType::R8:
+		    return 8;
+		case huatuo::transform::EvalStackReduceDataType::I:
 		case huatuo::transform::EvalStackReduceDataType::Ref:
 		case huatuo::transform::EvalStackReduceDataType::Obj:
+#if HUATUO_ARCH_64
 			return 8;
+#else
+            return 4;
+#endif
 		default:
 		{
 			IL2CPP_ASSERT(false);
+#if HUATUO_ARCH_64
 			return 8;
+#else
+            return 4;
+#endif
 		}
 		}
 	}
@@ -1027,7 +1036,7 @@ ip++;
 		return IS_CLASS_VALUE_TYPE(klass) ? (fieldInfo->offset - sizeof(Il2CppObject)) : fieldInfo->offset;
 	}
 
-	inline uint32_t GetOrAddResolveDataIndex(std::unordered_map<const void*, uint32_t>& ptr2Index, std::vector<const void*>& resolvedDatas, const void* ptr)
+	inline uint32_t GetOrAddResolveDataIndex(std::unordered_map<const void*, uint32_t>& ptr2Index, std::vector<uint64_t>& resolvedDatas, const void* ptr)
 	{
 		auto it = ptr2Index.find(ptr);
 		if (it != ptr2Index.end())
@@ -1037,14 +1046,14 @@ ip++;
 		else
 		{
 			uint32_t newIndex = (uint32_t)resolvedDatas.size();
-			resolvedDatas.push_back(ptr);
+			resolvedDatas.push_back((uint64_t)ptr);
 			ptr2Index.insert({ ptr, newIndex });
 			return newIndex;
 		}
 	}
 
 	template<typename T>
-	void AllocResolvedData(std::vector<const void*>& resolvedDatas, int32_t size, int32_t& index, T*& buf)
+	void AllocResolvedData(std::vector<uint64_t>& resolvedDatas, int32_t size, int32_t& index, T*& buf)
 	{
 		if (size > 0)
 		{
@@ -1173,7 +1182,11 @@ ip++;
 		const Il2CppType* type = fieldInfo->type;
 		if (type->byref)
 		{
-			CI_createClassLdfldAndReturn(i8);
+#if HUATUO_ARCH_64
+			CI_createClassLdfldAndReturn(i8)
+#else
+			CI_createClassLdfldAndReturn(i4)
+#endif
 		}
 		Retry:
 		switch (type->type)
@@ -1189,13 +1202,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createClassLdfldAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createClassLdfldAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createClassLdfldAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createClassLdfldAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createClassLdfldAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createClassLdfldAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+			CI_createClassLdfldAndReturn(i8)
+#else
+			CI_createClassLdfldAndReturn(i4)
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1254,7 +1271,11 @@ ip++;
 			}
 			else
 			{
-				CI_createClassLdfldAndReturn(i8)
+#if HUATUO_ARCH_64
+			    CI_createClassLdfldAndReturn(i8)
+#else
+			    CI_createClassLdfldAndReturn(i4)
+#endif
 			}
 		}
 		}
@@ -1278,7 +1299,11 @@ ip++;
 		const Il2CppType* type = fieldInfo->type;
 		if (type->byref)
 		{
-			CI_createValueTypeLdfldAndReturn(i8);
+#if HUATUO_ARCH_64
+			CI_createValueTypeLdfldAndReturn(i8)
+#else
+			CI_createValueTypeLdfldAndReturn(i4)
+#endif
 		}
 		Retry:
 		switch (type->type)
@@ -1294,13 +1319,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createValueTypeLdfldAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createValueTypeLdfldAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createValueTypeLdfldAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createValueTypeLdfldAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createValueTypeLdfldAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createValueTypeLdfldAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+			CI_createValueTypeLdfldAndReturn(i8)
+#else
+			CI_createValueTypeLdfldAndReturn(i4)
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1359,7 +1388,11 @@ ip++;
 			}
 			else
 			{
-				CI_createValueTypeLdfldAndReturn(i8)
+#if HUATUO_ARCH_64
+			CI_createValueTypeLdfldAndReturn(i8)
+#else
+			CI_createValueTypeLdfldAndReturn(i4)
+#endif
 			}
 		}
 		}
@@ -1382,7 +1415,11 @@ ip++;
 		const Il2CppType* type = fieldInfo->type;
 		if (type->byref)
 		{
-			CI_createStfldAndReturn(i8);
+#if HUATUO_ARCH_64
+			CI_createStfldAndReturn(i8)
+#else
+			CI_createStfldAndReturn(i4)
+#endif
 		}
 	Retry:
 		switch (type->type)
@@ -1398,13 +1435,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createStfldAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createStfldAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createStfldAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createStfldAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createStfldAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createStfldAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+			CI_createStfldAndReturn(i8)
+#else
+			CI_createStfldAndReturn(i4)
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1463,7 +1504,11 @@ ip++;
 			}
 			else
 			{
-				CI_createStfldAndReturn(i8)
+#if HUATUO_ARCH_64
+			    CI_createStfldAndReturn(i8)
+#else
+			    CI_createStfldAndReturn(i4)
+#endif
 			}
 		}
 		}
@@ -1477,17 +1522,19 @@ ip++;
     return ir; \
 }
 
-	inline interpreter::IRCommon* CreateLdsfld(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo)
+	inline interpreter::IRCommon* CreateLdsfld(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo, uint32_t parent)
 	{
 		const Il2CppType* type = fieldInfo->type;
-
-		Il2CppClass* parent = fieldInfo->parent;
 		uint16_t offset = fieldInfo->offset;
 		IL2CPP_ASSERT(fieldInfo->offset < (1 << 16));
 
 		if (type->byref)
 		{
-			CI_createLdsfldAndReturn(i8);
+#if HUATUO_ARCH_64
+			CI_createLdsfldAndReturn(i8)
+#else
+			CI_createLdsfldAndReturn(i4)
+#endif
 		}
 		Retry:
 		switch (type->type)
@@ -1503,13 +1550,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createLdsfldAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createLdsfldAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createLdsfldAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createLdsfldAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createLdsfldAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createLdsfldAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+			CI_createLdsfldAndReturn(i8)
+#else
+			CI_createLdsfldAndReturn(i4)
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1568,7 +1619,11 @@ ip++;
 			}
 			else
 			{
-				CI_createLdsfldAndReturn(i8)
+#if HUATUO_ARCH_64
+			    CI_createLdsfldAndReturn(i8)
+#else
+			    CI_createLdsfldAndReturn(i4)
+#endif
 			}
 		}
 		}
@@ -1582,14 +1637,17 @@ ip++;
     ir->data = dataIdx; \
     return ir; \
 }
-	inline interpreter::IRCommon* CreateStsfld(TemporaryMemoryArena& pool, const FieldInfo* fieldInfo, int32_t dataIdx)
+	inline interpreter::IRCommon* CreateStsfld(TemporaryMemoryArena& pool, const FieldInfo* fieldInfo, uint32_t parent, int32_t dataIdx)
 	{
-		Il2CppClass* parent = fieldInfo->parent;
 		uint16_t offset = fieldInfo->offset;
 		const Il2CppType* type = fieldInfo->type;
 		if (type->byref)
 		{
+#if HUATUO_ARCH_64
 			CI_createStsfldAndReturn(i8);
+#else
+			CI_createStsfldAndReturn(i4);
+#endif
 		}
 		Retry:
 		switch (type->type)
@@ -1605,13 +1663,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createStsfldAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createStsfldAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createStsfldAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createStsfldAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createStsfldAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createStsfldAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+			CI_createStsfldAndReturn(i8);
+#else
+			CI_createStsfldAndReturn(i4);
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1670,7 +1732,11 @@ ip++;
 			}
 			else
 			{
-				CI_createStsfldAndReturn(i8)
+#if HUATUO_ARCH_64
+			    CI_createStsfldAndReturn(i8);
+#else
+			    CI_createStsfldAndReturn(i4);
+#endif
 			}
 		}
 		}
@@ -1691,17 +1757,20 @@ ip++;
 		return il2cpp::vm::MetadataCache::GetThreadLocalStaticOffsetForField(const_cast<FieldInfo*>(fieldInfo));
 	}
 
-	inline interpreter::IRCommon* CreateLdthreadlocal(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo)
+	inline interpreter::IRCommon* CreateLdthreadlocal(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo, uint32_t parent)
 	{
 		const Il2CppType* type = fieldInfo->type;
 
-		Il2CppClass* parent = fieldInfo->parent;
 		IL2CPP_ASSERT(fieldInfo->offset == THREAD_STATIC_FIELD_OFFSET);
 		int32_t offset = GetThreadStaticFieldOffset(fieldInfo);
 
 		if (type->byref)
 		{
-			CI_createLdsfldAndReturn(i8);
+#if HUATUO_ARCH_64
+			CI_createLdthreadlocalAndReturn(i8)
+#else
+			CI_createLdthreadlocalAndReturn(i4)
+#endif
 		}
 		Retry:
 		switch (type->type)
@@ -1717,13 +1786,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createLdthreadlocalAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createLdthreadlocalAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createLdthreadlocalAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createLdthreadlocalAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createLdthreadlocalAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createLdthreadlocalAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+		 CI_createLdthreadlocalAndReturn(i8)
+#else
+		 CI_createLdthreadlocalAndReturn(i4)
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1782,7 +1855,11 @@ ip++;
 			}
 			else
 			{
-				CI_createLdthreadlocalAndReturn(i8)
+#if HUATUO_ARCH_64
+		        CI_createLdthreadlocalAndReturn(i8)
+#else
+		        CI_createLdthreadlocalAndReturn(i4)
+#endif
 			}
 		}
 		}
@@ -1797,15 +1874,18 @@ ip++;
     return ir; \
 }
 
-	inline interpreter::IRCommon* CreateStthreadlocal(TemporaryMemoryArena& pool, const FieldInfo* fieldInfo, int32_t dataIdx)
+	inline interpreter::IRCommon* CreateStthreadlocal(TemporaryMemoryArena& pool, const FieldInfo* fieldInfo, uint32_t parent, int32_t dataIdx)
 	{
-		Il2CppClass* parent = fieldInfo->parent;
 		IL2CPP_ASSERT(fieldInfo->offset == THREAD_STATIC_FIELD_OFFSET);
 		int32_t offset = GetThreadStaticFieldOffset(fieldInfo);
 		const Il2CppType* type = fieldInfo->type;
 		if (type->byref)
 		{
-			CI_createStthreadlocalAndReturn(i8);
+#if HUATUO_ARCH_64
+         	CI_createStthreadlocalAndReturn(i8)
+#else
+         	CI_createStthreadlocalAndReturn(i4)
+#endif
 		}
 		Retry:
 		switch (type->type)
@@ -1821,13 +1901,17 @@ ip++;
 		case IL2CPP_TYPE_I8: CI_createStthreadlocalAndReturn(i8)
 		case IL2CPP_TYPE_U8: CI_createStthreadlocalAndReturn(u8)
 		case IL2CPP_TYPE_R4: CI_createStthreadlocalAndReturn(i4)
-		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_R8: CI_createStthreadlocalAndReturn(i8)
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			CI_createStthreadlocalAndReturn(i8)
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: CI_createStthreadlocalAndReturn(i8)
+		case IL2CPP_TYPE_BYREF:
+		#if HUATUO_ARCH_64
+        			CI_createStthreadlocalAndReturn(i8)
+        #else
+        			CI_createStthreadlocalAndReturn(i4)
+        #endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -1886,7 +1970,11 @@ ip++;
 			}
 			else
 			{
-				CI_createStthreadlocalAndReturn(i8)
+#if HUATUO_ARCH_64
+			    CI_createStthreadlocalAndReturn(i8)
+#else
+			    CI_createStthreadlocalAndReturn(i4)
+#endif
 			}
 		}
 		}
@@ -1959,7 +2047,11 @@ ip++;
 	{
 		if (type->byref)
 		{
+#if HUATUO_ARCH_64
 			return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+#else
+			return HiOpcodeEnum::GetMdArrElementVarVar_i4;
+#endif
 		}
 		switch (type->type)
 		{
@@ -1974,12 +2066,17 @@ ip++;
 		case IL2CPP_TYPE_R4: return HiOpcodeEnum::GetMdArrElementVarVar_i4;
 		case IL2CPP_TYPE_R8:
 		case IL2CPP_TYPE_I8:
-		case IL2CPP_TYPE_U8:
+		case IL2CPP_TYPE_U8: return HiOpcodeEnum::GetMdArrElementVarVar_i8;
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF: return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+		case IL2CPP_TYPE_BYREF:
+#if HUATUO_ARCH_64
+			return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+#else
+			return HiOpcodeEnum::GetMdArrElementVarVar_i4;
+#endif
 		default:
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -2002,7 +2099,11 @@ ip++;
 			}
 			else
 			{
-				return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+#if HUATUO_ARCH_64
+			return HiOpcodeEnum::GetMdArrElementVarVar_i8;
+#else
+			return HiOpcodeEnum::GetMdArrElementVarVar_i4;
+#endif
 			}
 		}
 		}
@@ -2080,13 +2181,13 @@ ip++;
 		// TODO MEMORY OPTIMISTIC
 		EvalStackVarInfo* evalStack = pool.NewNAny<EvalStackVarInfo>(body.maxStack + 100);
 
-		std::vector<const void*>& resolveDatas = result.resolveDatas;
+		std::vector<uint64_t>& resolveDatas = result.resolveDatas;
 		// TODO. alloc use pool
 		std::unordered_map<uint32_t, uint32_t> token2DataIdxs;
 		// TOTO. alloc use pool
 		std::unordered_map<const void*, uint32_t> ptr2DataIdxs;
 
-		resolveDatas.push_back(nullptr); // reserved
+		resolveDatas.push_back(0); // reserved
 
 
 		std::vector<int32_t*> relocationOffsets;
@@ -2554,6 +2655,7 @@ ip++;
 					{
 						il2cpp::vm::Class::SetupFields(klass);
 						uint16_t topOffset = GetEvalStackTopOffset();
+						uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 						if (strcmp(methodName, ".ctor") == 0)
 						{
 							if (paramCount == 1)
@@ -2561,7 +2663,7 @@ ip++;
 								CreateAddIR(ir, NullableCtorVarVar);
 								ir->dst = GetEvalStackOffset_2();
 								ir->data = GetEvalStackOffset_1();
-								ir->klass = klass;
+								ir->klass = classIndirectIndex;
 
 								PopStackN(2);
 								continue;
@@ -2569,12 +2671,13 @@ ip++;
 						}
 						else if (strcmp(methodName, "GetValueOrDefault") == 0)
 						{
+							uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 							if (paramCount == 0)
 							{
 								CreateAddIR(ir, NullableGetValueOrDefaultVarVar);
 								ir->dst = topOffset;
 								ir->obj = topOffset;
-								ir->klass = klass;
+								ir->klass = classIndirectIndex;
 
 								// pop this, push value
 								PopStack();
@@ -2586,7 +2689,7 @@ ip++;
 								CreateAddIR(ir, NullableGetValueOrDefaultVarVar_1);
 								ir->dst = ir->obj = GetEvalStackOffset_2();
 								ir->defaultValue = topOffset;
-								ir->klass = klass;
+								ir->klass = classIndirectIndex;
 
 								// pop this, default value then push value
 								PopStackN(2);
@@ -2596,10 +2699,11 @@ ip++;
 						}
 						else if (strcmp(methodName, "get_HasValue") == 0)
 						{
+							uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 							CreateAddIR(ir, NullableHasValueVar);
 							ir->result = topOffset;
 							ir->obj = topOffset;
-							ir->klass = klass;
+							ir->klass = classIndirectIndex;
 
 							// pop this, push value
 							PopStack();
@@ -2608,10 +2712,11 @@ ip++;
 						}
 						else if (strcmp(methodName, "get_Value") == 0)
 						{
+							uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 							CreateAddIR(ir, NullableGetValueVarVar);
 							ir->dst = topOffset;
 							ir->obj = topOffset;
-							ir->klass = klass;
+							ir->klass = classIndirectIndex;
 
 							// pop this, push value
 							PopStack();
@@ -2837,7 +2942,7 @@ ip++;
 				int32_t resolvedTotalArgdNum = shareMethod->parameters_count + resolvedIsInstanceMethod;
 				int32_t needDataSlotNum = (resolvedTotalArgdNum + 3) / 4;
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgdNum;
-
+				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 
 				if (huatuo::metadata::IsInterpreterType(klass))
 				{
@@ -2847,13 +2952,13 @@ ip++;
 					if (IsReturnVoidMethod(shareMethod))
 					{
 						CreateAddIR(ir, CallInterp_void);
-						ir->methodInfo = const_cast<MethodInfo*>(shareMethod);
+						ir->methodInfo = methodDataIndex;
 						ir->argBase = argBaseOffset;
 					}
 					else
 					{
 						CreateAddIR(ir, CallInterp_ret);
-						ir->methodInfo = const_cast<MethodInfo*>(shareMethod);
+						ir->methodInfo = methodDataIndex;
 						ir->argBase = argBaseOffset;
 						ir->ret = argBaseOffset;
 						PushStackByType(shareMethod->return_type);
@@ -2866,7 +2971,6 @@ ip++;
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
 				}
 
-				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT(managed2NativeMethod);
 				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
@@ -2940,6 +3044,7 @@ ip++;
 
 				int32_t resolvedTotalArgdNum = shareMethod->parameters_count + 1;
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgdNum;
+				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 
 				bool isMultiDelegate = IsMulticastDelegate(shareMethod);
 				if (!isMultiDelegate && IsInterpreterMethod(shareMethod))
@@ -2950,13 +3055,13 @@ ip++;
 					if (IsReturnVoidMethod(shareMethod))
 					{
 						CreateAddIR(ir, CallInterpVirtual_void);
-						ir->method = const_cast<MethodInfo*>(shareMethod);
+						ir->method = methodDataIndex;
 						ir->argBase = argBaseOffset;
 					}
 					else
 					{
 						CreateAddIR(ir, CallInterpVirtual_ret);
-						ir->method = const_cast<MethodInfo*>(shareMethod);
+						ir->method = methodDataIndex;
 						ir->argBase = argBaseOffset;
 						ir->ret = argBaseOffset;
 						PushStackByType(shareMethod->return_type);
@@ -2964,7 +3069,6 @@ ip++;
 					continue;
 				}
 
-				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT(managed2NativeMethod);
 				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
@@ -4192,7 +4296,7 @@ ip++;
 						il2cpp::vm::Class::SetupFields(klass);
 						CreateAddIR(ir, NullableNewVarVar);
 						ir->dst = ir->data = GetEvalStackTopOffset();
-						ir->klass = klass;
+						ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 						PopStack();
 						PushStackByType(&klass->byval_arg);
 						continue;
@@ -4212,7 +4316,7 @@ ip++;
 							PopStackN(paramCount);
 							PushStackByReduceType(EvalStackReduceDataType::Obj);
 							ir->arr = GetEvalStackTopOffset();
-							ir->klass = klass;
+							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 						}
 						else if (klass->rank * 2 == paramCount)
 						{
@@ -4222,7 +4326,7 @@ ip++;
 							PopStackN(paramCount);
 							PushStackByReduceType(EvalStackReduceDataType::Obj);
 							ir->arr = GetEvalStackTopOffset();
-							ir->klass = klass;
+							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 						}
 						else
 						{
@@ -4237,7 +4341,7 @@ ip++;
 					IL2CPP_ASSERT(evalStackTop >= 2);
 					CreateAddIR(ir, NewDelegate);
 					ir->dst = ir->obj = GetEvalStackOffset_2();
-					ir->klass = shareMethod->klass;
+					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 					ir->method = GetEvalStackOffset_1();
 					PopStackN(2);
 					PushStackByReduceType(EvalStackReduceDataType::Obj);
@@ -4254,13 +4358,15 @@ ip++;
 
 				int32_t resolvedTotalArgdNum = shareMethod->parameters_count + 1;
 
+				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
+
 				if (IsInterpreterType(klass))
 				{
 					if (IS_CLASS_VALUE_TYPE(klass))
 					{
 						CreateAddIR(ir, NewValueTypeInterpVar);
 						ir->obj = GetEvalStackOffset(callArgEvalStackIdxBase);
-						ir->method = const_cast<MethodInfo*>(shareMethod);
+						ir->method = methodDataIndex;
 						ir->argBase = ir->obj;
 						ir->argStackObjectNum = curStackSize - ir->argBase;
 						// IL2CPP_ASSERT(ir->argStackObjectNum > 0); may 0
@@ -4275,7 +4381,7 @@ ip++;
 						{
 							CreateAddIR(ir, NewClassInterpVar_Ctor_0);
 							ir->obj = GetEvalStackNewTopOffset();
-							ir->method = const_cast<MethodInfo*>(shareMethod);
+							ir->method = methodDataIndex;
 							PushStackByReduceType(EvalStackReduceDataType::Obj);
 							ir->ctorFrameBase = GetEvalStackNewTopOffset();
 							maxStackSize = std::max(maxStackSize, curStackSize + 1); // 1 for __this
@@ -4284,7 +4390,7 @@ ip++;
 						{
 							CreateAddIR(ir, NewClassInterpVar);
 							ir->obj = GetEvalStackOffset(callArgEvalStackIdxBase);
-							ir->method = const_cast<MethodInfo*>(shareMethod);
+							ir->method = methodDataIndex;
 							ir->argBase = ir->obj;
 							ir->argStackObjectNum = curStackSize - ir->argBase;
 							IL2CPP_ASSERT(ir->argStackObjectNum > 0);
@@ -4302,14 +4408,13 @@ ip++;
 				if (shareMethod->parameters_count == 0 && !IS_CLASS_VALUE_TYPE(klass))
 				{
 					CreateAddIR(ir, NewClassVar_Ctor_0);
-					ir->method = const_cast<MethodInfo*>(shareMethod);
+					ir->method = methodDataIndex;
 					ir->obj = GetEvalStackNewTopOffset();
 					PushStackByReduceType(EvalStackReduceDataType::Obj);
 					continue;
 				}
 
 				int32_t needDataSlotNum = (resolvedTotalArgdNum + 3) / 4;
-				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT((void*)managed2NativeMethod);
 				//uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, managed2NativeMethod);
@@ -4335,8 +4440,8 @@ ip++;
 				PushStackByType(&klass->byval_arg);
 				CreateAddIR(ir, NewClassVar);
 				ir->type = IS_CLASS_VALUE_TYPE(shareMethod->klass) ? HiOpcodeEnum::NewValueTypeVar : HiOpcodeEnum::NewClassVar;
-				ir->managed2NativeMethod = (void*)managed2NativeMethod;
-				ir->method = const_cast<MethodInfo*>(shareMethod);
+				ir->managed2NativeMethod = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
+				ir->method = methodDataIndex;
 				ir->argIdxs = argIdxDataIndex;
 				ir->obj = objIdx;
 
@@ -4422,7 +4527,7 @@ ip++;
 				//}
 				CreateAddIR(ir, UnBoxVarVar);
 				ir->addr = ir->obj = GetEvalStackTopOffset();
-				ir->klass = objKlass;
+				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
 
 				PopStack();
 				PushStackByReduceType(EvalStackReduceDataType::Ref);
@@ -4498,11 +4603,11 @@ ip++;
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
-
+				uint32_t parentIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
 				uint16_t dstIdx = GetEvalStackNewTopOffset();
 				IRCommon* ir = fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET ?
-					CreateLdsfld(pool, dstIdx, fieldInfo)
-					: CreateLdthreadlocal(pool, dstIdx, fieldInfo);
+					CreateLdsfld(pool, dstIdx, fieldInfo, parentIndex)
+					: CreateLdthreadlocal(pool, dstIdx, fieldInfo, parentIndex);
 				AddInst(ir);
 				PushStackByType(fieldInfo->type);
 
@@ -4531,14 +4636,14 @@ ip++;
 							ldfldFromFieldData = true;
 							CreateAddIR(ir, LdsfldaFromFieldDataVarVar);
 							ir->dst = dstIdx;
-							ir->src = (void*)il2cpp_codegen_get_field_data(fieldInfo);
+							ir->src = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)il2cpp_codegen_get_field_data(fieldInfo));
 						}
 					}
 					if (!ldfldFromFieldData)
 					{
 						CreateAddIR(ir, LdsfldaVarVar);
 						ir->dst = dstIdx;
-						ir->klass = fieldInfo->parent;
+						ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
 						ir->offset = fieldInfo->offset;
 					}
 				}
@@ -4546,7 +4651,7 @@ ip++;
 				{
 					CreateAddIR(ir, LdthreadlocalaVarVar);
 					ir->dst = dstIdx;
-					ir->klass = fieldInfo->parent;
+					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
 					ir->offset = GetThreadStaticFieldOffset(fieldInfo);
 				}
 				PushStackByReduceType(EvalStackReduceDataType::Ref);
@@ -4563,10 +4668,11 @@ ip++;
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 
+				uint32_t klassIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
 				uint16_t dataIdx = GetEvalStackTopOffset();
 				IRCommon* ir = fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET ?
-					CreateStsfld(pool, fieldInfo, dataIdx)
-					: CreateStthreadlocal(pool, fieldInfo, dataIdx);
+					CreateStsfld(pool, fieldInfo, klassIndex, dataIdx)
+					: CreateStthreadlocal(pool, fieldInfo, klassIndex, dataIdx);
 				AddInst(ir);
 
 				PopStack();
@@ -4711,7 +4817,7 @@ ip++;
 				{
 					CreateAddIR(ir, BoxVarVar);
 					ir->dst = ir->data = GetEvalStackTopOffset();
-					ir->klass = objKlass;
+					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
 				}
 				else
 				{
@@ -4729,14 +4835,14 @@ ip++;
 				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(eleKlass);
 				Il2CppClass* arrKlass = il2cpp::vm::Class::GetArrayClass(eleKlass, 1);
-
+				uint32_t arrKlassIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, arrKlass);
 				switch (varSize.reduceType)
 				{
 				case EvalStackReduceDataType::I4:
 				{
 					CreateAddIR(ir, NewArrVarVar_4);
 					ir->arr = ir->size = varSize.locOffset;
-					ir->klass = arrKlass;
+					ir->klass = arrKlassIndex;
 					break;
 				}
 				case EvalStackReduceDataType::I8:
@@ -4744,7 +4850,7 @@ ip++;
 				{
 					CreateAddIR(ir, NewArrVarVar_8);
 					ir->arr = ir->size = varSize.locOffset;
-					ir->klass = arrKlass;
+					ir->klass = arrKlassIndex;
 					break;
 				}
 				default:
@@ -4778,7 +4884,7 @@ ip++;
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
-
+				uint32_t eleKlassIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, eleKlass);
 				switch (index.reduceType)
 				{
 				case EvalStackReduceDataType::I4:
@@ -4786,7 +4892,7 @@ ip++;
 					CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar_i4);
 					ir->arr = ir->addr = arr.locOffset;
 					ir->index = index.locOffset;
-					ir->eleKlass = eleKlass;
+					ir->eleKlass = eleKlassIndex;
 					break;
 				}
 				case EvalStackReduceDataType::I:
@@ -4795,7 +4901,7 @@ ip++;
 					CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar_i8);
 					ir->arr = ir->addr = arr.locOffset;
 					ir->index = index.locOffset;
-					ir->eleKlass = eleKlass;
+					ir->eleKlass = eleKlassIndex;
 					break;
 				}
 				default:
@@ -4847,7 +4953,11 @@ ip++;
 			}
 			case OpcodeValue::LDELEM_I:
 			{
+#if HUATUO_ARCH_64
 				CI_ldele(i8, I);
+#else
+				CI_ldele(i4, I);
+#endif
 				continue;
 			}
 			case OpcodeValue::LDELEM_R4:
@@ -4862,12 +4972,20 @@ ip++;
 			}
 			case OpcodeValue::LDELEM_REF:
 			{
+#if HUATUO_ARCH_64
 				CI_ldele(i8, Ref);
+#else
+				CI_ldele(i4, Ref);
+#endif
 				continue;
 			}
 			case OpcodeValue::STELEM_I:
 			{
+#if HUATUO_ARCH_64
 				CI_stele(i8)
+#else
+				CI_stele(i4)
+#endif
 				continue;
 			}
 			case OpcodeValue::STELEM_I1:
@@ -5148,7 +5266,7 @@ ip++;
 				{
 					CreateAddIR(ir, UnBoxAnyVarVar);
 					ir->dst = ir->obj = GetEvalStackTopOffset();
-					ir->klass = objKlass;
+					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
 
 					PopStack();
 					PushStackByType(&objKlass->byval_arg);
@@ -5204,7 +5322,7 @@ ip++;
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				CreateAddIR(ir, RefAnyValueVarVar);
 				ir->addr = ir->typedRef = GetEvalStackTopOffset();
-				ir->klass = objKlass;
+				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
 				PopStack();
 				PushStackByReduceType(EvalStackReduceDataType::Ref);
 				ip += 5;
@@ -5246,7 +5364,7 @@ ip++;
 				IL2CPP_ASSERT(objKlass);
 				CreateAddIR(ir, MakeRefVarVar);
 				ir->dst = ir->data = GetEvalStackTopOffset();
-				ir->klass = objKlass;
+				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas,  objKlass);
 				PopStack();
 
 				Il2CppType typedRef = {};
@@ -5263,7 +5381,7 @@ ip++;
 
 				CreateAddIR(ir, LdtokenVar);
 				ir->runtimeHandle = GetEvalStackNewTopOffset();
-				ir->token = runtimeHandle;
+				ir->token = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, runtimeHandle);
 				PushStackByReduceType(EvalStackReduceDataType::Ref);
 				ip += 5;
 				continue;
@@ -5469,7 +5587,7 @@ ip++;
 						{
 							CreateAddIR(ir, BoxRefVarVar);
 							ir->dst = ir->src = self.locOffset;
-							ir->klass = conKlass;
+							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, conKlass);
 							
 							self.reduceType = EvalStackReduceDataType::Obj;
 							self.byteSize = GetSizeByReduceType(self.reduceType);
@@ -5557,7 +5675,7 @@ ip++;
 
 					CreateAddIR(ir, LdvirftnVarVar);
 					ir->resultMethod = ir->obj = GetEvalStackTopOffset();
-					ir->virtualMethod = methodInfo;
+					ir->virtualMethod = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, methodInfo);
 
 					PopStack();
 					PushStackByReduceType(EvalStackReduceDataType::Ref);
