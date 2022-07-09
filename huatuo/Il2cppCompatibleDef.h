@@ -134,7 +134,7 @@ namespace huatuo
 
 	inline void* GetNulllableDataOffset(void* nullableObj, uint32_t size)
 	{
-		return nullableObj + size;
+		return (uint8_t*)nullableObj + size;
 	}
 
 	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, uint32_t size)
