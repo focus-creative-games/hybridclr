@@ -39,11 +39,8 @@ namespace transform
 	{
 		I4,
 		I8,
-		I,
 		R4,
 		R8,
-		Ref,
-		Obj,
 		Other,
 	};
 

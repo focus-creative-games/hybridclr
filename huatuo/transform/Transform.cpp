@@ -26,8 +26,10 @@ namespace transform
 
 #if HUATUO_ARCH_64
 #define NATIVE_INT_OP opI8
+	constexpr EvalStackReduceDataType NATIVE_INT_REDUCE_TYPE = EvalStackReduceDataType::I8;
 #else
 #define NATIVE_INT_OP opI4
+	constexpr EvalStackReduceDataType NATIVE_INT_REDUCE_TYPE = EvalStackReduceDataType::I4;
 #endif
 
 #define CreateIR(varName, typeName) IR##typeName* varName = pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName;
@@ -38,7 +40,7 @@ namespace transform
 	{
 		if (type->byref)
 		{
-			return EvalStackReduceDataType::Ref;
+			return NATIVE_INT_REDUCE_TYPE;
 		}
 		switch (type->type)
 		{
@@ -61,19 +63,15 @@ namespace transform
 			return EvalStackReduceDataType::R8;
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
-			return EvalStackReduceDataType::I;
 		case IL2CPP_TYPE_FNPTR:
-			return EvalStackReduceDataType::Ref;
 		case IL2CPP_TYPE_PTR:
-			return EvalStackReduceDataType::Ref;
 		case IL2CPP_TYPE_BYREF:
-			return EvalStackReduceDataType::Other;
 		case IL2CPP_TYPE_STRING:
 		case IL2CPP_TYPE_CLASS:
 		case IL2CPP_TYPE_ARRAY:
 		case IL2CPP_TYPE_SZARRAY:
 		case IL2CPP_TYPE_OBJECT:
-			return EvalStackReduceDataType::Obj;
+			return NATIVE_INT_REDUCE_TYPE;
 		case IL2CPP_TYPE_TYPEDBYREF:
 			return EvalStackReduceDataType::Other;
 		case IL2CPP_TYPE_VALUETYPE:
@@ -86,7 +84,7 @@ namespace transform
 			Il2CppGenericClass* genericClass = type->data.generic_class;
 			if (genericClass->type->type == IL2CPP_TYPE_CLASS)
 			{
-				return EvalStackReduceDataType::Obj;
+				return NATIVE_INT_REDUCE_TYPE;
 			}
 			else
 			{
@@ -111,10 +109,6 @@ namespace transform
 		case huatuo::transform::EvalStackReduceDataType::I8:
 		case huatuo::transform::EvalStackReduceDataType::R8:
 			return 8;
-		case huatuo::transform::EvalStackReduceDataType::I:
-		case huatuo::transform::EvalStackReduceDataType::Ref:
-		case huatuo::transform::EvalStackReduceDataType::Obj:
-			return PTR_SIZE;
 		default:
 		{
 			RaiseHuatuoExecutionEngineException("GetSizeByReduceType not support type");
@@ -1234,7 +1228,7 @@ namespace transform
 			CreateAddIR(ir, LdlocVarAddress);
 			ir->dst = GetEvalStackNewTopOffset();
 			ir->src = argInfo.argLocOffset;
-			PushStackByReduceType(EvalStackReduceDataType::Ref);
+			PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 		}
 
 		void AddInst_starg(int32_t argIdx)
@@ -1267,8 +1261,8 @@ namespace transform
 			CreateAddIR(ir, LdlocVarAddress);
 			LocVarInfo& __loc = locals[locIdx];
 			ir->dst = GetEvalStackNewTopOffset();
-			ir->src = __loc.locOffset; \
-				PushStackByReduceType(EvalStackReduceDataType::Ref);
+			ir->src = __loc.locOffset;
+			PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 		}
 
 		void CreateAddInst_ldc4(int32_t c, EvalStackReduceDataType rtype)
@@ -1332,7 +1326,7 @@ namespace transform
 					ir->type = opI4;
 					break;
 				}
-				case EvalStackReduceDataType::I:
+				case EvalStackReduceDataType::I8:
 				{
 					CreateAddIR(irConv, ConvertVarVar_i4_i8);
 					irConv->dst = irConv->src = op1.locOffset;
@@ -1351,32 +1345,6 @@ namespace transform
 			{
 				IL2CPP_ASSERT(op2.reduceType == EvalStackReduceDataType::I8);
 				ir->type = opI8;
-				break;
-			}
-			case EvalStackReduceDataType::I:
-			{
-				switch (op2.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op2.locOffset;
-					ir->type = opI8;
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
-				{
-					ir->type = opI8;
-					break;
-				}
-				default:
-				{
-					IL2CPP_ASSERT(false && "I8 not match");
-					break;
-				}
-				}
 				break;
 			}
 			case EvalStackReduceDataType::R4:
@@ -1413,26 +1381,6 @@ namespace transform
 				}
 				break;
 			}
-			case EvalStackReduceDataType::Ref:
-			case EvalStackReduceDataType::Obj:
-			{
-				switch (op2.reduceType)
-				{
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
-				{
-					ir->type = opI8;
-					break;
-				}
-				default:
-				{
-					IL2CPP_ASSERT(false && "Ref not match");
-					break;
-				}
-				}
-				break;
-			}
 			default:
 			{
 				IL2CPP_ASSERT(false && "nothing match");
@@ -1462,56 +1410,25 @@ namespace transform
 				}
 				case EvalStackReduceDataType::I8:
 				{
-	#if HUATUO_ARCH_64
-					if (dstReduceType != EvalStackReduceDataType::I)
-					{
-	#endif
-						ir->type = opI8;
-						AddInst(ir);
-	#if HUATUO_ARCH_64
-					}
-	#endif
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				{
-	#if HUATUO_ARCH_64
-					if (dstReduceType != EvalStackReduceDataType::I8)
-					{
-						ir->type = opI8;
-						AddInst(ir);
-					}
-	#else
-					if (dstReduceType != EvalStackReduceDataType::I4)
-					{
-						ir->type = opI4;
-						AddInst(ir);
-					}
-	#endif
+					ir->type = opI8;
+					AddInst(ir);
 					break;
 				}
 				case EvalStackReduceDataType::R4:
 				{
-					if (dstReduceType != EvalStackReduceDataType::R4)
-					{
-						ir->type = opR4;
-						AddInst(ir);
-					}
+					ir->type = opR4;
+					AddInst(ir);
 					break;
 				}
 				case EvalStackReduceDataType::R8:
 				{
-					if (dstReduceType != EvalStackReduceDataType::R8)
-					{
-						ir->type = opR8;
-						AddInst(ir);
-					}
+					ir->type = opR8;
+					AddInst(ir);
 					break;
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("conv");
 					break;
 				}
 				}
@@ -1541,33 +1458,8 @@ namespace transform
 				}
 				case EvalStackReduceDataType::I8:
 				{
-#if HUATUO_ARCH_64
-					if (dstReduceType != EvalStackReduceDataType::I && dstReduceType != EvalStackReduceDataType::Ref)
-					{
-#endif
-						ir->type = opI8;
-						AddInst(ir);
-#if HUATUO_ARCH_64
-				}
-#endif
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				{
-#if HUATUO_ARCH_64
-					if (dstReduceType != EvalStackReduceDataType::I8)
-					{
-						ir->type = opI8;
-						AddInst(ir);
-					}
-#else
-					if (dstReduceType != EvalStackReduceDataType::I4)
-					{
-						ir->type = opI4;
-						AddInst(ir);
-					}
-#endif
+					ir->type = opI8;
+					AddInst(ir);
 					break;
 				}
 				case EvalStackReduceDataType::R4:
@@ -1584,7 +1476,7 @@ namespace transform
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("conv_ovf");
 					break;
 				}
 				}
@@ -1617,18 +1509,12 @@ namespace transform
 					ir->type = opI4;
 					break;
 				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
+				case EvalStackReduceDataType::I8:
 				{
-#if HUATUO_ARCH_64
 					CreateAddIR(irConv, ConvertVarVar_i4_i8);
 					irConv->dst = irConv->src = op1.locOffset;
 					ir->type = opI8;
-#else
-					ir->type = opI4;
-#endif
-					resultType = EvalStackReduceDataType::I;
+					resultType = EvalStackReduceDataType::I8;
 					break;
 				}
 				default:
@@ -1642,20 +1528,16 @@ namespace transform
 			{
 				switch (op2.reduceType)
 				{
-				case EvalStackReduceDataType::I8:
+				case EvalStackReduceDataType::I4:
 				{
+					CreateAddIR(irConv, ConvertVarVar_i4_i8);
+					irConv->dst = irConv->src = op2.locOffset;
 					resultType = EvalStackReduceDataType::I8;
 					ir->type = opI8;
 					break;
 				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
+				case EvalStackReduceDataType::I8:
 				{
-#if !HUATUO_ARCH_64
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op2.locOffset;
-#endif
 					resultType = EvalStackReduceDataType::I8;
 					ir->type = opI8;
 					break;
@@ -1663,42 +1545,6 @@ namespace transform
 				default:
 				{
 					RaiseHuatuoExecutionEngineException("Add_bin_op I8 op unknown");
-					break;
-				}
-				}
-				break;
-			}
-			case EvalStackReduceDataType::I:
-			case EvalStackReduceDataType::Ref:
-			case EvalStackReduceDataType::Obj:
-			{
-				switch (op2.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-#if HUATUO_ARCH_64
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op2.locOffset;
-					ir->type = opI8;
-#else
-					ir->type = opI4;
-#endif
-					resultType = EvalStackReduceDataType::I;
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				{
-					resultType = EvalStackReduceDataType::I;
-#if HUATUO_ARCH_64
-					ir->type = opI8;
-#else
-					ir->type = opI4;
-#endif
-					break;
-				}
-				default:
-				{
-					RaiseHuatuoExecutionEngineException("Add_bin_op I op unknown");
 					break;
 				}
 				}
@@ -1778,60 +1624,12 @@ namespace transform
 					ir->type = opI4I8;
 					break;
 				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				{
-#if HUATUO_ARCH_64
-					ir->type = opI4I8;
-#else
-					ir->type = opI4I4;
-#endif
-					break;
-				}
 				default:
 				{
 					RaiseHuatuoExecutionEngineException("shitf i4");
 				}
 				}
 				break;
-			}
-			case EvalStackReduceDataType::I:
-			{		
-				switch (op2.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-#if HUATUO_ARCH_64
-					ir->type = opI8I4;
-#else
-					ir->type = opI4I4;
-#endif
-					break;
-				}
-				case EvalStackReduceDataType::I8:
-				{
-#if HUATUO_ARCH_64
-					ir->type = opI8I8;
-#else
-					ir->type = opI4I8;
-#endif
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				{
-#if HUATUO_ARCH_64
-					ir->type = opI8I8;
-#else
-					ir->type = opI4I4;
-#endif
-					break;
-				}
-				default:
-				{
-					RaiseHuatuoExecutionEngineException("shitf i");
-					break;
-				}
-				}
 			}
 			case EvalStackReduceDataType::I8:
 			{
@@ -1846,15 +1644,6 @@ namespace transform
 				{
 
 					ir->type = opI8I8;
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				{
-#if HUATUO_ARCH_64
-					ir->type = opI8I8;
-#else
-					ir->type = opI8I4;
-#endif
 					break;
 				}
 				default:
@@ -1902,19 +1691,6 @@ namespace transform
 					ir->type = opI8;
 					break;
 				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
-				{
-#if HUATUO_ARCH_64
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op1.locOffset;
-					ir->type = opI8;
-#else
-					ir->type = opI4;
-#endif
-					break;
-				}
 				default:
 				{
 					RaiseHuatuoExecutionEngineException("compare i4");
@@ -1939,65 +1715,9 @@ namespace transform
 					ir->type = opI8;
 					break;
 				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
-				{
-#if HUATUO_ARCH_64
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op2.locOffset;
-#endif
-					ir->type = opI8;
-					break;
-				}
 				default:
 				{
 					RaiseHuatuoExecutionEngineException("compare i8");
-					break;
-				}
-				}
-				break;
-			}
-			case EvalStackReduceDataType::I:
-			case EvalStackReduceDataType::Ref:
-			case EvalStackReduceDataType::Obj:
-			{
-				switch (op2.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-#if HUATUO_ARCH_64
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op2.locOffset;
-					ir->type = opI8;
-#else
-					ir->type = opI4;
-#endif
-					break;
-				}
-				case EvalStackReduceDataType::I8:
-				{
-#if !HUATUO_ARCH_64
-					CreateAddIR(irConv, ConvertVarVar_i4_i8);
-					irConv->dst = irConv->src = op1.locOffset;
-#endif
-					ir->type = opI8;
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				case EvalStackReduceDataType::Obj:
-				{
-#if HUATUO_ARCH_64
-					ir->type = opI8;
-#else
-					ir->type = opI4;
-#endif
-					break;
-				}
-				default:
-				{
-					RaiseHuatuoExecutionEngineException("compare i");
 					break;
 				}
 				}
@@ -2061,13 +1781,6 @@ namespace transform
 				ir->type = opI8;
 				break;
 			}
-			case EvalStackReduceDataType::I:
-			case EvalStackReduceDataType::Ref:
-			case EvalStackReduceDataType::Obj:
-			{
-				ir->type = NATIVE_INT_OP;
-				break;
-			}
 			default:
 			{
 				RaiseHuatuoExecutionEngineException("ldelem");
@@ -2100,11 +1813,6 @@ namespace transform
 			case EvalStackReduceDataType::I8:
 			{
 				ir->type = opI8;
-				break;
-			}
-			case EvalStackReduceDataType::I:
-			{
-				ir->type = NATIVE_INT_OP;
 				break;
 			}
 			default:
@@ -2401,7 +2109,7 @@ else \
 				FlowInfo* fi = pool.NewAny<FlowInfo>();
 				fi->offset = ec.handlerOffsets;
 				fi->curStackSize = evalStackBaseOffset + 1;
-				fi->evalStack.push_back({ EvalStackReduceDataType::Obj, 8, evalStackBaseOffset });
+				fi->evalStack.push_back({ NATIVE_INT_REDUCE_TYPE, PTR_SIZE, evalStackBaseOffset });
 				pendingFlows.push_back(fi);
 				break;
 			}
@@ -2415,7 +2123,7 @@ else \
 					IL2CPP_ASSERT(ec.classTokenOrFilterOffset);
 					fi->offset = ec.classTokenOrFilterOffset;
 					fi->curStackSize = evalStackBaseOffset + 1;
-					fi->evalStack.push_back({ EvalStackReduceDataType::Obj, 8, evalStackBaseOffset });
+					fi->evalStack.push_back({ NATIVE_INT_REDUCE_TYPE, PTR_SIZE, evalStackBaseOffset });
 					pendingFlows.push_back(fi);
 				}
 				{
@@ -2423,7 +2131,7 @@ else \
 					IL2CPP_ASSERT(ec.handlerOffsets);
 					fi->offset = ec.handlerOffsets;
 					fi->curStackSize = evalStackBaseOffset + 1;
-					fi->evalStack.push_back({ EvalStackReduceDataType::Obj, 8, evalStackBaseOffset });
+					fi->evalStack.push_back({ NATIVE_INT_REDUCE_TYPE, PTR_SIZE, evalStackBaseOffset });
 					pendingFlows.push_back(fi);
 				}
 
@@ -2600,7 +2308,7 @@ else \
 			{
 				CreateAddIR(ir, LdnullVar);
 				ir->dst = curStackSize;
-				ctx.PushStackByReduceType(EvalStackReduceDataType::I);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip++;
 				continue;
 			}
@@ -3023,7 +2731,7 @@ else \
 						ir->arr = ctx.GetEvalStackOffset(evalStackTop - paramCount);
 						ir->lengthIdxs = ir->arr + 1;
 						ctx.PopStackN(paramCount);
-						ctx.PushStackByReduceType(EvalStackReduceDataType::I);
+						ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 						ir->addr = ctx.GetEvalStackTopOffset();
 						continue;
 					}
@@ -3701,9 +3409,9 @@ else \
 			case OpcodeValue::LDIND_I:
 			{
 #if HUATUO_ARCH_64
-				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i8, EvalStackReduceDataType::I);
+				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i8, NATIVE_INT_REDUCE_TYPE);
 #else
-				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i4, EvalStackReduceDataType::I);
+				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i4, NATIVE_INT_REDUCE_TYPE);
 #endif
 				continue;
 			}
@@ -3720,9 +3428,9 @@ else \
 			case OpcodeValue::LDIND_REF:
 			{
 #if HUATUO_ARCH_64
-				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i8, EvalStackReduceDataType::Ref);
+				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i8, NATIVE_INT_REDUCE_TYPE);
 #else
-				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i4, EvalStackReduceDataType::Ref);
+				ctx.Add_ldind(HiOpcodeEnum::LdindVarVar_i4, NATIVE_INT_REDUCE_TYPE);
 #endif
 				continue;
 			}
@@ -3767,312 +3475,12 @@ else \
 			}
 			case OpcodeValue::ADD:
 			{
-				IL2CPP_ASSERT(evalStackTop >= 2);
-				EvalStackVarInfo& op1 = evalStack[evalStackTop - 2];
-				EvalStackVarInfo& op2 = evalStack[evalStackTop - 1];
-
-				CreateIR(ir, BinOpVarVarVar_Add_i4);
-				ir->op1 = op1.locOffset;
-				ir->op2 = op2.locOffset;
-				ir->ret = op1.locOffset;
-
-				EvalStackReduceDataType resultType;
-				switch (op1.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I4:
-					{
-						resultType = EvalStackReduceDataType::I4;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_i4;
-						break;
-					}
-					case EvalStackReduceDataType::I:
-					case EvalStackReduceDataType::Ref:
-					{
-						CreateAddIR(irConv, ConvertVarVar_i4_i8);
-						irConv->dst = irConv->src = op1.locOffset;
-
-						resultType = op2.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::I8:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I8:
-					case EvalStackReduceDataType::I: // not support i8 + i ! but we support
-					{
-						resultType = EvalStackReduceDataType::I8;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I4:
-					{
-						CreateAddIR(irConv, ConvertVarVar_i4_i8);
-						irConv->dst = irConv->src = op2.locOffset;
-
-						resultType = op1.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_i8;
-						break;
-					}
-					case EvalStackReduceDataType::I:
-					case EvalStackReduceDataType::I8:
-					{
-						resultType = op1.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::R4:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::R4:
-					{
-						resultType = op2.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_f4;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::R8:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::R8:
-					{
-						resultType = op2.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Add_f8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				default:
-				{
-					IL2CPP_ASSERT(false);
-					break;
-				}
-				}
-
-				ctx.PopStack();
-				op1.reduceType = resultType;
-				op1.byteSize = GetSizeByReduceType(resultType);
-				ctx.AddInst(ir);
-				ip++;
+				CI_binOp(Add);
 				continue;
 			}
 			case OpcodeValue::SUB:
 			{
-				IL2CPP_ASSERT(evalStackTop >= 2);
-				EvalStackVarInfo& op1 = evalStack[evalStackTop - 2];
-				EvalStackVarInfo& op2 = evalStack[evalStackTop - 1];
-
-				CreateIR(ir, BinOpVarVarVar_Add_i4);
-				ir->op1 = op1.locOffset;
-				ir->op2 = op2.locOffset;
-				ir->ret = op1.locOffset;
-
-				EvalStackReduceDataType resultType;
-				switch (op1.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I4:
-					{
-						resultType = EvalStackReduceDataType::I4;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i4;
-						break;
-					}
-					case EvalStackReduceDataType::I:
-					{
-						CreateAddIR(irConv, ConvertVarVar_i4_i8);
-						irConv->dst = irConv->src = op1.locOffset;
-
-						resultType = op2.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::I8:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I8:
-					case EvalStackReduceDataType::I: // not support i8 + i ! but we support
-					{
-						resultType = EvalStackReduceDataType::I8;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::I:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I4:
-					{
-						CreateAddIR(irConv, ConvertVarVar_i4_i8);
-						irConv->dst = irConv->src = op2.locOffset;
-
-						resultType = op1.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					case EvalStackReduceDataType::I:
-					{
-						resultType = op1.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::R4:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::R4:
-					{
-						resultType = op2.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_f4;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::R8:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::R8:
-					{
-						resultType = op2.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_f8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				case EvalStackReduceDataType::Ref:
-				{
-					switch (op2.reduceType)
-					{
-					case EvalStackReduceDataType::I4:
-					{
-						CreateAddIR(irConv, ConvertVarVar_i4_i8);
-						irConv->dst = irConv->src = op2.locOffset;
-
-						resultType = op1.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					case EvalStackReduceDataType::I:
-					{
-						resultType = op1.reduceType;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					case EvalStackReduceDataType::Ref:
-					{
-						resultType = EvalStackReduceDataType::I;
-						ir->type = HiOpcodeEnum::BinOpVarVarVar_Sub_i8;
-						break;
-					}
-					default:
-					{
-						IL2CPP_ASSERT(false);
-						break;
-					}
-					}
-					break;
-				}
-				default:
-				{
-					IL2CPP_ASSERT(false);
-					break;
-				}
-				}
-
-				ctx.PopStack();
-				op1.reduceType = resultType;
-				op1.byteSize = GetSizeByReduceType(resultType);
-				ctx.AddInst(ir);
-				ip++;
+				CI_binOp(Sub);
 				continue;
 			}
 			case OpcodeValue::MUL:
@@ -4145,7 +3553,6 @@ else \
 					break;
 				}
 				case EvalStackReduceDataType::I8:
-				case EvalStackReduceDataType::I:
 				{
 					ir->type = HiOpcodeEnum::UnaryOpVarVar_Neg_i8;
 					break;
@@ -4184,7 +3591,6 @@ else \
 					break;
 				}
 				case EvalStackReduceDataType::I8:
-				case EvalStackReduceDataType::I:
 				{
 					ir->type = HiOpcodeEnum::UnaryOpVarVar_Not_i8;
 					break;
@@ -4379,7 +3785,7 @@ else \
 				CreateAddIR(ir, LdstrVar);
 				ir->dst = ctx.GetEvalStackNewTopOffset();
 				ir->str = dataIdx;
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 				ip += 5;
 				continue;
@@ -4401,7 +3807,7 @@ else \
 						IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(klass));
 						CreateAddIR(ir, NewSystemObjectVar);
 						ir->obj = ctx.GetEvalStackNewTopOffset();
-						ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+						ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 						continue;
 					}
 					if (strcmp(klass->name, "Nullable`1") == 0)
@@ -4429,7 +3835,7 @@ else \
 							CreateAddIR(ir, NewMdArrVarVar_length);
 							ir->lengthIdxs = ctx.GetEvalStackOffset(evalStackTop - paramCount);
 							ctx.PopStackN(paramCount);
-							ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+							ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 							ir->arr = ctx.GetEvalStackTopOffset();
 							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 						}
@@ -4439,7 +3845,7 @@ else \
 							ir->lengthIdxs = ctx.GetEvalStackOffset(evalStackTop - paramCount);
 							ir->lowerBoundIdxs = ctx.GetEvalStackOffset(evalStackTop - klass->rank);
 							ctx.PopStackN(paramCount);
-							ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+							ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 							ir->arr = ctx.GetEvalStackTopOffset();
 							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 						}
@@ -4459,7 +3865,7 @@ else \
 					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 					ir->method = ctx.GetEvalStackOffset_1();
 					ctx.PopStackN(2);
-					ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 					continue;
 				}
 
@@ -4497,7 +3903,7 @@ else \
 							CreateAddIR(ir, NewClassInterpVar_Ctor_0);
 							ir->obj = ctx.GetEvalStackNewTopOffset();
 							ir->method = methodDataIndex;
-							ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+							ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 							ir->ctorFrameBase = ctx.GetEvalStackNewTopOffset();
 							maxStackSize = std::max(maxStackSize, curStackSize + 1); // 1 for __this
 						}
@@ -4510,7 +3916,7 @@ else \
 							ir->argStackObjectNum = curStackSize - ir->argBase;
 							IL2CPP_ASSERT(ir->argStackObjectNum > 0);
 							ctx.PopStackN(shareMethod->parameters_count);
-							ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+							ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 							ir->ctorFrameBase = ctx.GetEvalStackNewTopOffset();
 							maxStackSize = std::max(maxStackSize, curStackSize + ir->argStackObjectNum + 1); // 1 for __this
 						}
@@ -4525,7 +3931,7 @@ else \
 					CreateAddIR(ir, NewClassVar_Ctor_0);
 					ir->method = methodDataIndex;
 					ir->obj = ctx.GetEvalStackNewTopOffset();
-					ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 					continue;
 				}
 
@@ -4543,7 +3949,7 @@ else \
 				// arg1, arg2, arg3 ..., argN, obj or valuetype, __this(= obj or ref valuetype)
 				// obj on new top
 				ctx.PushStackByType(&klass->byval_arg);
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				__argIdxs[0] = ctx.GetEvalStackTopOffset(); // this
 
 				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
@@ -4613,8 +4019,6 @@ else \
 					break;
 				}
 				case EvalStackReduceDataType::I8:
-				case EvalStackReduceDataType::I:
-				case EvalStackReduceDataType::Ref:
 				{
 					CreateAddIR(ir, ConvertVarVar_u8_f8);
 					ir->dst = ir->src = ctx.GetEvalStackTopOffset();
@@ -4645,7 +4049,7 @@ else \
 				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
 
 				ctx.PopStack();
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 				ip += 5;
 				continue;
@@ -4668,7 +4072,7 @@ else \
 				// ldfld obj may be obj or or valuetype or ref valuetype....
 				EvalStackVarInfo& obj = evalStack[evalStackTop - 1];
 				uint16_t topIdx = ctx.GetEvalStackTopOffset();
-				IRCommon* ir = obj.reduceType != EvalStackReduceDataType::Ref && IS_CLASS_VALUE_TYPE(fieldInfo->parent) ? CreateValueTypeLdfld(pool, topIdx, topIdx, fieldInfo) : CreateClassLdfld(pool, topIdx, topIdx, fieldInfo);
+				IRCommon* ir = obj.reduceType != NATIVE_INT_REDUCE_TYPE && IS_CLASS_VALUE_TYPE(fieldInfo->parent) ? CreateValueTypeLdfld(pool, topIdx, topIdx, fieldInfo) : CreateClassLdfld(pool, topIdx, topIdx, fieldInfo);
 				ctx.AddInst(ir);
 				ctx.PopStack();
 				ctx.PushStackByType(fieldInfo->type);
@@ -4693,7 +4097,7 @@ else \
 				ir->offset = GetFieldOffset(fieldInfo);
 
 				ctx.PopStack();
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
 				continue;
 			}
@@ -4769,7 +4173,7 @@ else \
 					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
 					ir->offset = GetThreadStaticFieldOffset(fieldInfo);
 				}
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 				ip += 5;
 				continue;
@@ -4910,18 +4314,18 @@ else \
 			case OpcodeValue::CONV_OVF_I_UN:
 			{
 #if HUATUO_ARCH_64
-				CI_conv_un_ovf(i8, I, 8);
+				CI_conv_un_ovf(i8, I8, 8);
 #else
-				CI_conv_un_ovf(i4, I, 4);
+				CI_conv_un_ovf(i4, I4, 4);
 #endif
 				continue;
 			}
 			case OpcodeValue::CONV_OVF_U_UN:
 			{
 #if HUATUO_ARCH_64
-				CI_conv_un_ovf(u8, I, 8);
+				CI_conv_un_ovf(u8, I8, 8);
 #else
-				CI_conv_un_ovf(u4, I, 4);
+				CI_conv_un_ovf(u4, I4, 4);
 #endif
 				continue;
 			}
@@ -4935,7 +4339,7 @@ else \
 						objKlass = il2cpp::vm::Class::GetNullableArgument(objKlass);
 					}*/
 				ctx.PopStack();
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
 					CreateAddIR(ir, BoxVarVar);
@@ -4969,7 +4373,6 @@ else \
 					break;
 				}
 				case EvalStackReduceDataType::I8:
-				case EvalStackReduceDataType::I:
 				{
 					CreateAddIR(ir, NewArrVarVar_8);
 					ir->arr = ir->size = varSize.locOffset;
@@ -4983,7 +4386,7 @@ else \
 				}
 				}
 				ctx.PopStack();
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Obj);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 				ip += 5;
 				continue;
@@ -4994,7 +4397,7 @@ else \
 				CreateAddIR(ir, GetArrayLengthVarVar_8);
 				ir->arr = ir->len = ctx.GetEvalStackTopOffset();
 				ctx.PopStack();
-				ctx.PushStackByReduceType(EvalStackReduceDataType::I);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 				ip++;
 				continue;
@@ -5018,7 +4421,6 @@ else \
 					ir->eleKlass = eleKlassIndex;
 					break;
 				}
-				case EvalStackReduceDataType::I:
 				case EvalStackReduceDataType::I8:
 				{
 					CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar_i8);
@@ -5035,7 +4437,7 @@ else \
 				}
 
 				ctx.PopStackN(2);
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
 				continue;
 			}
@@ -5077,9 +4479,9 @@ else \
 			case OpcodeValue::LDELEM_I:
 			{
 #if HUATUO_ARCH_64
-				CI_ldele(i8, I);
+				CI_ldele(i8, I8);
 #else
-				CI_ldele(i4, I);
+				CI_ldele(i4, I4);
 #endif
 				continue;
 			}
@@ -5096,9 +4498,9 @@ else \
 			case OpcodeValue::LDELEM_REF:
 			{
 #if HUATUO_ARCH_64
-				CI_ldele(i8, Ref);
+				CI_ldele(i8, I8);
 #else
-				CI_ldele(i4, Ref);
+				CI_ldele(i4, I4);
 #endif
 				continue;
 			}
@@ -5165,7 +4567,7 @@ ir->dst = arr.locOffset;
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				const Il2CppType* eleType = &objKlass->byval_arg;
 
-				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8 || index.reduceType == EvalStackReduceDataType::I);
+				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8);
 				bool isIndexInt32Type = index.reduceType == EvalStackReduceDataType::I4;
 			LdelemRetry:
 				switch (eleType->type)
@@ -5282,7 +4684,7 @@ ir->ele = ele.locOffset;
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				const Il2CppType* eleType = &objKlass->byval_arg;
 
-				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8 || index.reduceType == EvalStackReduceDataType::I);
+				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8);
 				bool isIndexInt32Type = index.reduceType == EvalStackReduceDataType::I4;
 			StelemRetry:
 				switch (eleType->type)
@@ -5447,7 +4849,7 @@ ir->ele = ele.locOffset;
 				ir->addr = ir->typedRef = ctx.GetEvalStackTopOffset();
 				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
 				ctx.PopStack();
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
 				continue;
 			}
@@ -5505,7 +4907,7 @@ ir->ele = ele.locOffset;
 				CreateAddIR(ir, LdtokenVar);
 				ir->runtimeHandle = ctx.GetEvalStackNewTopOffset();
 				ir->token = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, runtimeHandle);
-				ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
 				continue;
 			}
@@ -5522,27 +4924,27 @@ ir->ele = ele.locOffset;
 			case OpcodeValue::CONV_I:
 			{
 #if HUATUO_ARCH_64
-				CI_conv(i8, I, 8);
+				CI_conv(i8, I8, 8);
 #else
-				CI_conv(i4, I, 4);
+				CI_conv(i4, I4, 4);
 #endif
 				continue;
 			}
 			case OpcodeValue::CONV_OVF_I:
 			{
 #if HUATUO_ARCH_64
-				CI_conv_ovf(i8, I, 8);
+				CI_conv_ovf(i8, I8, 8);
 #else
-				CI_conv_ovf(i4, I, 4);
+				CI_conv_ovf(i4, I4, 4);
 #endif
 				continue;
 			}
 			case OpcodeValue::CONV_OVF_U:
 			{
 #if HUATUO_ARCH_64
-				CI_conv_ovf(u8, I, 8);
+				CI_conv_ovf(u8, I8, 8);
 #else
-				CI_conv_ovf(u4, I, 4);
+				CI_conv_ovf(u4, I4, 4);
 #endif
 				continue;
 			}
@@ -5594,9 +4996,9 @@ ir->ele = ele.locOffset;
 			case OpcodeValue::CONV_U:
 			{
 #if HUATUO_ARCH_64
-				CI_conv(u8, I, 8);
+				CI_conv(u8, I8, 8);
 #else
-				CI_conv(u4, I, 4);
+				CI_conv(u4, I4, 4);
 #endif
 				continue;
 			}
@@ -5732,7 +5134,7 @@ ir->ele = ele.locOffset;
 							ir->dst = ir->src = self.locOffset;
 							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, conKlass);
 
-							self.reduceType = EvalStackReduceDataType::Obj;
+							self.reduceType = NATIVE_INT_REDUCE_TYPE;
 							self.byteSize = GetSizeByReduceType(self.reduceType);
 							goto LabelCallVir;
 						}
@@ -5746,7 +5148,7 @@ ir->ele = ele.locOffset;
 						CreateAddIR(ir, LdindVarVar_i4);
 #endif
 						ir->dst = ir->src = self.locOffset;
-						self.reduceType = EvalStackReduceDataType::Obj;
+						self.reduceType = NATIVE_INT_REDUCE_TYPE;
 						self.byteSize = GetSizeByReduceType(self.reduceType);
 						goto LabelCallVir;
 					}
@@ -5768,7 +5170,7 @@ ir->ele = ele.locOffset;
 					CreateAddIR(ir, LdcVarConst_8);
 					ir->dst = ctx.GetEvalStackNewTopOffset();
 					ir->src = (uint64_t)methodInfo;
-					ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 					ip += 6;
 					continue;
 				}
@@ -5794,7 +5196,6 @@ ir->ele = ele.locOffset;
 					switch (top.reduceType)
 					{
 					case EvalStackReduceDataType::I4:
-					case EvalStackReduceDataType::I: // FIXE ME
 					case EvalStackReduceDataType::I8: // FIXE ME
 					{
 						CreateAddIR(ir, LocalAllocVarVar_n_4);
@@ -5808,7 +5209,7 @@ ir->ele = ele.locOffset;
 					}
 					}
 					ctx.PopStack();
-					ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 					ip += 2;
 					continue;
@@ -5825,7 +5226,7 @@ ir->ele = ele.locOffset;
 					ir->virtualMethod = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, methodInfo);
 
 					ctx.PopStack();
-					ctx.PushStackByReduceType(EvalStackReduceDataType::Ref);
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 					ip += 6;
 					continue;
 				}
@@ -5912,7 +5313,7 @@ ir->ele = ele.locOffset;
 					CreateAddIR(ir, RefAnyTypeVarVar);
 					ir->dst = ir->typedRef = ctx.GetEvalStackOffset_1();
 					ctx.PopStack();
-					ctx.PushStackByReduceType(EvalStackReduceDataType::I);
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
 					ip += 2;
 					continue;
