@@ -31,7 +31,7 @@ namespace metadata
 	{
 		if (type->byref)
 		{
-			return 8;
+			return PTR_SIZE;
 		}
 		switch (type->type)
 		{
@@ -47,10 +47,10 @@ namespace metadata
 		case IL2CPP_TYPE_U4:
 		case IL2CPP_TYPE_R4:
 			return 4;
-
 		case IL2CPP_TYPE_I8:
 		case IL2CPP_TYPE_U8:
 		case IL2CPP_TYPE_R8:
+			return 8;
 		case IL2CPP_TYPE_I:
 		case IL2CPP_TYPE_U:
 		case IL2CPP_TYPE_FNPTR:
@@ -60,13 +60,13 @@ namespace metadata
 		case IL2CPP_TYPE_ARRAY:
 		case IL2CPP_TYPE_SZARRAY:
 		case IL2CPP_TYPE_OBJECT:
-			return 8;
+			return PTR_SIZE;
 		case IL2CPP_TYPE_TYPEDBYREF:
 			return sizeof(Il2CppTypedRef);
 		case IL2CPP_TYPE_CLASS:
 		{
 			IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
-			return 8;
+			return PTR_SIZE;
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
@@ -80,7 +80,7 @@ namespace metadata
 			if (genericClass->type->type == IL2CPP_TYPE_CLASS)
 			{
 				IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
-				return 8;
+				return PTR_SIZE;
 			}
 			else
 			{
