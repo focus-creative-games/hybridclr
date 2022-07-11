@@ -40,7 +40,7 @@
 #define HUATUO_ARCH_64 0
 #endif
 
-#define SIZEOF_PTR sizeof(void*)
+constexpr int PTR_SIZE = sizeof(void*);
 
 #ifndef ENABLE_PLACEHOLDER_DLL
 #define ENABLE_PLACEHOLDER_DLL 1
