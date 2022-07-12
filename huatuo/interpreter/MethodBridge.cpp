@@ -109,6 +109,10 @@ namespace huatuo
 				{
 					Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 					IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+					if (klass->enumtype)
+					{
+						return GetTypeArgDesc(&klass->castClass->byval_arg);
+					}
 					return GetValueTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
 				}
 			}

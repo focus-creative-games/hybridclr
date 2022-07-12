@@ -88,7 +88,8 @@ namespace transform
 			}
 			else
 			{
-				return EvalStackReduceDataType::Other;
+				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+				return klass->enumtype ? GetEvalStackReduceDataType(&klass->element_class->byval_arg) : EvalStackReduceDataType::Other;
 			}
 		}
 		default:
@@ -353,6 +354,10 @@ namespace transform
 			{
 				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+				if (klass->enumtype)
+				{
+					return ComputLocationDescInfo(&klass->castClass->byval_arg);
+				}
 				return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr));
 			}
 		}
