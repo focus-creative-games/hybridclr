@@ -1,102 +1,93 @@
-#huatuo
+#HybridCLR
 
-[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE)
 
-<br/>
+HybridCLR is a **near-perfect** Unity full-platform native c# hot update solution with complete features, zero cost, high performance, and low memory.
 
-![icon](docs/images/logo.png)
+HybridCLR expands the code of il2cpp, making it change from a pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to a 'AOT+Interpreter' hybrid runtime, which supports dynamic loading of assemblies natively , so that games packaged based on il2cpp backend can be efficiently executed in **AOT+interpreter** mixed mode not only on Android platform, but also on IOS, Consoles and other platforms that restrict JIT. Hot updates are fully supported from the bottom up.
 
-<br/>
-
-Huatuo is a near-perfect C# hot update solution with complete features, zero cost, high performance, and low memory.
-
-huatuo provides interpreter modules for pure AOT CLRs such as il2cpp, so that apps based on them can efficiently use the **AOT+interpreter** hybrid mode not only on the Android platform, but also on IOS, Consoles and other platforms that limit JIT. Execute, from the bottom to fully support the hot update.
+HybridCLR **pioneering implementation of the `differential hybrid dll` technology** ====. That is, the AOT dll can be arbitrarily added, deleted or modified, and HybridCLR will intelligently make the changed or newly added classes and functions run in the interpreter mode, but the unmodified classes and functions run in the AOT mode, so that the running performance of the hot-updated game logic can be basically achieved. The level of native AOT.
 
 ## Features
 
 - Features complete. Nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), except for the features below "Limitations and Notes" are supported.
-- Zero learning and usage costs. huatuo enhances the pure AOT runtime into a full CLR runtime, making hot update code work seamlessly with AOT code. Script classes are in the same runtime as AOT classes, even code like reflection, multi-threading (volatile, ThreadStatic, Task, async) works fine. There is no need to write any special code, no code generation, and no special restrictions.
-- Execute efficiently. Implemented an extremely efficient register interpreter that outperformed other hot update schemes by a large margin by all metrics. [Performance test report](https://focus-creative-games.github.io/huatuo/performance/benchmark/)
-- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary C# classes, which is far superior to other hot update solutions. [Memory usage report](https://focus-creative-games.github.io/huatuo/performance/benchmark/#%E5%86%85%E5%AD%98%E5%8D%A0%E7%94%A8%E6%8A%A5%E5%91%8A)
+- Zero learning and usage costs. HybridCLR enhances the pure AOT runtime into a full runtime, making hot update code work seamlessly with AOT code. Script classes and AOT classes can write code such as inheritance, reflection, multi-threading (volatile, ThreadStatic, Task, async) at will in the same runtime. There is no need to write any special code, no code generation, and no special restrictions.
+- Execute efficiently. Implemented an extremely efficient register interpreter that outperformed other hot update schemes by a large margin by all metrics. [Performance test report](https://focus-creative-games.github.io/hybridclr/benchmark/#performance test report)
+- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary C# classes, which is far superior to other hot update solutions. [Memory usage report](https://focus-creative-games.github.io/hybridclr/benchmark/#Memory usage report)
 - Native support for hotfix to repair part of AOT code. Adds almost no development and runtime overhead.
+- **Pioneering implementation of `differential hybrid dll` technology**. That is, a hot update dll can be packaged in AOT form first, and then the dll can be added, deleted or modified arbitrarily. HybridCLR will intelligently make the changed or added classes and functions run in interpreter mode, but the unmodified classes and functions run in AOT mode. run. This means that the running performance of the hot-updated game logic will be close to the level of native AOT.
 
 ## working principle
 
-Inspired by mono's [Hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/) technology, huatuo provides additional interpreter modules for AOT runtimes such as unity's il2cpp , transforming them from pure AOT runtime to "AOT + Interpreter" hybrid operation mode, which completely supports hot update from the bottom.
+HybridCLR is inspired by mono's [hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/) technology and provides additional interpreter modules for AOT runtimes such as unity's il2cpp , transform them from pure AOT runtime to "AOT + Interpreter" hybrid runtime.
 
 ![icon](docs/images/architecture.png)
 
-More specifically, huatuo does the following:
+More specifically, HybridCLR does the following:
 
 - Implemented an efficient metadata (dll) parsing library
-- Modified the metadata management module of il2cpp to realize the dynamic registration of metadata
+- Modified the metadata management module to realize the dynamic registration of metadata
 - Implemented a compiler from an IL instruction set to a custom register instruction set
 - Implemented an efficient register interpreter
 - Provide a large number of instinct functions additionally to improve the performance of the interpreter
-- Provide hotfix AOT support (in progress)
+- Provide hotfix AOT support
+
+## Differences from other popular c# hot update schemes
+
+### Essential comparison
+
+HybridCLR is a native c# hot update solution. In layman's terms, il2cpp is equivalent to the aot module of mono, and HybridCLR is equivalent to the interpreter module of mono. The two are combined into a complete mono. HybridCLR makes il2cpp a full-featured runtime that natively (ie, through System.Reflection.Assembly.Load) supports dynamic loading of dlls, thereby supporting hot updates of the ios platform.
+
+Because HybridCLR is implemented at the native runtime level, the type of the hot update part is completely equivalent and seamlessly unified with the type of the AOT part of the main project. You can call, inherit, reflect, and multithread at will, without generating code or writing adapters.
+
+Other hot update schemes are independent vms, and the relationship with il2cpp is essentially equivalent to the relationship of embedding lua in mono. Therefore, the type system is not unified. In order to allow the hot update type to inherit some types of AOT, an adapter needs to be written, and the type in the interpreter cannot be recognized by the type system of the main project. Incomplete features, troublesome development, and inefficient operation.
+
+### Actual use experience or feature comparison
+
+- HybridCLR costs almost zero to learn and use. HybridCLR turns il2cpp into a full-featured runtime with almost zero learning and usage costs and almost zero intrusion. Other schemes have a lot of pits and rules that need to be avoided, learning and use costs, and need to make a lot of modifications to the original project.
+- HybridCLR can use all c# features. Other schemes tend to have a lot of restrictions.
+- HybridCLR can directly support the use and inheritance of types in the main project. Other solutions are to write adapters or generate code.
+- The hot update part of the metadata in HybridCLR is seamlessly unified with the AOT metadata. Like the reflection code can work properly, the AOT part can also create hot update objects through the standard Reflection interface. Other options can't do it.
+- HybridCLR has good multithreading support. Features like multithreading, ThreadStatic, async, etc. are directly supported by HybridCLR, and other solutions are difficult to support except for the async feature.
+- The Unity workflow in HybridCLR is almost identical to the native one. The hot update MonoBehaviour in HybridCLR can be directly mounted on the hot update resource and work correctly. Other options do not work.
+- HybridCLR compatibility is extremely high. Various third-party libraries can work under HybridCLR as long as they work under il2cpp. Other solutions often require a lot of magic to modify the source code.
+- HybridCLR is extremely memory efficient. The hot update type in HybridCLR is completely equivalent to the AOT type of the main project, occupying the same amount of space. The equivalent types of other schemes are false types, which not only cannot be recognized by the runtime, but also occupy several times more space.
+- HybridCLR performs efficiently. The interaction between the hot update part in HybridCLR and the AOT part of the main project belongs to the internal interaction of il2cpp, which is extremely efficient. The other solution is the efficiency between the independent virtual machine and il2cpp, which is not only troublesome but also inefficient.
 
 ## Documentation
 
-- ~~[wiki](https://github.com/focus-creative-games/huatuo/wiki/home)~~
-- [Document](https://focus-creative-games.github.io/)，**recommend**
-- [FAQ](https://focus-creative-games.github.io/huatuo/faq/)
-- [Best Practices](https://focus-creative-games.github.io/huatuo/start_up/best_practices/)
-- [Source Structure and Trace Debugging](https://focus-creative-games.github.io/huatuo/source_inspect/)
-- [Sample Project](https://github.com/focus-creative-games/huatuo_trial)
+- [documentation site](https://focus-creative-games.github.io/), **recommended**
+- [FAQ](https://focus-creative-games.github.io/hybridclr/faq/)
+- [limitations and caveats](https://focus-creative-games.github.io/hybridclr/performance/limit/)
+- [Sample Project](https://github.com/focus-creative-games/hybridclr_trial)
 - [Know the column] (https://www.zhihu.com/column/c_1489549396035870720)
-- [==>Acknowledgments<==](https://focus-creative-games.github.io/huatuo/donate/)
+- [==>Acknowledgments<==](https://focus-creative-games.github.io/hybridclr/donate/)
 
 ## Stability status
 
-In terms of technical evaluation, the current stability is between the Alpha version and the Beta version.
+=== **Celebrated the official launch of the first android and iOS dual-end casual game using HybridCLR in 2021.6.7** ===, there will be several medium-heavy games online or external testing in July.
 
-- Completed unit tests for most instructions. Only a few instructions such as calli and initblk that are difficult to construct directly in C# do not have corresponding unit tests added.
-- Completing various syntax tests against the c# specification.
-- Tested the compatibility of common game libraries and frameworks, and the compatibility is good. See [Compatibility Report](docs/compatible.md)
-- [luban](https://github.com/focus-creative-games/luban) config can be loaded correctly
-- Can correctly run lightweight games like [2048](https://github.com/dgkanatsios/2048)
-- Can run small games like [StarForce](https://github.com/EllanJiang/StarForce)
-- Helping some small, medium and large (there is a heavy MMORPG project) to migrate and test huatuo. It is expected that large-scale game projects such as MMORPG can be successfully run this month.
+In terms of technical evaluation, the stability is currently in the Beta version. Due to the advanced nature of HybridCLR technical principles, there are not many bugs in nature, and the stability is very fast.
 
-## Limitations and Notes
-
-**Features not included in the restrictions are all supported by huatuo**. Please stop asking if huatuo supports a certain feature.
-
-- Support 5.x, 2017-2022 full series of versions, but not every minor version. For details, see [Currently Supported Unity Versions](https://focus-creative-games.github.io/huatuo/support_versions/).
-- Unable to create instances of **hot update non-enumeration value types** of ordinary AOT generics (**delegate, Nullable, arrays (including multi-dimensional) are not limited, hot update generics are also completely unlimited**) instance of the type. For example, List&lt;HotUpdateValueType&gt; is not supported but List&lt;int&gt;, List&lt;HotUpdateClass&gt; and List&lt;HotUpdateEnum&gt; are supported. For specific reasons, see [AOT generic limitation and principle introduction](https://focus-creative-games.github.io/huatuo/performance/generic_limit/). This will be more completely resolved in the July version, and there will be no restrictions after that.
-- The default async task that returns **custom value type** is temporarily not supported, and native value types such as int and enumeration and class types are not restricted. The reason is that the compiler will generate the generic class instantiation of AsyncTaskMethodBuilder&lt;T&gt; for async by default. If you use custom Task and AsyncTaskMethodBuilder like ETask, there are no restrictions. This limitation of native async will be resolved in subsequent versions.
-- **Note to use link.xml or code reference to avoid Unity cutting code. Avoid the error that the function can be called during the development period, but the function cannot be found after the release. We will provide default templates in the future.
-- BeginInvoke and EndInvoke of delegate are not supported. It just doesn't feel necessary to do it.
-- Due to the limitation of Unity's resource management mechanism (the script uuid has been determined during packaging, and the GUID corresponding to the hot update script cannot be found), the hot update MonoBehaviour needs to be compiled into an independent dll and mounted on the resource to be correctly reversed change
-- Incremental gc is not supported yet. Due to the tight time, it is too late to carefully deal with the memory barrier details of incremental gc. This issue will be resolved soon.
-- Temporarily does not support C# source code debugging of the real machine after packaging, but can print the error stack (only accurate to the function), and can also track and debug in the Debug project generated by Build. You can use the usual mono debugging for debugging during the development period under the Editor.
+- At present, PC, Android, and iOS have run through all unit tests and can be used stably.
+- Tested the compatibility of common game libraries and frameworks, and the compatibility is good. Any library that works under the il2cpp backend will work fine under HybridCLR. Even those libraries that are incompatible with il2cpp due to AOT issues can now run normally because of HybridCLR's expanded capabilities for il2cpp.
+- Dozens of large and medium-sized game projects have been integrated into HybridCLR, and some of them are being tested before going live. For details, please refer to some collected [complete access to commercial projects list](https://focus-creative-games.github.io/hybridclr/ref_project/)
 
 ## Support and Contact
 
-- development & comminicate，join in QQ group or email to contact Walon.
-
-  - QQ group: 651188171 (huatuo c# hot update development exchange group)
+- For development communication, welcome to join QQ group or email contact
+  - QQ group: 651188171 HybridCLR technical exchange group **(official main group)**. You can report bugs, but **do not consult basic usage issues in the group**.
+  - QQ group: 428404198 HybridCLR use problem consultation group **(novice group)**. If you encounter any problems in the process of using it, you can consult in the group.
   - Email: taojingjian#gmail.com
-- Business Cooperation, please contact Lucas Zhang
-  - Phone：15201249045
-  - Wechat：lucaszhang1993
-  - Email：zhangshuo@tuyoogame.com
-
 
 ## RoadMap
 
-Although huatuo is related to il2cpp, most of the core code is independent of il2cpp and can be easily ported (expected one month) to other CLR platforms that do not support AOT+Interpreter. No matter how the version of Unity changes, even if il2cpp is abandoned and .net 6+ is used, huatuo will continue to follow up and stably provide cross-platform CLR hot update service until one day when .net officially supports AOT+Interpreter, huatuo will complete its historical mission.
+Although HybridCLR is related to il2cpp, most of the core code is independent of il2cpp, and it is easy to transplant (expected one month) to other CLR platforms that do not support AOT+Interpreter. No matter how the version of Unity changes, even if il2cpp is abandoned and .net 6+ is used, HybridCLR will continue to follow up and stably provide cross-platform CLR hot update service until one day when .net officially supports AOT+Interpreter, then HybridCLR will complete its historical mission.
 
-- Continue to fix bugs to make a medium and large game work properly (2022.4)
-- Continue to follow up the version update of Unity and support more Unity versions. See [Currently Supported Unity Versions](https://focus-creative-games.github.io/huatuo/support_versions/)
-- Support hotfix bug in AOT part (2022.6)
-- Remove most common AOT generic class restrictions (2022.6)
-- Support incremental gc. (2022.6)
-- Instruction optimization, the number of instructions after compilation is reduced to 1/4-1/2, and the performance of basic instructions and most object model instructions is improved by 100%-300%. (2022.6 preview version)
-- Support for extern functions (2022.7)
-- Other memory and efficiency optimizations, and code refactoring
-- **===godot engine support ===**(2022.12)
+- Support for Unity 2019, 2020 and 2021 series versions (2022.6 -)
+- Instruction optimization, the number of instructions after compilation is reduced to 1/4-1/2, and the performance of basic instructions and most object model instructions is improved by 100%-300%. (2022.7-)
+- Support incremental gc (2022.8 -)
 
 ## license
 
-Huatuo is licensed under the [MIT](https://github.com/focus-creative-games/huatuo/blob/main/LICENSE) license
+HybridCLR is licensed under the [MIT](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE) license
