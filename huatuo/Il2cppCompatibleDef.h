@@ -29,8 +29,12 @@
 #elif IL2CPP_TARGET_ARMV7
 #define HUATUO_TARGET_ARMV7 1
 #define HUATUO_TARGET_ARM_ANY 1
-#else
+#elif IL2CPP_TARGET_WINDOWS
+#if PLATFORM_ARCH_64
 #define HUATUO_TARGET_X64 1
+#else
+#define HUATUO_TARGET_X86 1
+#endif
 #define HUATUO_TARGET_ARM_ANY 0
 #endif
 
@@ -40,7 +44,7 @@
 #define HUATUO_ARCH_64 0
 #endif
 
-constexpr int PTR_SIZE = sizeof(void*);
+constexpr int PTR_SIZE = IL2CPP_SIZEOF_VOID_P;
 
 #define SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS  HUATUO_ARCH_64
 

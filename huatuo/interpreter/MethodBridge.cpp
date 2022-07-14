@@ -32,7 +32,7 @@ namespace huatuo
 			}
 #elif HUATUO_TARGET_ARMV7
             return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
-#else
+#elif HUATUO_TARGET_X64
 			switch (size)
 			{
 			case 1:
@@ -47,6 +47,10 @@ namespace huatuo
 			case 32: return { LocationDataType::S_32, 4 };
 			default: return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 			}
+#elif HUATUO_TARGET_X86
+			return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
+#else 
+#error "not support platform"
 #endif
 		}
 
@@ -471,7 +475,7 @@ namespace huatuo
 			}
 #elif HUATUO_TARGET_ARMV7
 			AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
-#else
+#elif HUATUO_TARGET_X64
 			switch (typeSize)
 			{
 			case 1:
@@ -494,6 +498,10 @@ namespace huatuo
 				}
 			}
 			}
+#elif HUATUO_TARGET_X86
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
+#else
+#error "not support platform"
 #endif
 		}
 
