@@ -1400,7 +1400,7 @@ namespace transform
 		{
 			IL2CPP_ASSERT(evalStackTop > 0);
 			EvalStackVarInfo& top = evalStack[evalStackTop - 1];
-			if (top.reduceType != dstReduceType)
+			//if (top.reduceType != dstReduceType)
 			{
 				CreateIR(ir, ConvertVarVar_i1_i1);
 				ir->type = (HiOpcodeEnum)0;
@@ -1448,7 +1448,7 @@ namespace transform
 		{
 			IL2CPP_ASSERT(evalStackTop > 0);
 			EvalStackVarInfo& top = evalStack[evalStackTop - 1];
-			if (top.reduceType != dstReduceType)
+			//if (top.reduceType != dstReduceType)
 			{
 				CreateIR(ir, ConvertOverflowVarVar_i1_i1);
 				ir->type = (HiOpcodeEnum)0;
