@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../CommonDef.h"
+#include "MetadataUtil.h"
 
 namespace huatuo
 {
@@ -103,22 +104,50 @@ namespace metadata
             return _buf[_readPos++];
         }
 
-        uint16_t ReadUshort()
+        uint16_t Read16()
         {
             IL2CPP_ASSERT(_readPos + 2 <= _length);
-            uint16_t value = *(uint16_t*)(_buf + _readPos);
+            uint16_t value = GetU2LittleEndian(_buf + _readPos);
             _readPos += 2;
             return value;
         }
 
-        template<typename T>
-        T Read()
+        uint32_t Read32()
         {
-            IL2CPP_ASSERT(_readPos + sizeof(T) <= _length);
-            T value = *(T*)(_buf + _readPos);
-            _readPos += sizeof(T);
+            IL2CPP_ASSERT(_readPos + 4 <= _length);
+            uint32_t value = (uint32_t)GetI4LittleEndian(_buf + _readPos);
+            _readPos += 4;
             return value;
         }
+
+        uint64_t Read64()
+        {
+            IL2CPP_ASSERT(_readPos + 8 <= _length);
+            uint64_t value = (uint64_t)GetI8LittleEndian(_buf + _readPos);
+            _readPos += 8;
+            return value;
+        }
+
+        float ReadFloat()
+        {
+            uint32_t x = Read32();
+            return *(float*)&x;
+        }
+
+        double ReadDouble()
+        {
+            uint64_t x = Read64();
+            return *(double*)&x;
+        }
+
+        //template<typename T>
+        //T Read()
+        //{
+        //    IL2CPP_ASSERT(_readPos + sizeof(T) <= _length);
+        //    T value = *(T*)(_buf + _readPos);
+        //    _readPos += sizeof(T);
+        //    return value;
+        //}
 
         uint8_t PeekByte()
         {

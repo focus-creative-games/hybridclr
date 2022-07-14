@@ -42,6 +42,8 @@
 
 constexpr int PTR_SIZE = sizeof(void*);
 
+#define SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS  HUATUO_ARCH_64
+
 #ifndef ENABLE_PLACEHOLDER_DLL
 #define ENABLE_PLACEHOLDER_DLL 1
 #endif

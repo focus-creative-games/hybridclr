@@ -34,24 +34,49 @@ namespace metadata
         return *(int8_t*)data;
     }
 
-    inline uint16_t GetU2LittleEndian(const byte* data)
-    {
-        return *(uint16_t*)data;
-    }
-
     inline int16_t GetI2LittleEndian(const byte* data)
     {
-        return *(int16_t*)data;
+#if SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS
+        uint16_t value = *(uint16_t*)data;
+#else
+        uint16_t value = (uint16_t)data[0] | ((uint16_t)data[1] << 8);
+#endif
+        return (int16_t)value;
+    }
+
+    inline uint16_t GetU2LittleEndian(const byte* data)
+    {
+        return (uint16_t)GetI2LittleEndian(data);
     }
 
     inline int32_t GetI4LittleEndian(const byte* data)
     {
-        return *(int32_t*)data;
+#if SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS
+        uint32_t value = *(uint32_t*)data;
+#else
+        uint32_t value = (uint32_t)data[0]
+            | ((uint32_t)data[1] << 8)
+            | ((uint32_t)data[2] << 16)
+            | ((uint32_t)data[3] << 24);
+#endif
+        return (int32_t)value;
     }
 
     inline int64_t GetI8LittleEndian(const byte* data)
     {
-        return *(int64_t*)data;
+#if SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS
+        uint64_t value = *(uint64_t*)data;
+#else
+        uint64_t value = (uint64_t)data[0]
+            + ((uint64_t)data[1] << 8)
+            + ((uint64_t)data[2] << 16)
+            + ((uint64_t)data[3] << 24)
+            + ((uint64_t)data[4] << 32)
+            + ((uint64_t)data[5] << 40)
+            + ((uint64_t)data[6] << 48)
+            + ((uint64_t)data[7] << 56);
+#endif
+        return value;
     }
 
     uint32_t GetNotZeroBitCount(uint64_t x);

@@ -1680,12 +1680,12 @@ namespace metadata
 		{
 		case IL2CPP_TYPE_BOOLEAN:
 		{
-			*(bool*)data = reader.Read<bool>();
+			*(byte*)data = reader.ReadByte();
 			break;
 		}
 		case IL2CPP_TYPE_CHAR:
 		{
-			*(uint16_t*)data = reader.ReadUshort();
+			*(uint16_t*)data = reader.Read16();
 			break;
 		}
 		case IL2CPP_TYPE_I1:
@@ -1697,34 +1697,34 @@ namespace metadata
 		case IL2CPP_TYPE_I2:
 		case IL2CPP_TYPE_U2:
 		{
-			*(uint16_t*)data = reader.Read<uint16_t>();
+			*(uint16_t*)data = reader.Read16();
 			break;
 		}
 		case IL2CPP_TYPE_I4:
 		case IL2CPP_TYPE_U4:
 		{
-			*(uint32_t*)data = reader.Read<uint32_t>();
+			*(uint32_t*)data = reader.Read32();
 			break;
 		}
 		case IL2CPP_TYPE_I8:
 		case IL2CPP_TYPE_U8:
 		{
-			*(uint64_t*)data = reader.Read<uint64_t>();
+			*(uint64_t*)data = reader.Read64();
 			break;
 		}
 		case IL2CPP_TYPE_R4:
 		{
-			*(float*)data = reader.Read<float>();
+			*(float*)data = reader.ReadFloat();
 			break;
 		}
 		case IL2CPP_TYPE_R8:
 		{
-			*(double*)data = reader.Read<double>();
+			*(double*)data = reader.ReadDouble();
 			break;
 		}
 		case IL2CPP_TYPE_SZARRAY:
 		{
-			uint32_t numElem = reader.Read<uint32_t>();
+			uint32_t numElem = reader.Read32();
 			if (numElem != (uint32_t)-1)
 			{
 				Il2CppClass* arrKlass = il2cpp::vm::Class::FromIl2CppType(argType);
@@ -1889,7 +1889,7 @@ namespace metadata
 
 	void InterpreterImage::ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod)
 	{
-		uint16_t prolog = reader.ReadUshort();
+		uint16_t prolog = reader.Read16();
 		IL2CPP_ASSERT(prolog == 0x0001);
 		if (ctorMethod->parameters_count == 0)
 		{
@@ -1916,7 +1916,7 @@ namespace metadata
 			// clear ref. may not need. gc memory barrier
 			std::memset(argDatas, 0, argSize);
 		}
-		uint16_t numNamed = reader.ReadUshort();
+		uint16_t numNamed = reader.Read16();
 		Il2CppClass* klass = obj->klass;
 		for (uint16_t idx = 0; idx < numNamed; idx++)
 		{
