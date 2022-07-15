@@ -54,7 +54,7 @@ namespace transform
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("");
 				}
 				}
 				// don't split 0 offset br

@@ -158,7 +158,7 @@ namespace metadata
 
 		const Il2CppTypeDefinitionSizes* GetTypeDefinitionSizesFromRawIndex(TypeDefinitionIndex index)
 		{
-			IL2CPP_ASSERT(index < _typeDetails.size());
+			IL2CPP_ASSERT((size_t)index < _typeDetails.size());
 			return &_typeDetails[index].typeSizes;
 		}
 

@@ -221,7 +221,7 @@ namespace huatuo
 		{
 			if (type->byref)
 			{
-				IL2CPP_ASSERT(false);
+				RaiseHuatuoExecutionEngineException("");
 				return nullptr;
 			}
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -346,7 +346,7 @@ namespace huatuo
 			}
 			else
 			{
-				IL2CPP_ASSERT(false);
+				RaiseHuatuoExecutionEngineException("");
 			}
 		}
 
@@ -365,7 +365,7 @@ namespace huatuo
 			}
 			else
 			{
-				IL2CPP_ASSERT(false);
+				RaiseHuatuoExecutionEngineException("");
 			}
 		}
 		static void AppendValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, char* sigBuf, size_t bufferSize, size_t& pos)

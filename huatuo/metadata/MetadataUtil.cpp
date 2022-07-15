@@ -300,7 +300,7 @@ namespace metadata
 		default:
 			return true;
 		}
-		IL2CPP_ASSERT(false);
+		RaiseHuatuoExecutionEngineException("");
 		return false;
 	}
 
@@ -421,7 +421,7 @@ namespace metadata
 		default:
 			return true;
 		}
-		IL2CPP_ASSERT(false);
+		RaiseHuatuoExecutionEngineException("");
 		return false;
 	}
 
@@ -508,7 +508,7 @@ namespace metadata
 		}
 		default: return true;
 		}
-		IL2CPP_ASSERT(false);
+		RaiseHuatuoExecutionEngineException("");
 		return false;
 	}
 

@@ -1493,7 +1493,7 @@ namespace metadata
 
 		typeDef.vtable_count = (uint16_t)vms.size();
 		typeDef.interfaceOffsetsStart = EncodeWithIndex(offsetsStart);
-		typeDef.interface_offsets_count = (uint32_t)interfaceOffsetInfos.size();
+		typeDef.interface_offsets_count = (uint16_t)interfaceOffsetInfos.size();
 
 		// klass may create by prev BuildTree
 		Il2CppClass* klass = _classList[tdd->index];

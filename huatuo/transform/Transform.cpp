@@ -2156,7 +2156,7 @@ else \
 			}
 			default:
 			{
-				IL2CPP_ASSERT(false);
+				RaiseHuatuoExecutionEngineException("");
 			}
 			}
 			result.exClauses.push_back(iec);
@@ -3574,7 +3574,7 @@ else \
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("NEG not suppport type");
 					break;
 				}
 				}
@@ -3602,7 +3602,7 @@ else \
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("NOT not suppport type");
 					break;
 				}
 				}
@@ -4031,7 +4031,7 @@ else \
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("");
 					break;
 				}
 				}
@@ -4436,7 +4436,7 @@ else \
 				}
 				default:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("ldelema");
 					break;
 				}
 				}
@@ -4516,7 +4516,7 @@ else \
 #else
 				CI_stele(i4)
 #endif
-					continue;
+				continue;
 			}
 			case OpcodeValue::STELEM_I1:
 			{
@@ -4948,7 +4948,7 @@ ir->ele = ele.locOffset;
 
 				case OpcodeValue::ARGLIST:
 				{
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("");
 					ip += 2;
 					continue;
 				}

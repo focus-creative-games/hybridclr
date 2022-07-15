@@ -216,7 +216,7 @@ namespace metadata
 				return cur->_type;
 			}
 		}
-		IL2CPP_ASSERT(false);
+		RaiseHuatuoExecutionEngineException("");
 		return nullptr;
 	}
 
