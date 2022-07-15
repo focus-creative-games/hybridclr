@@ -400,33 +400,32 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		return ref.value;
 	}
 
-	inline Il2CppArray* NewMdArray(Il2CppClass* fullArrKlass, il2cpp_array_size_t* lengths, il2cpp_array_size_t* lowerBounds)
+#define MAX_DIMENSION  10
+
+	inline Il2CppArray* NewMdArray(Il2CppClass* fullArrKlass, StackObject* lengths, StackObject* lowerBounds)
 	{
+		il2cpp_array_size_t arrLengths[MAX_DIMENSION];
+		il2cpp_array_size_t arrLowerBounds[MAX_DIMENSION];
+
 		switch (fullArrKlass->rank)
 		{
 		case 1:
 		{
-			if (lengths)
-			{
-				lengths[0] = (int32_t)lengths[0];
-			}
+			arrLengths[0] = lengths[0].i32;
 			if (lowerBounds)
 			{
-				lowerBounds[0] = (int32_t)lowerBounds[0];
+				arrLowerBounds[0] = lowerBounds[0].i32;
 			}
 			break;
 		}
 		case 2:
 		{
-			if (lengths)
-			{
-				lengths[0] = (int32_t)lengths[0];
-				lengths[1] = (int32_t)lengths[1];
-			}
+			arrLengths[0] = lengths[0].i32;
+			arrLengths[1] = lengths[1].i32;
 			if (lowerBounds)
 			{
-				lowerBounds[0] = (int32_t)lowerBounds[0];
-				lowerBounds[1] = (int32_t)lowerBounds[1];
+				arrLowerBounds[0] = lowerBounds[0].i32;
+				arrLowerBounds[1] = lowerBounds[1].i32;
 			}
 			break;
 		}
@@ -434,23 +433,21 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		{
 			for (uint8_t i = 0; i < fullArrKlass->rank; i++)
 			{
-				if (lengths)
-				{
-					lengths[i] = (int32_t)lengths[i];
-				}
+				arrLengths[i] = lengths[i].i32;
 				if (lowerBounds)
 				{
-					lowerBounds[i] = (int32_t)lowerBounds[i];
+					arrLowerBounds[i] = lowerBounds[i].i32;
 				}
 			}
 			break;
 		}
 		}
-		return il2cpp::vm::Array::NewFull(fullArrKlass, lengths, lowerBounds);
+		return il2cpp::vm::Array::NewFull(fullArrKlass, arrLengths, lowerBounds ? arrLowerBounds : nullptr);
 	}
 
-	inline void* GetMdArrayElementAddress(Il2CppArray* arr, il2cpp_array_size_t* indexs)
+	inline void* GetMdArrayElementAddress(Il2CppArray* arr, StackObject* indexs)
 	{
+		CHECK_NOT_NULL_THROW(arr);
 		Il2CppClass* klass = arr->klass;
 		uint32_t eleSize = klass->element_size;
 		Il2CppArrayBounds* bounds = arr->bounds;
@@ -460,7 +457,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		case 1:
 		{
 			Il2CppArrayBounds& bound = bounds[0];
-			int32_t idx = (int32_t)indexs[0] - bound.lower_bound;
+			int32_t idx = indexs[0].i32 - bound.lower_bound;
 			if (idx >= 0 && idx < bound.length)
 			{
 				return arrayStart + (idx * eleSize);
@@ -474,9 +471,9 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		case 2:
 		{
 			Il2CppArrayBounds& bound0 = bounds[0];
-			int32_t idx0 = (int32_t)indexs[0] - bound0.lower_bound;
+			int32_t idx0 = indexs[0].i32 - bound0.lower_bound;
 			Il2CppArrayBounds& bound1 = bounds[1];
-			int32_t idx1 = (int32_t)indexs[1] - bound1.lower_bound;
+			int32_t idx1 = indexs[1].i32 - bound1.lower_bound;
 			if (idx0 >= 0 && idx0 < bound0.length && idx1 >= 0 && idx1 < bound1.length)
 			{
 				return arrayStart + ((idx0 * bound1.length) + idx1) * eleSize;
@@ -490,11 +487,11 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		case 3:
 		{
 			Il2CppArrayBounds& bound0 = bounds[0];
-			int32_t idx0 = (int32_t)indexs[0] - bound0.lower_bound;
+			int32_t idx0 = indexs[0].i32 - bound0.lower_bound;
 			Il2CppArrayBounds& bound1 = bounds[1];
-			int32_t idx1 = (int32_t)indexs[1] - bound1.lower_bound;
+			int32_t idx1 = indexs[1].i32 - bound1.lower_bound;
 			Il2CppArrayBounds& bound2 = bounds[2];
-			int32_t idx2 = (int32_t)indexs[2] - bound2.lower_bound;
+			int32_t idx2 = indexs[2].i32 - bound2.lower_bound;
 			if (idx0 >= 0 && idx0 < bound0.length && idx1 >= 0 && idx1 < bound1.length && idx2 >= 0 && idx2 < bound2.length)
 			{
 				return arrayStart + ((idx0 * bound1.length + idx1) * bound2.length + idx2) * eleSize;
@@ -512,7 +509,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 			for (uint8_t i = 0; i < klass->rank; i++)
 			{
 				Il2CppArrayBounds& bound = bounds[i];
-				int32_t idx = (int32_t)indexs[i] - bound.lower_bound;
+				int32_t idx = indexs[i].i32 - bound.lower_bound;
 				if (idx >= 0 && idx < bound.length)
 				{
 					totalIdx = totalIdx * bound.length + idx;
@@ -527,22 +524,24 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		}
 	}
 
-	template<typename T> void GetMdArrayElementExpandToStack(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	template<typename T> void GetMdArrayElementExpandToStack(Il2CppArray* arr, StackObject* indexs, void* value)
 	{
+		CHECK_NOT_NULL_THROW(arr);
 		*(int32_t*)value = *(T*)GetMdArrayElementAddress(arr, indexs);
 	}
 
-	template<typename T> void GetMdArrayElementCopyToStack(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	template<typename T> void GetMdArrayElementCopyToStack(Il2CppArray* arr, StackObject* indexs, void* value)
 	{
+		CHECK_NOT_NULL_THROW(arr);
 		*(T*)value = *(T*)GetMdArrayElementAddress(arr, indexs);
 	}
 
-	inline void GetMdArrayElementBySize(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	inline void GetMdArrayElementBySize(Il2CppArray* arr, StackObject* indexs, void* value)
 	{
 		CopyBySize(value, GetMdArrayElementAddress(arr, indexs), arr->klass->element_size);
 	}
 
-	inline void SetMdArrayElement(Il2CppArray* arr, il2cpp_array_size_t* indexs, void* value)
+	inline void SetMdArrayElement(Il2CppArray* arr, StackObject* indexs, void* value)
 	{
 		CopyBySize(GetMdArrayElementAddress(arr, indexs), value, arr->klass->element_size);
 	}
@@ -1078,7 +1077,7 @@ while (true) \
 			} \
 			default: \
 			{ \
-			IL2CPP_ASSERT(false); \
+				RaiseHuatuoExecutionEngineException(""); \
 			} \
 			} \
 		} \
@@ -1131,7 +1130,7 @@ for (; efi.nextExClauseIndex < exClauseNum; ) \
 		} \
 		default: \
 		{ \
-			IL2CPP_ASSERT(false); \
+			RaiseHuatuoExecutionEngineException(""); \
 		} \
 		} \
 	} \
@@ -6993,7 +6992,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-				    (*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), nullptr);
+				    (*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (StackObject*)(void*)(localVarBase + __lengthIdxs), nullptr);
 				    ip += 16;
 				    continue;
 				}
@@ -7003,7 +7002,7 @@ else \
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __lowerBoundIdxs = *(uint16_t*)(ip + 6);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-				    (*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (il2cpp_array_size_t*)(void*)(localVarBase + __lowerBoundIdxs));
+				    (*(Il2CppArray**)(localVarBase + __arr)) =  NewMdArray(__klass, (StackObject*)(void*)(localVarBase + __lengthIdxs), (StackObject*)(void*)(localVarBase + __lowerBoundIdxs));
 				    ip += 16;
 				    continue;
 				}
@@ -7012,7 +7011,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementExpandToStack<int8_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementExpandToStack<int8_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7021,7 +7020,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementExpandToStack<uint8_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementExpandToStack<uint8_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7030,7 +7029,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementExpandToStack<int16_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementExpandToStack<int16_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7039,7 +7038,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementExpandToStack<uint16_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementExpandToStack<uint16_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7048,7 +7047,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementCopyToStack<int32_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementCopyToStack<int32_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7057,7 +7056,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementCopyToStack<uint32_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementCopyToStack<uint32_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7066,7 +7065,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementCopyToStack<int64_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementCopyToStack<int64_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7075,7 +7074,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementCopyToStack<uint64_t>((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementCopyToStack<uint64_t>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7084,7 +7083,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementBySize((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    GetMdArrayElementBySize((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7093,7 +7092,7 @@ else \
 					uint16_t __addr = *(uint16_t*)(ip + 2);
 					uint16_t __arr = *(uint16_t*)(ip + 4);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 6);
-				    (*(void**)(localVarBase + __addr)) = GetMdArrayElementAddress((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs));
+				    (*(void**)(localVarBase + __addr)) = GetMdArrayElementAddress((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs));
 				    ip += 8;
 				    continue;
 				}
@@ -7102,7 +7101,7 @@ else \
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
-				    SetMdArrayElement((*(Il2CppArray**)(localVarBase + __arr)), (il2cpp_array_size_t*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    SetMdArrayElement((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}
@@ -7328,7 +7327,7 @@ else \
 				//!!!}}INSTRINCT
 #pragma endregion
 				default:
-					IL2CPP_ASSERT(false);
+					RaiseHuatuoExecutionEngineException("");
 					break;
 				}
 			}
