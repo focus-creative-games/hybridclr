@@ -1402,7 +1402,7 @@ namespace transform
 			EvalStackVarInfo& top = evalStack[evalStackTop - 1];
 			//if (top.reduceType != dstReduceType)
 			{
-				CreateIR(ir, ConvertVarVar_i1_i1);
+				CreateIR(ir, ConvertVarVar_i4_u4);
 				ir->type = (HiOpcodeEnum)0;
 				ir->dst = ir->src = GetEvalStackTopOffset();
 				switch (top.reduceType)
@@ -1450,7 +1450,7 @@ namespace transform
 			EvalStackVarInfo& top = evalStack[evalStackTop - 1];
 			//if (top.reduceType != dstReduceType)
 			{
-				CreateIR(ir, ConvertOverflowVarVar_i1_i1);
+				CreateIR(ir, ConvertOverflowVarVar_i4_u4);
 				ir->type = (HiOpcodeEnum)0;
 				ir->dst = ir->src = GetEvalStackTopOffset();
 				switch (top.reduceType)
