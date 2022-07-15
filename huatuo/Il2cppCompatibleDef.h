@@ -36,6 +36,10 @@
 #define HUATUO_TARGET_X86 1
 #endif
 #define HUATUO_TARGET_ARM_ANY 0
+#elif IL2CPP_TARGET_JAVASCRIPT
+#define HUATUO_TARGET_JAVASCRIPT 1
+#else
+#error "not support platform"
 #endif
 
 #if	PLATFORM_ARCH_64
