@@ -122,6 +122,11 @@ namespace interpreter
 		}
 	}
 
+	inline void CopyStackObject(StackObject* dst, void* src, uint32_t count)
+	{
+		std::memcpy(dst, src, count * sizeof(StackObject));
+	}
+
 	inline void CopyBySize(void* dst, void* src, uint32_t size)
 	{
 		switch (size)

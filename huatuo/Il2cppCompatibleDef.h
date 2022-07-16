@@ -41,8 +41,12 @@
 
 #if	PLATFORM_ARCH_64
 #define HUATUO_ARCH_64 1
+#define GENERAL_ABI_64 1
+#define GENERAL_ABI_32 0
 #else
 #define HUATUO_ARCH_64 0
+#define GENERAL_ABI_64 0
+#define GENERAL_ABI_32 1
 #endif
 
 constexpr int PTR_SIZE = IL2CPP_SIZEOF_VOID_P;

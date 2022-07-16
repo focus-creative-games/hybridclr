@@ -96,7 +96,9 @@ namespace interpreter
 
 	static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
 	{
-		TEMP_FORMAT(errMsg, "Invoke method missing. %s.%s::%s", method->klass->namespaze, method->klass->name, method->name);
+		char sigName[1000];
+		ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
+		TEMP_FORMAT(errMsg, "Invoke method missing. sinature:%s %s.%s::%s", sigName, method->klass->namespaze, method->klass->name, method->name);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
 	}
