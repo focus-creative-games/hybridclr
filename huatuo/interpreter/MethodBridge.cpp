@@ -413,10 +413,11 @@ namespace huatuo
 				}
 			}
 			// FIXME HSV
-
-			AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
+			uint8_t actualAligment = 1;
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
 #elif GENERAL_ABI_32
-			AppendValueTypeSignatureByAligmentAndSize(typeSize, klass->naturalAligment, sigBuf, bufferSize, pos);
+			uint8_t actualAligment = klass->naturalAligment <= 4 ? 1 : 8;
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
 #else
 #error "not support platform"
 #endif
