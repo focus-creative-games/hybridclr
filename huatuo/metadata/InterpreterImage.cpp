@@ -1070,6 +1070,7 @@ namespace metadata
 		return method;
 	}
 
+	/*
 	const MethodInfo* InterpreterImage::ResolveMethodInfo(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, const Il2CppGenericInst* genericInstantiation, const Il2CppGenericContext* genericContext)
 	{
 		if (type->type != IL2CPP_TYPE_ARRAY)
@@ -1109,6 +1110,7 @@ namespace metadata
 		RaiseMethodNotFindException(type, resolveMethodName);
 		return nullptr;
 	}
+	*/
 
 	const MethodInfo* InterpreterImage::ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer,
 		const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex)

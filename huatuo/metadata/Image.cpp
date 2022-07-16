@@ -901,6 +901,72 @@ namespace metadata
         return nullptr;
     }
 
+    const MethodInfo* Image::ResolveMethodInfo(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, const Il2CppGenericInst* genericInstantiation, const Il2CppGenericContext* genericContext)
+    {
+        if (type->type != IL2CPP_TYPE_ARRAY)
+        {
+            const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+            const Il2CppGenericContainer* klassGenericContainer = GetGenericContainerFromIl2CppType(type);
+            const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
+            for (uint32_t i = 0; i < typeDef->method_count; i++)
+            {
+                const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef->methodStart + i);
+                const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex);
+                if (std::strcmp(resolveMethodName, methodName) == 0 && IsMatchMethodSig(methodDef, resolveSig, klassGenericContainer, genericInstantiation ? genericInstantiation->type_argc : 0))
+                {
+                    return GetMethodInfo(type, methodDef, genericInstantiation, genericContext);
+                }
+            }
+        }
+        else
+        {
+            IL2CPP_ASSERT(genericInstantiation == nullptr);
+            Il2CppClass* arrayKlass = il2cpp::vm::Class::FromIl2CppType(type);
+            il2cpp::vm::Class::SetupMethods(arrayKlass);
+            //const Il2CppType* genericClassInstArgv[] = { &arrayKlass->element_class->byval_arg };
+            const Il2CppType** genericClassInstArgv = genericContext && genericContext->class_inst ? genericContext->class_inst->type_argv : nullptr;
+            const Il2CppType** genericMethodInstArgv = genericContext && genericContext->method_inst ? genericContext->method_inst->type_argv : nullptr;
+
+            // FIXME MEMORY LEAK
+            for (uint16_t i = 0; i < arrayKlass->method_count; i++)
+            {
+                const MethodInfo* method = arrayKlass->methods[i];
+                if (std::strcmp(resolveMethodName, method->name) == 0 && IsMatchMethodSig(method, resolveSig, genericClassInstArgv, genericMethodInstArgv))
+                {
+                    return method;
+                }
+            }
+        }
+        RaiseMethodNotFindException(type, resolveMethodName);
+        return nullptr;
+    }
+
+    const void* Image::ReadRuntimeHandleFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, uint32_t rowIndex)
+    {
+
+        ResolveMemberRef rmr = {};
+        ReadResolveMemberRefFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, rmr);
+        if (rmr.signature.memberType == TableType::FIELD_POINTER)
+        {
+            const Il2CppFieldDefinition* fieldDef = nullptr;
+            ResolveField(&rmr.parent.type, rmr.name, &rmr.signature.field.type, fieldDef);
+            const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(rmr.parent.type, fieldDef);
+            return fieldInfo;
+        }
+        else if (rmr.signature.memberType == TableType::METHOD_POINTER)
+        {
+            if (genericContext)
+            {
+                rmr.parent.type = *TryInflateIfNeed(&rmr.parent.type, genericContext, true);
+            }
+            return ResolveMethodInfo(&rmr.parent.type, rmr.name, rmr.signature.method, nullptr, genericContext);
+        }
+        else
+        {
+            RaiseHuatuoExecutionEngineException("GetRuntimeHandleFromToken invaild ParentType");
+            return nullptr;
+        }
+    }
 
     const void* Image::GetRuntimeHandleFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
@@ -921,16 +987,20 @@ namespace metadata
             }
             return type;
         }
-        case huatuo::metadata::TableType::FIELD_POINTER:
         case huatuo::metadata::TableType::FIELD:
         {
             return GetFieldInfoFromToken(token, klassGenericContainer, methodGenericContainer, genericContext);
         }
-        case huatuo::metadata::TableType::METHOD_POINTER:
         case huatuo::metadata::TableType::METHOD:
         case huatuo::metadata::TableType::METHODSPEC:
         {
             return GetMethodInfoFromToken(token, klassGenericContainer, methodGenericContainer, genericContext);
+        }
+        case huatuo::metadata::TableType::MEMBERREF:
+        {
+            const void* handle = ReadRuntimeHandleFromMemberRef(klassGenericContainer, methodGenericContainer, genericContext, rowIndex);
+            //_token2RuntimeHandleCache.insert({ key, (void*)handle });
+            return handle;
         }
         default:
         {
