@@ -548,7 +548,7 @@ namespace huatuo
 			switch (type->type)
 			{
 			case IL2CPP_TYPE_VOID: AppendString(sigBuf, bufferSize, pos, "v"); break;
-#if HUATUO_TARGET_ARM_ANY
+#if IL2CPP_TARGET_ARM64 || IL2CPP_TARGET_ARMV7 || HUATUO_TARGET_X86 || IL2CPP_TARGET_JAVASCRIPT
 			case IL2CPP_TYPE_BOOLEAN:
 			case IL2CPP_TYPE_I1:
 			case IL2CPP_TYPE_U1: AppendString(sigBuf, bufferSize, pos, "i1"); break;
@@ -558,8 +558,10 @@ namespace huatuo
 			case IL2CPP_TYPE_I4:
 			case IL2CPP_TYPE_U4: AppendString(sigBuf, bufferSize, pos, "i4"); break;
 			case IL2CPP_TYPE_R4: AppendString(sigBuf, bufferSize, pos, "r4"); break;
-#else
+#elif HUATUO_TARGET_X64
 			case IL2CPP_TYPE_R4:
+#else
+#error "not suppport platform"
 #endif
 			case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "r8"); break;
 			case IL2CPP_TYPE_I8:
