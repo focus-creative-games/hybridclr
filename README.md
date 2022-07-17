@@ -3,7 +3,12 @@
 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE)
 
-HybridCLR是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的Unity全平台原生c#热更方案。
+![logo](./docs/images/logo.jpg)
+
+<br/>
+<br/>
+
+HybridCLR(代号wolong)是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的Unity全平台原生c#热更方案。
 
 HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行。从底层彻底支持了热更新。
 
@@ -17,6 +22,11 @@ HybridCLR**开创性地实现了 `differential hybrid dll` 技术**====。即可
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/hybridclr/benchmark/#内存占用报告)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
 - **开创性地实现了 `differential hybrid dll` 技术**。即可以将某个热更新dll先AOT形式打包，后面可以对该dll任意增删改，HybridCLR会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行。这意味着热更新的游戏逻辑的运行性能将接近原生AOT的水平。
+
+## 兼容性
+
+- 支持所有il2cpp支持的平台。目前测试支持 PC(Win32和Win64)、Android(armv7、armv8)、iOS(64bit)、NS（64bit)、WebGL平台，剩余平台有待测试。
+- 已经支持Unity 2020-2021全系列LTS版本，预计于2022.8月上旬支持 2019全系列LTS版本
 
 ## 工作原理
 
@@ -45,49 +55,53 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ### 实际使用体验或者特性比较
 
-- HybridCLR学习和使用成本几乎为零。HybridCLR让il2cpp变成全功能的runtime，学习和使用成本几乎为零，几乎零侵入性。而其他方案则有大量的坑和需要规避的规则，学习和使用成本，需要对原项目作大量改造。
-- HybridCLR可以使用所有c#的特性。而其他方案往往有大量的限制。
-- HybridCLR中可以直接支持使用和继承主工程中的类型。其他方案要写适配器或者生成代码。
-- HybridCLR中热更新部分元数据与AOT元数据无缝统一。像反射代码能够正常工作的，AOT部分也可以通过标准Reflection接口创建出热更新对象。其他方案做不到。
-- HybridCLR对多线程支持良好。像多线程、ThreadStatic、async等等特性都是HybridCLR直接支持，其他方案除了async特性外均难以支持。
-- HybridCLR中Unity工作流与原生几乎完全相同。HybridCLR中热更新MonoBehaviour可以直接挂载在热更新资源上，并且正确工作。其他方案不行。
-- HybridCLR兼容性极高。各种第三方库只要在il2cpp下能工作，在HybridCLR下也能正常工作。其他方案往往要大量魔改源码。
-- HybridCLR内存效率极高。HybridCLR中热更新类型与主工程的AOT类型完全等价，占用一样多的空间。其他方案的同等类型则是假类型，不仅不能被runtime识别，还多占了数倍空间。
-- HybridCLR执行效率高。HybridCLR中热更新部分与主工程AOT部分交互属于il2cpp内部交互，效率极高。而其他方案则是独立虚拟机与il2cpp之间的效率，不仅交互麻烦还效率低下。
+- 学习和使用成本几乎为零。HybridCLR让il2cpp变成全功能的runtime，学习和使用成本几乎为零，几乎零侵入性。而其他方案则有大量的坑和需要规避的规则，学习和使用成本，需要对原项目作大量改造。
+- 可以使用所有c#的特性。而其他方案往往有大量的限制。
+- 可以直接支持使用和继承主工程中的类型。其他方案要写适配器或者生成代码。
+- 热更新部分元数据与AOT元数据无缝统一。像反射代码能够正常工作的，AOT部分也可以通过标准Reflection接口创建出热更新对象。其他方案做不到。
+- 对多线程支持良好。像多线程、ThreadStatic、async等等特性都是HybridCLR直接支持，其他方案除了async特性外均难以支持。
+- Unity工作流与原生几乎完全相同。HybridCLR中热更新MonoBehaviour可以直接挂载在热更新资源上，并且正确工作。其他方案不行。
+- 兼容性极高。各种第三方库只要在il2cpp下能工作，在HybridCLR下也能正常工作。其他方案往往要大量魔改源码。
+- 内存效率极高。HybridCLR中热更新类型与主工程的AOT类型完全等价，占用一样多的空间。其他方案的同等类型则是假类型，不仅不能被runtime识别，还多占了数倍空间。
+- 执行效率高。HybridCLR中热更新部分与主工程AOT部分交互属于il2cpp内部交互，效率极高。而其他方案则是独立虚拟机与il2cpp之间的效率，不仅交互麻烦还效率低下。
 
 ## 文档
 
-- [文档站](https://focus-creative-games.github.io/)，**推荐使用**
-- [FAQ](https://focus-creative-games.github.io/hybridclr/faq/)
-- [限制和注意事项](https://focus-creative-games.github.io/hybridclr/performance/limit/)
+- [官方文档](https://focus-creative-games.github.io/hybridclr/index/)
+- [快速上手](https://focus-creative-games.github.io/hybridclr/start_up/)
 - [示例项目](https://github.com/focus-creative-games/hybridclr_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
-- [==>致谢名单<==](https://focus-creative-games.github.io/hybridclr/donate/)
+- [UWA学堂](https://edu.uwa4d.com/course-intro/0/432)
 
 ## 稳定性状况
 
-=== **庆祝于 2021.6.7 第一款使用HybridCLR的android和iOS双端休闲游戏正式上线** ===，7月份还有几款中重游戏上线或者对外测试。
+=== **庆祝于 2022.6.7 第一款使用HybridCLR的android和iOS双端休闲游戏正式上线** ===，7月份还有几款中重游戏上线或者对外测试。
 
-技术评估上目前稳定性处于Beta版本。由于HybridCLR技术原理的先进性，bug本质上不多，稳定得非常快。
-
-- 目前PC、Android、iOS 已跑通所有单元测试，可稳定体验使用。
-- 测试了游戏常用库和框架的兼容性，兼容性良好。只要能在il2cpp backend下工作的库都可以在HybridCLR下正常工作。甚至那些与il2cpp因为AOT问题不兼容的库，现在因为HybridCLR对il2cpp的能力扩充，反而可以正常运行了。
-- 已经有几十个大中型游戏项目较完整地接入HybridCLR，并且其中一些在紧锣密鼓作上线前测试。具体参见收集的一些 [完整接入的商业项目列表](https://focus-creative-games.github.io/hybridclr/ref_project/)
+- 2020系列版本于2020.7月底发布正式版本，2022版本预计于2020.8发布正式版本，2019版本预计于2020.9发布正式版本。
+- 目前PC（x86及x64）、Android（arm v7及v8)、iOS 已跑通所有单元测试，可稳定体验使用。
+- 测试过大量游戏常见库，未发现跟il2cpp原生兼容但使用HybridCLR后不兼容性的库。只要能在il2cpp backend下工作的库都可以在HybridCLR下正常工作。甚至那些与il2cpp因为AOT问题不兼容的库，现在因为HybridCLR对il2cpp的能力扩充，反而可以正常运行了。
+- 已经有几十个大中型游戏项目较完整地接入，数百款中小款或独立游戏比较完整接入，并且其中一些在紧锣密鼓作上线前测试。具体参见收集的一些 [完整接入的商业项目列表](https://focus-creative-games.github.io/hybridclr/ref_project/)
 
 ## 支持与联系
 
-- 开发交流，欢迎加QQ群或邮件联系
-  - QQ群：651188171 HybridCLR技术交流群 **(官方主群)**。可以反馈bug，但**不要在群里咨询基础使用问题**。
-  - QQ群：428404198 HybridCLR使用疑难咨询群 **(新手群)**。新手使用过程中遇到问题，都可以在群里咨询。
-  - 邮箱：taojingjian#gmail.com
+- QQ群：651188171 HybridCLR(wolong)技术交流群 **(官方主群)**。可以反馈bug，但**不要在群里咨询基础使用问题**。
+- QQ群：428404198 HybridCLR(wolong)新手群 **(新手群)**。新手使用过程中遇到问题，都可以在群里咨询。
+- 邮箱：walon@focus-creative-games.com
 
 ## RoadMap
 
 HybridCLR虽然与il2cpp相关，但绝大多数核心代码独立于il2cpp，很容易移植（预计一个月）到其他不支持AOT+Interpreter的CLR平台。无论unity如何版本变迁，哪怕废弃了il2cpp改用.net 6+，HybridCLR会持续跟进，稳定地提供跨平台的CLR热更新服务，直至某天.net官方直接支持AOT+Interpreter，则HybridCLR完成其历史使命。
 
-- 支持Unity 2019、2020和2021系列版本 (2022.6 -)
-- 指令优化，编译后指令数减少到原来1/4-1/2，基础指令和大多数对象模型指令有100%-300%的性能提升。 (2022.7 -)
-- 支持增量式gc (2022.8 -)
+- 正式支持Unity 2019LTS全系列版本 (2022.7 - 2022.8)
+- 支持 `Hybrid Dll` 技术 (2022.9)
+- 指令优化，编译后指令数减少到原来1/4-1/2，基础指令和大多数对象模型指令有100%-300%的性能提升。 (2022.10 -)
+- 支持增量式GC (2022.10 -)
+
+## 关于作者
+
+**walon** ：**focus-creative-games** 创始人
+
+毕业于清华大学物理系，2006年CMO金牌，奥数国家集训队成员，保送清华基科班。专注于游戏技术，擅长开发架构和基础技术设施。
 
 ## license
 
