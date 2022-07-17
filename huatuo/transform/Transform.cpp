@@ -1845,6 +1845,22 @@ namespace transform
 			return false;
 		}
 
+		bool IsLeaveInTryBlock(const std::vector<ExceptionClause>& exceptionClauses, uint32_t leaveOffset)
+		{
+			for (const ExceptionClause& ec : exceptionClauses)
+			{
+				if (ec.tryOffset <= leaveOffset && leaveOffset < ec.tryOffset + ec.tryLength)
+				{
+					return true;
+				}
+				if (ec.handlerOffsets <= leaveOffset && leaveOffset < ec.handlerLength + ec.handlerLength)
+				{
+					return false;
+				}
+			}
+			return false;
+		}
+
 		void Add_leave(uint32_t targetOffset)
 		{
 			uint32_t leaveOffset = (uint32_t)(ip - ipBase);
@@ -1856,11 +1872,17 @@ namespace transform
 				ir->firstHandlerIndex = firstHandlerIndex;
 				PushOffset(&ir->target);
 			}
-			else
+			else if (!IsLeaveInTryBlock(body.exceptionClauses, leaveOffset))
 			{
 				CreateAddIR(ir, LeaveEx_Directly);
 				ir->target = targetOffset;
 				PushOffset(&ir->target);
+			}
+			else
+			{
+				CreateAddIR(ir, BranchUncondition_4);
+				ir->offset = targetOffset;
+				PushOffset(&ir->offset);
 			}
 			PopAllStack();
 			PushBranch(targetOffset);
