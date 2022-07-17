@@ -1829,6 +1829,57 @@ namespace transform
 			ip++;
 		}
 
+
+		bool FindFirstLeaveHandlerIndex(const std::vector<ExceptionClause>& exceptionClauses, uint32_t leaveOffset, uint32_t targetOffset, uint16_t& index)
+		{
+			index = 0;
+			for (const ExceptionClause& ec : exceptionClauses)
+			{
+				if (ec.flags == CorILExceptionClauseType::Finally)
+				{
+					if (ec.tryOffset <= leaveOffset && leaveOffset < ec.tryOffset + ec.tryLength)
+						return !(ec.tryOffset <= targetOffset && targetOffset < ec.tryOffset + ec.tryLength);
+				}
+				++index;
+			}
+			return false;
+		}
+
+		void Add_leave(uint32_t targetOffset)
+		{
+			uint32_t leaveOffset = (uint32_t)(ip - ipBase);
+			uint16_t firstHandlerIndex;
+			if (FindFirstLeaveHandlerIndex(body.exceptionClauses, leaveOffset, targetOffset, firstHandlerIndex))
+			{
+				CreateAddIR(ir, LeaveEx);
+				ir->target = targetOffset;
+				ir->firstHandlerIndex = firstHandlerIndex;
+				PushOffset(&ir->target);
+			}
+			else
+			{
+				CreateAddIR(ir, LeaveEx_Directly);
+				ir->target = targetOffset;
+				PushOffset(&ir->target);
+			}
+			PopAllStack();
+			PushBranch(targetOffset);
+		}
+
+		uint16_t FindFirstThrowHandlerIndex(const std::vector<ExceptionClause>& exceptionClauses, uint32_t throwOffset)
+		{
+			uint16_t index = 0;
+			for (const ExceptionClause& ec : exceptionClauses)
+			{
+				if (ec.flags == CorILExceptionClauseType::Finally)
+				{
+					if (ec.tryOffset <= throwOffset && throwOffset < ec.tryOffset + ec.tryLength)
+						return index;
+				}
+				++index;
+			}
+			return index;
+		}
 	};
 
 #pragma region conv
@@ -3160,11 +3211,7 @@ else \
 			{
 				brOffset = GetI1(ip + 1);
 				int32_t targetOffset = ipOffset + brOffset + 2;
-				CreateAddIR(ir, LeaveEx);
-				ir->offset = targetOffset;
-				ctx.PushOffset(&ir->offset);
-				ctx.PopAllStack();
-				ctx.PushBranch(targetOffset);
+				ctx.Add_leave((uint32_t)targetOffset);
 				PopBranch();
 				continue;
 			}
@@ -3259,11 +3306,7 @@ else \
 			{
 				brOffset = GetI4LittleEndian(ip + 1);
 				int32_t targetOffset = ipOffset + brOffset + 5;
-				CreateAddIR(ir, LeaveEx);
-				ir->offset = targetOffset;
-				ctx.PushOffset(&ir->offset);
-				ctx.PopAllStack();
-				ctx.PushBranch(targetOffset);
+				ctx.Add_leave((uint32_t)targetOffset);
 				PopBranch();
 				continue;
 			}
@@ -4064,6 +4107,7 @@ else \
 				IL2CPP_ASSERT(evalStackTop > 0);
 				CreateAddIR(ir, ThrowEx);
 				ir->exceptionObj = ctx.GetEvalStackTopOffset();
+				ir->firstHandlerIndex = ctx.FindFirstThrowHandlerIndex(body.exceptionClauses, ipOffset);
 				ctx.PopAllStack();
 				PopBranch();
 				continue;

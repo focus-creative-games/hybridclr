@@ -48,6 +48,7 @@ namespace huatuo
 		{
 			None,
 			Exception,
+			Catch,
 			Leave,
 		};
 

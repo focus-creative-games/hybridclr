@@ -582,6 +582,7 @@ namespace interpreter
 		8,
 		8,
 		8,
+		8,
 		16,
 		16,
 		16,

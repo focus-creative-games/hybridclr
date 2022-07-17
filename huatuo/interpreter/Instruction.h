@@ -596,6 +596,7 @@ namespace interpreter
 		ThrowEx,
 		RethrowEx,
 		LeaveEx,
+		LeaveEx_Directly,
 		EndFilterEx,
 		EndFinallyEx,
 		NullableNewVarVar,
@@ -6231,8 +6232,7 @@ namespace interpreter
 	struct IRThrowEx : IRCommon
 	{
 		uint16_t exceptionObj;
-		uint8_t __pad4;
-		uint8_t __pad5;
+		uint16_t firstHandlerIndex;
 		uint8_t __pad6;
 		uint8_t __pad7;
 	};
@@ -6251,9 +6251,16 @@ namespace interpreter
 
 	struct IRLeaveEx : IRCommon
 	{
+		uint16_t firstHandlerIndex;
+		int32_t target;
+	};
+
+
+	struct IRLeaveEx_Directly : IRCommon
+	{
 		uint8_t __pad2;
 		uint8_t __pad3;
-		int32_t offset;
+		int32_t target;
 	};
 
 
