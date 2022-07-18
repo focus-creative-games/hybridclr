@@ -17,6 +17,20 @@ namespace huatuo
 	{
 		ArgDesc GetValueTypeArgDescBySize(uint32_t size)
 		{
+#if ARM64_ABI
+			if (size <= 8)
+			{
+				return { LocationDataType::U8, 1 };
+			}
+			else if (size <= 16)
+			{
+				return { LocationDataType::S_16, 2 };
+			}
+			else
+			{
+				return { LocationDataType::SR, (uint32_t)metadata::GetStackSizeByByteSize(size) };
+			}
+#elif GENERAL_ABI_64 || GENERAL_ABI_32
 			if (size <= 8)
 			{
 				return { LocationDataType::U8, 1 };
@@ -37,6 +51,9 @@ namespace huatuo
 			{
 				return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 			}
+#else
+#error "not support ABI"
+#endif
 		}
 
 		ArgDesc GetTypeArgDesc(const Il2CppType* type)
@@ -153,6 +170,12 @@ namespace huatuo
 					break;
 				}
 				case LocationDataType::S_N:
+				{
+					CopyStackObject(dst, src->ptr, arg.stackObjectSize);
+					dstOffset += arg.stackObjectSize;
+					break;
+				}
+				case LocationDataType::SR:
 				{
 					CopyStackObject(dst, src->ptr, arg.stackObjectSize);
 					dstOffset += arg.stackObjectSize;
@@ -328,8 +351,9 @@ namespace huatuo
 				RaiseHuatuoExecutionEngineException("");
 			}
 		}
-		static void AppendValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, char* sigBuf, size_t bufferSize, size_t& pos)
+		static void AppendValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, bool returnValue, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
+#if GENERAL_ABI_32 || GENERAL_ABI_64
 			switch (aligment)
 			{
 			case 0:
@@ -359,12 +383,32 @@ namespace huatuo
 				RaiseHuatuoExecutionEngineException(errMsg);
 			}
 			}
+#elif ARM64_ABI
+			if (typeSize <= 8)
+			{
+				AppendString(sigBuf, bufferSize, pos, "i8");
+			}
+			else if (typeSize <= 16)
+			{
+				AppendString(sigBuf, bufferSize, pos, "i16");
+			}
+			else if (!returnValue)
+			{
+				AppendString(sigBuf, bufferSize, pos, "sr");
+			}
+			else
+			{
+				pos += std::sprintf(sigBuf + pos, "S%d", typeSize);
+			}
+#else
+#error "not support ABI"
+#endif
 		}
 
 		static void AppendValueTypeSignature(Il2CppClass* klass, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
 			int32_t typeSize = il2cpp::vm::Class::GetValueSize(klass, nullptr);
-#if GENERAL_ABI_64
+#if GENERAL_ABI_64 || ARM64_ABI
 			HFATypeInfo typeInfo = {};
 			if (ComputeHFATypeInfo(klass, typeInfo))
 			{
@@ -414,10 +458,10 @@ namespace huatuo
 			}
 			// FIXME HSV
 			uint8_t actualAligment = 1;
-			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
 #elif GENERAL_ABI_32
 			uint8_t actualAligment = klass->naturalAligment <= 4 ? 1 : 8;
-			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
 #else
 #error "not support platform"
 #endif

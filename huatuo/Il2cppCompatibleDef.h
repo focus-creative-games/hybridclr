@@ -41,7 +41,12 @@
 
 #if	PLATFORM_ARCH_64
 #define HUATUO_ARCH_64 1
+#if IL2CPP_TARGET_ARM64
+#define ARM64_ABI 1
+#define GENERAL_ABI_64 0
+#else
 #define GENERAL_ABI_64 1
+#endif
 #define GENERAL_ABI_32 0
 #else
 #define HUATUO_ARCH_64 0
