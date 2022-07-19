@@ -10,5 +10,5 @@ liberapay: # Replace with a single Liberapay username
 issuehunt: # Replace with a single IssueHunt username
 otechie: # Replace with a single Otechie username
 lfx_crowdfunding: # Replace with a single LFX Crowdfunding project-name e.g., cloud-foundry
-custom: ['https://raw.githubusercontent.com/focus-creative-games/huatuo/main/docs/sponsor/weixin.JPG','https://raw.githubusercontent.com/focus-creative-games/huatuo/main/docs/sponsor/zhifubao.JPG']
+custom: ['https://raw.githubusercontent.com/focus-creative-games/hybridclr/main/docs/sponsor/weixin.JPG','https://raw.githubusercontent.com/focus-creative-games/hybridclr/main/docs/sponsor/zhifubao.JPG']
 
