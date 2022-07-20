@@ -847,23 +847,26 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 
 	inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo* method, Il2CppObject* obj, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t* argIdxs, StackObject* localVarBase, void* ret)
 	{
-		if (huatuo::metadata::IsInstanceMethod(method))
+		if (invokeParamCount == method->parameters_count)
 		{
+			if (huatuo::metadata::IsInstanceMethod(method))
+			{
+				CHECK_NOT_NULL_THROW(obj);
 #ifdef HUATUO_UNITY_2021_OR_NEW
-			(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
+				(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
 #else
-			(localVarBase + argIdxs[0])->obj = obj;
+				(localVarBase + argIdxs[0])->obj = obj;
 #endif
-			instanceM2NMethod(method, argIdxs, localVarBase, ret);
+				instanceM2NMethod(method, argIdxs, localVarBase, ret);
+			}
+			else
+			{
+				staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
+			}
 		}
-		else if (invokeParamCount == method->parameters_count)
-		{
-			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
-		}
-		else
+		else if (invokeParamCount + 1 == method->parameters_count)
 		{
 			// explicit this
-			IL2CPP_ASSERT(invokeParamCount + 1 == method->parameters_count);
 			CHECK_NOT_NULL_THROW(obj);
 #ifdef HUATUO_UNITY_2021_OR_NEW
 			(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
@@ -871,6 +874,17 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 			(localVarBase + argIdxs[0])->obj = obj;
 #endif
 			instanceM2NMethod(method, argIdxs, localVarBase, ret);
+		}
+		else
+		{
+			IL2CPP_ASSERT(invokeParamCount == method->parameters_count + 1);
+#if HUATUO_UNITY_2021_OR_NEW == 0
+			if (huatuo::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+			{
+				(localVarBase + argIdxs[1])->obj -= 1;
+			}
+#endif
+			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
 		}
 	}
 
