@@ -364,7 +364,12 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 	{
 		if (il2cpp::vm::Class::IsNullable(klass))
 		{
+#if HUATUO_UNITY_2021_OR_NEW
+			// il2cpp modify argument meaning in 2021
+			UnBoxNullable(obj, klass, data);
+#else
 			UnBoxNullable(obj, klass->element_class, data);
+#endif
 		}
 		else
 		{
