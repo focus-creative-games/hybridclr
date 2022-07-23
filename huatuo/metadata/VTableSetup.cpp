@@ -220,7 +220,7 @@ namespace metadata
 		return nullptr;
 	}
 
-	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef)
+	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, bool throwExceptionIfNotFind)
 	{
 		for (VTableSetUp* curTdt = this; curTdt; curTdt = curTdt->_parent)
 		{
@@ -233,7 +233,10 @@ namespace metadata
 				}
 			}
 		}
-		RaiseMethodNotFindException(containerType, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex));
+		if (throwExceptionIfNotFind)
+		{
+			RaiseMethodNotFindException(containerType, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex));
+		}
 		return nullptr;
 	}
 
@@ -524,12 +527,16 @@ namespace metadata
 					continue;
 				}
 
-				const GenericClassMethod* implVm = FindImplMethod(vmi.type, vmi.method);
+				const GenericClassMethod* implVm = FindImplMethod(vmi.type, vmi.method, false);
 				if (implVm)
 				{
 					vmi.type = implVm->type;
 					vmi.method = implVm->method;
 					vmi.name = implVm->name;
+				}
+				else if (huatuo::metadata::IsNewSlot(vmi.method->flags))
+				{
+					continue;
 				}
 				else
 				{
