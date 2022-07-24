@@ -9,6 +9,12 @@ namespace huatuo
 
 namespace metadata
 {
+	struct ReversePInvokeInfo
+	{
+		int32_t index;
+		Il2CppMethodPointer methodPointer;
+		const MethodInfo* methodInfo;
+	};
 
 	class MetadataModule
 	{
@@ -220,7 +226,32 @@ namespace metadata
 			Il2CppClass* parent = klass->parent;
 			return parent != il2cpp_defaults.multicastdelegate_class && parent != il2cpp_defaults.delegate_class && AOTHomologousImage::FindImageByAssembly(klass->image->assembly);
 		}
+
+		static Il2CppMethodPointer GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method);
+
+		static const MethodInfo* GetMethodInfoByReversePInvokeWrapperIndex(int32_t index)
+		{
+			return s_reverseInfos[index].methodInfo;
+		}
+
+		static const MethodInfo* GetMethodInfoByReversePInvokeWrapperMethodPointer(Il2CppMethodPointer methodPointer)
+		{
+			auto it = s_methodPointer2ReverseInfos.find(methodPointer);
+			return it != s_methodPointer2ReverseInfos.end() ? it->second->methodInfo : nullptr;
+		}
+
+		static int32_t GetWrapperIndexByReversePInvokeWrapperMethodPointer(Il2CppMethodPointer methodPointer)
+		{
+			auto it = s_methodPointer2ReverseInfos.find(methodPointer);
+			return it != s_methodPointer2ReverseInfos.end() ? it->second->index : -1;
+		}
 	private:
+		static void InitReversePInvokeInfo();
+
+		static std::unordered_map<const MethodInfo*, const ReversePInvokeInfo*> s_methodInfo2ReverseInfos;
+		static std::unordered_map<Il2CppMethodPointer, const ReversePInvokeInfo*> s_methodPointer2ReverseInfos;
+		static std::vector<ReversePInvokeInfo> s_reverseInfos;
+		static size_t s_nextMethodIndex;
 	};
 }
 
