@@ -442,6 +442,7 @@ namespace metadata
 
 		Il2CppString* ReadSerString(BlobReader& reader);
 		Il2CppReflectionType* ReadSystemType(BlobReader& reader);
+		Il2CppObject* InterpreterImage::ReadBoxedValue(BlobReader& reader);
 		void ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data);
 		void ReadCustomAttributeFieldOrPropType(BlobReader& reader, Il2CppType& type);
 		void ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod);

@@ -1676,6 +1676,17 @@ namespace metadata
 		return type;
 	}
 
+
+	Il2CppObject* InterpreterImage::ReadBoxedValue(BlobReader& reader)
+	{
+		uint64_t obj = 0;
+		Il2CppType kind = {};
+		ReadCustomAttributeFieldOrPropType(reader, kind);
+		ReadFixedArg(reader, &kind, &obj);
+		Il2CppClass* valueType = il2cpp::vm::Class::FromIl2CppType(&kind);
+		return il2cpp::vm::Object::Box(valueType, &obj);
+	}
+
 	void InterpreterImage::ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data)
 	{
 		switch (argType->type)
@@ -1751,12 +1762,7 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_OBJECT:
 		{
-			uint64_t obj = 0;
-			Il2CppType kind = {};
-			kind.type = (Il2CppTypeEnum)reader.ReadByte();
-			Il2CppClass* valueType = il2cpp::vm::Class::FromIl2CppType(&kind);
-			ReadFixedArg(reader, &kind, &obj);
-			*(Il2CppObject**)data = il2cpp::vm::Object::Box(valueType, &obj);
+			*(Il2CppObject**)data = ReadBoxedValue(reader);
 			// FIXME memory barrier
 			break;
 		}
@@ -1769,13 +1775,7 @@ namespace metadata
 			}
 			if (klass == il2cpp_defaults.object_class)
 			{
-				Il2CppType boxedValueType = {};
-				boxedValueType.type = (Il2CppTypeEnum)reader.ReadByte();
-				Il2CppClass* valKlass = il2cpp::vm::Class::FromIl2CppType(&boxedValueType);
-				IL2CPP_ASSERT(valKlass);
-				uint64_t val = 0;
-				ReadFixedArg(reader, &boxedValueType, &val);
-				*(Il2CppObject**)data = il2cpp::vm::Object::Box(valKlass, &val);
+				*(Il2CppObject**)data = ReadBoxedValue(reader);
 			}
 			else if (klass == il2cpp_defaults.systemtype_class)
 			{
@@ -1804,13 +1804,7 @@ namespace metadata
 		{
 			uint8_t fieldOrPropType = reader.ReadByte();
 			IL2CPP_ASSERT(fieldOrPropType == 0x51);
-			Il2CppType boxedValueType = {};
-			boxedValueType.type = (Il2CppTypeEnum)reader.ReadByte();
-			Il2CppClass* valKlass = il2cpp::vm::Class::FromIl2CppType(&boxedValueType);
-			IL2CPP_ASSERT(valKlass);
-			uint64_t val = 0;
-			ReadFixedArg(reader, &boxedValueType, &val);
-			*(Il2CppObject**)data = il2cpp::vm::Object::Box(valKlass, &val);
+			*(Il2CppObject**)data = ReadBoxedValue(reader);
 			break;
 		}
 		case IL2CPP_TYPE_ENUM:
