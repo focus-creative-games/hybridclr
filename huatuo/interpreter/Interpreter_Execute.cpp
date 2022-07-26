@@ -1,4 +1,4 @@
-﻿
+
 #include "Interpreter.h"
 
 #include <cmath>
@@ -4314,7 +4314,7 @@ else \
 					uint16_t __obj = *(uint16_t*)(ip + 2);
 					MethodInfo* __method = ((MethodInfo*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 				    Il2CppObject* _obj = il2cpp::vm::Object::New(__method->klass);
-				    ((NativeClassCtor0)(__method->methodPointer))(_obj, __method);
+				    ((NativeClassCtor0)(GetInterpreterDirectlyCallMethodPointer(__method)))(_obj, __method);
 				    (*(Il2CppObject**)(localVarBase + __obj)) = _obj;
 				    ip += 8;
 				    continue;
@@ -4568,7 +4568,7 @@ else \
 				    }
 				    else 
 				    {
-				        if (_actualMethod->methodPointer == nullptr)
+				        if (GetInterpreterDirectlyCallMethodPointer(_actualMethod) == nullptr)
 				        {
 				            RaiseAOTGenericMethodNotInstantiatedException(_actualMethod);
 				        }
@@ -4605,7 +4605,7 @@ else \
 				    }
 				    else 
 				    {
-				        if (_actualMethod->methodPointer == nullptr)
+				        if (GetInterpreterDirectlyCallMethodPointer(_actualMethod) == nullptr)
 				        {
 				            RaiseAOTGenericMethodNotInstantiatedException(_actualMethod);
 				        }
@@ -4643,7 +4643,7 @@ else \
 				    }
 				    else 
 				    {
-				        if (_actualMethod->methodPointer == nullptr)
+				        if (GetInterpreterDirectlyCallMethodPointer(_actualMethod) == nullptr)
 				        {
 				            RaiseAOTGenericMethodNotInstantiatedException(_actualMethod);
 				        }

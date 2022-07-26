@@ -2855,7 +2855,7 @@ else \
 					continue;
 				}
 
-				if (!shareMethod->invoker_method || !shareMethod->methodPointer)
+				if (!GetInterpreterDirectlyCallMethodPointer(shareMethod))
 				{
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
 				}
@@ -3939,7 +3939,7 @@ else \
 					continue;
 				}
 
-				if (!shareMethod->methodPointer)
+				if (!GetInterpreterDirectlyCallMethodPointer(shareMethod))
 				{
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
 				}

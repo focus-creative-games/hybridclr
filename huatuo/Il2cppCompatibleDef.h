@@ -81,6 +81,10 @@ constexpr int PTR_SIZE = IL2CPP_SIZEOF_VOID_P;
 
 namespace huatuo
 {
+	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
+	{
+		return method->methodPointer;
+	}
 
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
 	{
@@ -89,7 +93,7 @@ namespace huatuo
 
 	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)
 	{
-		il2cpp::vm::Type::ConstructDelegate(delegate, target, method->methodPointer, method);
+		il2cpp::vm::Type::ConstructDelegate(delegate, target, GetInterpreterDirectlyCallMethodPointer(method), method);
 	}
 
 	inline const MethodInfo* GetGenericVirtualMethod(const MethodInfo* result, const MethodInfo* inflateMethod)
@@ -130,6 +134,10 @@ namespace huatuo
 
 namespace huatuo
 {
+	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
+	{
+		return method->indirect_call_via_invokers ? ((SharedGenericMethodInfo*)method)->interpCallMethodPointer : method->methodPointer;
+	}
 
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
 	{
