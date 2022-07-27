@@ -136,7 +136,7 @@ namespace huatuo
 {
 	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
 	{
-		return method->indirect_call_via_invokers ? ((SharedGenericMethodInfo*)method)->interpCallMethodPointer : method->methodPointer;
+		return method->indirect_call_via_invokers ? method->interpCallMethodPointer : method->methodPointer;
 	}
 
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
