@@ -16,6 +16,8 @@
 #include "utils/MemoryMappedFile.h"
 #include "utils/Memory.h"
 
+#include "../interpreter/InterpreterModule.h"
+
 #include "InterpreterImage.h"
 #include "AOTHomologousImage.h"
 #include "ReversePInvokeMethodStub.h"
@@ -24,6 +26,18 @@ using namespace il2cpp;
 
 namespace huatuo
 {
+    Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method)
+    {
+#if HUATUO_UNITY_2021
+        IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
+        method->initInterpCallMethodPointer = true;
+        method->interpCallMethodPointer = huatuo::metadata::MetadataModule::IsImplementedByInterpreter(method) ?
+            huatuo::interpreter::InterpreterModule::GetMethodPointer(method) : nullptr;
+        return method->interpCallMethodPointer;
+#else
+        return nullptr;
+#endif
+    }
 
 namespace metadata
 {
