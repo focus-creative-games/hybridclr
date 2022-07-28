@@ -28,14 +28,21 @@ namespace huatuo
 {
     Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method)
     {
-#if HUATUO_UNITY_2021
         IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
         method->initInterpCallMethodPointer = true;
+#if HUATUO_UNITY_2021
         method->interpCallMethodPointer = huatuo::metadata::MetadataModule::IsImplementedByInterpreter(method) ?
             huatuo::interpreter::InterpreterModule::GetMethodPointer(method) : nullptr;
         return method->interpCallMethodPointer;
 #else
-        return nullptr;
+        if (huatuo::metadata::MetadataModule::IsImplementedByInterpreter(method))
+        {
+            method->methodPointer = method->klass->valuetype && huatuo::metadata::IsInstanceMethod(method) ?
+                huatuo::interpreter::InterpreterModule::GetAdjustThunkMethodPointer(method)
+                : huatuo::interpreter::InterpreterModule::GetMethodPointer(method);
+            method->invoker_method = huatuo::interpreter::InterpreterModule::GetMethodInvoker(method);
+        }
+        return method->methodPointer;
 #endif
     }
 

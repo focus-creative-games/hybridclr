@@ -84,9 +84,16 @@ constexpr int PTR_SIZE = IL2CPP_SIZEOF_VOID_P;
 
 namespace huatuo
 {
+	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
+
 	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
 	{
-		return method->methodPointer;
+		Il2CppMethodPointer methodPointer = method->methodPointer;
+		if (methodPointer || method->initInterpCallMethodPointer)
+		{
+			return methodPointer;
+		}
+		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
 	}
 
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
