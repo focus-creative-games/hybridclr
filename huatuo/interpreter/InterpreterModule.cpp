@@ -98,7 +98,7 @@ namespace interpreter
 	{
 		char sigName[1000];
 		ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
-		TEMP_FORMAT(errMsg, "Invoke method missing. sinature:%s %s.%s::%s", sigName, method->klass->namespaze, method->klass->name, method->name);
+		TEMP_FORMAT(errMsg, "Invoke method missing. ABI:%s sinature:%s %s.%s::%s", HUATUO_ABI_NAME, sigName, method->klass->namespaze, method->klass->name, method->name);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
 	}
@@ -165,7 +165,7 @@ namespace interpreter
 		char sigName[1000];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 
-		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
+		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. ABI:%s sinature:%s not support.", HUATUO_ABI_NAME, sigName);
 		RaiseMethodNotSupportException(method, errMsg);
 		return nullptr;
 	}
@@ -179,7 +179,7 @@ namespace interpreter
 		{
 			return it->second.managed2NativeMethod;
 		}
-		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
+		TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. ABI:%s sinature:%s not support.", HUATUO_ABI_NAME, sigName);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
 	}

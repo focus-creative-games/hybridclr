@@ -44,14 +44,17 @@
 #if IL2CPP_TARGET_ARM64
 #define ARM64_ABI 1
 #define GENERAL_ABI_64 0
+#define HUATUO_ABI_NAME "Arm64"
 #else
 #define GENERAL_ABI_64 1
+#define HUATUO_ABI_NAME "General64"
 #endif
 #define GENERAL_ABI_32 0
 #else
 #define HUATUO_ARCH_64 0
 #define GENERAL_ABI_64 0
 #define GENERAL_ABI_32 1
+#define HUATUO_ABI_NAME "General32"
 #endif
 
 constexpr int PTR_SIZE = IL2CPP_SIZEOF_VOID_P;
