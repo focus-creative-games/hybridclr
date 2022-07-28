@@ -380,7 +380,7 @@ namespace metadata
                 TEMP_FORMAT(errMsg, "Image::ReadTypeFromResolutionScope ReadTypeFromResolutionScope.TYPEREF enclosingType:%s", name);
                 RaiseHuatuoExecutionEngineException(errMsg);
             }
-            IL2CPP_ASSERT(enclosingTypeDef);
+            bool find = false;
             for (const Il2CppTypeDefinition* nextTypeDef; (nextTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetNestedTypes(enclosingTypeDef, &iter));)
             {
                 const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nextTypeDef->nameIndex);
@@ -388,10 +388,16 @@ namespace metadata
                 if (!std::strcmp(name, nestedTypeName))
                 {
                     GetIl2CppTypeFromTypeDefinition(nextTypeDef, type);
-                    return;
+                    find = true;
+                    break;
                 }
             }
-
+            if (!find)
+            {
+                std::string enclosingTypeName = GetKlassCStringFullName(&enClosingType);
+                TEMP_FORMAT(errMsg, "Image::ReadTypeFromResolutionScope ReadTypeFromResolutionScope.TYPEREF fail. type:%s.%s", enclosingTypeName.c_str(), name);
+                RaiseHuatuoExecutionEngineException(errMsg);
+            }
             break;
         }
         default:
