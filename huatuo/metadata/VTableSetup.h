@@ -75,6 +75,8 @@ namespace metadata
 		uint32_t GetTypeIndex() const { return _typeDef->byvalTypeIndex; }
 		bool IsInterType() const { return huatuo::metadata::IsInterpreterType(_typeDef); }
 	private:
+		void ApplyOverrideMethod(const GenericClassMethod* beOverrideParentMethod, const Il2CppMethodDefinition* overrideMethodDef, uint16_t checkOverrideMaxIdx, std::vector<uint16_t>& implInterfaceOffsetIdxs);
+
 		VTableSetUp* _parent;
 		std::vector<VTableSetUp*> _interfaces;
 		std::vector<RawInterfaceOffsetInfo> _interfaceOffsetInfos;
