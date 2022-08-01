@@ -187,6 +187,10 @@ namespace metadata
         Il2CppImage* image2;
         if ((ass = FindPlaceHolderAssembly(nameNoExt)) != nullptr)
         {
+            if (ass->token)
+            {
+                RaiseHuatuoExecutionEngineException("not support load placeholder assembly repeatly!");
+            }
             image2 = ass->image;
             IL2CPP_FREE((void*)ass->image->name);
             IL2CPP_FREE((void*)ass->image->nameNoExt);
