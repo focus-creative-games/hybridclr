@@ -147,6 +147,11 @@ namespace metadata
         return IsInterpreterType(method->klass);
     }
 
+    inline bool IsInterpreterImplement(const MethodInfo* method)
+    {
+        return method->isInterpterImpl;
+    }
+
     inline bool IsInstanceMethod(const MethodInfo* method)
     {
         return !(method->flags & METHOD_ATTRIBUTE_STATIC);

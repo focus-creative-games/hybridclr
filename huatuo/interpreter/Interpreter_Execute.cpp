@@ -981,7 +981,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 if (_del->delegates == nullptr) \
 {\
     const MethodInfo* method = _del->delegate.method; \
-    if (huatuo::metadata::IsInterpreterMethod(method))\
+    if (huatuo::metadata::IsInterpreterImplement(method))\
     {\
         if (huatuo::metadata::IsInstanceMethod(method))\
         {\
@@ -4559,7 +4559,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4596,7 +4596,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4634,7 +4634,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))

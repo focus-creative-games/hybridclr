@@ -31,8 +31,11 @@ namespace huatuo
         IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
         method->initInterpCallMethodPointer = true;
 #if HUATUO_UNITY_2021
-        method->interpCallMethodPointer = huatuo::metadata::MetadataModule::IsImplementedByInterpreter(method) ?
-            huatuo::interpreter::InterpreterModule::GetMethodPointer(method) : nullptr;
+        if (huatuo::metadata::MetadataModule::IsImplementedByInterpreter(method))
+        {
+            method->interpCallMethodPointer = huatuo::interpreter::InterpreterModule::GetMethodPointer(method);
+            method->isInterpterImpl = true;
+        }
         return method->interpCallMethodPointer;
 #else
         if (huatuo::metadata::MetadataModule::IsImplementedByInterpreter(method))
@@ -41,6 +44,7 @@ namespace huatuo
                 huatuo::interpreter::InterpreterModule::GetAdjustThunkMethodPointer(method)
                 : huatuo::interpreter::InterpreterModule::GetMethodPointer(method);
             method->invoker_method = huatuo::interpreter::InterpreterModule::GetMethodInvoker(method);
+            method->isInterpterImpl = true;
         }
         return method->methodPointer;
 #endif

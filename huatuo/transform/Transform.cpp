@@ -2833,7 +2833,7 @@ else \
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgdNum;
 				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 
-				if (huatuo::metadata::IsInterpreterType(klass))
+				if (huatuo::metadata::IsInterpreterImplement(shareMethod))
 				{
 					ctx.PopStackN(resolvedTotalArgdNum);
 
@@ -2936,7 +2936,7 @@ else \
 				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 
 				bool isMultiDelegate = IsMulticastDelegate(shareMethod);
-				if (!isMultiDelegate && IsInterpreterMethod(shareMethod))
+				if (!isMultiDelegate && IsInterpreterImplement(shareMethod))
 				{
 					ctx.PopStackN(resolvedTotalArgdNum);
 
