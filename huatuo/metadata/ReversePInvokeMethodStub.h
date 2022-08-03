@@ -1,4 +1,4 @@
-#pragma oncej
+#pragma once
 
 #include "../CommonDef.h"
 
