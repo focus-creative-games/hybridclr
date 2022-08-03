@@ -616,7 +616,8 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
 		void* srcData = GetNulllableDataOffset(nullableValueObj, size);
 
-		LabelGet:
+	LabelGet:
+		IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(eleClass));
 		switch (eleClass->byval_arg.type)
 		{
 		case IL2CPP_TYPE_BOOLEAN:
@@ -678,6 +679,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 			break;
 		}
 		case IL2CPP_TYPE_VALUETYPE:
+		case IL2CPP_TYPE_GENERICINST:
 		{
 			if (eleClass->enumtype)
 			{
@@ -785,6 +787,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 			break;
 		}
 		case IL2CPP_TYPE_VALUETYPE:
+		case IL2CPP_TYPE_GENERICINST:
 		{
 			if (eleClass->enumtype)
 			{
