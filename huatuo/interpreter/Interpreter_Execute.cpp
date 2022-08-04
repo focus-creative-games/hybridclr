@@ -94,7 +94,245 @@ namespace interpreter
 ((uint64_t)(a) == 0) || ((uint64_t)(b) == 0) ? 0 : \
 (uint64_t)(b) > ((UINT64_MAX) / (uint64_t)(a))
 
+	inline bool CheckConvertOverflow_i4_i1(int32_t x)
+	{
+		return ((x < INT8_MIN) || (x > INT8_MAX));
+	}
 
+	inline bool CheckConvertOverflow_i4_u1(int32_t x)
+	{
+		return (uint32_t)x > UINT8_MAX;
+	}
+
+	inline bool CheckConvertOverflow_i4_i2(int32_t x)
+	{
+		return ((x < INT16_MIN) || (x > INT16_MAX));
+	}
+
+	inline bool CheckConvertOverflow_i4_u2(int32_t x)
+	{
+		return (uint32_t)x > UINT16_MAX;
+	}
+
+	inline bool CheckConvertOverflow_i4_i4(int32_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_i4_u4(int32_t x)
+	{
+		return x < 0;
+	}
+
+	inline bool CheckConvertOverflow_i4_i8(int32_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_i4_u8(int32_t x)
+	{
+		return  x < 0;
+	}
+
+	inline bool CheckConvertOverflow_u4_i1(uint32_t x)
+	{
+		return  x > INT8_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u4_u1(uint32_t x)
+	{
+		return  x > UINT8_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u4_i2(uint32_t x)
+	{
+		return x > INT16_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u4_u2(uint32_t x)
+	{
+		return  x > UINT16_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u4_i4(uint32_t x)
+	{
+		return x > INT32_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u4_u4(uint32_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_u4_i8(uint32_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_u4_u8(uint32_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_i8_i1(int64_t x)
+	{
+		return ((x < INT8_MIN) || (x > INT8_MAX));
+	}
+
+	inline bool CheckConvertOverflow_i8_u1(int64_t x)
+	{
+		return (uint64_t)x > UINT8_MAX;
+	}
+
+	inline bool CheckConvertOverflow_i8_i2(int64_t x)
+	{
+		return ((x < INT16_MIN) || (x > INT16_MAX));
+	}
+
+	inline bool CheckConvertOverflow_i8_u2(int64_t x)
+	{
+		return (uint64_t)x > UINT16_MAX;
+	}
+
+	inline bool CheckConvertOverflow_i8_i4(int64_t x)
+	{
+		return ((x < INT32_MIN) || (x > INT32_MAX));
+	}
+
+	inline bool CheckConvertOverflow_i8_u4(int64_t x)
+	{
+		return (uint64_t)x > UINT32_MAX;
+	}
+
+	inline bool CheckConvertOverflow_i8_i8(int64_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_i8_u8(int64_t x)
+	{
+		return x < 0;
+	}
+
+	inline bool CheckConvertOverflow_u8_i1(uint64_t x)
+	{
+		return x > INT8_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_u1(uint64_t x)
+	{
+		return  x > UINT8_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_i2(uint64_t x)
+	{
+		return x > INT16_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_u2(uint64_t x)
+	{
+		return  x > UINT16_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_i4(uint64_t x)
+	{
+		return x > INT32_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_u4(uint64_t x)
+	{
+		return x > UINT32_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_i8(uint64_t x)
+	{
+		return x > INT64_MAX;
+	}
+
+	inline bool CheckConvertOverflow_u8_u8(uint64_t x)
+	{
+		return false;
+	}
+
+	inline bool CheckConvertOverflow_f4_i1(float x)
+	{
+		return ((x < INT8_MIN) || (x > INT8_MAX)) || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_u1(float x)
+	{
+		return truncf(x) < 0 || truncf(x) > UINT8_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_i2(float x)
+	{
+		return truncf(x) < INT16_MIN || truncf(x) > INT16_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_u2(float x)
+	{
+		return truncf(x) < 0 || truncf(x) > UINT16_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_i4(float x)
+	{
+		return truncf(x) < INT32_MIN || truncf(x) > INT32_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_u4(float x)
+	{
+		return truncf(x) < 0 || truncf(x) > UINT32_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_i8(float x)
+	{
+		return truncf(x) < INT64_MIN || truncf(x) > INT64_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f4_u8(float x)
+	{
+		return truncf(x) < 0 || truncf(x) > UINT64_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_i1(double x)
+	{
+		return ((x < INT8_MIN) || (x > INT8_MAX)) || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_u1(double x)
+	{
+		return trunc(x) < 0 || trunc(x) > UINT8_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_i2(double x)
+	{
+		return trunc(x) < INT16_MIN || trunc(x) > INT16_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_u2(double x)
+	{
+		return trunc(x) < 0 || trunc(x) > UINT16_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_i4(double x)
+	{
+		return trunc(x) < INT32_MIN || trunc(x) > INT32_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_u4(double x)
+	{
+		return trunc(x) < 0 || trunc(x) > UINT32_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_i8(double x)
+	{
+		return trunc(x) < INT64_MIN || trunc(x) > INT64_MAX || isnan(x);
+	}
+
+	inline bool CheckConvertOverflow_f8_u8(double x)
+	{
+		return trunc(x) < 0 || trunc(x) > UINT64_MAX || isnan(x);
+	}
 
 	inline int32_t HiDiv(int32_t a, int32_t b)
 	{
@@ -981,7 +1219,7 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 if (_del->delegates == nullptr) \
 {\
     const MethodInfo* method = _del->delegate.method; \
-    if (huatuo::metadata::IsInterpreterImplement(method))\
+    if (huatuo::metadata::IsInterpreterMethod(method))\
     {\
         if (huatuo::metadata::IsInstanceMethod(method))\
         {\
@@ -2019,11 +2257,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(int8_t)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_i1(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int8_t*)(localVarBase + __dst)) = (int8_t)((*(int32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(int32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2031,11 +2270,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(uint8_t)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_u1(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint8_t*)(localVarBase + __dst)) = (uint8_t)uint32_t((*(int32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2043,11 +2283,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(int16_t)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_i2(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int16_t*)(localVarBase + __dst)) = (int16_t)((*(int32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(int32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2055,11 +2296,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(uint16_t)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_u2(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint16_t*)(localVarBase + __dst)) = (uint16_t)uint32_t((*(int32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2067,7 +2309,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)((*(int32_t*)(localVarBase + __src))) < 0)
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_i4(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2079,11 +2322,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)((*(int32_t*)(localVarBase + __src))) < 0)
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_u4(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint32_t*)(localVarBase + __dst)) = (uint32_t)((*(int32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2091,7 +2335,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(int64_t)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_i8(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2103,35 +2348,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(uint64_t)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
+				    int32_t val = (*(int32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i4_u8(*(int32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint64_t*)(localVarBase + __dst)) = (uint64_t)uint32_t((*(int32_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_i4_f4:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(float)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(float*)(localVarBase + __dst)) = (float)((*(int32_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_i4_f8:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)(double)((*(int32_t*)(localVarBase + __src))) != (*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(double*)(localVarBase + __dst)) = (double)((*(int32_t*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2139,11 +2361,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(int8_t)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_i1(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int8_t*)(localVarBase + __dst)) = (int8_t)((*(uint32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(uint32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2151,11 +2374,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(uint8_t)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_u1(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint8_t*)(localVarBase + __dst)) = (uint8_t)((*(uint32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(uint32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2163,11 +2387,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(int16_t)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_i2(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int16_t*)(localVarBase + __dst)) = (int16_t)((*(uint32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(uint32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2175,11 +2400,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(uint16_t)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_u2(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint16_t*)(localVarBase + __dst)) = (uint16_t)((*(uint32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(uint32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2187,7 +2413,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)((*(uint32_t*)(localVarBase + __src))) < 0)
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_i4(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2199,11 +2426,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)((*(uint32_t*)(localVarBase + __src))) < 0)
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_u4(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint32_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2211,7 +2439,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(int64_t)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_i8(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2223,35 +2452,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(uint64_t)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
+				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u4_u8(*(uint32_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint32_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_u4_f4:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(float)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(float*)(localVarBase + __dst)) = (float)((*(uint32_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_u4_f8:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint32_t)(double)((*(uint32_t*)(localVarBase + __src))) != (*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(double*)(localVarBase + __dst)) = (double)((*(uint32_t*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint32_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2259,11 +2465,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(int8_t)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_i1(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int8_t*)(localVarBase + __dst)) = (int8_t)((*(int64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(int64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2271,11 +2478,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(uint8_t)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_u1(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint8_t*)(localVarBase + __dst)) = (uint8_t)uint64_t((*(int64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2283,11 +2491,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(int16_t)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_i2(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int16_t*)(localVarBase + __dst)) = (int16_t)((*(int64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(int64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2295,11 +2504,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(uint16_t)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_u2(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint16_t*)(localVarBase + __dst)) = (uint16_t)uint64_t((*(int64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2307,7 +2517,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(int32_t)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_i4(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2319,11 +2530,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(uint32_t)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_u4(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint32_t*)(localVarBase + __dst)) = (uint32_t)uint64_t((*(int64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2331,7 +2543,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)((*(int64_t*)(localVarBase + __src))) < 0)
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_i8(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2343,35 +2556,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)((*(int64_t*)(localVarBase + __src))) < 0)
+				    int64_t val = (*(int64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_i8_u8(*(int64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint64_t*)(localVarBase + __dst)) = (uint64_t)((*(int64_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_i8_f4:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(float)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(float*)(localVarBase + __dst)) = (float)((*(int64_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_i8_f8:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)(double)((*(int64_t*)(localVarBase + __src))) != (*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(double*)(localVarBase + __dst)) = (double)((*(int64_t*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2379,11 +2569,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(int8_t)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_i1(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int8_t*)(localVarBase + __dst)) = (int8_t)((*(uint64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(uint64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2391,11 +2582,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(uint8_t)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_u1(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint8_t*)(localVarBase + __dst)) = (uint8_t)((*(uint64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(uint64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2403,11 +2595,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(int16_t)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_i2(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int16_t*)(localVarBase + __dst)) = (int16_t)((*(uint64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(uint64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2415,11 +2608,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(uint16_t)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_u2(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint16_t*)(localVarBase + __dst)) = (uint16_t)((*(uint64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(uint64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2427,7 +2621,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(int32_t)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_i4(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2439,11 +2634,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(uint32_t)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_u4(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint64_t*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2451,7 +2647,8 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)((*(uint64_t*)(localVarBase + __src))) < 0)
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_i8(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
@@ -2463,35 +2660,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)((*(uint64_t*)(localVarBase + __src))) < 0)
+				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
+				    if (CheckConvertOverflow_u8_u8(*(uint64_t*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint64_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_u8_f4:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(float)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(float*)(localVarBase + __dst)) = (float)((*(uint64_t*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_u8_f8:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((uint64_t)(double)((*(uint64_t*)(localVarBase + __src))) != (*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(double*)(localVarBase + __dst)) = (double)((*(uint64_t*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint64_t*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2499,11 +2673,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(int8_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_i1(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int8_t*)(localVarBase + __dst)) = (int8_t)((*(float*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int8_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2511,11 +2686,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(uint8_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_u1(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint8_t*)(localVarBase + __dst)) = (uint8_t)((*(float*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint8_t, int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2523,11 +2699,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(int16_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_i2(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int16_t*)(localVarBase + __dst)) = (int16_t)((*(float*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int16_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2535,11 +2712,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(uint16_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_u2(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint16_t*)(localVarBase + __dst)) = (uint16_t)((*(float*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint16_t, int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2547,11 +2725,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(int32_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_i4(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(float*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2559,11 +2738,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(uint32_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_u4(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint32_t*)(localVarBase + __dst)) = (uint32_t)((*(float*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint32_t, int32_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2571,11 +2751,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(int64_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_i8(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(float*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int64_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2583,35 +2764,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(uint64_t)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
+				    float val = (*(float*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f4_u8(*(float*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint64_t*)(localVarBase + __dst)) = (uint64_t)((*(float*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_f4_f4:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int32_t)((*(float*)(localVarBase + __src))) < 0)
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(float*)(localVarBase + __dst)) = (float)((*(float*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_f4_f8:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((float)(double)((*(float*)(localVarBase + __src))) != (*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(double*)(localVarBase + __dst)) = (double)((*(float*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint64_t, int64_t>((*(float*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2619,11 +2777,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(int8_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_i1(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int8_t*)(localVarBase + __dst)) = (int8_t)((*(double*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int8_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2631,11 +2790,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(uint8_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_u1(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint8_t*)(localVarBase + __dst)) = (uint8_t)((*(double*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint8_t, int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2643,11 +2803,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(int16_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_i2(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int16_t*)(localVarBase + __dst)) = (int16_t)((*(double*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int16_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2655,11 +2816,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(uint16_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_u2(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint16_t*)(localVarBase + __dst)) = (uint16_t)((*(double*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint16_t, int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2667,11 +2829,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(int32_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_i4(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(double*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2679,11 +2842,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(uint32_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_u4(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint32_t*)(localVarBase + __dst)) = (uint32_t)((*(double*)(localVarBase + __src)));
+				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint32_t, int32_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2691,11 +2855,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(int64_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_i8(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(double*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_double_to_int<int64_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -2703,35 +2868,12 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(uint64_t)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
+				    double val = (*(double*)(localVarBase + __src));
+				    if (CheckConvertOverflow_f8_u8(*(double*)(localVarBase + __src)))
 				    {
 				        il2cpp::vm::Exception::RaiseOverflowException();
 				    }
-				    (*(uint64_t*)(localVarBase + __dst)) = (uint64_t)((*(double*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_f8_f4:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((double)(float)((*(double*)(localVarBase + __src))) != (*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(float*)(localVarBase + __dst)) = (float)((*(double*)(localVarBase + __src)));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::ConvertOverflowVarVar_f8_f8:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __src = *(uint16_t*)(ip + 4);
-				    if ((int64_t)((*(double*)(localVarBase + __src))) < 0)
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(double*)(localVarBase + __dst)) = (double)((*(double*)(localVarBase + __src)));
+				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_cast_floating_point<uint64_t, int64_t>((*(double*)(localVarBase + __src)));
 				    ip += 8;
 				    continue;
 				}
@@ -4559,7 +4701,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4596,7 +4738,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4634,7 +4776,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
