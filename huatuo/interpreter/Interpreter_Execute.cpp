@@ -1091,72 +1091,6 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 
 #pragma region function
 
-	inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo* method, Il2CppObject* obj, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t* argIdxs, StackObject* localVarBase, void* ret)
-	{
-		if (invokeParamCount == method->parameters_count)
-		{
-			if (huatuo::metadata::IsInstanceMethod(method))
-			{
-				CHECK_NOT_NULL_THROW(obj);
-#ifdef HUATUO_UNITY_2021_OR_NEW
-				(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
-#else
-				(localVarBase + argIdxs[0])->obj = obj;
-#endif
-				instanceM2NMethod(method, argIdxs, localVarBase, ret);
-			}
-			else
-			{
-				staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
-			}
-		}
-		else if (invokeParamCount + 1 == method->parameters_count)
-		{
-			// explicit this
-			CHECK_NOT_NULL_THROW(obj);
-#ifdef HUATUO_UNITY_2021_OR_NEW
-			(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
-#else
-			(localVarBase + argIdxs[0])->obj = obj;
-#endif
-			instanceM2NMethod(method, argIdxs, localVarBase, ret);
-		}
-		else
-		{
-			IL2CPP_ASSERT(invokeParamCount == method->parameters_count + 1);
-#if HUATUO_UNITY_2021_OR_NEW == 0
-			if (huatuo::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
-			{
-				(localVarBase + argIdxs[1])->obj -= 1;
-			}
-#endif
-			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
-		}
-	}
-
-	inline void HiCallDelegate(Il2CppMulticastDelegate* del, uint16_t invokeParamCount, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t* argIdxs, StackObject* localVarBase, void* ret)
-	{
-		CHECK_NOT_NULL_THROW(del);
-		if (del->delegates == nullptr)
-		{
-			CallDelegateMethod(invokeParamCount, del->delegate.method, del->delegate.target, staticM2NMethod, instanceM2NMethod, argIdxs, localVarBase, ret);
-		}
-		else
-		{
-			Il2CppArray* dels = del->delegates;
-			for (il2cpp_array_size_t i = 0; i < dels->max_length; i++)
-			{
-				Il2CppMulticastDelegate* subDel = il2cpp_array_get(dels, Il2CppMulticastDelegate*, i);
-				IL2CPP_ASSERT(subDel);
-				//IL2CPP_ASSERT(subDel->delegate.method->klass->parent == il2cpp_defaults.multicastdelegate_class);
-				IL2CPP_ASSERT(subDel->delegates == nullptr);
-				CallDelegateMethod(invokeParamCount, subDel->delegate.method, subDel->delegate.target, staticM2NMethod, instanceM2NMethod, argIdxs, localVarBase, ret);
-			}
-		}
-	}
-
-
-
 #define SAVE_CUR_FRAME(nextIp) { \
 	frame->ip = nextIp; \
 }
@@ -1215,39 +1149,56 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 	PREPARE_NEW_FRAME(methodInfo, argBasePtr, retPtr, true); \
 }
 
-#define CALL_DELEGATE(_resolvedArgIdxs, _del, _managed2NativeStaticCall, _managed2NativeInstanceCall, _ret) \
-if (_del->delegates == nullptr) \
-{\
-    const MethodInfo* method = _del->delegate.method; \
-    if (huatuo::metadata::IsInterpreterMethod(method))\
-    {\
-        if (huatuo::metadata::IsInstanceMethod(method))\
-        {\
-            Il2CppObject* obj = _del->delegate.target; \
-            (localVarBase + _resolvedArgIdxs[0])->obj = obj; \
-            method = GET_OBJECT_VIRTUAL_METHOD(obj, method); \
-            _managed2NativeInstanceCall(method, _resolvedArgIdxs, localVarBase, _ret); \
-        }\
-        else\
-        {\
-            _managed2NativeStaticCall(method, _resolvedArgIdxs + 1, localVarBase, _ret); \
-        }\
-    }\
-    else\
-    {\
-        CallDelegateMethod(_del->delegate.method, _del->delegate.target, _managed2NativeStaticCall, _managed2NativeInstanceCall, _resolvedArgIdxs, localVarBase, _ret); \
-    }\
-}\
-else\
-{\
-    Il2CppArray* _dels = _del->delegates; \
-    for (il2cpp_array_size_t i = 0; i < _dels->max_length; i++)\
-    {\
-        Il2CppMulticastDelegate* subDel = il2cpp_array_get(_dels, Il2CppMulticastDelegate*, i); \
-        IL2CPP_ASSERT(subDel); \
-        IL2CPP_ASSERT(subDel->delegates == nullptr); \
-        CallDelegateMethod(subDel->delegate.method, subDel->delegate.target, _managed2NativeStaticCall, _managed2NativeInstanceCall, _resolvedArgIdxs, localVarBase, _ret); \
-    }\
+inline void FixCallNativeThisPointer(const MethodInfo * method, StackObject * dst, Il2CppObject * src)
+{
+#ifdef HUATUO_UNITY_2021_OR_NEW
+	dst->obj = IS_CLASS_VALUE_TYPE(method->klass) ? src + 1 : src;
+#else
+	dst->obj = src;
+#endif
+}
+
+inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * method, Il2CppObject * obj, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t * argIdxs, StackObject * localVarBase, void* ret)
+{
+	if (invokeParamCount == method->parameters_count)
+	{
+		if (huatuo::metadata::IsInstanceMethod(method))
+		{
+			CHECK_NOT_NULL_THROW(obj);
+#ifdef HUATUO_UNITY_2021_OR_NEW
+			(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
+#else
+			(localVarBase + argIdxs[0])->obj = obj;
+#endif
+			instanceM2NMethod(method, argIdxs, localVarBase, ret);
+		}
+		else
+		{
+			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
+		}
+	}
+	else if (invokeParamCount + 1 == method->parameters_count)
+	{
+		// explicit this
+		CHECK_NOT_NULL_THROW(obj);
+#ifdef HUATUO_UNITY_2021_OR_NEW
+		(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
+#else
+		(localVarBase + argIdxs[0])->obj = obj;
+#endif
+		instanceM2NMethod(method, argIdxs, localVarBase, ret);
+	}
+	else
+	{
+		IL2CPP_ASSERT(invokeParamCount == method->parameters_count + 1);
+#if HUATUO_UNITY_2021_OR_NEW == 0
+		if (huatuo::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+		{
+			(localVarBase + argIdxs[1])->obj -= 1;
+		}
+#endif
+		staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
+	}
 }
 
 #pragma endregion
@@ -4701,7 +4652,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4738,7 +4689,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4776,7 +4727,7 @@ else \
 				        _objPtr->obj += 1;
 				    }
 				#endif
-				    if (huatuo::metadata::IsInterpreterMethod(_actualMethod))
+				    if (huatuo::metadata::IsInterpreterImplement(_actualMethod))
 				    {
 				#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
 				        if (IS_CLASS_VALUE_TYPE(_actualMethod->klass))
@@ -4864,9 +4815,125 @@ else \
 					uint32_t __managed2NativeInstanceMethod = *(uint32_t*)(ip + 8);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 2);
-				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
-				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, nullptr);
+					void* _ret = nullptr;
+					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
+					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
+					CHECK_NOT_NULL_THROW(_del);
+					if (_del->delegates == nullptr)
+					{
+						const MethodInfo* method = _del->delegate.method;
+						Il2CppObject* target = _del->delegate.target;
+						// uint8_t _actualParameterCount = method->parameters_count + huatuo::metadata::IsInstanceMethod(method);
+						if (huatuo::metadata::IsInterpreterImplement(method))
+						{
+							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
+							{
+							case 0:
+							{
+								if (huatuo::metadata::IsInstanceMethod(method))
+								{
+									CHECK_NOT_NULL_THROW(target);
+									if (IS_CLASS_VALUE_TYPE(method->klass))
+									{
+										target++;
+									}
+									_argBasePtr->obj = target;
+								}
+								else
+								{
+									_argBasePtr++;
+									_resolvedArgIdxs++;
+								}
+								break;
+							}
+							case -1:
+							{
+								CHECK_NOT_NULL_THROW(target);
+								_argBasePtr->obj = target;
+								break;
+							}
+							case 1:
+							{
+								_resolvedArgIdxs++;
+								_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+								break;
+							}
+							default:
+							{
+								RaiseHuatuoExecutionEngineException("CallInterpDelegate");
+							}
+							}
+							CALL_INTERP_RET((ip + 16), method, _argBasePtr, _ret);
+							continue;
+						}
+						else
+						{
+							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
+							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
+							Managed2NativeCallMethod _managed2NativeCallMethod = nullptr;
+							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
+							{
+							case 0:
+								{
+									if (huatuo::metadata::IsInstanceMethod(method))
+									{
+										CHECK_NOT_NULL_THROW(target);
+										FixCallNativeThisPointer(method, _argBasePtr, target);
+										_managed2NativeCallMethod = _instanceM2NMethod;
+									}
+									else
+									{
+										_argBasePtr++;
+										_resolvedArgIdxs++;
+										_managed2NativeCallMethod = _staticM2NMethod;
+									}
+									break;
+								}
+							case -1:
+								{
+									CHECK_NOT_NULL_THROW(target);
+									FixCallNativeThisPointer(method, _argBasePtr, target);
+									_managed2NativeCallMethod = _instanceM2NMethod;
+									break;
+								}
+							case 1:
+								{
+									_resolvedArgIdxs++;
+									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+					#if HUATUO_UNITY_2021_OR_NEW == 0
+									if (huatuo::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+									{
+										_argBasePtr->obj -= 1;
+									}
+					#endif
+									_managed2NativeCallMethod = _staticM2NMethod;
+									break;
+								}
+							default:
+								{
+									RaiseHuatuoExecutionEngineException("CallInterpDelegate");
+								}
+							}
+							_managed2NativeCallMethod(method, _resolvedArgIdxs, localVarBase, _ret);
+						}
+					}
+					else
+					{
+						Il2CppArray* dels = _del->delegates;
+						Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
+						Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
+						for (il2cpp_array_size_t i = 0; i < dels->max_length; i++)
+						{
+							Il2CppMulticastDelegate* subDel = il2cpp_array_get(dels, Il2CppMulticastDelegate *, i);
+							IL2CPP_ASSERT(subDel);
+							//IL2CPP_ASSERT(subDel->delegate.method->klass->parent == il2cpp_defaults.multicastdelegate_class);
+							IL2CPP_ASSERT(subDel->delegates == nullptr);
+							const MethodInfo* method = subDel->delegate.method;
+							Il2CppObject* target = subDel->delegate.target;
+							CallDelegateMethod(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _ret);
+						}
+					}
 				    ip += 16;
 				    continue;
 				}
@@ -4877,10 +4944,125 @@ else \
 					uint32_t __argIdxs = *(uint32_t*)(ip + 16);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 4);
-				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
 				    void* _ret = (void*)(localVarBase + __ret);
-				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, _ret);
+					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
+					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
+					CHECK_NOT_NULL_THROW(_del);
+					if (_del->delegates == nullptr)
+					{
+						const MethodInfo* method = _del->delegate.method;
+						Il2CppObject* target = _del->delegate.target;
+						// uint8_t _actualParameterCount = method->parameters_count + huatuo::metadata::IsInstanceMethod(method);
+						if (huatuo::metadata::IsInterpreterImplement(method))
+						{
+							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
+							{
+							case 0:
+							{
+								if (huatuo::metadata::IsInstanceMethod(method))
+								{
+									CHECK_NOT_NULL_THROW(target);
+									if (IS_CLASS_VALUE_TYPE(method->klass))
+									{
+										target++;
+									}
+									_argBasePtr->obj = target;
+								}
+								else
+								{
+									_argBasePtr++;
+									_resolvedArgIdxs++;
+								}
+								break;
+							}
+							case -1:
+							{
+								CHECK_NOT_NULL_THROW(target);
+								_argBasePtr->obj = target;
+								break;
+							}
+							case 1:
+							{
+								_resolvedArgIdxs++;
+								_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+								break;
+							}
+							default:
+							{
+								RaiseHuatuoExecutionEngineException("CallInterpDelegate");
+							}
+							}
+							CALL_INTERP_RET((ip + 24), method, _argBasePtr, _ret);
+							continue;
+						}
+						else
+						{
+							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
+							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
+							Managed2NativeCallMethod _managed2NativeCallMethod = nullptr;
+							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
+							{
+							case 0:
+								{
+									if (huatuo::metadata::IsInstanceMethod(method))
+									{
+										CHECK_NOT_NULL_THROW(target);
+										FixCallNativeThisPointer(method, _argBasePtr, target);
+										_managed2NativeCallMethod = _instanceM2NMethod;
+									}
+									else
+									{
+										_argBasePtr++;
+										_resolvedArgIdxs++;
+										_managed2NativeCallMethod = _staticM2NMethod;
+									}
+									break;
+								}
+							case -1:
+								{
+									CHECK_NOT_NULL_THROW(target);
+									FixCallNativeThisPointer(method, _argBasePtr, target);
+									_managed2NativeCallMethod = _instanceM2NMethod;
+									break;
+								}
+							case 1:
+								{
+									_resolvedArgIdxs++;
+									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+					#if HUATUO_UNITY_2021_OR_NEW == 0
+									if (huatuo::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+									{
+										_argBasePtr->obj -= 1;
+									}
+					#endif
+									_managed2NativeCallMethod = _staticM2NMethod;
+									break;
+								}
+							default:
+								{
+									RaiseHuatuoExecutionEngineException("CallInterpDelegate");
+								}
+							}
+							_managed2NativeCallMethod(method, _resolvedArgIdxs, localVarBase, _ret);
+						}
+					}
+					else
+					{
+						Il2CppArray* dels = _del->delegates;
+						Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
+						Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
+						for (il2cpp_array_size_t i = 0; i < dels->max_length; i++)
+						{
+							Il2CppMulticastDelegate* subDel = il2cpp_array_get(dels, Il2CppMulticastDelegate *, i);
+							IL2CPP_ASSERT(subDel);
+							//IL2CPP_ASSERT(subDel->delegate.method->klass->parent == il2cpp_defaults.multicastdelegate_class);
+							IL2CPP_ASSERT(subDel->delegates == nullptr);
+							const MethodInfo* method = subDel->delegate.method;
+							Il2CppObject* target = subDel->delegate.target;
+							CallDelegateMethod(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _ret);
+						}
+					}
 				    ip += 24;
 				    continue;
 				}
@@ -4892,10 +5074,125 @@ else \
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 6);
 					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
-				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-				    Il2CppObject* __obj = localVarBase[_resolvedArgIdxs[0]].obj;
 				    void* _ret = (void*)(localVarBase + __ret);
-				    HiCallDelegate((Il2CppMulticastDelegate*)__obj, __invokeParamCount, ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod]), ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod]), _resolvedArgIdxs, localVarBase, _ret);
+					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
+					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
+					CHECK_NOT_NULL_THROW(_del);
+					if (_del->delegates == nullptr)
+					{
+						const MethodInfo* method = _del->delegate.method;
+						Il2CppObject* target = _del->delegate.target;
+						// uint8_t _actualParameterCount = method->parameters_count + huatuo::metadata::IsInstanceMethod(method);
+						if (huatuo::metadata::IsInterpreterImplement(method))
+						{
+							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
+							{
+							case 0:
+							{
+								if (huatuo::metadata::IsInstanceMethod(method))
+								{
+									CHECK_NOT_NULL_THROW(target);
+									if (IS_CLASS_VALUE_TYPE(method->klass))
+									{
+										target++;
+									}
+									_argBasePtr->obj = target;
+								}
+								else
+								{
+									_argBasePtr++;
+									_resolvedArgIdxs++;
+								}
+								break;
+							}
+							case -1:
+							{
+								CHECK_NOT_NULL_THROW(target);
+								_argBasePtr->obj = target;
+								break;
+							}
+							case 1:
+							{
+								_resolvedArgIdxs++;
+								_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+								break;
+							}
+							default:
+							{
+								RaiseHuatuoExecutionEngineException("CallInterpDelegate");
+							}
+							}
+							CALL_INTERP_RET((ip + 24), method, _argBasePtr, _ret);
+							continue;
+						}
+						else
+						{
+							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
+							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
+							Managed2NativeCallMethod _managed2NativeCallMethod = nullptr;
+							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
+							{
+							case 0:
+								{
+									if (huatuo::metadata::IsInstanceMethod(method))
+									{
+										CHECK_NOT_NULL_THROW(target);
+										FixCallNativeThisPointer(method, _argBasePtr, target);
+										_managed2NativeCallMethod = _instanceM2NMethod;
+									}
+									else
+									{
+										_argBasePtr++;
+										_resolvedArgIdxs++;
+										_managed2NativeCallMethod = _staticM2NMethod;
+									}
+									break;
+								}
+							case -1:
+								{
+									CHECK_NOT_NULL_THROW(target);
+									FixCallNativeThisPointer(method, _argBasePtr, target);
+									_managed2NativeCallMethod = _instanceM2NMethod;
+									break;
+								}
+							case 1:
+								{
+									_resolvedArgIdxs++;
+									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+					#if HUATUO_UNITY_2021_OR_NEW == 0
+									if (huatuo::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+									{
+										_argBasePtr->obj -= 1;
+									}
+					#endif
+									_managed2NativeCallMethod = _staticM2NMethod;
+									break;
+								}
+							default:
+								{
+									RaiseHuatuoExecutionEngineException("CallInterpDelegate");
+								}
+							}
+							_managed2NativeCallMethod(method, _resolvedArgIdxs, localVarBase, _ret);
+						}
+					}
+					else
+					{
+						Il2CppArray* dels = _del->delegates;
+						Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
+						Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
+						for (il2cpp_array_size_t i = 0; i < dels->max_length; i++)
+						{
+							Il2CppMulticastDelegate* subDel = il2cpp_array_get(dels, Il2CppMulticastDelegate *, i);
+							IL2CPP_ASSERT(subDel);
+							//IL2CPP_ASSERT(subDel->delegate.method->klass->parent == il2cpp_defaults.multicastdelegate_class);
+							IL2CPP_ASSERT(subDel->delegates == nullptr);
+							const MethodInfo* method = subDel->delegate.method;
+							Il2CppObject* target = subDel->delegate.target;
+							CallDelegateMethod(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _ret);
+						}
+					}
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;

@@ -125,8 +125,6 @@ namespace interpreter
 		ConvertOverflowVarVar_i4_u4,
 		ConvertOverflowVarVar_i4_i8,
 		ConvertOverflowVarVar_i4_u8,
-		ConvertOverflowVarVar_i4_f4,
-		ConvertOverflowVarVar_i4_f8,
 		ConvertOverflowVarVar_u4_i1,
 		ConvertOverflowVarVar_u4_u1,
 		ConvertOverflowVarVar_u4_i2,
@@ -135,8 +133,6 @@ namespace interpreter
 		ConvertOverflowVarVar_u4_u4,
 		ConvertOverflowVarVar_u4_i8,
 		ConvertOverflowVarVar_u4_u8,
-		ConvertOverflowVarVar_u4_f4,
-		ConvertOverflowVarVar_u4_f8,
 		ConvertOverflowVarVar_i8_i1,
 		ConvertOverflowVarVar_i8_u1,
 		ConvertOverflowVarVar_i8_i2,
@@ -145,8 +141,6 @@ namespace interpreter
 		ConvertOverflowVarVar_i8_u4,
 		ConvertOverflowVarVar_i8_i8,
 		ConvertOverflowVarVar_i8_u8,
-		ConvertOverflowVarVar_i8_f4,
-		ConvertOverflowVarVar_i8_f8,
 		ConvertOverflowVarVar_u8_i1,
 		ConvertOverflowVarVar_u8_u1,
 		ConvertOverflowVarVar_u8_i2,
@@ -155,8 +149,6 @@ namespace interpreter
 		ConvertOverflowVarVar_u8_u4,
 		ConvertOverflowVarVar_u8_i8,
 		ConvertOverflowVarVar_u8_u8,
-		ConvertOverflowVarVar_u8_f4,
-		ConvertOverflowVarVar_u8_f8,
 		ConvertOverflowVarVar_f4_i1,
 		ConvertOverflowVarVar_f4_u1,
 		ConvertOverflowVarVar_f4_i2,
@@ -165,8 +157,6 @@ namespace interpreter
 		ConvertOverflowVarVar_f4_u4,
 		ConvertOverflowVarVar_f4_i8,
 		ConvertOverflowVarVar_f4_u8,
-		ConvertOverflowVarVar_f4_f4,
-		ConvertOverflowVarVar_f4_f8,
 		ConvertOverflowVarVar_f8_i1,
 		ConvertOverflowVarVar_f8_u1,
 		ConvertOverflowVarVar_f8_i2,
@@ -175,8 +165,6 @@ namespace interpreter
 		ConvertOverflowVarVar_f8_u4,
 		ConvertOverflowVarVar_f8_i8,
 		ConvertOverflowVarVar_f8_u8,
-		ConvertOverflowVarVar_f8_f4,
-		ConvertOverflowVarVar_f8_f8,
 		BinOpVarVarVar_Add_i4,
 		BinOpVarVarVar_Sub_i4,
 		BinOpVarVarVar_Mul_i4,
@@ -1550,24 +1538,6 @@ namespace interpreter
 	};
 
 
-	struct IRConvertOverflowVarVar_i4_f4 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_i4_f8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
 	struct IRConvertOverflowVarVar_u4_i1 : IRCommon
 	{
 		uint16_t dst;
@@ -1632,24 +1602,6 @@ namespace interpreter
 
 
 	struct IRConvertOverflowVarVar_u4_u8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_u4_f4 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_u4_f8 : IRCommon
 	{
 		uint16_t dst;
 		uint16_t src;
@@ -1730,24 +1682,6 @@ namespace interpreter
 	};
 
 
-	struct IRConvertOverflowVarVar_i8_f4 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_i8_f8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
 	struct IRConvertOverflowVarVar_u8_i1 : IRCommon
 	{
 		uint16_t dst;
@@ -1812,24 +1746,6 @@ namespace interpreter
 
 
 	struct IRConvertOverflowVarVar_u8_u8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_u8_f4 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_u8_f8 : IRCommon
 	{
 		uint16_t dst;
 		uint16_t src;
@@ -1910,24 +1826,6 @@ namespace interpreter
 	};
 
 
-	struct IRConvertOverflowVarVar_f4_f4 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_f4_f8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
 	struct IRConvertOverflowVarVar_f8_i1 : IRCommon
 	{
 		uint16_t dst;
@@ -1992,24 +1890,6 @@ namespace interpreter
 
 
 	struct IRConvertOverflowVarVar_f8_u8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_f8_f4 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t src;
-		uint8_t __pad6;
-		uint8_t __pad7;
-	};
-
-
-	struct IRConvertOverflowVarVar_f8_f8 : IRCommon
 	{
 		uint16_t dst;
 		uint16_t src;
