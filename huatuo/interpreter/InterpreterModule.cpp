@@ -156,12 +156,12 @@ namespace interpreter
 		return (Il2CppMethodPointer)NotSupportNative2Managed;
 	}
 
-	void Managed2NativeCallByReflectionInvokeImpl(const MethodInfo* method, bool forceStatic, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+	void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 	{
 		if (huatuo::metadata::IsInterpreterMethod(method) || method->invoker_method == nullptr)
 		{
 			char sigName[1000];
-			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+			ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
 
 			TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. ABI:%s sinature:%s not support.", HUATUO_ABI_NAME, sigName);
 			RaiseMethodNotSupportException(method, errMsg);
@@ -221,16 +221,6 @@ namespace interpreter
 #endif
 	}
 
-	void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
-	{
-		Managed2NativeCallByReflectionInvokeImpl(method, false, argVarIndexs, localVarBase, ret);
-	}
-
-	void Managed2NativeCallByReflectionInvokeIgnoreThisObj(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
-	{
-		Managed2NativeCallByReflectionInvokeImpl(method, false, argVarIndexs, localVarBase, ret);
-	}
-
 	Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const MethodInfo* method, bool forceStatic)
 	{
 		const NativeCallMethod* ncm = GetNativeCallMethod(method, forceStatic);
@@ -238,7 +228,7 @@ namespace interpreter
 		{
 			return ncm->managed2NativeMethod;
 		}
-		return forceStatic ? Managed2NativeCallByReflectionInvokeIgnoreThisObj : Managed2NativeCallByReflectionInvoke;
+		return Managed2NativeCallByReflectionInvoke;
 	}
 
 	Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
@@ -250,7 +240,7 @@ namespace interpreter
 		{
 			return it->second.managed2NativeMethod;
 		}
-		return Managed2NativeCallByReflectionInvokeIgnoreThisObj;
+		return Managed2NativeCallByReflectionInvoke;
 	}
 
 	InvokerMethod InterpreterModule::GetMethodInvoker(const Il2CppMethodDefinition* method)
