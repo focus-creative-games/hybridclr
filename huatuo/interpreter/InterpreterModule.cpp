@@ -283,6 +283,7 @@ namespace interpreter
 		{
 			return (InterpMethodInfo*)methodInfo->huatuoData;
 		}
+		IL2CPP_ASSERT(methodInfo->isInterpterImpl);
 
 		metadata::Image* image = metadata::IsInterpreterMethod(methodInfo) ? huatuo::metadata::MetadataModule::GetImage(methodInfo->klass)
 			: (metadata::Image*)huatuo::metadata::AOTHomologousImage::FindImageByAssembly(
