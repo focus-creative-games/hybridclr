@@ -57,8 +57,8 @@ namespace metadata
 #if ENABLE_PLACEHOLDER_DLL == 1
     static const char* s_ignorePlaceHolderDlls[] =
     {
-        "UnityEngine.",
-        "Unity.",
+        //"UnityEngine.",
+        //"Unity.",
         "WindowsRuntimeMetadata.dll",
         nullptr,
     };
