@@ -12,6 +12,14 @@ HybridCLR(代号wolong)是一个**特性完整、零成本、高性能、低内�
 
 HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行。从底层彻底支持了热更新。
 
+## 文档
+
+- [官方文档](https://focus-creative-games.github.io/hybridclr/index/)
+- [快速上手](https://focus-creative-games.github.io/hybridclr/start_up/)
+- [示例项目](https://github.com/focus-creative-games/hybridclr_trial)
+- [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
+- [UWA学堂](https://edu.uwa4d.com/course-intro/0/432)
+
 ## 特性
 
 - 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
@@ -19,11 +27,6 @@ HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/w
 - 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://focus-creative-games.github.io/hybridclr/benchmark/#性能测试报告)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/hybridclr/benchmark/#内存占用报告)
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
-
-## 兼容性
-
-- 支持所有il2cpp支持的平台。目前测试支持 PC(Win32和Win64)、Android(armv7、armv8)、iOS(64bit)、NS(64bit)、WebGL(有少量bug)平台，剩余平台有待测试。
-- 已经支持Unity 2020-2021全系列LTS版本，预计于2022.8月上旬支持 2019全系列LTS版本
 
 ## 工作原理
 
@@ -62,22 +65,26 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 - 内存效率极高。HybridCLR中热更新类型与主工程的AOT类型完全等价，占用一样多的空间。其他方案的同等类型则是假类型，不仅不能被runtime识别，还多占了数倍空间。
 - 执行效率高。HybridCLR中热更新部分与主工程AOT部分交互属于il2cpp内部交互，效率极高。而其他方案则是独立虚拟机与il2cpp之间的效率，不仅交互麻烦还效率低下。
 
-## 文档
 
-- [官方文档](https://focus-creative-games.github.io/hybridclr/index/)
-- [快速上手](https://focus-creative-games.github.io/hybridclr/start_up/)
-- [示例项目](https://github.com/focus-creative-games/hybridclr_trial)
-- [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
-- [UWA学堂](https://edu.uwa4d.com/course-intro/0/432)
+## 兼容性
+
+- 支持所有il2cpp支持的平台。目前测试支持 PC(Win32和Win64)、Android(armv7、armv8)、iOS(64bit)、NS(64bit)、WebGL(有少量bug)平台，剩余平台有待测试。
+- 已经支持Unity 2020-2021全系列LTS版本，预计于2022.8月上旬支持 2019全系列LTS版本
+- 测试过大量游戏常见库，未发现跟il2cpp原生兼容但使用HybridCLR后不兼容性的库。只要能在il2cpp backend下工作的库都可以在HybridCLR下正常工作。甚至那些与il2cpp因为AOT问题不兼容的库，现在因为HybridCLR对il2cpp的能力扩充，反而可以正常运行了。
 
 ## 稳定性状况
 
-=== **庆祝于 2022.6.7 第一款使用HybridCLR的android和iOS双端休闲游戏正式上线** ===，8月份还有几款中重游戏上线或者对外测试。
+目前PC(x86及x64)、Android(arm v7及v8)、iOS(64bit) 可稳定使用。已经有几十个大中型游戏项目较完整地接入，其中一些在紧锣密鼓作上线前测试。
 
-- 2020系列版本于2020.7月底发布正式版本，2022版本预计于2020.8发布正式版本，2019版本预计于2020.9发布正式版本。
-- 目前PC(x86及x64)、Android(arm v7及v8)、iOS(64bit) 可稳定使用。
-- 测试过大量游戏常见库，未发现跟il2cpp原生兼容但使用HybridCLR后不兼容性的库。只要能在il2cpp backend下工作的库都可以在HybridCLR下正常工作。甚至那些与il2cpp因为AOT问题不兼容的库，现在因为HybridCLR对il2cpp的能力扩充，反而可以正常运行了。
-- 已经有几十个大中型游戏项目较完整地接入，数百款中小款或独立游戏比较完整接入，并且其中一些在紧锣密鼓作上线前测试。具体参见收集的一些 [完整接入的商业项目列表](https://focus-creative-games.github.io/hybridclr/ref_project/)
+鉴于在多个重度上线（准上线）项目上有超过2个月的稳定表现，预计于**8月份发布正式版本**。
+
+## 接入的商业项目
+
+- 2022.6.7上线第一款Android+iOS双端三消类型游戏
+- 2022.8.5上线第二款双端重度RPG卡牌
+- 2022.8.8上线第三款双端重度RPG塔防游戏 
+- 2022.8 还有至少3款：MMORPG（重度）、RPG塔防（中度）、三消（中度）上线
+- 其他参见收集的一些 [完整接入的商业项目列表](https://focus-creative-games.github.io/hybridclr/ref_project/)
 
 ## 支持与联系
 
