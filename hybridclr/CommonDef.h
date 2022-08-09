@@ -4,7 +4,7 @@
 #include <cstring>
 #include <memory>
 
-#include "Il2cppCompatibleDef.h"
+#include "Il2CppCompatibleDef.h"
 
 #include "codegen/il2cpp-codegen.h"
 #include "utils/Memory.h"

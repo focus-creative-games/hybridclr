@@ -54,7 +54,8 @@ namespace transform
 				}
 				default:
 				{
-					RaiseExecutionEngineException("");
+					RaiseExecutionEngineException("invalid BranchTarget param");
+					offset = -1;
 				}
 				}
 				// don't split 0 offset br
@@ -86,7 +87,8 @@ namespace transform
 			}
 			default:
 			{
-				IL2CPP_ASSERT(false && "unknown inline type");
+				RaiseExecutionEngineException("unknown inline type");
+				nextOffset = -1;
 			}
 			}
 			ip = nextIp;

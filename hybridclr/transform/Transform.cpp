@@ -1525,6 +1525,7 @@ namespace transform
 				default:
 				{
 					RaiseExecutionEngineException("Add_bin_op I4 op unknown");
+					resultType = (EvalStackReduceDataType)-1;
 				}
 				}
 				break;
@@ -1550,6 +1551,7 @@ namespace transform
 				default:
 				{
 					RaiseExecutionEngineException("Add_bin_op I8 op unknown");
+					resultType = (EvalStackReduceDataType)-1;
 					break;
 				}
 				}
@@ -1568,6 +1570,7 @@ namespace transform
 				default:
 				{
 					RaiseExecutionEngineException("Add_bin_op R4 op unknown");
+					resultType = (EvalStackReduceDataType)-1;
 					break;
 				}
 				}
@@ -1586,6 +1589,7 @@ namespace transform
 				default:
 				{
 					RaiseExecutionEngineException("Add_bin_op R8 op unknown");
+					resultType = (EvalStackReduceDataType)-1;
 					break;
 				}
 				}
@@ -1594,6 +1598,7 @@ namespace transform
 			default:
 			{
 				RaiseExecutionEngineException("Add_bin_op unknown");
+				resultType = (EvalStackReduceDataType)-1;
 				break;
 			}
 			}
@@ -3410,7 +3415,6 @@ else \
 				uint32_t n = (uint32_t)GetI4LittleEndian(ip + 1);
 				ir->value = ctx.GetEvalStackTopOffset();
 				ir->caseNum = n;
-				ir->caseOffsets;
 
 				int32_t* caseOffsets;
 				AllocResolvedData(resolveDatas, (n + 1) / 2, *(int32_t*)&ir->caseOffsets, caseOffsets);
