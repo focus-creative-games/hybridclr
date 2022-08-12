@@ -98,7 +98,7 @@ namespace interpreter
 	static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
 	{
 		char sigName[1000];
-		ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
+		ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
 		TEMP_FORMAT(errMsg, "Invoke method missing. ABI:%s sinature:%s %s.%s::%s", HYBRIDCLR_ABI_NAME, sigName, method->klass->namespaze, method->klass->name, method->name);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
