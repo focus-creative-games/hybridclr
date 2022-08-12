@@ -68,13 +68,13 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ## 兼容性
 
-- 支持所有il2cpp支持的平台。目前测试支持 PC(Win32和Win64)、Android(armv7、armv8)、iOS(64bit)、NS(64bit)、WebGL(有少量bug)平台，剩余平台有待测试。
+- 支持所有il2cpp支持的平台。目前测试支持 PC(Win32和Win64)、macOS(x86、x64、Arm64)、Android(armv7、armv8)、iOS(64bit)、NS(64bit)、WebGL(有少量bug)平台，剩余平台有待测试。
 - 已经支持Unity 2020-2021全系列LTS版本，预计于2022.8月上旬支持 2019全系列LTS版本
 - 测试过大量游戏常见库，未发现跟il2cpp原生兼容但使用HybridCLR后不兼容性的库。只要能在il2cpp backend下工作的库都可以在HybridCLR下正常工作。甚至那些与il2cpp因为AOT问题不兼容的库，现在因为HybridCLR对il2cpp的能力扩充，反而可以正常运行了。
 
 ## 稳定性状况
 
-目前PC(x86及x64)、Android(arm v7及v8)、iOS(64bit) 可稳定使用。已经有几十个大中型游戏项目较完整地接入，其中一些在紧锣密鼓作上线前测试。
+目前PC(x86及x64)、macOS(x86、x64、Arm64)、Android(arm v7及v8)、iOS(64bit) 可稳定使用。已经有几十个大中型游戏项目较完整地接入，其中一些在紧锣密鼓作上线前测试。
 
 鉴于在多个重度上线（准上线）项目上有超过2个月的稳定表现，预计于**8月份发布正式版本**。
 
