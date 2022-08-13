@@ -122,9 +122,23 @@ namespace interpreter
 		}
 	}
 
-	inline void CopyStackObject(StackObject* dst, void* src, uint32_t count)
+	inline void CopyStackObject(StackObject* dst, void* vsrc, uint32_t count)
 	{
-		std::memcpy(dst, src, count * sizeof(StackObject));
+		StackObject* src = (StackObject*)vsrc;
+		IL2CPP_ASSERT(dst + count <= src || src + count <= dst);
+		switch (count)
+		{
+		case 8: dst[7] = src[7];
+		case 7: dst[6] = src[6];
+		case 6: dst[5] = src[5];
+		case 5: dst[4] = src[4];
+		case 4: dst[3] = src[3];
+		case 3: dst[2] = src[2];
+		case 2: dst[1] = src[1];
+		case 1: *dst = *src; break;
+		case 0: break;
+		default: std::memcpy(dst, src, count * sizeof(StackObject));
+		}
 	}
 
 	inline void CopyBySize(void* dst, void* src, uint32_t size)

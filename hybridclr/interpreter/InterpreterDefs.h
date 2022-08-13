@@ -70,15 +70,11 @@ namespace hybridclr
 			StackObject* stackBasePtr;
 			ptrdiff_t oldStackTop;
 			void* ret;
-
 			byte* ip;
 
-			//Il2CppException* saveException;
 			std::vector<ExceptionFlowInfo>* exHandleStack;
 			ExceptionFlowInfo prevExFlowInfo;
 			ExceptionFlowInfo curExFlowInfo;
-
-			//std::vector<void*> *bigLocalAllocs;
 		};
 
 		struct InterpExceptionClause

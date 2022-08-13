@@ -32,7 +32,7 @@ namespace interpreter
 				IL2CPP_ASSERT(imi->argCount == metadata::GetActualArgumentNum(imi->method));
 				if (imi->isTrivialCopyArgs)
 				{
-					std::memcpy(stackBasePtr, argBase, imi->argStackObjectSize * sizeof(StackObject));
+					CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
 				}
 				else
 				{

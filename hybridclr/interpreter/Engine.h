@@ -199,28 +199,6 @@ namespace interpreter
 		MachineState& _state;
 	};
 
-	//class NativeInterpFrameGroup
-	//{
-	//public:
-	//	NativeInterpFrameGroup(MachineState& state, const MethodInfo* method) : _state(state), _interMethod({})
-	//	{
-	//		
-	//		InterpFrame* frame = state.PushFrame();
-	//		*frame = {};
-	//		_interMethod.method = method;
-	//		frame->method = &_interMethod;
-	//	}
-
-	//	~NativeInterpFrameGroup()
-	//	{
-	//		_state.PopFrame();
-	//	}
-
-	//private:
-	//	MachineState _state;
-	//	InterpMethodInfo _interMethod;
-	//};
-
 	class InterpFrameGroup
 	{
 	public:
