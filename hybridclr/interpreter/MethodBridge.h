@@ -20,16 +20,7 @@ namespace interpreter
 		Managed2NativeCallMethod managed2NativeMethod;
 	};
 
-	struct NativeInvokeMethod
-	{
-		const char* signature;
-		InvokerMethod instanceMethod;
-		InvokerMethod staticMethod;
-	};
-
 	extern NativeCallMethod g_callStub[];
-	extern NativeInvokeMethod g_invokeStub[];
-
 
 	template<int N>
 	struct ValueTypeSize
@@ -128,11 +119,6 @@ namespace interpreter
 	}
 
 	void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize);
-
-	inline void* AdjustValueTypeSelfPointer(Il2CppObject* __this, const MethodInfo* method)
-	{
-		return __this + IS_CLASS_VALUE_TYPE(__this->klass);
-	}
 
 	bool IsPassArgAsValue(const Il2CppType* type, LocationDataType* locType = nullptr);
 	Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value);
