@@ -183,7 +183,9 @@ namespace metadata
 		uint16_t slotIdx = 0;
 		for (auto& vm : _virtualMethods)
 		{
-			const_cast<Il2CppMethodDefinition*>(vm.method)->slot = slotIdx++;
+			Il2CppMethodDefinition* methodDef = const_cast<Il2CppMethodDefinition*>(vm.method);
+			IL2CPP_ASSERT(methodDef->slot == slotIdx);
+			slotIdx++;
 		}
 	}
 
