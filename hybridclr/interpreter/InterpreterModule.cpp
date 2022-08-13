@@ -216,10 +216,10 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(&method.returnType, method.params, method.paramCount, false, sigName, sizeof(sigName) - 1);
 			auto it = s_calls.find(sigName);
-			/*if (it != s_calls.end())
+			if (it != s_calls.end())
 			{
 				return it->second.managed2NativeMethod;
-			}*/
+			}
 			return Managed2NativeCallByReflectionInvoke;
 		}
 
