@@ -8,10 +8,12 @@
 #include "vm/Exception.h"
 #include "vm/StackTrace.h"
 
-#include "../metadata/MetadataDef.h"
+#include "../metadata/MetadataUtil.h"
 #include "../HybridCLRConfig.h"
 
 #include "InterpreterDefs.h"
+#include "MemoryUtil.h"
+#include "MethodBridge.h"
 
 
 #if DEBUG
@@ -252,7 +254,40 @@ namespace interpreter
 			}
 		}
 
-		InterpFrame* EnterFrame(const InterpMethodInfo* imi, StackObject* argBase, bool withArgStack);
+		InterpFrame* EnterFrameFromInterpreter(const InterpMethodInfo* imi, StackObject* argBase)
+		{
+			ptrdiff_t oldStackTop = _machineState.GetStackTop();
+			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
+			InterpFrame* newFrame = _machineState.PushFrame();
+			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
+			PUSH_STACK_FRAME(imi->method);
+			return newFrame;
+		}
+
+
+		InterpFrame* EnterFrameFromNative(const InterpMethodInfo* imi, StackObject* argBase)
+		{
+			ptrdiff_t oldStackTop = _machineState.GetStackTop();
+			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize);
+			InterpFrame* newFrame = _machineState.PushFrame();
+			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
+
+			// if not prepare arg stack. copy from args
+			if (imi->args)
+			{
+				IL2CPP_ASSERT(imi->argCount == metadata::GetActualArgumentNum(imi->method));
+				if (imi->isTrivialCopyArgs)
+				{
+					CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
+				}
+				else
+				{
+					CopyArgs(stackBasePtr, argBase, imi->args, imi->argCount, imi->argStackObjectSize);
+				}
+			}
+			PUSH_STACK_FRAME(imi->method);
+			return newFrame;
+		}
 
 		InterpFrame* LeaveFrame()
 		{

@@ -303,6 +303,7 @@ namespace hybridclr
 		{
 			return (InterpMethodInfo*)methodInfo->interpData;
 		}
+		Interpreter::RuntimeClassCCtorInit(methodInfo);
 		IL2CPP_ASSERT(methodInfo->isInterpterImpl);
 
 		metadata::Image* image = metadata::IsInterpreterMethod(methodInfo) ? hybridclr::metadata::MetadataModule::GetImage(methodInfo->klass)

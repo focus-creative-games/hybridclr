@@ -1103,10 +1103,17 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 }
 
 	// maxStackSize包含 arg + local + eval,对于解释器栈来说，可能多余
-#define PREPARE_NEW_FRAME(newMethodInfo, argBasePtr, retPtr, withArgStack) { \
+#define PREPARE_NEW_FRAME_FROM_NATIVE(newMethodInfo, argBasePtr, retPtr) { \
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
-	frame = interpFrameGroup.EnterFrame(imi, argBasePtr, withArgStack); \
-	RuntimeClassCCtorInit(newMethodInfo); \
+	frame = interpFrameGroup.EnterFrameFromNative(imi, argBasePtr); \
+	frame->ret = retPtr; \
+	ip = ipBase = imi->codes; \
+	localVarBase = frame->stackBasePtr; \
+}
+
+#define PREPARE_NEW_FRAME_FROM_INTERPRETER(newMethodInfo, argBasePtr, retPtr) { \
+	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
+	frame = interpFrameGroup.EnterFrameFromInterpreter(imi, argBasePtr); \
 	frame->ret = retPtr; \
 	ip = ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
@@ -1141,12 +1148,12 @@ if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
 
 #define CALL_INTERP_VOID(nextIp, methodInfo, argBasePtr) { \
 	SAVE_CUR_FRAME(nextIp) \
-	PREPARE_NEW_FRAME(methodInfo, argBasePtr, nullptr, true); \
+	PREPARE_NEW_FRAME_FROM_INTERPRETER(methodInfo, argBasePtr, nullptr); \
 }
 
 #define CALL_INTERP_RET(nextIp, methodInfo, argBasePtr, retPtr) { \
 	SAVE_CUR_FRAME(nextIp) \
-	PREPARE_NEW_FRAME(methodInfo, argBasePtr, retPtr, true); \
+	PREPARE_NEW_FRAME_FROM_INTERPRETER(methodInfo, argBasePtr, retPtr); \
 }
 
 inline void FixCallNativeThisPointer(const MethodInfo * method, StackObject * dst, Il2CppObject * src)
@@ -1437,7 +1444,7 @@ else \
 
 		Il2CppException* lastUnwindException;
 
-		PREPARE_NEW_FRAME(methodInfo, args, ret, false);
+		PREPARE_NEW_FRAME_FROM_NATIVE(methodInfo, args, ret);
 	LoopStart:
 		try
 		{
