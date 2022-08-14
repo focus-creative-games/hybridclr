@@ -17,14 +17,14 @@ namespace interpreter
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 
 			newFrame = _machineState.PushFrame();
-			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, {}, {} };
+			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
 		}
 		else
 		{
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize);
 
 			newFrame = _machineState.PushFrame();
-			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, {}, {} };
+			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
 
 			// if not prepare arg stack. copy from args
 			if (!withArgStack && imi->args)

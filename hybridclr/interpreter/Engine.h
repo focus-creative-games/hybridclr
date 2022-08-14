@@ -46,6 +46,10 @@ namespace interpreter
 			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
 			_frameCount = hc.GetInterpreterThreadFrameStackSize();
 			_frameTopIdx = 0;
+
+			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(hc.GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
+			_exceptionFlowCount = hc.GetInterpreterThreadExceptionFlowSize();
+			_exceptionFlowTopIdx = 0;
 		}
 
 		~MachineState()
@@ -131,10 +135,33 @@ namespace interpreter
 			}
 		}
 
-		//const InterpFrame* GetFrameBaseMinusOne() const
-		//{
-		//	return _frameBase - 1;
-		//}
+		ExceptionFlowInfo* AllocExceptionFlow(int32_t count)
+		{
+			if (_exceptionFlowTopIdx + count < _exceptionFlowCount)
+			{
+				ExceptionFlowInfo* efi = _exceptionFlowBase + _exceptionFlowTopIdx;
+				_exceptionFlowTopIdx += count;
+				return efi;
+			}
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("AllocExceptionFlowZero"));
+			return nullptr;
+		}
+
+		uint32_t GetExceptionFlowTopIdx() const
+		{
+			return _exceptionFlowTopIdx;
+		}
+
+		void SetExceptionFlowTopIdx(uint32_t exTopIdx)
+		{
+			_exceptionFlowTopIdx = exTopIdx;
+		}
+
+		void SetExceptionFlowTop(ExceptionFlowInfo* top)
+		{
+			_exceptionFlowTopIdx = (int32_t)(top - _exceptionFlowBase);
+			IL2CPP_ASSERT(_exceptionFlowTopIdx >= 0 && _exceptionFlowTopIdx <= _exceptionFlowCount);
+		}
 
 		void PushExecutingImage(const Il2CppImage* image)
 		{
@@ -178,6 +205,11 @@ namespace interpreter
 		InterpFrame* _frameBase;
 		uint32_t _frameTopIdx;
 		uint32_t _frameCount;
+
+		ExceptionFlowInfo* _exceptionFlowBase;
+		uint32_t _exceptionFlowTopIdx;
+		uint32_t _exceptionFlowCount;
+
 
 		std::stack<const Il2CppImage*> _executingImageStack;
 	};
@@ -227,11 +259,9 @@ namespace interpreter
 			IL2CPP_ASSERT(_machineState.GetFrameTopIdx() > _frameBaseIdx);
 			POP_STACK_FRAME();
 			InterpFrame* frame = _machineState.GetTopFrame();
-			if (frame->exHandleStack)
+			if (frame->exFlowBase)
 			{
-				frame->exHandleStack->~vector();
-				IL2CPP_FREE(frame->exHandleStack);
-				frame->exHandleStack = nullptr;
+				_machineState.SetExceptionFlowTop(frame->exFlowBase);
 			}
 			_machineState.PopFrame();
 			_machineState.SetStackTop(frame->oldStackTop);

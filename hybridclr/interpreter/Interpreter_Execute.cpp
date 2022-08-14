@@ -1205,76 +1205,78 @@ inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * met
 
 #pragma region exception
 
-void PushExceptionFlowInfo(InterpFrame* frame, const ExceptionFlowInfo& newExFlowInfo)
-{
-	if (frame->curExFlowInfo.exFlowType == ExceptionFlowType::None)
-	{
+constexpr int EXCEPTION_FLOW_INFO_ALLOC_BATCH_NUM = 3;
 
-	}
-	else if (frame->prevExFlowInfo.exFlowType == ExceptionFlowType::None)
+inline void PushExceptionFlowInfo(InterpFrame* frame, MachineState& machine, const ExceptionFlowInfo& newExFlowInfo)
+{
+	if (frame->exFlowCount >= frame->exFlowCapaticy)
 	{
-		frame->prevExFlowInfo = frame->curExFlowInfo;
-	}
-	else
-	{
-		if (!frame->exHandleStack)
+		ExceptionFlowInfo* newEfi = machine.AllocExceptionFlow(EXCEPTION_FLOW_INFO_ALLOC_BATCH_NUM);
+		if (frame->exFlowBase == nullptr)
 		{
-			frame->exHandleStack = new (IL2CPP_MALLOC(sizeof(std::vector<ExceptionFlowInfo>))) std::vector<ExceptionFlowInfo>();
+			frame->exFlowBase = newEfi;
 		}
-		frame->exHandleStack->push_back(frame->prevExFlowInfo);
-		frame->prevExFlowInfo = frame->curExFlowInfo;
+		frame->exFlowCapaticy += EXCEPTION_FLOW_INFO_ALLOC_BATCH_NUM;
 	}
-	frame->curExFlowInfo = newExFlowInfo;
+	frame->exFlowBase[frame->exFlowCount++] = newExFlowInfo;
 }
 
-void PopPrevExceptionFlowInfo(InterpFrame* frame)
+inline void PopPrevExceptionFlowInfo(InterpFrame* frame, ExceptionFlowInfo** curEx)
 {
-	if (frame->exHandleStack && !frame->exHandleStack->empty())
+	if (frame->exFlowCount >= 2)
 	{
-		frame->prevExFlowInfo = *frame->exHandleStack->rbegin();
-		frame->exHandleStack->pop_back();
-	}
-	else
-	{
-		frame->prevExFlowInfo.exFlowType = ExceptionFlowType::None;
+		frame->exFlowBase[frame->exFlowCount - 2] = frame->exFlowBase[frame->exFlowCount - 1];
+		--frame->exFlowCount;
+		if (curEx)
+		{
+			*curEx = frame->exFlowBase + frame->exFlowCount - 1;
+		}
 	}
 }
 
-#define PREPARE_EXCEPTION(_ex_, _firstHanlderIndex_)  PushExceptionFlowInfo(frame, {ExceptionFlowType::Exception, (int32_t)(ip - ipBase), _ex_, _firstHanlderIndex_, 0});
+inline void PopCurExceptionFlowInfo(InterpFrame* frame)
+{
+	if (frame->exFlowCount >= 1)
+	{
+		--frame->exFlowCount;
+	}
+}
+
+#define PREPARE_EXCEPTION(_ex_, _firstHanlderIndex_)  PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Exception, (int32_t)(ip - ipBase), _ex_, _firstHanlderIndex_, 0});
 
 
 #define FIND_NEXT_EX_HANDLER_OR_UNWIND() \
 while (true) \
 { \
-	ExceptionFlowInfo& efi = frame->curExFlowInfo; \
-	IL2CPP_ASSERT(efi.exFlowType == ExceptionFlowType::Exception); \
-	IL2CPP_ASSERT(efi.ex); \
+	ExceptionFlowInfo* efi = frame->GetCurExFlow(); \
+	IL2CPP_ASSERT(efi && efi->exFlowType == ExceptionFlowType::Exception); \
+	IL2CPP_ASSERT(efi->ex); \
 	int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
-	for (; efi.nextExClauseIndex < exClauseNum; ) \
+	for (; efi->nextExClauseIndex < exClauseNum; ) \
 	{ \
-		while (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None && efi.nextExClauseIndex >= frame->prevExFlowInfo.nextExClauseIndex) {\
-			InterpExceptionClause* prevIec = imi->exClauses[frame->prevExFlowInfo.nextExClauseIndex - 1]; \
-			if (!(prevIec->handlerBeginOffset <= efi.throwOffset && efi.throwOffset < prevIec->handlerEndOffset)) { \
-				PopPrevExceptionFlowInfo(frame);\
+		for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && efi->nextExClauseIndex >= prevExFlow->nextExClauseIndex ;) {\
+			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
+			if (!(prevIec->handlerBeginOffset <= efi->throwOffset && efi->throwOffset < prevIec->handlerEndOffset)) { \
+				PopPrevExceptionFlowInfo(frame, &efi);\
 			} \
 			else \
 			{ \
 				break; \
 			} \
 		}\
-		InterpExceptionClause* iec = imi->exClauses[efi.nextExClauseIndex++]; \
-		if (iec->tryBeginOffset <= efi.throwOffset && efi.throwOffset < iec->tryEndOffset) \
+		InterpExceptionClause* iec = imi->exClauses[efi->nextExClauseIndex++]; \
+		if (iec->tryBeginOffset <= efi->throwOffset && efi->throwOffset < iec->tryEndOffset) \
 		{ \
 			switch (iec->flags) \
 			{ \
 			case CorILExceptionClauseType::Exception: \
 			{ \
-			if (il2cpp::vm::Class::IsAssignableFrom(iec->exKlass, efi.ex->klass)) \
+			if (il2cpp::vm::Class::IsAssignableFrom(iec->exKlass, efi->ex->klass)) \
 			{ \
 			ip = ipBase + iec->handlerBeginOffset; \
 			StackObject* exObj = localVarBase + imi->evalStackBaseOffset; \
-			exObj->obj = efi.ex; \
-			efi.exFlowType = ExceptionFlowType::Catch;\
+			exObj->obj = efi->ex; \
+			efi->exFlowType = ExceptionFlowType::Catch;\
 			goto LoopStart; \
 			} \
 			break; \
@@ -1283,7 +1285,7 @@ while (true) \
 			{ \
 			ip = ipBase + iec->filterBeginOffset; \
 			StackObject* exObj = localVarBase + imi->evalStackBaseOffset; \
-			exObj->obj = efi.ex; \
+			exObj->obj = efi->ex; \
 			goto LoopStart; \
 			} \
 			case CorILExceptionClauseType::Finally: \
@@ -1307,11 +1309,11 @@ while (true) \
 	if (frame) \
 	{ \
 		LOAD_PREV_FRAME(); \
-		PREPARE_EXCEPTION(efi.ex, 0); \
+		PREPARE_EXCEPTION(efi->ex, 0); \
 	}\
 	else \
 	{ \
-		lastUnwindException = efi.ex; \
+		lastUnwindException = efi->ex; \
 		goto UnWindFail; \
 	} \
 }
@@ -1325,16 +1327,17 @@ while (true) \
 	FIND_NEXT_EX_HANDLER_OR_UNWIND(); \
 }
 #define RETHROW_EX() { \
-	IL2CPP_ASSERT(frame->curExFlowInfo.exFlowType == ExceptionFlowType::Catch); \
-	il2cpp::vm::Exception::Raise(frame->curExFlowInfo.ex, const_cast<MethodInfo*>(imi->method)); \
+	ExceptionFlowInfo* curExFlow = frame->GetCurExFlow(); \
+	IL2CPP_ASSERT(curExFlow->exFlowType == ExceptionFlowType::Catch); \
+	il2cpp::vm::Exception::Raise(curExFlow->ex, const_cast<MethodInfo*>(imi->method)); \
 }
 
 #define POP_CATCH_HANDLERS(leaveTarget)\
 { \
-	while (frame->prevExFlowInfo.exFlowType == ExceptionFlowType::Catch) { \
-			InterpExceptionClause* prevIec = imi->exClauses[frame->prevExFlowInfo.nextExClauseIndex - 1]; \
+	for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && prevExFlow->exFlowType == ExceptionFlowType::Catch ;) { \
+			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
 			if (!(prevIec->handlerBeginOffset <= leaveTarget && leaveTarget < prevIec->handlerEndOffset)) {	\
-					PopPrevExceptionFlowInfo(frame); \
+					PopPrevExceptionFlowInfo(frame, nullptr); \
 			} \
 			else \
 			{ \
@@ -1344,15 +1347,15 @@ while (true) \
 }
 
 #define CONTINUE_NEXT_FINALLY() { \
-ExceptionFlowInfo& efi = frame->curExFlowInfo; \
-IL2CPP_ASSERT(efi.exFlowType == ExceptionFlowType::Leave); \
+ExceptionFlowInfo* efi = frame->GetCurExFlow(); \
+IL2CPP_ASSERT(efi && efi->exFlowType == ExceptionFlowType::Leave); \
 int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
-for (; efi.nextExClauseIndex < exClauseNum; ) \
+for (; efi->nextExClauseIndex < exClauseNum; ) \
 { \
-	InterpExceptionClause* iec = imi->exClauses[efi.nextExClauseIndex++]; \
-	if (iec->tryBeginOffset <= efi.throwOffset && efi.throwOffset < iec->tryEndOffset) \
+	InterpExceptionClause* iec = imi->exClauses[efi->nextExClauseIndex++]; \
+	if (iec->tryBeginOffset <= efi->throwOffset && efi->throwOffset < iec->tryEndOffset) \
 	{ \
-		if (iec->tryBeginOffset <= efi.leaveTarget && efi.leaveTarget < iec->tryEndOffset) \
+		if (iec->tryBeginOffset <= efi->leaveTarget && efi->leaveTarget < iec->tryEndOffset) \
 		{ \
 			break; \
 		} \
@@ -1376,17 +1379,12 @@ for (; efi.nextExClauseIndex < exClauseNum; ) \
 		} \
 	} \
 } \
-ip = ipBase + efi.leaveTarget; \
-if (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None) {\
-	frame->curExFlowInfo = frame->prevExFlowInfo;\
-	PopPrevExceptionFlowInfo(frame); \
-} else { \
-	frame->curExFlowInfo.exFlowType = ExceptionFlowType::None; \
-}\
+ip = ipBase + efi->leaveTarget; \
+PopCurExceptionFlowInfo(frame); \
 }
 
 #define LEAVE_EX(target, firstHandlerIndex)  { \
-	PushExceptionFlowInfo(frame, {ExceptionFlowType::Leave, (int32_t)(ip - ipBase), nullptr, firstHandlerIndex + 1, target}); \
+	PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Leave, (int32_t)(ip - ipBase), nullptr, firstHandlerIndex + 1, target}); \
 	InterpExceptionClause* iec = imi->exClauses[firstHandlerIndex]; \
 	POP_CATCH_HANDLERS(target); \
 	ip = ipBase + iec->handlerBeginOffset; \
@@ -1397,26 +1395,29 @@ if (frame->prevExFlowInfo.exFlowType != ExceptionFlowType::None) {\
 	ip = ipBase + target; \
 }
 
-#define ENDFILTER_EX(value) \
-IL2CPP_ASSERT(frame->curExFlowInfo.exFlowType == ExceptionFlowType::Exception); \
+#define ENDFILTER_EX(value) {\
+ExceptionFlowInfo* curExFlow = frame->GetCurExFlow(); \
+IL2CPP_ASSERT(curExFlow->exFlowType == ExceptionFlowType::Exception); \
 if(!(value)) \
 {\
     FIND_NEXT_EX_HANDLER_OR_UNWIND();\
 } \
 else \
 { \
-	frame->curExFlowInfo.exFlowType = ExceptionFlowType::Catch;\
+	curExFlow->exFlowType = ExceptionFlowType::Catch;\
+}\
 }
 
-#define ENDFINALLY_EX() \
-IL2CPP_ASSERT(frame->curExFlowInfo.exFlowType != ExceptionFlowType::None); \
-if (frame->curExFlowInfo.exFlowType == ExceptionFlowType::Exception) \
+#define ENDFINALLY_EX() {\
+ExceptionFlowInfo* curExFlow = frame->GetCurExFlow(); \
+if (curExFlow->exFlowType == ExceptionFlowType::Exception) \
 { \
     FIND_NEXT_EX_HANDLER_OR_UNWIND(); \
 } \
 else \
 { \
     CONTINUE_NEXT_FINALLY();\
+}\
 }
 
 #pragma endregion 

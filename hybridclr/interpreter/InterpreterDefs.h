@@ -47,7 +47,6 @@ namespace hybridclr
 
 		enum class ExceptionFlowType
 		{
-			None,
 			Exception,
 			Catch,
 			Leave,
@@ -72,9 +71,19 @@ namespace hybridclr
 			void* ret;
 			byte* ip;
 
-			std::vector<ExceptionFlowInfo>* exHandleStack;
-			ExceptionFlowInfo prevExFlowInfo;
-			ExceptionFlowInfo curExFlowInfo;
+			ExceptionFlowInfo* exFlowBase;
+			int32_t exFlowCount;
+			int32_t exFlowCapaticy;
+
+			ExceptionFlowInfo* GetCurExFlow() const
+			{
+				return exFlowCount > 0 ? exFlowBase + exFlowCount - 1 : nullptr;
+			}
+
+			ExceptionFlowInfo* GetPrevExFlow() const
+			{
+				return exFlowCount > 1 ? exFlowBase + exFlowCount - 2 : nullptr;
+			}
 		};
 
 		struct InterpExceptionClause

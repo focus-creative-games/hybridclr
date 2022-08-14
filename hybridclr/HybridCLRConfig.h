@@ -8,37 +8,55 @@ namespace hybridclr
 	{
 
 	public:
+		HybridCLRConfig()
+		{
+			_threadObjectStackSize = 1024 * 128;
+			_threadFrameStackSize = 1024 * 2;
+			_threadExceptionFlowSize = 512;
+		}
+
 		static HybridCLRConfig& GetIns()
 		{
-			return _ins;
+			return s_ins;
 		}
 
-		static uint32_t GetInterpreterThreadObjectStackSize()
+		uint32_t GetInterpreterThreadObjectStackSize()
 		{
-			return s_threadObjectStackSize;
+			return _threadObjectStackSize;
 		}
 
-		static void SetInterpreterThreadObjectStackSize(uint32_t count)
+		void SetInterpreterThreadObjectStackSize(uint32_t count)
 		{
-			s_threadObjectStackSize = count;
+			_threadObjectStackSize = count;
 		}
 
-		static uint32_t GetInterpreterThreadFrameStackSize()
+		uint32_t GetInterpreterThreadFrameStackSize()
 		{
-			return s_threadFrameStackSize;
+			return _threadFrameStackSize;
 		}
 
-		static void SetInterpreterThreadFrameStackSize(uint32_t count)
+		void SetInterpreterThreadFrameStackSize(uint32_t count)
 		{
-			s_threadFrameStackSize = count;
+			_threadFrameStackSize = count;
+		}
+
+		uint32_t GetInterpreterThreadExceptionFlowSize()
+		{
+			return _threadExceptionFlowSize;
+		}
+
+		void SetInterpreterThreadExceptionFlowSize(uint32_t count)
+		{
+			_threadExceptionFlowSize = count;
 		}
 
 	private:
-		static HybridCLRConfig _ins;
+		static HybridCLRConfig s_ins;
 
 	private:
-		static uint32_t s_threadObjectStackSize;
-		static uint32_t s_threadFrameStackSize;
+		uint32_t _threadObjectStackSize;
+		uint32_t _threadFrameStackSize;
+		uint32_t _threadExceptionFlowSize;
 	};
 }
 
