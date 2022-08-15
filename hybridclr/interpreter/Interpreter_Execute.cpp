@@ -516,26 +516,36 @@ namespace interpreter
 		}
 	}
 
+	template<typename T> bool CompareCeq(T a, T b) { return a == b; }
+	template<typename T> bool CompareCne(T a, T b) { return a != b; }
+	template<typename T> bool CompareCgt(T a, T b) { return a > b; }
+	template<typename T> bool CompareCge(T a, T b) { return a >= b; }
+	template<typename T> bool CompareClt(T a, T b) { return a < b; }
+	template<typename T> bool CompareCle(T a, T b) { return a <= b; }
 
+	inline bool CompareCneUn(int32_t a, int32_t b) { return (uint32_t)a != (uint32_t)b; }
+	inline bool CompareCgtUn(int32_t a, int32_t b) { return (uint32_t)a > (uint32_t)b; }
+	inline bool CompareCgeUn(int32_t a, int32_t b) { return (uint32_t)a >= (uint32_t)b; }
+	inline bool CompareCltUn(int32_t a, int32_t b) { return (uint32_t)a < (uint32_t)b; }
+	inline bool CompareCleUn(int32_t a, int32_t b) { return (uint32_t)a <= (uint32_t)b; }
 
-#define DefCompare(cmp, op) template<typename T> bool Compare##cmp(T a, T b) { return a op b; }
-#define DefCompareUn(cmp, op) inline bool Compare##cmp(int32_t a, int32_t b) { return (uint32_t)a op (uint32_t)b; } \
-inline bool Compare##cmp(int64_t a, int64_t b) { return (uint64_t)a op (uint64_t)b; } \
-inline bool Compare##cmp(float a, float b) { return a op b; } \
-inline bool Compare##cmp(double a, double b) { return a op b; }
+	inline bool CompareCneUn(int64_t a, int64_t b) { return (uint64_t)a != (uint64_t)b; }
+	inline bool CompareCgtUn(int64_t a, int64_t b) { return (uint64_t)a > (uint64_t)b; }
+	inline bool CompareCgeUn(int64_t a, int64_t b) { return (uint64_t)a >= (uint64_t)b; }
+	inline bool CompareCltUn(int64_t a, int64_t b) { return (uint64_t)a < (uint64_t)b; }
+	inline bool CompareCleUn(int64_t a, int64_t b) { return (uint64_t)a <= (uint64_t)b; }
 
-	DefCompare(Ceq, == );
-	DefCompare(Cne, != );
-	DefCompare(Cgt, > );
-	DefCompare(Cge, >= );
-	DefCompare(Clt, < );
-	DefCompare(Cle, <= );
+	inline bool CompareCneUn(float a, float b) { return a != b; }
+	inline bool CompareCgtUn(float a, float b) { return a > b; }
+	inline bool CompareCgeUn(float a, float b) { return a >= b; }
+	inline bool CompareCltUn(float a, float b) { return a < b; }
+	inline bool CompareCleUn(float a, float b) { return a <= b; }
 
-	DefCompareUn(CneUn, != );
-	DefCompareUn(CgtUn, > );
-	DefCompareUn(CgeUn, >= );
-	DefCompareUn(CltUn, < );
-	DefCompareUn(CleUn, <= );
+	inline bool CompareCneUn(double a, double b) { return a != b; }
+	inline bool CompareCgtUn(double a, double b) { return a > b; }
+	inline bool CompareCgeUn(double a, double b) { return a >= b; }
+	inline bool CompareCltUn(double a, double b) { return a < b; }
+	inline bool CompareCleUn(double a, double b) { return a <= b; }
 
 #pragma endregion
 
