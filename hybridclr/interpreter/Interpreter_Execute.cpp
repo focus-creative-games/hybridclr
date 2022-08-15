@@ -3174,7 +3174,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    int32_t op1 = (*(int32_t*)(localVarBase + __op1));
 				    int32_t op2 = (*(int32_t*)(localVarBase + __op2));
-				    if ((CHECK_ADD_OVERFLOW(op1, op2)) == 0)
+				    if ((CheckAddOverflow(op1, op2)) == 0)
 				    {
 				        (*(int32_t*)(localVarBase + __ret)) = op1 + op2;
 				    }
@@ -3192,7 +3192,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    int32_t op1 = (*(int32_t*)(localVarBase + __op1));
 				    int32_t op2 = (*(int32_t*)(localVarBase + __op2));
-				    if ((CHECK_SUB_OVERFLOW(op1, op2)) == 0)
+				    if ((CheckSubOverflow(op1, op2)) == 0)
 				    {
 				        (*(int32_t*)(localVarBase + __ret)) = op1 - op2;
 				    }
@@ -3210,7 +3210,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    int32_t op1 = (*(int32_t*)(localVarBase + __op1));
 				    int32_t op2 = (*(int32_t*)(localVarBase + __op2));
-				    if ((CHECK_MUL_OVERFLOW(op1, op2)) == 0)
+				    if ((CheckMulOverflow(op1, op2)) == 0)
 				    {
 				        (*(int32_t*)(localVarBase + __ret)) = op1 * op2;
 				    }
@@ -3228,7 +3228,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    int64_t op1 = (*(int64_t*)(localVarBase + __op1));
 				    int64_t op2 = (*(int64_t*)(localVarBase + __op2));
-				    if ((CHECK_ADD_OVERFLOW64(op1, op2)) == 0)
+				    if ((CheckAddOverflow64(op1, op2)) == 0)
 				    {
 				        (*(int64_t*)(localVarBase + __ret)) = op1 + op2;
 				    }
@@ -3246,7 +3246,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    int64_t op1 = (*(int64_t*)(localVarBase + __op1));
 				    int64_t op2 = (*(int64_t*)(localVarBase + __op2));
-				    if ((CHECK_SUB_OVERFLOW64(op1, op2)) == 0)
+				    if ((CheckSubOverflow64(op1, op2)) == 0)
 				    {
 				        (*(int64_t*)(localVarBase + __ret)) = op1 - op2;
 				    }
@@ -3264,7 +3264,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    int64_t op1 = (*(int64_t*)(localVarBase + __op1));
 				    int64_t op2 = (*(int64_t*)(localVarBase + __op2));
-				    if ((CHECK_MUL_OVERFLOW64(op1, op2)) == 0)
+				    if ((CheckMulOverflow64(op1, op2)) == 0)
 				    {
 				        (*(int64_t*)(localVarBase + __ret)) = op1 * op2;
 				    }
@@ -3282,7 +3282,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    uint32_t op1 = (*(uint32_t*)(localVarBase + __op1));
 				    uint32_t op2 = (*(uint32_t*)(localVarBase + __op2));
-				    if ((CHECK_ADD_OVERFLOW_UN(op1, op2)) == 0)
+				    if ((CheckAddOverflowUn(op1, op2)) == 0)
 				    {
 				        (*(uint32_t*)(localVarBase + __ret)) = op1 + op2;
 				    }
@@ -3300,7 +3300,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    uint32_t op1 = (*(uint32_t*)(localVarBase + __op1));
 				    uint32_t op2 = (*(uint32_t*)(localVarBase + __op2));
-				    if ((CHECK_SUB_OVERFLOW_UN(op1, op2)) == 0)
+				    if ((CheckSubOverflowUn(op1, op2)) == 0)
 				    {
 				        (*(uint32_t*)(localVarBase + __ret)) = op1 - op2;
 				    }
@@ -3318,7 +3318,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    uint32_t op1 = (*(uint32_t*)(localVarBase + __op1));
 				    uint32_t op2 = (*(uint32_t*)(localVarBase + __op2));
-				    if ((CHECK_MUL_OVERFLOW_UN(op1, op2)) == 0)
+				    if ((CheckMulOverflowUn(op1, op2)) == 0)
 				    {
 				        (*(uint32_t*)(localVarBase + __ret)) = op1 * op2;
 				    }
@@ -3336,7 +3336,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    uint64_t op1 = (*(uint64_t*)(localVarBase + __op1));
 				    uint64_t op2 = (*(uint64_t*)(localVarBase + __op2));
-				    if ((CHECK_ADD_OVERFLOW64_UN(op1, op2)) == 0)
+				    if ((CheckAddOverflow64Un(op1, op2)) == 0)
 				    {
 				        (*(uint64_t*)(localVarBase + __ret)) = op1 + op2;
 				    }
@@ -3354,7 +3354,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    uint64_t op1 = (*(uint64_t*)(localVarBase + __op1));
 				    uint64_t op2 = (*(uint64_t*)(localVarBase + __op2));
-				    if ((CHECK_SUB_OVERFLOW64_UN(op1, op2)) == 0)
+				    if ((CheckSubOverflow64Un(op1, op2)) == 0)
 				    {
 				        (*(uint64_t*)(localVarBase + __ret)) = op1 - op2;
 				    }
@@ -3372,7 +3372,7 @@ else \
 					uint16_t __op2 = *(uint16_t*)(ip + 6);
 				    uint64_t op1 = (*(uint64_t*)(localVarBase + __op1));
 				    uint64_t op2 = (*(uint64_t*)(localVarBase + __op2));
-				    if ((CHECK_MUL_OVERFLOW64_UN(op1, op2)) == 0)
+				    if ((CheckMulOverflow64Un(op1, op2)) == 0)
 				    {
 				        (*(uint64_t*)(localVarBase + __ret)) = op1 * op2;
 				    }
