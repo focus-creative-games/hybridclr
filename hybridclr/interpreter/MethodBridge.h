@@ -12,21 +12,27 @@ namespace interpreter
 	typedef void (*Managed2NativeCallMethod)(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
 	typedef void (*NativeClassCtor0)(Il2CppObject* obj, const MethodInfo* method);
 
-	struct NativeCallMethod
+	struct Managed2NativeMethodInfo
+	{
+		const char* signature;
+		Managed2NativeCallMethod method;
+	};
+
+	struct Native2ManagedMethodInfo
 	{
 		const char* signature;
 		Il2CppMethodPointer method;
-		Managed2NativeCallMethod managed2NativeMethod;
 	};
 
-	struct NativeAdjustThunkMethod
+	struct NativeAdjustThunkMethodInfo
 	{
 		const char* signature;
-		Il2CppMethodPointer adjustThunkMethod;
+		Il2CppMethodPointer method;
 	};
 
-	extern NativeCallMethod g_callStub[];
-	extern NativeAdjustThunkMethod g_adjustThunkStub[];
+	extern Managed2NativeMethodInfo g_managed2nativeStub[];
+	extern Native2ManagedMethodInfo g_native2managedStub[];
+	extern NativeAdjustThunkMethodInfo g_adjustThunkStub[];
 
 	template<int N>
 	struct ValueTypeSize

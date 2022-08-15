@@ -21,8 +21,9 @@ namespace hybridclr
 	{
 		il2cpp::os::ThreadLocalValue InterpreterModule::s_machineState;
 
-		static std::unordered_map<const char*, NativeCallMethod, CStringHash, CStringEqualTo> s_calls;
-		static std::unordered_map<const char*, NativeAdjustThunkMethod, CStringHash, CStringEqualTo> s_adjustThunks;
+		static std::unordered_map<const char*, Managed2NativeCallMethod, CStringHash, CStringEqualTo> g_managed2natives;
+		static std::unordered_map<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> g_native2manageds;
+		static std::unordered_map<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> g_adjustThunks;
 
 		MachineState& InterpreterModule::GetCurrentThreadMachineState()
 		{
@@ -40,41 +41,59 @@ namespace hybridclr
 		{
 			for (size_t i = 0; ; i++)
 			{
-				NativeCallMethod& method = g_callStub[i];
+				Managed2NativeMethodInfo& method = g_managed2nativeStub[i];
 				if (!method.signature)
 				{
 					break;
 				}
-				s_calls.insert({ method.signature, method });
+				g_managed2natives.insert({ method.signature, method.method });
+			}
+			for (size_t i = 0; ; i++)
+			{
+				Native2ManagedMethodInfo& method = g_native2managedStub[i];
+				if (!method.signature)
+				{
+					break;
+				}
+				g_native2manageds.insert({ method.signature, method.method });
 			}
 
 			for (size_t i = 0; ; i++)
 			{
-				NativeAdjustThunkMethod& method = g_adjustThunkStub[i];
+				NativeAdjustThunkMethodInfo& method = g_adjustThunkStub[i];
 				if (!method.signature)
 				{
 					break;
 				}
-				s_adjustThunks.insert({ method.signature, method });
+				g_adjustThunks.insert({ method.signature, method.method });
 			}
 		}
 
 		template<typename T>
-		const NativeCallMethod* GetNativeCallMethod(const T* method, bool forceStatic)
+		const Managed2NativeCallMethod GetManaged2NativeMethod(const T* method, bool forceStatic)
 		{
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
-			auto it = s_calls.find(sigName);
-			return (it != s_calls.end()) ? &it->second : nullptr;
+			auto it = g_managed2natives.find(sigName);
+			return it != g_managed2natives.end() ? it->second : nullptr;
 		}
 
 		template<typename T>
-		const NativeAdjustThunkMethod* GetNativeAdjustMethodMethod(const T* method, bool forceStatic)
+		const Il2CppMethodPointer GetNative2ManagedMethod(const T* method, bool forceStatic)
 		{
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
-			auto it = s_adjustThunks.find(sigName);
-			return (it != s_adjustThunks.end()) ? &it->second : nullptr;
+			auto it = g_native2manageds.find(sigName);
+			return it != g_native2manageds.end() ? it->second : nullptr;
+		}
+
+		template<typename T>
+		const Il2CppMethodPointer GetNativeAdjustMethodMethod(const T* method, bool forceStatic)
+		{
+			char sigName[1000];
+			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+			auto it = g_adjustThunks.find(sigName);
+			return it != g_adjustThunks.end() ? it->second : nullptr;
 		}
 
 		static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
@@ -106,44 +125,24 @@ namespace hybridclr
 
 		Il2CppMethodPointer InterpreterModule::GetMethodPointer(const Il2CppMethodDefinition* method)
 		{
-			const NativeCallMethod* ncm = GetNativeCallMethod(method, false);
-			if (ncm)
-			{
-				return ncm->method;
-			}
-			//RaiseMethodNotSupportException(method, "GetMethodPointer");
-			return (Il2CppMethodPointer)NotSupportNative2Managed;
+			Il2CppMethodPointer ncm = GetNative2ManagedMethod(method, false);
+			return ncm ? ncm : (Il2CppMethodPointer)NotSupportNative2Managed;
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetMethodPointer(const MethodInfo* method)
 		{
-			const NativeCallMethod* ncm = GetNativeCallMethod(method, false);
-			if (ncm)
-			{
-				return ncm->method;
-			}
-			//RaiseMethodNotSupportException(method, "GetMethodPointer");
-			return (Il2CppMethodPointer)NotSupportNative2Managed;
+			Il2CppMethodPointer ncm = GetNative2ManagedMethod(method, false);
+			return ncm ? ncm : (Il2CppMethodPointer)NotSupportNative2Managed;
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const Il2CppMethodDefinition* method)
 		{
-			if (!hybridclr::metadata::IsInstanceMethod(method))
-			{
-				return nullptr;
-			}
-			const NativeAdjustThunkMethod* ncm = GetNativeAdjustMethodMethod(method, false);
-			return ncm ? ncm->adjustThunkMethod : nullptr;
+			return GetNativeAdjustMethodMethod(method, false);
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const MethodInfo* method)
 		{
-			if (!hybridclr::metadata::IsInstanceMethod(method))
-			{
-				return nullptr;
-			}
-			const NativeAdjustThunkMethod* ncm = GetNativeAdjustMethodMethod(method, false);
-			return ncm ? ncm->adjustThunkMethod : nullptr;
+			return GetNativeAdjustMethodMethod(method, false);
 		}
 
 		void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
@@ -213,24 +212,18 @@ namespace hybridclr
 
 		Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const MethodInfo* method, bool forceStatic)
 		{
-			const NativeCallMethod* ncm = GetNativeCallMethod(method, forceStatic);
-			if (ncm)
-			{
-				return ncm->managed2NativeMethod;
-			}
-			return Managed2NativeCallByReflectionInvoke;
+			char sigName[1000];
+			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+			auto it = g_managed2natives.find(sigName);
+			return it != g_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
 		}
 
 		Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
 		{
 			char sigName[1000];
 			ComputeSignature(&method.returnType, method.params, method.paramCount, false, sigName, sizeof(sigName) - 1);
-			auto it = s_calls.find(sigName);
-			if (it != s_calls.end())
-			{
-				return it->second.managed2NativeMethod;
-			}
-			return Managed2NativeCallByReflectionInvoke;
+			auto it = g_managed2natives.find(sigName);
+			return it != g_managed2natives.end()? it->second : Managed2NativeCallByReflectionInvoke;
 		}
 
 		inline void* AdjustValueTypeSelfPointer(Il2CppObject* __this)
