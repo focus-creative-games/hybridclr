@@ -16,11 +16,17 @@ namespace interpreter
 	{
 		const char* signature;
 		Il2CppMethodPointer method;
-		Il2CppMethodPointer adjustThunkMethod;
 		Managed2NativeCallMethod managed2NativeMethod;
 	};
 
+	struct NativeAdjustThunkMethod
+	{
+		const char* signature;
+		Il2CppMethodPointer adjustThunkMethod;
+	};
+
 	extern NativeCallMethod g_callStub[];
+	extern NativeAdjustThunkMethod g_adjustThunkStub[];
 
 	template<int N>
 	struct ValueTypeSize

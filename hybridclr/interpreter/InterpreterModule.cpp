@@ -22,6 +22,7 @@ namespace hybridclr
 		il2cpp::os::ThreadLocalValue InterpreterModule::s_machineState;
 
 		static std::unordered_map<const char*, NativeCallMethod, CStringHash, CStringEqualTo> s_calls;
+		static std::unordered_map<const char*, NativeAdjustThunkMethod, CStringHash, CStringEqualTo> s_adjustThunks;
 
 		MachineState& InterpreterModule::GetCurrentThreadMachineState()
 		{
@@ -46,6 +47,16 @@ namespace hybridclr
 				}
 				s_calls.insert({ method.signature, method });
 			}
+
+			for (size_t i = 0; ; i++)
+			{
+				NativeAdjustThunkMethod& method = g_adjustThunkStub[i];
+				if (!method.signature)
+				{
+					break;
+				}
+				s_adjustThunks.insert({ method.signature, method });
+			}
 		}
 
 		template<typename T>
@@ -55,6 +66,15 @@ namespace hybridclr
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = s_calls.find(sigName);
 			return (it != s_calls.end()) ? &it->second : nullptr;
+		}
+
+		template<typename T>
+		const NativeAdjustThunkMethod* GetNativeAdjustMethodMethod(const T* method, bool forceStatic)
+		{
+			char sigName[1000];
+			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+			auto it = s_adjustThunks.find(sigName);
+			return (it != s_adjustThunks.end()) ? &it->second : nullptr;
 		}
 
 		static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
@@ -112,13 +132,8 @@ namespace hybridclr
 			{
 				return nullptr;
 			}
-			const NativeCallMethod* ncm = GetNativeCallMethod(method, false);
-			if (ncm)
-			{
-				return ncm->adjustThunkMethod;
-			}
-			//RaiseMethodNotSupportException(method, "GetAdjustThunkMethodPointer");
-			return (Il2CppMethodPointer)NotSupportNative2Managed;
+			const NativeAdjustThunkMethod* ncm = GetNativeAdjustMethodMethod(method, false);
+			return ncm ? ncm->adjustThunkMethod : nullptr;
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const MethodInfo* method)
@@ -127,13 +142,8 @@ namespace hybridclr
 			{
 				return nullptr;
 			}
-			const NativeCallMethod* ncm = GetNativeCallMethod(method, false);
-			if (ncm)
-			{
-				return ncm->adjustThunkMethod;
-			}
-			//RaiseMethodNotSupportException(method, "GetAdjustThunkMethodPointer");
-			return (Il2CppMethodPointer)NotSupportNative2Managed;
+			const NativeAdjustThunkMethod* ncm = GetNativeAdjustMethodMethod(method, false);
+			return ncm ? ncm->adjustThunkMethod : nullptr;
 		}
 
 		void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
