@@ -1208,43 +1208,51 @@ inline void FixCallNativeThisPointer(const MethodInfo * method, StackObject * ds
 
 inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * method, Il2CppObject * obj, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t * argIdxs, StackObject * localVarBase, void* ret)
 {
+	StackObject* selfSo;
 	if (invokeParamCount == method->parameters_count)
 	{
 		if (hybridclr::metadata::IsInstanceMethod(method))
 		{
 			CHECK_NOT_NULL_THROW(obj);
+			selfSo = localVarBase + argIdxs[0];
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-			(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
+			selfSo->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
 #else
-			(localVarBase + argIdxs[0])->obj = obj;
+			selfSo->obj = obj;
 #endif
 			instanceM2NMethod(method, argIdxs, localVarBase, ret);
 		}
 		else
 		{
+			Interpreter::RuntimeClassCCtorInit(method);
 			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
 		}
 	}
 	else if (invokeParamCount + 1 == method->parameters_count)
 	{
+		IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(method));
+		selfSo = localVarBase + argIdxs[0];
 		// explicit this
 		CHECK_NOT_NULL_THROW(obj);
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-		(localVarBase + argIdxs[0])->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
+		selfSo->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
 #else
-		(localVarBase + argIdxs[0])->obj = obj;
+		selfSo->obj = obj;
 #endif
 		instanceM2NMethod(method, argIdxs, localVarBase, ret);
 	}
 	else
 	{
 		IL2CPP_ASSERT(invokeParamCount == method->parameters_count + 1);
+		IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(method));
+		selfSo = localVarBase + argIdxs[1];
 #if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-		if (hybridclr::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+		if (IS_CLASS_VALUE_TYPE(method->klass))
 		{
-			(localVarBase + argIdxs[1])->obj -= 1;
+			selfSo->obj -= 1;
 		}
 #endif
+		CHECK_NOT_NULL_THROW(selfSo->obj);
 		staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
 	}
 }
@@ -4873,7 +4881,6 @@ else \
 					{
 						const MethodInfo* method = _del->delegate.method;
 						Il2CppObject* target = _del->delegate.target;
-						// uint8_t _actualParameterCount = method->parameters_count + hybridclr::metadata::IsInstanceMethod(method);
 						if (hybridclr::metadata::IsInterpreterImplement(method))
 						{
 							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
@@ -4893,6 +4900,7 @@ else \
 								{
 									_argBasePtr++;
 									_resolvedArgIdxs++;
+									// Interpreter::RuntimeClassCCtorInit be called when first transform
 								}
 								break;
 							}
@@ -4906,6 +4914,7 @@ else \
 							{
 								_resolvedArgIdxs++;
 								_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+								CHECK_NOT_NULL_THROW(_argBasePtr->obj);
 								break;
 							}
 							default:
@@ -4936,6 +4945,7 @@ else \
 										_argBasePtr++;
 										_resolvedArgIdxs++;
 										_managed2NativeCallMethod = _staticM2NMethod;
+										Interpreter::RuntimeClassCCtorInit(method);
 									}
 									break;
 								}
@@ -4951,11 +4961,12 @@ else \
 									_resolvedArgIdxs++;
 									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-									if (hybridclr::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+									if (IS_CLASS_VALUE_TYPE(method->klass))
 									{
 										_argBasePtr->obj -= 1;
 									}
 					#endif
+									CHECK_NOT_NULL_THROW(_argBasePtr->obj);
 									_managed2NativeCallMethod = _staticM2NMethod;
 									break;
 								}
@@ -5002,7 +5013,6 @@ else \
 					{
 						const MethodInfo* method = _del->delegate.method;
 						Il2CppObject* target = _del->delegate.target;
-						// uint8_t _actualParameterCount = method->parameters_count + hybridclr::metadata::IsInstanceMethod(method);
 						if (hybridclr::metadata::IsInterpreterImplement(method))
 						{
 							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
@@ -5022,6 +5032,7 @@ else \
 								{
 									_argBasePtr++;
 									_resolvedArgIdxs++;
+									// Interpreter::RuntimeClassCCtorInit be called when first transform
 								}
 								break;
 							}
@@ -5035,6 +5046,7 @@ else \
 							{
 								_resolvedArgIdxs++;
 								_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+								CHECK_NOT_NULL_THROW(_argBasePtr->obj);
 								break;
 							}
 							default:
@@ -5065,6 +5077,7 @@ else \
 										_argBasePtr++;
 										_resolvedArgIdxs++;
 										_managed2NativeCallMethod = _staticM2NMethod;
+										Interpreter::RuntimeClassCCtorInit(method);
 									}
 									break;
 								}
@@ -5080,11 +5093,12 @@ else \
 									_resolvedArgIdxs++;
 									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-									if (hybridclr::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+									if (IS_CLASS_VALUE_TYPE(method->klass))
 									{
 										_argBasePtr->obj -= 1;
 									}
 					#endif
+									CHECK_NOT_NULL_THROW(_argBasePtr->obj);
 									_managed2NativeCallMethod = _staticM2NMethod;
 									break;
 								}
@@ -5132,7 +5146,6 @@ else \
 					{
 						const MethodInfo* method = _del->delegate.method;
 						Il2CppObject* target = _del->delegate.target;
-						// uint8_t _actualParameterCount = method->parameters_count + hybridclr::metadata::IsInstanceMethod(method);
 						if (hybridclr::metadata::IsInterpreterImplement(method))
 						{
 							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
@@ -5152,6 +5165,7 @@ else \
 								{
 									_argBasePtr++;
 									_resolvedArgIdxs++;
+									// Interpreter::RuntimeClassCCtorInit be called when first transform
 								}
 								break;
 							}
@@ -5165,6 +5179,7 @@ else \
 							{
 								_resolvedArgIdxs++;
 								_argBasePtr = localVarBase + _resolvedArgIdxs[0];
+								CHECK_NOT_NULL_THROW(_argBasePtr->obj);
 								break;
 							}
 							default:
@@ -5195,6 +5210,7 @@ else \
 										_argBasePtr++;
 										_resolvedArgIdxs++;
 										_managed2NativeCallMethod = _staticM2NMethod;
+										Interpreter::RuntimeClassCCtorInit(method);
 									}
 									break;
 								}
@@ -5210,11 +5226,12 @@ else \
 									_resolvedArgIdxs++;
 									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-									if (hybridclr::metadata::IsInstanceMethod(method) && IS_CLASS_VALUE_TYPE(method->klass))
+									if (IS_CLASS_VALUE_TYPE(method->klass))
 									{
 										_argBasePtr->obj -= 1;
 									}
 					#endif
+									CHECK_NOT_NULL_THROW(_argBasePtr->obj);
 									_managed2NativeCallMethod = _staticM2NMethod;
 									break;
 								}
