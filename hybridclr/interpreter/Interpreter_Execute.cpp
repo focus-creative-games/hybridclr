@@ -564,10 +564,14 @@ namespace interpreter
 		}
 	}
 
-#define CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(ARR, INDEX) CHECK_NOT_NULL_THROW(ARR); \
-if (ARR->max_length <= (il2cpp_array_size_t)INDEX) { \
-	il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException()); \
-}
+	inline void CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(Il2CppArray* arr, int64_t index)
+	{
+		CHECK_NOT_NULL_THROW(arr);
+		if (arr->max_length <= (il2cpp_array_size_t)index)
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException());
+		}
+	}
 
 	inline void CHECK_TYPE_MATCH_ELSE_THROW(Il2CppClass* klass1, Il2CppClass* klass2)
 	{
