@@ -36,63 +36,90 @@ namespace interpreter
 
 #pragma region arith
 
-#define CHECK_ADD_OVERFLOW(a,b) \
-(int32_t)(b) >= 0 ? (int32_t)(INT32_MAX) - (int32_t)(b) < (int32_t)(a) ? -1 : 0	\
-: (int32_t)(INT32_MIN) - (int32_t)(b) > (int32_t)(a) ? +1 : 0
+	inline bool CheckAddOverflow(int32_t a, int32_t b)
+	{
+		return b >= 0 ? (INT32_MAX - b < a) : (INT32_MIN - b > a);
+	}
 
-#define CHECK_SUB_OVERFLOW(a,b) \
-(int32_t)(b) < 0 ? (int32_t)(INT32_MAX) + (int32_t)(b) < (int32_t)(a) ? -1 : 0	\
-: (int32_t)(INT32_MIN) + (int32_t)(b) > (int32_t)(a) ? +1 : 0
+	inline bool CheckSubOverflow(int32_t a, int32_t b)
+	{
+		return b >= 0 ? (INT32_MAX - b < a) : (INT32_MIN - b > a);
+	}
 
-#define CHECK_ADD_OVERFLOW_UN(a,b) \
-(uint32_t)(UINT32_MAX) - (uint32_t)(b) < (uint32_t)(a) ? -1 : 0
+	inline bool CheckAddOverflowUn(uint32_t a, uint32_t b)
+	{
+		return UINT32_MAX - b < a;
+	}
 
-#define CHECK_SUB_OVERFLOW_UN(a,b) \
-(uint32_t)(a) < (uint32_t)(b) ? -1 : 0
+	inline bool CheckSubOverflowUn(uint32_t a, uint32_t b)
+	{
+		return a < b;
+	}
 
-#define CHECK_ADD_OVERFLOW64(a,b) \
-(int64_t)(b) >= 0 ? (int64_t)(INT64_MAX) - (int64_t)(b) < (int64_t)(a) ? -1 : 0	\
-: (int64_t)(INT64_MIN) - (int64_t)(b) > (int64_t)(a) ? +1 : 0
+	inline bool CheckAddOverflow64(int64_t a, int64_t b)
+	{
+		return b >= 0 ? (INT64_MAX - b < a) : (INT64_MIN - b > a);
+	}
 
-#define CHECK_SUB_OVERFLOW64(a,b) \
-(int64_t)(b) < 0 ? (int64_t)(INT64_MAX) + (int64_t)(b) < (int64_t)(a) ? -1 : 0	\
-: (int64_t)(INT64_MIN) + (int64_t)(b) > (int64_t)(a) ? +1 : 0
+	inline bool CheckSubOverflow64(int64_t a, int64_t b)
+	{
+		return b < 0 ? (INT64_MAX + b < a) : (INT64_MIN + b > a);
+	}
 
-#define CHECK_ADD_OVERFLOW64_UN(a,b) \
-(uint64_t)(UINT64_MAX) - (uint64_t)(b) < (uint64_t)(a) ? -1 : 0
+	inline bool CheckAddOverflow64Un(uint64_t a, uint64_t b)
+	{
+		return UINT64_MAX - b < a;
+	}
 
-#define CHECK_SUB_OVERFLOW64_UN(a,b) \
-(uint64_t)(a) < (uint64_t)(b) ? -1 : 0
+	inline bool CheckSubOverflow64Un(uint64_t a, uint64_t b)
+	{
+		return a < b;
+	}
 
-#define CHECK_ADD_OVERFLOW_NAT(a,b) CHECK_ADD_OVERFLOW64(a,b)
-#define CHECK_ADD_OVERFLOW_NAT_UN(a,b) CHECK_ADD_OVERFLOW64_UN(a,b)
+	inline bool CheckMulOverflow(int32_t a, int32_t b)
+	{
+		int64_t c = (int64_t)a * (int64_t)b;
+		return c <= INT32_MIN || c >= INT32_MAX;
+	}
 
-	/* Resolves to TRUE if the operands would overflow */
-#define CHECK_MUL_OVERFLOW(a,b) \
-((int32_t)(a) == 0) || ((int32_t)(b) == 0) ? 0 : \
-(((int32_t)(a) > 0) && ((int32_t)(b) == -1)) ? 0 : \
-(((int32_t)(a) < 0) && ((int32_t)(b) == -1)) ? (a == INT32_MIN) : \
-(((int32_t)(a) > 0) && ((int32_t)(b) > 0)) ? (int32_t)(a) > ((INT32_MAX) / (int32_t)(b)) : \
-(((int32_t)(a) > 0) && ((int32_t)(b) < 0)) ? (int32_t)(a) > ((INT32_MIN) / (int32_t)(b)) : \
-(((int32_t)(a) < 0) && ((int32_t)(b) > 0)) ? (int32_t)(a) < ((INT32_MIN) / (int32_t)(b)) : \
-(int32_t)(a) < ((INT32_MAX) / (int32_t)(b))
+	inline bool CheckMulOverflowUn(uint32_t a, uint32_t b)
+	{
+		return (uint64_t)a * (uint64_t)b >= UINT32_MAX;
+	}
 
-#define CHECK_MUL_OVERFLOW_UN(a,b) \
-((uint32_t)(a) == 0) || ((uint32_t)(b) == 0) ? 0 : \
-(uint32_t)(b) > ((UINT32_MAX) / (uint32_t)(a))
+	inline bool CheckMulOverflow64(int64_t a, int64_t b)
+	{
+		if (a == 0 || b == 0)
+		{
+			return false;
+		}
+		if (a > 0 && b == -1)
+		{
+			return false;
+		}
+		if (a < 0 && b == -1)
+		{
+			return a == INT64_MIN;
+		}
+		if (a > 0 && b > 0)
+		{
+			return a > INT64_MAX / b;
+		}
+		if (a > 0 && b < 0)
+		{
+			return a > INT64_MIN / b;
+		}
+		if (a < 0 && b > 0)
+		{
+			return a < INT64_MIN / b;
+		}
+		return a < INT64_MAX / b;
+	}
 
-#define CHECK_MUL_OVERFLOW64(a,b) \
-((int64_t)(a) == 0) || ((int64_t)(b) == 0) ? 0 : \
-(((int64_t)(a) > 0) && ((int64_t)(b) == -1)) ? 0 : \
-(((int64_t)(a) < 0) && ((int64_t)(b) == -1)) ? (a == INT64_MIN) : \
-(((int64_t)(a) > 0) && ((int64_t)(b) > 0)) ? (int64_t)(a) > ((INT64_MAX) / (int64_t)(b)) : \
-(((int64_t)(a) > 0) && ((int64_t)(b) < 0)) ? (int64_t)(a) > ((INT64_MIN) / (int64_t)(b)) : \
-(((int64_t)(a) < 0) && ((int64_t)(b) > 0)) ? (int64_t)(a) < ((INT64_MIN) / (int64_t)(b)) : \
-(int64_t)(a) < ((INT64_MAX) / (int64_t)(b))
-
-#define CHECK_MUL_OVERFLOW64_UN(a,b) \
-((uint64_t)(a) == 0) || ((uint64_t)(b) == 0) ? 0 : \
-(uint64_t)(b) > ((UINT64_MAX) / (uint64_t)(a))
+	inline bool CheckMulOverflow64Un(uint64_t a, uint64_t b)
+	{
+		return  a != 0 && b > UINT64_MAX / a;
+	}
 
 	inline bool CheckConvertOverflow_i4_i1(int32_t x)
 	{
