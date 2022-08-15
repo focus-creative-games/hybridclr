@@ -318,9 +318,12 @@ namespace interpreter
 		RetVar_ret_32,
 		RetVar_ret_n,
 		RetVar_void,
-		CallNative_void,
-		CallNative_ret,
-		CallNative_ret_expand,
+		CallNativeInstance_void,
+		CallNativeInstance_ret,
+		CallNativeInstance_ret_expand,
+		CallNativeStatic_void,
+		CallNativeStatic_ret,
+		CallNativeStatic_ret_expand,
 		CallInterp_void,
 		CallInterp_ret,
 		CallVirtual_void,
@@ -3422,7 +3425,7 @@ namespace interpreter
 	};
 
 
-	struct IRCallNative_void : IRCommon
+	struct IRCallNativeInstance_void : IRCommon
 	{
 		uint8_t __pad2;
 		uint8_t __pad3;
@@ -3432,7 +3435,7 @@ namespace interpreter
 	};
 
 
-	struct IRCallNative_ret : IRCommon
+	struct IRCallNativeInstance_ret : IRCommon
 	{
 		uint16_t ret;
 		uint32_t managed2NativeMethod;
@@ -3441,7 +3444,43 @@ namespace interpreter
 	};
 
 
-	struct IRCallNative_ret_expand : IRCommon
+	struct IRCallNativeInstance_ret_expand : IRCommon
+	{
+		uint8_t retLocationType;
+		uint8_t __pad3;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t managed2NativeMethod;
+		uint32_t methodInfo;
+		uint32_t argIdxs;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallNativeStatic_void : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t managed2NativeMethod;
+		uint32_t methodInfo;
+		uint32_t argIdxs;
+	};
+
+
+	struct IRCallNativeStatic_ret : IRCommon
+	{
+		uint16_t ret;
+		uint32_t managed2NativeMethod;
+		uint32_t methodInfo;
+		uint32_t argIdxs;
+	};
+
+
+	struct IRCallNativeStatic_ret_expand : IRCommon
 	{
 		uint8_t retLocationType;
 		uint8_t __pad3;

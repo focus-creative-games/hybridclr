@@ -4647,35 +4647,80 @@ else \
 					LEAVE_FRAME();
 				    continue;
 				}
-				case HiOpcodeEnum::CallNative_void:
+				case HiOpcodeEnum::CallNativeInstance_void:
 				{
 					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 4);
 					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, nullptr);
+				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+				    CHECK_NOT_NULL_THROW((localVarBase + _resolvedArgIdxs[0])->obj);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), _resolvedArgIdxs, localVarBase, nullptr);
 				    ip += 16;
 				    continue;
 				}
-				case HiOpcodeEnum::CallNative_ret:
+				case HiOpcodeEnum::CallNativeInstance_ret:
 				{
 					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 4);
 					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+				    CHECK_NOT_NULL_THROW((localVarBase + _resolvedArgIdxs[0])->obj);
 				    void* _ret = (void*)(localVarBase + __ret);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), _resolvedArgIdxs, localVarBase, _ret);
 				    ip += 16;
 				    continue;
 				}
-				case HiOpcodeEnum::CallNative_ret_expand:
+				case HiOpcodeEnum::CallNativeInstance_ret_expand:
 				{
 					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 8);
 					uint32_t __methodInfo = *(uint32_t*)(ip + 12);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 16);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
+				    uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+				    CHECK_NOT_NULL_THROW((localVarBase + _resolvedArgIdxs[0])->obj);
 				    void* _ret = (void*)(localVarBase + __ret);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), _resolvedArgIdxs, localVarBase, _ret);
+				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallNativeStatic_void:
+				{
+					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 4);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__methodInfo]);
+					Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_resolvedMethod, ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, nullptr);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallNativeStatic_ret:
+				{
+					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 4);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__methodInfo]);
+					Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    void* _ret = (void*)(localVarBase + __ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_resolvedMethod, ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallNativeStatic_ret_expand:
+				{
+					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 8);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 12);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 16);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__methodInfo]);
+					Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    void* _ret = (void*)(localVarBase + __ret);
+				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_resolvedMethod, ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;
@@ -4684,6 +4729,10 @@ else \
 				{
 					MethodInfo* __methodInfo = ((MethodInfo*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					uint16_t __argBase = *(uint16_t*)(ip + 2);
+					if (metadata::IsInstanceMethod(__methodInfo))
+					{
+						CHECK_NOT_NULL_THROW((localVarBase + __argBase)->obj);
+					}
 				    CALL_INTERP_VOID((ip + 8), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase));
 				    continue;
 				}
@@ -4692,6 +4741,10 @@ else \
 					MethodInfo* __methodInfo = ((MethodInfo*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __argBase = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
+					if (metadata::IsInstanceMethod(__methodInfo))
+					{
+						CHECK_NOT_NULL_THROW((localVarBase + __argBase)->obj);
+					}
 				    CALL_INTERP_RET((ip + 16), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase), (void*)(localVarBase + __ret));
 				    continue;
 				}

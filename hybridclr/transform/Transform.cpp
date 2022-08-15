@@ -2899,7 +2899,8 @@ else \
 					interpreter::LocationDataType locDataType = GetLocationDataTypeByType(shareMethod->return_type);
 					if (interpreter::IsNeedExpandLocationType(locDataType))
 					{
-						CreateAddIR(ir, CallNative_ret_expand);
+						CreateAddIR(ir, CallNativeInstance_ret_expand);
+						ir->type = resolvedIsInstanceMethod ? HiOpcodeEnum::CallNativeInstance_ret_expand : HiOpcodeEnum::CallNativeStatic_ret_expand;
 						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
 						ir->methodInfo = methodDataIndex;
 						ir->argIdxs = argIdxDataIndex;
@@ -2908,7 +2909,8 @@ else \
 					}
 					else
 					{
-						CreateAddIR(ir, CallNative_ret);
+						CreateAddIR(ir, CallNativeInstance_ret);
+						ir->type = resolvedIsInstanceMethod ? HiOpcodeEnum::CallNativeInstance_ret : HiOpcodeEnum::CallNativeStatic_ret;
 						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
 						ir->methodInfo = methodDataIndex;
 						ir->argIdxs = argIdxDataIndex;
@@ -2917,7 +2919,8 @@ else \
 				}
 				else
 				{
-					CreateAddIR(ir, CallNative_void);
+					CreateAddIR(ir, CallNativeInstance_void);
+					ir->type = resolvedIsInstanceMethod ? HiOpcodeEnum::CallNativeInstance_void : HiOpcodeEnum::CallNativeStatic_void;
 					ir->managed2NativeMethod = managed2NativeMethodDataIdx;
 					ir->methodInfo = methodDataIndex;
 					ir->argIdxs = argIdxDataIndex;
