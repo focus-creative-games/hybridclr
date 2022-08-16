@@ -7948,6 +7948,19 @@ else \
 				    ip += 16;
 				    continue;
 				}
+				case HiOpcodeEnum::ArrayGetGenericValueImpl:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __index = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    int32_t _index = (*(int32_t*)(localVarBase + __index));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, _index);
+				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
+				    std::memmove((*(void**)(localVarBase + __value)), GET_ARRAY_ELEMENT_ADDRESS(_arr, _index, _eleSize), _eleSize);
+				    ip += 8;
+				    continue;
+				}
 
 				//!!!}}INSTRINCT
 #pragma endregion

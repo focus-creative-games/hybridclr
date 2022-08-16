@@ -2618,6 +2618,35 @@ else \
 							continue;
 						}
 					}
+					else if (std::strcmp(klassName, "Array") == 0)
+					{
+						//if (strcmp(methodName, "get_Length") == 0)
+						//{
+						//	CreateAddIR(ir, GetArrayLengthVarVar_8);
+						//	ir->arr = ir->len = ctx.GetEvalStackTopOffset();
+						//	ctx.PopStack();
+						//	ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+						//	continue;
+						//}
+						//else if (strcmp(methodName, "get_LongLength") == 0)
+						//{
+						//	CreateAddIR(ir, GetArrayLengthVarVar_8);
+						//	ir->arr = ir->len = ctx.GetEvalStackTopOffset();
+						//	ctx.PopStack();
+						//	ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+						//	continue;
+						//}
+						if (strcmp(methodName, "GetGenericValueImpl") == 0)
+						{
+							uint16_t topOffset = ctx.GetEvalStackTopOffset();
+							CreateAddIR(ir, ArrayGetGenericValueImpl);
+							ir->arr = ctx.GetEvalStackOffset_3();
+							ir->index = ctx.GetEvalStackOffset_2();
+							ir->value = ctx.GetEvalStackOffset_1();
+							ctx.PopStackN(3);
+							continue;
+						}
+					}
 				}
 				else if (strcmp(klass->namespaze, "System.Threading") == 0)
 				{

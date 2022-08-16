@@ -609,6 +609,7 @@ namespace interpreter
 		NewVector4_2,
 		NewVector4_3,
 		NewVector4_4,
+		ArrayGetGenericValueImpl,
 
 		//!!!}}OPCODE
 	};
@@ -6431,6 +6432,14 @@ namespace interpreter
 		uint8_t __pad13;
 		uint8_t __pad14;
 		uint8_t __pad15;
+	};
+
+
+	struct IRArrayGetGenericValueImpl : IRCommon
+	{
+		uint16_t arr;
+		uint16_t index;
+		uint16_t value;
 	};
 
 
