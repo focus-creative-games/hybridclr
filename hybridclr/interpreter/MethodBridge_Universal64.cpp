@@ -17426,15 +17426,6 @@ Native2ManagedMethodInfo hybridclr::interpreter::g_native2managedStub[] =
 	{nullptr, nullptr},
 };
 
-static int8_t __N2M_AdjustorThunk_i1(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
 static ValueTypeSize16 __N2M_AdjustorThunk_i16i8i16i16(int64_t __arg0, ValueTypeSize16 __arg1, ValueTypeSize16 __arg2, const MethodInfo* method)
 {
     StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
@@ -17444,7 +17435,7 @@ static ValueTypeSize16 __N2M_AdjustorThunk_i16i8i16i16(int64_t __arg0, ValueType
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1i1(int8_t __arg0, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -17453,43 +17444,7 @@ static int8_t __N2M_AdjustorThunk_i1i1(int8_t __arg0, const MethodInfo* method)
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1i2(int16_t __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1i4(int32_t __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1i4i4i4vf3i4r4i8i8i8(int32_t __arg0, int32_t __arg1, int32_t __arg2, HtVector3f __arg3, int32_t __arg4, float __arg5, int64_t __arg6, int64_t __arg7, int64_t __arg8, const MethodInfo* method)
-{
-    StackObject args[10] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
-    StackObject* ret = args + 9;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1i4i4r4i8i8i8(int32_t __arg0, int32_t __arg1, float __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
-    StackObject* ret = args + 6;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1i4i8(int32_t __arg0, int64_t __arg1, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8i1(int64_t __arg0, int8_t __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
@@ -17498,19 +17453,55 @@ static int8_t __N2M_AdjustorThunk_i1i4i8(int32_t __arg0, int64_t __arg1, const M
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1i4i8i8i8(int32_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8i2(int64_t __arg0, int16_t __arg1, const MethodInfo* method)
 {
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = args + 4;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int8_t*)ret;
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1i8(int64_t __arg0, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8i4i4i4vf3i4r4i8i8i8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, HtVector3f __arg4, int32_t __arg5, float __arg6, int64_t __arg7, int64_t __arg8, int64_t __arg9, const MethodInfo* method)
+{
+    StackObject args[11] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, (uint64_t)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9 };
+    StackObject* ret = args + 10;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8i4i4r4i8i8i8(int64_t __arg0, int32_t __arg1, int32_t __arg2, float __arg3, int64_t __arg4, int64_t __arg5, int64_t __arg6, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = args + 7;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8i4i8(int64_t __arg0, int32_t __arg1, int64_t __arg2, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8i4i8i8i8(int64_t __arg0, int32_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = args + 5;
     Interpreter::Execute(method, args, ret);
     return *(int8_t*)ret;
 }
@@ -17525,142 +17516,16 @@ static int8_t __N2M_AdjustorThunk_i1i8i8(int64_t __arg0, int64_t __arg1, const M
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1r4(float __arg0, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8i8i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
     Interpreter::Execute(method, args, ret);
     return *(int8_t*)ret;
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1r8(double __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S1(ValueTypeSize<1> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S108(ValueTypeSize<108> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S116(ValueTypeSize<116> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S12(ValueTypeSize<12> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S120(ValueTypeSize<120> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S136(ValueTypeSize<136> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S1568(ValueTypeSize<1568> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S16(ValueTypeSize<16> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S188(ValueTypeSize<188> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S2(ValueTypeSize<2> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S224(ValueTypeSize<224> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S232(ValueTypeSize<232> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S24(ValueTypeSize<24> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S24i8(ValueTypeSize<24> __arg0, int64_t __arg1, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8r4(int64_t __arg0, float __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
@@ -17669,124 +17534,7 @@ static int8_t __N2M_AdjustorThunk_i1S24i8(ValueTypeSize<24> __arg0, int64_t __ar
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1S28(ValueTypeSize<28> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S312(ValueTypeSize<312> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S32(ValueTypeSize<32> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S4(ValueTypeSize<4> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S40(ValueTypeSize<40> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S64(ValueTypeSize<64> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S68(ValueTypeSize<68> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S8(ValueTypeSize<8> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S96(ValueTypeSize<96> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1S992(ValueTypeSize<992> __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1vd2(HtVector2d __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1vf2(HtVector2f __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1vf3(HtVector3f __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int8_t*)ret;
-}
-
-
-static int8_t __N2M_AdjustorThunk_i1vf3i1(HtVector3f __arg0, int8_t __arg1, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8r8(int64_t __arg0, double __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
@@ -17795,7 +17543,16 @@ static int8_t __N2M_AdjustorThunk_i1vf3i1(HtVector3f __arg0, int8_t __arg1, cons
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1vf3vf3(HtVector3f __arg0, HtVector3f __arg1, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8S1(int64_t __arg0, ValueTypeSize<1> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S108(int64_t __arg0, ValueTypeSize<108> __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
     StackObject* ret = args + 2;
@@ -17804,16 +17561,70 @@ static int8_t __N2M_AdjustorThunk_i1vf3vf3(HtVector3f __arg0, HtVector3f __arg1,
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1vf4(HtVector4f __arg0, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8S116(int64_t __arg0, ValueTypeSize<116> __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int8_t*)ret;
 }
 
 
-static int8_t __N2M_AdjustorThunk_i1vf4i1(HtVector4f __arg0, int8_t __arg1, const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8S12(int64_t __arg0, ValueTypeSize<12> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S120(int64_t __arg0, ValueTypeSize<120> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S136(int64_t __arg0, ValueTypeSize<136> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S1568(int64_t __arg0, ValueTypeSize<1568> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S16(int64_t __arg0, ValueTypeSize<16> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S188(int64_t __arg0, ValueTypeSize<188> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S2(int64_t __arg0, ValueTypeSize<2> __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
@@ -17822,48 +17633,201 @@ static int8_t __N2M_AdjustorThunk_i1vf4i1(HtVector4f __arg0, int8_t __arg1, cons
 }
 
 
-static int16_t __N2M_AdjustorThunk_i2(const MethodInfo* method)
+static int8_t __N2M_AdjustorThunk_i1i8S224(int64_t __arg0, ValueTypeSize<224> __arg1, const MethodInfo* method)
 {
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S232(int64_t __arg0, ValueTypeSize<232> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S24(int64_t __arg0, ValueTypeSize<24> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S24i8(int64_t __arg0, ValueTypeSize<24> __arg1, int64_t __arg2, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S28(int64_t __arg0, ValueTypeSize<28> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S312(int64_t __arg0, ValueTypeSize<312> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S32(int64_t __arg0, ValueTypeSize<32> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S4(int64_t __arg0, ValueTypeSize<4> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S40(int64_t __arg0, ValueTypeSize<40> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S64(int64_t __arg0, ValueTypeSize<64> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S68(int64_t __arg0, ValueTypeSize<68> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S8(int64_t __arg0, ValueTypeSize<8> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S96(int64_t __arg0, ValueTypeSize<96> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8S992(int64_t __arg0, ValueTypeSize<992> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vd2(int64_t __arg0, HtVector2d __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vf2(int64_t __arg0, HtVector2f __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vf3(int64_t __arg0, HtVector3f __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vf3i1(int64_t __arg0, HtVector3f __arg1, int8_t __arg2, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vf3vf3(int64_t __arg0, HtVector3f __arg1, HtVector3f __arg2, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
+    StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vf4(int64_t __arg0, HtVector4f __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int8_t __N2M_AdjustorThunk_i1i8vf4i1(int64_t __arg0, HtVector4f __arg1, int8_t __arg2, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int8_t*)ret;
+}
+
+
+static int16_t __N2M_AdjustorThunk_i2i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(int16_t*)ret;
-}
-
-
-static int32_t __N2M_AdjustorThunk_i4(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(int32_t*)ret;
-}
-
-
-static int32_t __N2M_AdjustorThunk_i4i1(int8_t __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int32_t*)ret;
-}
-
-
-static int32_t __N2M_AdjustorThunk_i4i2(int16_t __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int32_t*)ret;
-}
-
-
-static int32_t __N2M_AdjustorThunk_i4i4(int32_t __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(int32_t*)ret;
 }
 
 
@@ -17871,6 +17835,24 @@ static int32_t __N2M_AdjustorThunk_i4i8(int64_t __arg0, const MethodInfo* method
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
+    Interpreter::Execute(method, args, ret);
+    return *(int32_t*)ret;
+}
+
+
+static int32_t __N2M_AdjustorThunk_i4i8i1(int64_t __arg0, int8_t __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int32_t*)ret;
+}
+
+
+static int32_t __N2M_AdjustorThunk_i4i8i2(int64_t __arg0, int16_t __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
@@ -17885,10 +17867,28 @@ static int32_t __N2M_AdjustorThunk_i4i8i4(int64_t __arg0, int32_t __arg1, const 
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4i8i4i1(int64_t __arg0, int32_t __arg1, int8_t __arg2, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8i8(int64_t __arg0, int64_t __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(int32_t*)ret;
+}
+
+
+static int32_t __N2M_AdjustorThunk_i4i8i8i4(int64_t __arg0, int64_t __arg1, int32_t __arg2, const MethodInfo* method)
 {
     StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int32_t*)ret;
+}
+
+
+static int32_t __N2M_AdjustorThunk_i4i8i8i4i1(int64_t __arg0, int64_t __arg1, int32_t __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = args + 4;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
@@ -17903,70 +17903,61 @@ static int32_t __N2M_AdjustorThunk_i4i8i8i4i4i8i8(int64_t __arg0, int64_t __arg1
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4r4(float __arg0, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8r4(int64_t __arg0, float __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4r8(double __arg0, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8r8(int64_t __arg0, double __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4S1(ValueTypeSize<1> __arg0, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8S1(int64_t __arg0, ValueTypeSize<1> __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4S16(ValueTypeSize<16> __arg0, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8S16(int64_t __arg0, ValueTypeSize<16> __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4S4(ValueTypeSize<4> __arg0, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8S4(int64_t __arg0, ValueTypeSize<4> __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
 
 
-static int32_t __N2M_AdjustorThunk_i4S8(ValueTypeSize<8> __arg0, const MethodInfo* method)
+static int32_t __N2M_AdjustorThunk_i4i8S8(int64_t __arg0, ValueTypeSize<8> __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int32_t*)ret;
 }
 
 
-static int64_t __N2M_AdjustorThunk_i8(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(int64_t*)ret;
-}
-
-
-static int64_t __N2M_AdjustorThunk_i8i2(int16_t __arg0, const MethodInfo* method)
+static int64_t __N2M_AdjustorThunk_i8i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -17975,7 +17966,7 @@ static int64_t __N2M_AdjustorThunk_i8i2(int16_t __arg0, const MethodInfo* method
 }
 
 
-static int64_t __N2M_AdjustorThunk_i8i2i8(int16_t __arg0, int64_t __arg1, const MethodInfo* method)
+static int64_t __N2M_AdjustorThunk_i8i8i2(int64_t __arg0, int16_t __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
@@ -17984,19 +17975,19 @@ static int64_t __N2M_AdjustorThunk_i8i2i8(int16_t __arg0, int64_t __arg1, const 
 }
 
 
-static int64_t __N2M_AdjustorThunk_i8i4(int32_t __arg0, const MethodInfo* method)
+static int64_t __N2M_AdjustorThunk_i8i8i2i8(int64_t __arg0, int16_t __arg1, int64_t __arg2, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
     Interpreter::Execute(method, args, ret);
     return *(int64_t*)ret;
 }
 
 
-static int64_t __N2M_AdjustorThunk_i8i8(int64_t __arg0, const MethodInfo* method)
+static int64_t __N2M_AdjustorThunk_i8i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(int64_t*)ret;
 }
@@ -18011,6 +18002,15 @@ static int64_t __N2M_AdjustorThunk_i8i8i8(int64_t __arg0, int64_t __arg1, const 
 }
 
 
+static int64_t __N2M_AdjustorThunk_i8i8i8i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
+    Interpreter::Execute(method, args, ret);
+    return *(int64_t*)ret;
+}
+
+
 static int64_t __N2M_AdjustorThunk_i8i8S12(int64_t __arg0, ValueTypeSize<12> __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
@@ -18020,16 +18020,7 @@ static int64_t __N2M_AdjustorThunk_i8i8S12(int64_t __arg0, ValueTypeSize<12> __a
 }
 
 
-static float __N2M_AdjustorThunk_r4(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(float*)ret;
-}
-
-
-static float __N2M_AdjustorThunk_r4i4(int32_t __arg0, const MethodInfo* method)
+static float __N2M_AdjustorThunk_r4i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -18038,7 +18029,7 @@ static float __N2M_AdjustorThunk_r4i4(int32_t __arg0, const MethodInfo* method)
 }
 
 
-static float __N2M_AdjustorThunk_r4i4i4(int32_t __arg0, int32_t __arg1, const MethodInfo* method)
+static float __N2M_AdjustorThunk_r4i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
@@ -18047,37 +18038,37 @@ static float __N2M_AdjustorThunk_r4i4i4(int32_t __arg0, int32_t __arg1, const Me
 }
 
 
-static float __N2M_AdjustorThunk_r4vf3(HtVector3f __arg0, const MethodInfo* method)
+static float __N2M_AdjustorThunk_r4i8i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = args + 3;
     Interpreter::Execute(method, args, ret);
     return *(float*)ret;
 }
 
 
-static double __N2M_AdjustorThunk_r8(const MethodInfo* method)
+static float __N2M_AdjustorThunk_r4i8vf3(int64_t __arg0, HtVector3f __arg1, const MethodInfo* method)
 {
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(float*)ret;
+}
+
+
+static double __N2M_AdjustorThunk_r8i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(double*)ret;
 }
 
 
-static ValueTypeSize<1> __N2M_AdjustorThunk_S1(const MethodInfo* method)
+static ValueTypeSize<12> __N2M_AdjustorThunk_S12i8(int64_t __arg0, const MethodInfo* method)
 {
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<1>*)ret;
-}
-
-
-static ValueTypeSize<12> __N2M_AdjustorThunk_S12(const MethodInfo* method)
-{
-    StackObject args[2] = { };
-    StackObject* ret = args + 0;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<12>*)ret;
 }
@@ -18101,24 +18092,6 @@ static ValueTypeSize<12> __N2M_AdjustorThunk_S12i8S12S12(int64_t __arg0, ValueTy
 }
 
 
-static ValueTypeSize<16> __N2M_AdjustorThunk_S16(const MethodInfo* method)
-{
-    StackObject args[2] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<16>*)ret;
-}
-
-
-static ValueTypeSize<16> __N2M_AdjustorThunk_S16i4(int32_t __arg0, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<16>*)ret;
-}
-
-
 static ValueTypeSize<16> __N2M_AdjustorThunk_S16i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
@@ -18128,75 +18101,66 @@ static ValueTypeSize<16> __N2M_AdjustorThunk_S16i8(int64_t __arg0, const MethodI
 }
 
 
-static ValueTypeSize<16> __N2M_AdjustorThunk_S16r8(double __arg0, const MethodInfo* method)
+static ValueTypeSize<16> __N2M_AdjustorThunk_S16i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<16>*)ret;
 }
 
 
-static ValueTypeSize<16> __N2M_AdjustorThunk_S16S8(ValueTypeSize<8> __arg0, const MethodInfo* method)
+static ValueTypeSize<16> __N2M_AdjustorThunk_S16i8i8(int64_t __arg0, int64_t __arg1, const MethodInfo* method)
 {
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<16>*)ret;
 }
 
 
-static ValueTypeSize<188> __N2M_AdjustorThunk_S188(const MethodInfo* method)
+static ValueTypeSize<16> __N2M_AdjustorThunk_S16i8r8(int64_t __arg0, double __arg1, const MethodInfo* method)
 {
-    StackObject args[24] = { };
-    StackObject* ret = args + 0;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<16>*)ret;
+}
+
+
+static ValueTypeSize<16> __N2M_AdjustorThunk_S16i8S8(int64_t __arg0, ValueTypeSize<8> __arg1, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<16>*)ret;
+}
+
+
+static ValueTypeSize<188> __N2M_AdjustorThunk_S188i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[25] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<188>*)ret;
 }
 
 
-static ValueTypeSize<2> __N2M_AdjustorThunk_S2(const MethodInfo* method)
+static ValueTypeSize<1> __N2M_AdjustorThunk_S1i8(int64_t __arg0, const MethodInfo* method)
 {
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<2>*)ret;
-}
-
-
-static ValueTypeSize<224> __N2M_AdjustorThunk_S224(const MethodInfo* method)
-{
-    StackObject args[28] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<224>*)ret;
-}
-
-
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24(const MethodInfo* method)
-{
-    StackObject args[3] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<24>*)ret;
-}
-
-
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24i4(int32_t __arg0, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<24>*)ret;
+    return *(ValueTypeSize<1>*)ret;
 }
 
 
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24i4i4i4S56i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, ValueTypeSize<56> __arg3, int32_t __arg4, const MethodInfo* method)
+static ValueTypeSize<224> __N2M_AdjustorThunk_S224i8(int64_t __arg0, const MethodInfo* method)
 {
-    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = args + 5;
+    StackObject args[29] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<24>*)ret;
+    return *(ValueTypeSize<224>*)ret;
 }
 
 
@@ -18209,10 +18173,19 @@ static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8(int64_t __arg0, const MethodI
 }
 
 
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8i1(int64_t __arg0, int8_t __arg1, const MethodInfo* method)
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
     StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<24>*)ret;
+}
+
+
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8i4i4i4S56i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, ValueTypeSize<56> __arg4, int32_t __arg5, const MethodInfo* method)
+{
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, (uint64_t)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = args + 6;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<24>*)ret;
 }
@@ -18236,16 +18209,7 @@ static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8i8i1(int64_t __arg0, int64_t _
 }
 
 
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56i1(ValueTypeSize<56> __arg0, int8_t __arg1, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = args + 2;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<24>*)ret;
-}
-
-
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56i1i1(ValueTypeSize<56> __arg0, int8_t __arg1, int8_t __arg2, const MethodInfo* method)
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8i8i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, const MethodInfo* method)
 {
     StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = args + 3;
@@ -18254,7 +18218,16 @@ static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56i1i1(ValueTypeSize<56> __arg0
 }
 
 
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56S56i1(ValueTypeSize<56> __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, const MethodInfo* method)
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8i8i8i1(int64_t __arg0, int64_t __arg1, int64_t __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = args + 4;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<24>*)ret;
+}
+
+
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8S56i1(int64_t __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, const MethodInfo* method)
 {
     StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = args + 3;
@@ -18263,7 +18236,7 @@ static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56S56i1(ValueTypeSize<56> __arg
 }
 
 
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56S56i1i1(ValueTypeSize<56> __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, int8_t __arg3, const MethodInfo* method)
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8S56i1i1(int64_t __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, int8_t __arg3, const MethodInfo* method)
 {
     StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = args + 4;
@@ -18272,21 +18245,30 @@ static ValueTypeSize<24> __N2M_AdjustorThunk_S24S56S56i1i1(ValueTypeSize<56> __a
 }
 
 
-static ValueTypeSize<24> __N2M_AdjustorThunk_S24S8(ValueTypeSize<8> __arg0, const MethodInfo* method)
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8S56S56i1(int64_t __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, int8_t __arg3, const MethodInfo* method)
 {
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = args + 4;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<24>*)ret;
 }
 
 
-static ValueTypeSize<28> __N2M_AdjustorThunk_S28(const MethodInfo* method)
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8S56S56i1i1(int64_t __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, int8_t __arg3, int8_t __arg4, const MethodInfo* method)
 {
-    StackObject args[4] = { };
-    StackObject* ret = args + 0;
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = args + 5;
     Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<28>*)ret;
+    return *(ValueTypeSize<24>*)ret;
+}
+
+
+static ValueTypeSize<24> __N2M_AdjustorThunk_S24i8S8(int64_t __arg0, ValueTypeSize<8> __arg1, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<24>*)ret;
 }
 
 
@@ -18299,21 +18281,30 @@ static ValueTypeSize<28> __N2M_AdjustorThunk_S28i8(int64_t __arg0, const MethodI
 }
 
 
-static ValueTypeSize<28> __N2M_AdjustorThunk_S28S28(ValueTypeSize<28> __arg0, const MethodInfo* method)
+static ValueTypeSize<28> __N2M_AdjustorThunk_S28i8i8(int64_t __arg0, int64_t __arg1, const MethodInfo* method)
 {
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<28>*)ret;
 }
 
 
-static ValueTypeSize<32> __N2M_AdjustorThunk_S32(const MethodInfo* method)
+static ValueTypeSize<28> __N2M_AdjustorThunk_S28i8S28(int64_t __arg0, ValueTypeSize<28> __arg1, const MethodInfo* method)
 {
-    StackObject args[4] = { };
-    StackObject* ret = args + 0;
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<32>*)ret;
+    return *(ValueTypeSize<28>*)ret;
+}
+
+
+static ValueTypeSize<2> __N2M_AdjustorThunk_S2i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<2>*)ret;
 }
 
 
@@ -18326,43 +18317,43 @@ static ValueTypeSize<32> __N2M_AdjustorThunk_S32i8(int64_t __arg0, const MethodI
 }
 
 
-static ValueTypeSize<36> __N2M_AdjustorThunk_S36(const MethodInfo* method)
+static ValueTypeSize<32> __N2M_AdjustorThunk_S32i8i8(int64_t __arg0, int64_t __arg1, const MethodInfo* method)
 {
-    StackObject args[5] = { };
-    StackObject* ret = args + 0;
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<32>*)ret;
+}
+
+
+static ValueTypeSize<36> __N2M_AdjustorThunk_S36i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<36>*)ret;
 }
 
 
-static ValueTypeSize<4> __N2M_AdjustorThunk_S4(const MethodInfo* method)
+static ValueTypeSize<40> __N2M_AdjustorThunk_S40i8(int64_t __arg0, const MethodInfo* method)
 {
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<4>*)ret;
-}
-
-
-static ValueTypeSize<40> __N2M_AdjustorThunk_S40(const MethodInfo* method)
-{
-    StackObject args[5] = { };
-    StackObject* ret = args + 0;
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<40>*)ret;
 }
 
 
-static ValueTypeSize<48> __N2M_AdjustorThunk_S48i4(int32_t __arg0, const MethodInfo* method)
+static ValueTypeSize<48> __N2M_AdjustorThunk_S48i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<48>*)ret;
 }
 
 
-static ValueTypeSize<4> __N2M_AdjustorThunk_S4i4(int32_t __arg0, const MethodInfo* method)
+static ValueTypeSize<4> __N2M_AdjustorThunk_S4i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -18371,16 +18362,16 @@ static ValueTypeSize<4> __N2M_AdjustorThunk_S4i4(int32_t __arg0, const MethodInf
 }
 
 
-static ValueTypeSize<56> __N2M_AdjustorThunk_S56(const MethodInfo* method)
+static ValueTypeSize<4> __N2M_AdjustorThunk_S4i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[7] = { };
-    StackObject* ret = args + 0;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<56>*)ret;
+    return *(ValueTypeSize<4>*)ret;
 }
 
 
-static ValueTypeSize<56> __N2M_AdjustorThunk_S56i4(int32_t __arg0, const MethodInfo* method)
+static ValueTypeSize<56> __N2M_AdjustorThunk_S56i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -18389,48 +18380,30 @@ static ValueTypeSize<56> __N2M_AdjustorThunk_S56i4(int32_t __arg0, const MethodI
 }
 
 
-static ValueTypeSize<64> __N2M_AdjustorThunk_S64(const MethodInfo* method)
+static ValueTypeSize<56> __N2M_AdjustorThunk_S56i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[8] = { };
-    StackObject* ret = args + 0;
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<56>*)ret;
+}
+
+
+static ValueTypeSize<64> __N2M_AdjustorThunk_S64i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<64>*)ret;
 }
 
 
-static ValueTypeSize<68> __N2M_AdjustorThunk_S68(const MethodInfo* method)
+static ValueTypeSize<68> __N2M_AdjustorThunk_S68i8(int64_t __arg0, const MethodInfo* method)
 {
-    StackObject args[9] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<68>*)ret;
-}
-
-
-static ValueTypeSize<8> __N2M_AdjustorThunk_S8(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<8>*)ret;
-}
-
-
-static ValueTypeSize<8> __N2M_AdjustorThunk_S8i4(int32_t __arg0, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject args[10] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<8>*)ret;
-}
-
-
-static ValueTypeSize<8> __N2M_AdjustorThunk_S8i4i8i8(int32_t __arg0, int64_t __arg1, int64_t __arg2, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = args + 3;
-    Interpreter::Execute(method, args, ret);
-    return *(ValueTypeSize<8>*)ret;
+    return *(ValueTypeSize<68>*)ret;
 }
 
 
@@ -18443,61 +18416,70 @@ static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8(int64_t __arg0, const MethodInf
 }
 
 
-static ValueTypeSize<8> __N2M_AdjustorThunk_S8r8(double __arg0, const MethodInfo* method)
+static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<8>*)ret;
 }
 
 
-static ValueTypeSize<8> __N2M_AdjustorThunk_S8S16(ValueTypeSize<16> __arg0, const MethodInfo* method)
+static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8i4i8i8(int64_t __arg0, int32_t __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = args + 4;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<8>*)ret;
 }
 
 
-static ValueTypeSize<8> __N2M_AdjustorThunk_S8S8(ValueTypeSize<8> __arg0, const MethodInfo* method)
+static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8i8(int64_t __arg0, int64_t __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<8>*)ret;
 }
 
 
-static ValueTypeSize<992> __N2M_AdjustorThunk_S992(const MethodInfo* method)
+static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8r8(int64_t __arg0, double __arg1, const MethodInfo* method)
 {
-    StackObject args[124] = { };
-    StackObject* ret = args + 0;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<8>*)ret;
+}
+
+
+static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8S16(int64_t __arg0, ValueTypeSize<16> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<8>*)ret;
+}
+
+
+static ValueTypeSize<8> __N2M_AdjustorThunk_S8i8S8(int64_t __arg0, ValueTypeSize<8> __arg1, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
+    Interpreter::Execute(method, args, ret);
+    return *(ValueTypeSize<8>*)ret;
+}
+
+
+static ValueTypeSize<992> __N2M_AdjustorThunk_S992i8(int64_t __arg0, const MethodInfo* method)
+{
+    StackObject args[125] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject* ret = args + 1;
     Interpreter::Execute(method, args, ret);
     return *(ValueTypeSize<992>*)ret;
 }
 
 
-static void __N2M_AdjustorThunk_v(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static HtVector2f __N2M_AdjustorThunk_vf2(const MethodInfo* method)
-{
-    StackObject args[1] = { };
-    StackObject* ret = args + 0;
-    Interpreter::Execute(method, args, ret);
-    return *(HtVector2f*)ret;
-}
-
-
-static HtVector2f __N2M_AdjustorThunk_vf2r4(float __arg0, const MethodInfo* method)
+static HtVector2f __N2M_AdjustorThunk_vf2i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -18506,16 +18488,16 @@ static HtVector2f __N2M_AdjustorThunk_vf2r4(float __arg0, const MethodInfo* meth
 }
 
 
-static HtVector3f __N2M_AdjustorThunk_vf3(const MethodInfo* method)
+static HtVector2f __N2M_AdjustorThunk_vf2i8r4(int64_t __arg0, float __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = { };
-    StackObject* ret = args + 0;
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
-    return *(HtVector3f*)ret;
+    return *(HtVector2f*)ret;
 }
 
 
-static HtVector3f __N2M_AdjustorThunk_vf3r4(float __arg0, const MethodInfo* method)
+static HtVector3f __N2M_AdjustorThunk_vf3i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -18524,25 +18506,25 @@ static HtVector3f __N2M_AdjustorThunk_vf3r4(float __arg0, const MethodInfo* meth
 }
 
 
-static HtVector3f __N2M_AdjustorThunk_vf3vf3(HtVector3f __arg0, const MethodInfo* method)
+static HtVector3f __N2M_AdjustorThunk_vf3i8r4(int64_t __arg0, float __arg1, const MethodInfo* method)
 {
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(HtVector3f*)ret;
 }
 
 
-static HtVector4f __N2M_AdjustorThunk_vf4(const MethodInfo* method)
+static HtVector3f __N2M_AdjustorThunk_vf3i8vf3(int64_t __arg0, HtVector3f __arg1, const MethodInfo* method)
 {
-    StackObject args[2] = { };
-    StackObject* ret = args + 0;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
-    return *(HtVector4f*)ret;
+    return *(HtVector3f*)ret;
 }
 
 
-static HtVector4f __N2M_AdjustorThunk_vf4i4(int32_t __arg0, const MethodInfo* method)
+static HtVector4f __N2M_AdjustorThunk_vf4i8(int64_t __arg0, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
     StackObject* ret = args + 1;
@@ -18551,381 +18533,21 @@ static HtVector4f __N2M_AdjustorThunk_vf4i4(int32_t __arg0, const MethodInfo* me
 }
 
 
-static HtVector4f __N2M_AdjustorThunk_vf4vf4(HtVector4f __arg0, const MethodInfo* method)
+static HtVector4f __N2M_AdjustorThunk_vf4i8i4(int64_t __arg0, int32_t __arg1, const MethodInfo* method)
 {
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = args + 1;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
     return *(HtVector4f*)ret;
 }
 
 
-static void __N2M_AdjustorThunk_vi1(int8_t __arg0, const MethodInfo* method)
+static HtVector4f __N2M_AdjustorThunk_vf4i8vf4(int64_t __arg0, HtVector4f __arg1, const MethodInfo* method)
 {
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = args + 2;
     Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi1i1(int8_t __arg0, int8_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi1i1i1i1(int8_t __arg0, int8_t __arg1, int8_t __arg2, int8_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi1i1i1i4i4i4i4(int8_t __arg0, int8_t __arg1, int8_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi1i1i1i4i4i4i4i4i4i4i4(int8_t __arg0, int8_t __arg1, int8_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, int32_t __arg8, int32_t __arg9, int32_t __arg10, const MethodInfo* method)
-{
-    StackObject args[11] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9, *(uint64_t*)&__arg10 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi1i4(int8_t __arg0, int32_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi2(int16_t __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi2i2(int16_t __arg0, int16_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi2i4i1i1i1(int16_t __arg0, int32_t __arg1, int8_t __arg2, int8_t __arg3, int8_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4(int32_t __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i1(int32_t __arg0, int8_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i1i1i1i1i4i8(int32_t __arg0, int8_t __arg1, int8_t __arg2, int8_t __arg3, int8_t __arg4, int32_t __arg5, int64_t __arg6, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i2i2i1i1i1i1i1i1i1i1(int32_t __arg0, int16_t __arg1, int16_t __arg2, int8_t __arg3, int8_t __arg4, int8_t __arg5, int8_t __arg6, int8_t __arg7, int8_t __arg8, int8_t __arg9, int8_t __arg10, const MethodInfo* method)
-{
-    StackObject args[11] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9, *(uint64_t*)&__arg10 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i2i2i8(int32_t __arg0, int16_t __arg1, int16_t __arg2, int64_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4(int32_t __arg0, int32_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i1i1(int32_t __arg0, int32_t __arg1, int32_t __arg2, int8_t __arg3, int8_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, const MethodInfo* method)
-{
-    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i4i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, const MethodInfo* method)
-{
-    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i4i8(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int64_t __arg7, const MethodInfo* method)
-{
-    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i4i8i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int64_t __arg7, int32_t __arg8, const MethodInfo* method)
-{
-    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i4i8S8(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int64_t __arg7, ValueTypeSize<8> __arg8, const MethodInfo* method)
-{
-    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i4S8(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, ValueTypeSize<8> __arg7, const MethodInfo* method)
-{
-    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4i8(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int64_t __arg6, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i4i4i4S8(int32_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, ValueTypeSize<8> __arg6, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4i8(int32_t __arg0, int32_t __arg1, int32_t __arg2, int64_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i4S56i4(int32_t __arg0, int32_t __arg1, int32_t __arg2, ValueTypeSize<56> __arg3, int32_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4i8(int32_t __arg0, int32_t __arg1, int64_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4r4(int32_t __arg0, int32_t __arg1, float __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i4r4i1(int32_t __arg0, int32_t __arg1, float __arg2, int8_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i8(int32_t __arg0, int64_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4i8i8i8i8i8(int32_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, const MethodInfo* method)
-{
-    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4r4(int32_t __arg0, float __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4S4(int32_t __arg0, ValueTypeSize<4> __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4S40i1i1i1(int32_t __arg0, ValueTypeSize<40> __arg1, int8_t __arg2, int8_t __arg3, int8_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4S48i4(int32_t __arg0, ValueTypeSize<48> __arg1, int32_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4S56(int32_t __arg0, ValueTypeSize<56> __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vi4vf4(int32_t __arg0, HtVector4f __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
+    return *(HtVector4f*)ret;
 }
 
 
@@ -18947,9 +18569,72 @@ static void __N2M_AdjustorThunk_vi8i1(int64_t __arg0, int8_t __arg1, const Metho
 }
 
 
+static void __N2M_AdjustorThunk_vi8i1i1(int64_t __arg0, int8_t __arg1, int8_t __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i1i1i1i1(int64_t __arg0, int8_t __arg1, int8_t __arg2, int8_t __arg3, int8_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i1i1i1i4i4i4i4(int64_t __arg0, int8_t __arg1, int8_t __arg2, int8_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i1i1i1i4i4i4i4i4i4i4i4(int64_t __arg0, int8_t __arg1, int8_t __arg2, int8_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, int32_t __arg8, int32_t __arg9, int32_t __arg10, int32_t __arg11, const MethodInfo* method)
+{
+    StackObject args[12] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9, *(uint64_t*)&__arg10, *(uint64_t*)&__arg11 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
 static void __N2M_AdjustorThunk_vi8i1i4(int64_t __arg0, int8_t __arg1, int32_t __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i2(int64_t __arg0, int16_t __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i2i2(int64_t __arg0, int16_t __arg1, int16_t __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i2i4i1i1i1(int64_t __arg0, int16_t __arg1, int32_t __arg2, int8_t __arg3, int8_t __arg4, int8_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
@@ -18974,6 +18659,33 @@ static void __N2M_AdjustorThunk_vi8i4i1(int64_t __arg0, int32_t __arg1, int8_t _
 }
 
 
+static void __N2M_AdjustorThunk_vi8i4i1i1i1i1i4i8(int64_t __arg0, int32_t __arg1, int8_t __arg2, int8_t __arg3, int8_t __arg4, int8_t __arg5, int32_t __arg6, int64_t __arg7, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i2i2i1i1i1i1i1i1i1i1(int64_t __arg0, int32_t __arg1, int16_t __arg2, int16_t __arg3, int8_t __arg4, int8_t __arg5, int8_t __arg6, int8_t __arg7, int8_t __arg8, int8_t __arg9, int8_t __arg10, int8_t __arg11, const MethodInfo* method)
+{
+    StackObject args[12] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9, *(uint64_t*)&__arg10, *(uint64_t*)&__arg11 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i2i2i8(int64_t __arg0, int32_t __arg1, int16_t __arg2, int16_t __arg3, int64_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
 static void __N2M_AdjustorThunk_vi8i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
@@ -18992,9 +18704,225 @@ static void __N2M_AdjustorThunk_vi8i4i4i4(int64_t __arg0, int32_t __arg1, int32_
 }
 
 
+static void __N2M_AdjustorThunk_vi8i4i4i4i1i1(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int8_t __arg4, int8_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, int32_t __arg8, const MethodInfo* method)
+{
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, int64_t __arg8, const MethodInfo* method)
+{
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i8i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, int64_t __arg8, int32_t __arg9, const MethodInfo* method)
+{
+    StackObject args[10] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i8S8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, int64_t __arg8, ValueTypeSize<8> __arg9, const MethodInfo* method)
+{
+    StackObject args[10] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4S8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int32_t __arg7, ValueTypeSize<8> __arg8, const MethodInfo* method)
+{
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4i8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, int64_t __arg7, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i4i4i4S8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, int32_t __arg6, ValueTypeSize<8> __arg7, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4i8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, int64_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i4S56i4(int64_t __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, ValueTypeSize<56> __arg4, int32_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, (uint64_t)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4i8(int64_t __arg0, int32_t __arg1, int32_t __arg2, int64_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4r4(int64_t __arg0, int32_t __arg1, int32_t __arg2, float __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i4r4i1(int64_t __arg0, int32_t __arg1, int32_t __arg2, float __arg3, int8_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
 static void __N2M_AdjustorThunk_vi8i4i8(int64_t __arg0, int32_t __arg1, int64_t __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4i8i8i8i8i8(int64_t __arg0, int32_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, int64_t __arg6, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4r4(int64_t __arg0, int32_t __arg1, float __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4S4(int64_t __arg0, int32_t __arg1, ValueTypeSize<4> __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4S40i1i1i1(int64_t __arg0, int32_t __arg1, ValueTypeSize<40> __arg2, int8_t __arg3, int8_t __arg4, int8_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4S48i4(int64_t __arg0, int32_t __arg1, ValueTypeSize<48> __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4S56(int64_t __arg0, int32_t __arg1, ValueTypeSize<56> __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i4vf4(int64_t __arg0, int32_t __arg1, HtVector4f __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
@@ -19019,6 +18947,15 @@ static void __N2M_AdjustorThunk_vi8i8i1(int64_t __arg0, int64_t __arg1, int8_t _
 }
 
 
+static void __N2M_AdjustorThunk_vi8i8i1i4(int64_t __arg0, int64_t __arg1, int8_t __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
 static void __N2M_AdjustorThunk_vi8i8i4(int64_t __arg0, int64_t __arg1, int32_t __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
@@ -19028,7 +18965,34 @@ static void __N2M_AdjustorThunk_vi8i8i4(int64_t __arg0, int64_t __arg1, int32_t 
 }
 
 
+static void __N2M_AdjustorThunk_vi8i8i4i1(int64_t __arg0, int64_t __arg1, int32_t __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
 static void __N2M_AdjustorThunk_vi8i8i4i4(int64_t __arg0, int64_t __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i4i4i4(int64_t __arg0, int64_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i4i8(int64_t __arg0, int64_t __arg1, int32_t __arg2, int64_t __arg3, const MethodInfo* method)
 {
     StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = nullptr;
@@ -19046,16 +19010,43 @@ static void __N2M_AdjustorThunk_vi8i8i8(int64_t __arg0, int64_t __arg1, int64_t 
 }
 
 
-static void __N2M_AdjustorThunk_vi8i8i8i8i8i8i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, int32_t __arg6, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8i8i8i1(int64_t __arg0, int64_t __arg1, int64_t __arg2, int8_t __arg3, const MethodInfo* method)
 {
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vi8i8i8i8i8i8i4i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, int32_t __arg6, int64_t __arg7, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8i8i8i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i8i4i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i8i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i8i8i8i8i8i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, int64_t __arg6, int32_t __arg7, const MethodInfo* method)
 {
     StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
     StackObject* ret = nullptr;
@@ -19064,9 +19055,54 @@ static void __N2M_AdjustorThunk_vi8i8i8i8i8i8i4i8(int64_t __arg0, int64_t __arg1
 }
 
 
-static void __N2M_AdjustorThunk_vi8i8i8S40i4i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, ValueTypeSize<40> __arg3, int32_t __arg4, int32_t __arg5, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8i8i8i8i8i8i8i4i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, int64_t __arg5, int64_t __arg6, int32_t __arg7, int64_t __arg8, const MethodInfo* method)
 {
-    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i8i8S40i4i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, ValueTypeSize<40> __arg4, int32_t __arg5, int32_t __arg6, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, (uint64_t)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i8S16i4(int64_t __arg0, int64_t __arg1, int64_t __arg2, ValueTypeSize<16> __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8i8S4(int64_t __arg0, int64_t __arg1, int64_t __arg2, ValueTypeSize<4> __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8r8(int64_t __arg0, int64_t __arg1, double __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8S16(int64_t __arg0, int64_t __arg1, ValueTypeSize<16> __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
@@ -19082,9 +19118,90 @@ static void __N2M_AdjustorThunk_vi8i8S16i4(int64_t __arg0, int64_t __arg1, Value
 }
 
 
-static void __N2M_AdjustorThunk_vi8i8S4(int64_t __arg0, int64_t __arg1, ValueTypeSize<4> __arg2, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8i8S16i4i4(int64_t __arg0, int64_t __arg1, ValueTypeSize<16> __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8S16i4i4i8i8i4i4(int64_t __arg0, int64_t __arg1, ValueTypeSize<16> __arg2, int32_t __arg3, int32_t __arg4, int64_t __arg5, int64_t __arg6, int32_t __arg7, int32_t __arg8, const MethodInfo* method)
+{
+    StackObject args[9] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8i8S8(int64_t __arg0, int64_t __arg1, ValueTypeSize<8> __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4(int64_t __arg0, float __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4i8(int64_t __arg0, float __arg1, int64_t __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4r4(int64_t __arg0, float __arg1, float __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4r4r4(int64_t __arg0, float __arg1, float __arg2, float __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4r4r4r4(int64_t __arg0, float __arg1, float __arg2, float __arg3, float __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4r4r4r4r4r4(int64_t __arg0, float __arg1, float __arg2, float __arg3, float __arg4, float __arg5, float __arg6, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4(int64_t __arg0, float __arg1, float __arg2, float __arg3, float __arg4, float __arg5, float __arg6, float __arg7, float __arg8, float __arg9, float __arg10, float __arg11, float __arg12, float __arg13, float __arg14, float __arg15, float __arg16, const MethodInfo* method)
+{
+    StackObject args[17] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9, *(uint64_t*)&__arg10, *(uint64_t*)&__arg11, *(uint64_t*)&__arg12, *(uint64_t*)&__arg13, *(uint64_t*)&__arg14, *(uint64_t*)&__arg15, *(uint64_t*)&__arg16 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
@@ -19100,6 +19217,42 @@ static void __N2M_AdjustorThunk_vi8r8(int64_t __arg0, double __arg1, const Metho
 }
 
 
+static void __N2M_AdjustorThunk_vi8r8r8(int64_t __arg0, double __arg1, double __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S12(int64_t __arg0, ValueTypeSize<12> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S12i4i4i4(int64_t __arg0, ValueTypeSize<12> __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S12S12(int64_t __arg0, ValueTypeSize<12> __arg1, ValueTypeSize<12> __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
 static void __N2M_AdjustorThunk_vi8S16(int64_t __arg0, ValueTypeSize<16> __arg1, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
@@ -19109,7 +19262,142 @@ static void __N2M_AdjustorThunk_vi8S16(int64_t __arg0, ValueTypeSize<16> __arg1,
 }
 
 
-static void __N2M_AdjustorThunk_vi8S16i4(int64_t __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S16i4i4i4(int64_t __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S16S16(int64_t __arg0, ValueTypeSize<16> __arg1, ValueTypeSize<16> __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S16S16i4(int64_t __arg0, ValueTypeSize<16> __arg1, ValueTypeSize<16> __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S16S16i4i4(int64_t __arg0, ValueTypeSize<16> __arg1, ValueTypeSize<16> __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S16S16i4i4i4(int64_t __arg0, ValueTypeSize<16> __arg1, ValueTypeSize<16> __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S188(int64_t __arg0, ValueTypeSize<188> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S2(int64_t __arg0, ValueTypeSize<2> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S224(int64_t __arg0, ValueTypeSize<224> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S24(int64_t __arg0, ValueTypeSize<24> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S28(int64_t __arg0, ValueTypeSize<28> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S2i8(int64_t __arg0, ValueTypeSize<2> __arg1, int64_t __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S2i8i4(int64_t __arg0, ValueTypeSize<2> __arg1, int64_t __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S2i8i4i4(int64_t __arg0, ValueTypeSize<2> __arg1, int64_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S2i8i4i4i4(int64_t __arg0, ValueTypeSize<2> __arg1, int64_t __arg2, int32_t __arg3, int32_t __arg4, int32_t __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S32(int64_t __arg0, ValueTypeSize<32> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S32i4(int64_t __arg0, ValueTypeSize<32> __arg1, int32_t __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = nullptr;
@@ -19118,7 +19406,7 @@ static void __N2M_AdjustorThunk_vi8S16i4(int64_t __arg0, ValueTypeSize<16> __arg
 }
 
 
-static void __N2M_AdjustorThunk_vi8S16i4i4(int64_t __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S32i8i8(int64_t __arg0, ValueTypeSize<32> __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method)
 {
     StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = nullptr;
@@ -19127,9 +19415,189 @@ static void __N2M_AdjustorThunk_vi8S16i4i4(int64_t __arg0, ValueTypeSize<16> __a
 }
 
 
-static void __N2M_AdjustorThunk_vi8S16i4i4i8i8i4i4(int64_t __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, int32_t __arg3, int64_t __arg4, int64_t __arg5, int32_t __arg6, int32_t __arg7, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S32i8i8i8(int64_t __arg0, ValueTypeSize<32> __arg1, int64_t __arg2, int64_t __arg3, int64_t __arg4, const MethodInfo* method)
 {
-    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7 };
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S32i8i8S4i1S56S56(int64_t __arg0, ValueTypeSize<32> __arg1, int64_t __arg2, int64_t __arg3, ValueTypeSize<4> __arg4, int8_t __arg5, ValueTypeSize<56> __arg6, ValueTypeSize<56> __arg7, const MethodInfo* method)
+{
+    StackObject args[8] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, (uint64_t)&__arg6, (uint64_t)&__arg7 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S32i8i8S56S56(int64_t __arg0, ValueTypeSize<32> __arg1, int64_t __arg2, int64_t __arg3, ValueTypeSize<56> __arg4, ValueTypeSize<56> __arg5, const MethodInfo* method)
+{
+    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, (uint64_t)&__arg4, (uint64_t)&__arg5 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S4(int64_t __arg0, ValueTypeSize<4> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S40(int64_t __arg0, ValueTypeSize<40> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S40i1i1(int64_t __arg0, ValueTypeSize<40> __arg1, int8_t __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S40i4i4i4(int64_t __arg0, ValueTypeSize<40> __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S40i4i4S40i4i4(int64_t __arg0, ValueTypeSize<40> __arg1, int32_t __arg2, int32_t __arg3, ValueTypeSize<40> __arg4, int32_t __arg5, int32_t __arg6, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, (uint64_t)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S4i4(int64_t __arg0, ValueTypeSize<4> __arg1, int32_t __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S4S224(int64_t __arg0, ValueTypeSize<4> __arg1, ValueTypeSize<224> __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, (uint64_t)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56(int64_t __arg0, ValueTypeSize<56> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56i1(int64_t __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56i1i1(int64_t __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56i4i1(int64_t __arg0, ValueTypeSize<56> __arg1, int32_t __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56S56i1(int64_t __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, int8_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56S56i1i1(int64_t __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, int8_t __arg3, int8_t __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56S56S56S28(int64_t __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, ValueTypeSize<56> __arg3, ValueTypeSize<28> __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3, (uint64_t)&__arg4 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S56S56S56S28S64r4(int64_t __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, ValueTypeSize<56> __arg3, ValueTypeSize<28> __arg4, ValueTypeSize<64> __arg5, float __arg6, const MethodInfo* method)
+{
+    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3, (uint64_t)&__arg4, (uint64_t)&__arg5, *(uint64_t*)&__arg6 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S64(int64_t __arg0, ValueTypeSize<64> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S64vf4(int64_t __arg0, ValueTypeSize<64> __arg1, HtVector4f __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8S68(int64_t __arg0, ValueTypeSize<68> __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
@@ -19145,34 +19613,16 @@ static void __N2M_AdjustorThunk_vi8S8(int64_t __arg0, ValueTypeSize<8> __arg1, c
 }
 
 
-static void __N2M_AdjustorThunk_vr4(float __arg0, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S8i4i4(int64_t __arg0, ValueTypeSize<8> __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
 {
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vr4i8(float __arg0, int64_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vr4r4(float __arg0, float __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vr4r4r4(float __arg0, float __arg1, float __arg2, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S8i8(int64_t __arg0, ValueTypeSize<8> __arg1, int64_t __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = nullptr;
@@ -19181,43 +19631,25 @@ static void __N2M_AdjustorThunk_vr4r4r4(float __arg0, float __arg1, float __arg2
 }
 
 
-static void __N2M_AdjustorThunk_vr4r4r4r4(float __arg0, float __arg1, float __arg2, float __arg3, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S8S8(int64_t __arg0, ValueTypeSize<8> __arg1, ValueTypeSize<8> __arg2, const MethodInfo* method)
 {
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vr4r4r4r4r4r4(float __arg0, float __arg1, float __arg2, float __arg3, float __arg4, float __arg5, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8S992(int64_t __arg0, ValueTypeSize<992> __arg1, const MethodInfo* method)
 {
-    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vr4r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4(float __arg0, float __arg1, float __arg2, float __arg3, float __arg4, float __arg5, float __arg6, float __arg7, float __arg8, float __arg9, float __arg10, float __arg11, float __arg12, float __arg13, float __arg14, float __arg15, const MethodInfo* method)
-{
-    StackObject args[16] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5, *(uint64_t*)&__arg6, *(uint64_t*)&__arg7, *(uint64_t*)&__arg8, *(uint64_t*)&__arg9, *(uint64_t*)&__arg10, *(uint64_t*)&__arg11, *(uint64_t*)&__arg12, *(uint64_t*)&__arg13, *(uint64_t*)&__arg14, *(uint64_t*)&__arg15 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vr8(double __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vr8r8(double __arg0, double __arg1, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf2(int64_t __arg0, HtVector2f __arg1, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
     StackObject* ret = nullptr;
@@ -19226,43 +19658,16 @@ static void __N2M_AdjustorThunk_vr8r8(double __arg0, double __arg1, const Method
 }
 
 
-static void __N2M_AdjustorThunk_vS12(ValueTypeSize<12> __arg0, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf2r4(int64_t __arg0, HtVector2f __arg1, float __arg2, const MethodInfo* method)
 {
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vS12i4i4i4(ValueTypeSize<12> __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS12S12(ValueTypeSize<12> __arg0, ValueTypeSize<12> __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS16(ValueTypeSize<16> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS16i4i4i4(ValueTypeSize<16> __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf2r4r4(int64_t __arg0, HtVector2f __arg1, float __arg2, float __arg3, const MethodInfo* method)
 {
     StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = nullptr;
@@ -19271,7 +19676,16 @@ static void __N2M_AdjustorThunk_vS16i4i4i4(ValueTypeSize<16> __arg0, int32_t __a
 }
 
 
-static void __N2M_AdjustorThunk_vS16S16(ValueTypeSize<16> __arg0, ValueTypeSize<16> __arg1, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf2vf2(int64_t __arg0, HtVector2f __arg1, HtVector2f __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8vf3(int64_t __arg0, HtVector3f __arg1, const MethodInfo* method)
 {
     StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
     StackObject* ret = nullptr;
@@ -19280,7 +19694,7 @@ static void __N2M_AdjustorThunk_vS16S16(ValueTypeSize<16> __arg0, ValueTypeSize<
 }
 
 
-static void __N2M_AdjustorThunk_vS16S16i4(ValueTypeSize<16> __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf3r4(int64_t __arg0, HtVector3f __arg1, float __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
     StackObject* ret = nullptr;
@@ -19289,430 +19703,7 @@ static void __N2M_AdjustorThunk_vS16S16i4(ValueTypeSize<16> __arg0, ValueTypeSiz
 }
 
 
-static void __N2M_AdjustorThunk_vS16S16i4i4(ValueTypeSize<16> __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS16S16i4i4i4(ValueTypeSize<16> __arg0, ValueTypeSize<16> __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS188(ValueTypeSize<188> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS2(ValueTypeSize<2> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS224(ValueTypeSize<224> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS24(ValueTypeSize<24> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS28(ValueTypeSize<28> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS2i8(ValueTypeSize<2> __arg0, int64_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS2i8i4(ValueTypeSize<2> __arg0, int64_t __arg1, int32_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS2i8i4i4(ValueTypeSize<2> __arg0, int64_t __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS2i8i4i4i4(ValueTypeSize<2> __arg0, int64_t __arg1, int32_t __arg2, int32_t __arg3, int32_t __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS32(ValueTypeSize<32> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS32i4(ValueTypeSize<32> __arg0, int32_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS32i8i8(ValueTypeSize<32> __arg0, int64_t __arg1, int64_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS32i8i8i8(ValueTypeSize<32> __arg0, int64_t __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS32i8i8S4i1S56S56(ValueTypeSize<32> __arg0, int64_t __arg1, int64_t __arg2, ValueTypeSize<4> __arg3, int8_t __arg4, ValueTypeSize<56> __arg5, ValueTypeSize<56> __arg6, const MethodInfo* method)
-{
-    StackObject args[7] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3, *(uint64_t*)&__arg4, (uint64_t)&__arg5, (uint64_t)&__arg6 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS32i8i8S56S56(ValueTypeSize<32> __arg0, int64_t __arg1, int64_t __arg2, ValueTypeSize<56> __arg3, ValueTypeSize<56> __arg4, const MethodInfo* method)
-{
-    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, (uint64_t)&__arg4 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS4(ValueTypeSize<4> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS40(ValueTypeSize<40> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS40i1i1(ValueTypeSize<40> __arg0, int8_t __arg1, int8_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS40i4i4i4(ValueTypeSize<40> __arg0, int32_t __arg1, int32_t __arg2, int32_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS40i4i4S40i4i4(ValueTypeSize<40> __arg0, int32_t __arg1, int32_t __arg2, ValueTypeSize<40> __arg3, int32_t __arg4, int32_t __arg5, const MethodInfo* method)
-{
-    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2, (uint64_t)&__arg3, *(uint64_t*)&__arg4, *(uint64_t*)&__arg5 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS4i4(ValueTypeSize<4> __arg0, int32_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS4S224(ValueTypeSize<4> __arg0, ValueTypeSize<224> __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56(ValueTypeSize<56> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56i1(ValueTypeSize<56> __arg0, int8_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56i1i1(ValueTypeSize<56> __arg0, int8_t __arg1, int8_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56i4i1(ValueTypeSize<56> __arg0, int32_t __arg1, int8_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56S56i1(ValueTypeSize<56> __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56S56i1i1(ValueTypeSize<56> __arg0, ValueTypeSize<56> __arg1, int8_t __arg2, int8_t __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56S56S56S28(ValueTypeSize<56> __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, ValueTypeSize<28> __arg3, const MethodInfo* method)
-{
-    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS56S56S56S28S64r4(ValueTypeSize<56> __arg0, ValueTypeSize<56> __arg1, ValueTypeSize<56> __arg2, ValueTypeSize<28> __arg3, ValueTypeSize<64> __arg4, float __arg5, const MethodInfo* method)
-{
-    StackObject args[6] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3, (uint64_t)&__arg4, *(uint64_t*)&__arg5 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS64(ValueTypeSize<64> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS64vf4(ValueTypeSize<64> __arg0, HtVector4f __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS68(ValueTypeSize<68> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS8(ValueTypeSize<8> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS8i4i4(ValueTypeSize<8> __arg0, int32_t __arg1, int32_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS8i8(ValueTypeSize<8> __arg0, int64_t __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS8S8(ValueTypeSize<8> __arg0, ValueTypeSize<8> __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vS992(ValueTypeSize<992> __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf2(HtVector2f __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf2r4(HtVector2f __arg0, float __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf2r4r4(HtVector2f __arg0, float __arg1, float __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf2vf2(HtVector2f __arg0, HtVector2f __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf3(HtVector3f __arg0, const MethodInfo* method)
-{
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf3r4(HtVector3f __arg0, float __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf3vf3(HtVector3f __arg0, HtVector3f __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf3vf3vf3(HtVector3f __arg0, HtVector3f __arg1, HtVector3f __arg2, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf3vf3(int64_t __arg0, HtVector3f __arg1, HtVector3f __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
     StackObject* ret = nullptr;
@@ -19721,25 +19712,16 @@ static void __N2M_AdjustorThunk_vvf3vf3vf3(HtVector3f __arg0, HtVector3f __arg1,
 }
 
 
-static void __N2M_AdjustorThunk_vvf3vf4(HtVector3f __arg0, HtVector4f __arg1, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf3vf3vf3(int64_t __arg0, HtVector3f __arg1, HtVector3f __arg2, HtVector3f __arg3, const MethodInfo* method)
 {
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vvf3vf4r4(HtVector3f __arg0, HtVector4f __arg1, float __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf3vf4vf3(HtVector3f __arg0, HtVector4f __arg1, HtVector3f __arg2, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf3vf4(int64_t __arg0, HtVector3f __arg1, HtVector4f __arg2, const MethodInfo* method)
 {
     StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2 };
     StackObject* ret = nullptr;
@@ -19748,36 +19730,54 @@ static void __N2M_AdjustorThunk_vvf3vf4vf3(HtVector3f __arg0, HtVector4f __arg1,
 }
 
 
-static void __N2M_AdjustorThunk_vvf4(HtVector4f __arg0, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf3vf4r4(int64_t __arg0, HtVector3f __arg1, HtVector4f __arg2, float __arg3, const MethodInfo* method)
 {
-    StackObject args[1] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)) };
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, *(uint64_t*)&__arg3 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
 }
 
 
-static void __N2M_AdjustorThunk_vvf4r4(HtVector4f __arg0, float __arg1, const MethodInfo* method)
-{
-    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf4r4i4(HtVector4f __arg0, float __arg1, int32_t __arg2, const MethodInfo* method)
-{
-    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
-    StackObject* ret = nullptr;
-    Interpreter::Execute(method, args, ret);
-    
-}
-
-
-static void __N2M_AdjustorThunk_vvf4vf4vf4vf4(HtVector4f __arg0, HtVector4f __arg1, HtVector4f __arg2, HtVector4f __arg3, const MethodInfo* method)
+static void __N2M_AdjustorThunk_vi8vf3vf4vf3(int64_t __arg0, HtVector3f __arg1, HtVector4f __arg2, HtVector3f __arg3, const MethodInfo* method)
 {
     StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8vf4(int64_t __arg0, HtVector4f __arg1, const MethodInfo* method)
+{
+    StackObject args[2] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8vf4r4(int64_t __arg0, HtVector4f __arg1, float __arg2, const MethodInfo* method)
+{
+    StackObject args[3] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8vf4r4i4(int64_t __arg0, HtVector4f __arg1, float __arg2, int32_t __arg3, const MethodInfo* method)
+{
+    StackObject args[4] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, *(uint64_t*)&__arg2, *(uint64_t*)&__arg3 };
+    StackObject* ret = nullptr;
+    Interpreter::Execute(method, args, ret);
+    
+}
+
+
+static void __N2M_AdjustorThunk_vi8vf4vf4vf4vf4(int64_t __arg0, HtVector4f __arg1, HtVector4f __arg2, HtVector4f __arg3, HtVector4f __arg4, const MethodInfo* method)
+{
+    StackObject args[5] = {(uint64_t)(*(uint8_t**)&__arg0 + sizeof(Il2CppObject)), (uint64_t)&__arg1, (uint64_t)&__arg2, (uint64_t)&__arg3, (uint64_t)&__arg4 };
     StackObject* ret = nullptr;
     Interpreter::Execute(method, args, ret);
     
@@ -19787,268 +19787,268 @@ static void __N2M_AdjustorThunk_vvf4vf4vf4vf4(HtVector4f __arg0, HtVector4f __ar
 NativeAdjustThunkMethodInfo hybridclr::interpreter::g_adjustThunkStub[] = 
 {
 
-	{"i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1},
 	{"i16i8i16i16", (Il2CppMethodPointer)__N2M_AdjustorThunk_i16i8i16i16},
-	{"i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i1},
-	{"i1i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i2},
-	{"i1i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i4},
-	{"i1i4i4i4vf3i4r4i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i4i4i4vf3i4r4i8i8i8},
-	{"i1i4i4r4i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i4i4r4i8i8i8},
-	{"i1i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i4i8},
-	{"i1i4i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i4i8i8i8},
 	{"i1i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8},
+	{"i1i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i1},
+	{"i1i8i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i2},
+	{"i1i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i4},
+	{"i1i8i4i4i4vf3i4r4i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i4i4i4vf3i4r4i8i8i8},
+	{"i1i8i4i4r4i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i4i4r4i8i8i8},
+	{"i1i8i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i4i8},
+	{"i1i8i4i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i4i8i8i8},
 	{"i1i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i8},
-	{"i1r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1r4},
-	{"i1r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1r8},
-	{"i1S1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S1},
-	{"i1S108", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S108},
-	{"i1S116", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S116},
-	{"i1S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S12},
-	{"i1S120", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S120},
-	{"i1S136", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S136},
-	{"i1S1568", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S1568},
-	{"i1S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S16},
-	{"i1S188", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S188},
-	{"i1S2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S2},
-	{"i1S224", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S224},
-	{"i1S232", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S232},
-	{"i1S24", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S24},
-	{"i1S24i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S24i8},
-	{"i1S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S28},
-	{"i1S312", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S312},
-	{"i1S32", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S32},
-	{"i1S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S4},
-	{"i1S40", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S40},
-	{"i1S64", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S64},
-	{"i1S68", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S68},
-	{"i1S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S8},
-	{"i1S96", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S96},
-	{"i1S992", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1S992},
-	{"i1vd2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vd2},
-	{"i1vf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vf2},
-	{"i1vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vf3},
-	{"i1vf3i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vf3i1},
-	{"i1vf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vf3vf3},
-	{"i1vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vf4},
-	{"i1vf4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1vf4i1},
-	{"i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i2},
-	{"i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4},
-	{"i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i1},
-	{"i4i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i2},
-	{"i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i4},
+	{"i1i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8i8i8},
+	{"i1i8r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8r4},
+	{"i1i8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8r8},
+	{"i1i8S1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S1},
+	{"i1i8S108", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S108},
+	{"i1i8S116", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S116},
+	{"i1i8S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S12},
+	{"i1i8S120", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S120},
+	{"i1i8S136", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S136},
+	{"i1i8S1568", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S1568},
+	{"i1i8S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S16},
+	{"i1i8S188", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S188},
+	{"i1i8S2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S2},
+	{"i1i8S224", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S224},
+	{"i1i8S232", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S232},
+	{"i1i8S24", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S24},
+	{"i1i8S24i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S24i8},
+	{"i1i8S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S28},
+	{"i1i8S312", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S312},
+	{"i1i8S32", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S32},
+	{"i1i8S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S4},
+	{"i1i8S40", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S40},
+	{"i1i8S64", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S64},
+	{"i1i8S68", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S68},
+	{"i1i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S8},
+	{"i1i8S96", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S96},
+	{"i1i8S992", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8S992},
+	{"i1i8vd2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vd2},
+	{"i1i8vf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vf2},
+	{"i1i8vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vf3},
+	{"i1i8vf3i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vf3i1},
+	{"i1i8vf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vf3vf3},
+	{"i1i8vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vf4},
+	{"i1i8vf4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i1i8vf4i1},
+	{"i2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i2i8},
 	{"i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8},
+	{"i4i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i1},
+	{"i4i8i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i2},
 	{"i4i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i4},
-	{"i4i8i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i4i1},
+	{"i4i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i8},
+	{"i4i8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i8i4},
+	{"i4i8i8i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i8i4i1},
 	{"i4i8i8i4i4i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8i8i4i4i8i8},
-	{"i4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4r4},
-	{"i4r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4r8},
-	{"i4S1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4S1},
-	{"i4S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4S16},
-	{"i4S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4S4},
-	{"i4S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4S8},
-	{"i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8},
-	{"i8i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i2},
-	{"i8i2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i2i8},
-	{"i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i4},
+	{"i4i8r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8r4},
+	{"i4i8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8r8},
+	{"i4i8S1", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8S1},
+	{"i4i8S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8S16},
+	{"i4i8S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8S4},
+	{"i4i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i4i8S8},
 	{"i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8},
+	{"i8i8i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8i2},
+	{"i8i8i2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8i2i8},
+	{"i8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8i4},
 	{"i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8i8},
+	{"i8i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8i8i8},
 	{"i8i8S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_i8i8S12},
-	{"r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4},
-	{"r4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4i4},
-	{"r4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4i4i4},
-	{"r4vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4vf3},
-	{"r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_r8},
-	{"S1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S1},
-	{"S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_S12},
+	{"r4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4i8},
+	{"r4i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4i8i4},
+	{"r4i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4i8i4i4},
+	{"r4i8vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_r4i8vf3},
+	{"r8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_r8i8},
+	{"S12i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S12i8},
 	{"S12i8S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_S12i8S12},
 	{"S12i8S12S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_S12i8S12S12},
-	{"S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16},
-	{"S16i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16i4},
 	{"S16i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16i8},
-	{"S16r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16r8},
-	{"S16S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16S8},
-	{"S188", (Il2CppMethodPointer)__N2M_AdjustorThunk_S188},
-	{"S2", (Il2CppMethodPointer)__N2M_AdjustorThunk_S2},
-	{"S224", (Il2CppMethodPointer)__N2M_AdjustorThunk_S224},
-	{"S24", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24},
-	{"S24i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i4},
-	{"S24i4i4i4S56i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i4i4i4S56i4},
+	{"S16i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16i8i4},
+	{"S16i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16i8i8},
+	{"S16i8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16i8r8},
+	{"S16i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S16i8S8},
+	{"S188i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S188i8},
+	{"S1i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S1i8},
+	{"S224i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S224i8},
 	{"S24i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8},
-	{"S24i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i1},
+	{"S24i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i4},
+	{"S24i8i4i4i4S56i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i4i4i4S56i4},
 	{"S24i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i8},
 	{"S24i8i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i8i1},
-	{"S24S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24S56i1},
-	{"S24S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24S56i1i1},
-	{"S24S56S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24S56S56i1},
-	{"S24S56S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24S56S56i1i1},
-	{"S24S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24S8},
-	{"S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_S28},
+	{"S24i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i8i8},
+	{"S24i8i8i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8i8i8i1},
+	{"S24i8S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8S56i1},
+	{"S24i8S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8S56i1i1},
+	{"S24i8S56S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8S56S56i1},
+	{"S24i8S56S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8S56S56i1i1},
+	{"S24i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S24i8S8},
 	{"S28i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S28i8},
-	{"S28S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_S28S28},
-	{"S32", (Il2CppMethodPointer)__N2M_AdjustorThunk_S32},
+	{"S28i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S28i8i8},
+	{"S28i8S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_S28i8S28},
+	{"S2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S2i8},
 	{"S32i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S32i8},
-	{"S36", (Il2CppMethodPointer)__N2M_AdjustorThunk_S36},
-	{"S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S4},
-	{"S40", (Il2CppMethodPointer)__N2M_AdjustorThunk_S40},
-	{"S48i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S48i4},
-	{"S4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S4i4},
-	{"S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_S56},
-	{"S56i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S56i4},
-	{"S64", (Il2CppMethodPointer)__N2M_AdjustorThunk_S64},
-	{"S68", (Il2CppMethodPointer)__N2M_AdjustorThunk_S68},
-	{"S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8},
-	{"S8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i4},
-	{"S8i4i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i4i8i8},
+	{"S32i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S32i8i8},
+	{"S36i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S36i8},
+	{"S40i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S40i8},
+	{"S48i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S48i8i4},
+	{"S4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S4i8},
+	{"S4i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S4i8i4},
+	{"S56i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S56i8},
+	{"S56i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S56i8i4},
+	{"S64i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S64i8},
+	{"S68i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S68i8},
 	{"S8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8},
-	{"S8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8r8},
-	{"S8S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8S16},
-	{"S8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8S8},
-	{"S992", (Il2CppMethodPointer)__N2M_AdjustorThunk_S992},
-	{"v", (Il2CppMethodPointer)__N2M_AdjustorThunk_v},
-	{"vf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf2},
-	{"vf2r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf2r4},
-	{"vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf3},
-	{"vf3r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf3r4},
-	{"vf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf3vf3},
-	{"vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf4},
-	{"vf4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf4i4},
-	{"vf4vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf4vf4},
-	{"vi1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi1},
-	{"vi1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi1i1},
-	{"vi1i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi1i1i1i1},
-	{"vi1i1i1i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi1i1i1i4i4i4i4},
-	{"vi1i1i1i4i4i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi1i1i1i4i4i4i4i4i4i4i4},
-	{"vi1i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi1i4},
-	{"vi2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi2},
-	{"vi2i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi2i2},
-	{"vi2i4i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi2i4i1i1i1},
-	{"vi4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4},
-	{"vi4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i1},
-	{"vi4i1i1i1i1i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i1i1i1i1i4i8},
-	{"vi4i2i2i1i1i1i1i1i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i2i2i1i1i1i1i1i1i1i1},
-	{"vi4i2i2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i2i2i8},
-	{"vi4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4},
-	{"vi4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4},
-	{"vi4i4i4i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i1i1},
-	{"vi4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4},
-	{"vi4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4},
-	{"vi4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4},
-	{"vi4i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i4},
-	{"vi4i4i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i4i4},
-	{"vi4i4i4i4i4i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i4i8},
-	{"vi4i4i4i4i4i4i4i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i4i8i4},
-	{"vi4i4i4i4i4i4i4i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i4i8S8},
-	{"vi4i4i4i4i4i4i4S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i4S8},
-	{"vi4i4i4i4i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4i8},
-	{"vi4i4i4i4i4i4S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i4i4i4S8},
-	{"vi4i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4i8},
-	{"vi4i4i4S56i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i4S56i4},
-	{"vi4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4i8},
-	{"vi4i4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4r4},
-	{"vi4i4r4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i4r4i1},
-	{"vi4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i8},
-	{"vi4i8i8i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4i8i8i8i8i8},
-	{"vi4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4r4},
-	{"vi4S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4S4},
-	{"vi4S40i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4S40i1i1i1},
-	{"vi4S48i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4S48i4},
-	{"vi4S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4S56},
-	{"vi4vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi4vf4},
+	{"S8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8i4},
+	{"S8i8i4i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8i4i8i8},
+	{"S8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8i8},
+	{"S8i8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8r8},
+	{"S8i8S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8S16},
+	{"S8i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S8i8S8},
+	{"S992i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_S992i8},
+	{"vf2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf2i8},
+	{"vf2i8r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf2i8r4},
+	{"vf3i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf3i8},
+	{"vf3i8r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf3i8r4},
+	{"vf3i8vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf3i8vf3},
+	{"vf4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf4i8},
+	{"vf4i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf4i8i4},
+	{"vf4i8vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vf4i8vf4},
 	{"vi8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8},
 	{"vi8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i1},
+	{"vi8i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i1i1},
+	{"vi8i1i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i1i1i1i1},
+	{"vi8i1i1i1i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i1i1i1i4i4i4i4},
+	{"vi8i1i1i1i4i4i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i1i1i1i4i4i4i4i4i4i4i4},
 	{"vi8i1i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i1i4},
+	{"vi8i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i2},
+	{"vi8i2i2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i2i2},
+	{"vi8i2i4i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i2i4i1i1i1},
 	{"vi8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4},
 	{"vi8i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i1},
+	{"vi8i4i1i1i1i1i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i1i1i1i1i4i8},
+	{"vi8i4i2i2i1i1i1i1i1i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i2i2i1i1i1i1i1i1i1i1},
+	{"vi8i4i2i2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i2i2i8},
 	{"vi8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4},
 	{"vi8i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4},
+	{"vi8i4i4i4i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i1i1},
+	{"vi8i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4},
+	{"vi8i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4},
+	{"vi8i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4},
+	{"vi8i4i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4},
+	{"vi8i4i4i4i4i4i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i4},
+	{"vi8i4i4i4i4i4i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i8},
+	{"vi8i4i4i4i4i4i4i4i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i8i4},
+	{"vi8i4i4i4i4i4i4i4i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4i8S8},
+	{"vi8i4i4i4i4i4i4i4S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i4S8},
+	{"vi8i4i4i4i4i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4i8},
+	{"vi8i4i4i4i4i4i4S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i4i4i4S8},
+	{"vi8i4i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4i8},
+	{"vi8i4i4i4S56i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i4S56i4},
+	{"vi8i4i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4i8},
+	{"vi8i4i4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4r4},
+	{"vi8i4i4r4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i4r4i1},
 	{"vi8i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i8},
+	{"vi8i4i8i8i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4i8i8i8i8i8},
+	{"vi8i4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4r4},
+	{"vi8i4S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4S4},
+	{"vi8i4S40i1i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4S40i1i1i1},
+	{"vi8i4S48i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4S48i4},
+	{"vi8i4S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4S56},
+	{"vi8i4vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i4vf4},
 	{"vi8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8},
 	{"vi8i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i1},
+	{"vi8i8i1i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i1i4},
 	{"vi8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i4},
+	{"vi8i8i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i4i1},
 	{"vi8i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i4i4},
+	{"vi8i8i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i4i4i4},
+	{"vi8i8i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i4i8},
 	{"vi8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8},
-	{"vi8i8i8i8i8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i8i8i8i4},
-	{"vi8i8i8i8i8i8i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i8i8i8i4i8},
-	{"vi8i8i8S40i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8S40i4i4},
+	{"vi8i8i8i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i1},
+	{"vi8i8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i4},
+	{"vi8i8i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i4i4},
+	{"vi8i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i8},
+	{"vi8i8i8i8i8i8i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i8i8i8i8i4},
+	{"vi8i8i8i8i8i8i8i4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i8i8i8i8i4i8},
+	{"vi8i8i8i8S40i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8i8S40i4i4},
+	{"vi8i8i8S16i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8S16i4},
+	{"vi8i8i8S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8i8S4},
+	{"vi8i8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8r8},
+	{"vi8i8S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8S16},
 	{"vi8i8S16i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8S16i4},
-	{"vi8i8S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8S4},
+	{"vi8i8S16i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8S16i4i4},
+	{"vi8i8S16i4i4i8i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8S16i4i4i8i8i4i4},
+	{"vi8i8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8i8S8},
+	{"vi8r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4},
+	{"vi8r4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4i8},
+	{"vi8r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4r4},
+	{"vi8r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4r4r4},
+	{"vi8r4r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4r4r4r4},
+	{"vi8r4r4r4r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4r4r4r4r4r4},
+	{"vi8r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4},
 	{"vi8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r8},
+	{"vi8r8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8r8r8},
+	{"vi8S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S12},
+	{"vi8S12i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S12i4i4i4},
+	{"vi8S12S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S12S12},
 	{"vi8S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16},
-	{"vi8S16i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16i4},
-	{"vi8S16i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16i4i4},
-	{"vi8S16i4i4i8i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16i4i4i8i8i4i4},
+	{"vi8S16i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16i4i4i4},
+	{"vi8S16S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16S16},
+	{"vi8S16S16i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16S16i4},
+	{"vi8S16S16i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16S16i4i4},
+	{"vi8S16S16i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S16S16i4i4i4},
+	{"vi8S188", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S188},
+	{"vi8S2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S2},
+	{"vi8S224", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S224},
+	{"vi8S24", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S24},
+	{"vi8S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S28},
+	{"vi8S2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S2i8},
+	{"vi8S2i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S2i8i4},
+	{"vi8S2i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S2i8i4i4},
+	{"vi8S2i8i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S2i8i4i4i4},
+	{"vi8S32", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S32},
+	{"vi8S32i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S32i4},
+	{"vi8S32i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S32i8i8},
+	{"vi8S32i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S32i8i8i8},
+	{"vi8S32i8i8S4i1S56S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S32i8i8S4i1S56S56},
+	{"vi8S32i8i8S56S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S32i8i8S56S56},
+	{"vi8S4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S4},
+	{"vi8S40", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S40},
+	{"vi8S40i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S40i1i1},
+	{"vi8S40i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S40i4i4i4},
+	{"vi8S40i4i4S40i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S40i4i4S40i4i4},
+	{"vi8S4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S4i4},
+	{"vi8S4S224", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S4S224},
+	{"vi8S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56},
+	{"vi8S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56i1},
+	{"vi8S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56i1i1},
+	{"vi8S56i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56i4i1},
+	{"vi8S56S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56S56i1},
+	{"vi8S56S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56S56i1i1},
+	{"vi8S56S56S56S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56S56S56S28},
+	{"vi8S56S56S56S28S64r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S56S56S56S28S64r4},
+	{"vi8S64", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S64},
+	{"vi8S64vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S64vf4},
+	{"vi8S68", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S68},
 	{"vi8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S8},
-	{"vr4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4},
-	{"vr4i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4i8},
-	{"vr4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4r4},
-	{"vr4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4r4r4},
-	{"vr4r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4r4r4r4},
-	{"vr4r4r4r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4r4r4r4r4r4},
-	{"vr4r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr4r4r4r4r4r4r4r4r4r4r4r4r4r4r4r4},
-	{"vr8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr8},
-	{"vr8r8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vr8r8},
-	{"vS12", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS12},
-	{"vS12i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS12i4i4i4},
-	{"vS12S12", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS12S12},
-	{"vS16", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS16},
-	{"vS16i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS16i4i4i4},
-	{"vS16S16", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS16S16},
-	{"vS16S16i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS16S16i4},
-	{"vS16S16i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS16S16i4i4},
-	{"vS16S16i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS16S16i4i4i4},
-	{"vS188", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS188},
-	{"vS2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS2},
-	{"vS224", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS224},
-	{"vS24", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS24},
-	{"vS28", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS28},
-	{"vS2i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS2i8},
-	{"vS2i8i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS2i8i4},
-	{"vS2i8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS2i8i4i4},
-	{"vS2i8i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS2i8i4i4i4},
-	{"vS32", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS32},
-	{"vS32i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS32i4},
-	{"vS32i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS32i8i8},
-	{"vS32i8i8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS32i8i8i8},
-	{"vS32i8i8S4i1S56S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS32i8i8S4i1S56S56},
-	{"vS32i8i8S56S56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS32i8i8S56S56},
-	{"vS4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS4},
-	{"vS40", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS40},
-	{"vS40i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS40i1i1},
-	{"vS40i4i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS40i4i4i4},
-	{"vS40i4i4S40i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS40i4i4S40i4i4},
-	{"vS4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS4i4},
-	{"vS4S224", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS4S224},
-	{"vS56", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56},
-	{"vS56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56i1},
-	{"vS56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56i1i1},
-	{"vS56i4i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56i4i1},
-	{"vS56S56i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56S56i1},
-	{"vS56S56i1i1", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56S56i1i1},
-	{"vS56S56S56S28", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56S56S56S28},
-	{"vS56S56S56S28S64r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS56S56S56S28S64r4},
-	{"vS64", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS64},
-	{"vS64vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS64vf4},
-	{"vS68", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS68},
-	{"vS8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS8},
-	{"vS8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS8i4i4},
-	{"vS8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS8i8},
-	{"vS8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS8S8},
-	{"vS992", (Il2CppMethodPointer)__N2M_AdjustorThunk_vS992},
-	{"vvf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf2},
-	{"vvf2r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf2r4},
-	{"vvf2r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf2r4r4},
-	{"vvf2vf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf2vf2},
-	{"vvf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3},
-	{"vvf3r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3r4},
-	{"vvf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3vf3},
-	{"vvf3vf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3vf3vf3},
-	{"vvf3vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3vf4},
-	{"vvf3vf4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3vf4r4},
-	{"vvf3vf4vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf3vf4vf3},
-	{"vvf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf4},
-	{"vvf4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf4r4},
-	{"vvf4r4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf4r4i4},
-	{"vvf4vf4vf4vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vvf4vf4vf4vf4},
+	{"vi8S8i4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S8i4i4},
+	{"vi8S8i8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S8i8},
+	{"vi8S8S8", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S8S8},
+	{"vi8S992", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8S992},
+	{"vi8vf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf2},
+	{"vi8vf2r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf2r4},
+	{"vi8vf2r4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf2r4r4},
+	{"vi8vf2vf2", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf2vf2},
+	{"vi8vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3},
+	{"vi8vf3r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3r4},
+	{"vi8vf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3vf3},
+	{"vi8vf3vf3vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3vf3vf3},
+	{"vi8vf3vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3vf4},
+	{"vi8vf3vf4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3vf4r4},
+	{"vi8vf3vf4vf3", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf3vf4vf3},
+	{"vi8vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf4},
+	{"vi8vf4r4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf4r4},
+	{"vi8vf4r4i4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf4r4i4},
+	{"vi8vf4vf4vf4vf4", (Il2CppMethodPointer)__N2M_AdjustorThunk_vi8vf4vf4vf4vf4},
 	{nullptr, nullptr},
 };
 
