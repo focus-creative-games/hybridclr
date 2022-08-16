@@ -2646,6 +2646,16 @@ else \
 							ctx.PopStackN(3);
 							continue;
 						}
+						if (strcmp(methodName, "SetGenericValueImpl") == 0)
+						{
+							uint16_t topOffset = ctx.GetEvalStackTopOffset();
+							CreateAddIR(ir, ArraySetGenericValueImpl);
+							ir->arr = ctx.GetEvalStackOffset_3();
+							ir->index = ctx.GetEvalStackOffset_2();
+							ir->value = ctx.GetEvalStackOffset_1();
+							ctx.PopStackN(3);
+							continue;
+						}
 					}
 				}
 				else if (strcmp(klass->namespaze, "System.Threading") == 0)
