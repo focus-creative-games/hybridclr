@@ -944,10 +944,15 @@ namespace metadata
 
 	uint32_t InterpreterImage::AddIl2CppTypeCache(Il2CppType& type)
 	{
-		//// TODO 优化
-		uint32_t index = (uint32_t)_types.size();
+		auto it = _type2Indexs.find(type);
+		if (it != _type2Indexs.end())
+		{
+			return it->second;
+		}
+		uint32_t encodeIndex = EncodeWithIndex((uint32_t)_types.size());
 		_types.push_back(type);
-		return EncodeWithIndex(index);
+		_type2Indexs.insert({ type, encodeIndex });
+		return encodeIndex;
 	}
 
 	uint32_t InterpreterImage::AddIl2CppGenericContainers(Il2CppGenericContainer& geneContainer)

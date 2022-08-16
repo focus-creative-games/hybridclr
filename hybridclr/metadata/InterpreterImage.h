@@ -457,6 +457,7 @@ namespace metadata
 		std::vector<Il2CppTypeDefinition> _exportedTypeDefines;
 
 		std::vector<Il2CppType> _types;
+		std::unordered_map<Il2CppType, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;
 		std::vector<TypeIndex> _interfaceDefines;
 		std::vector<InterfaceOffsetInfo> _interfaceOffsets;
 
