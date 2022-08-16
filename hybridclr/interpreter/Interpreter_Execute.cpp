@@ -1230,15 +1230,9 @@ inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * met
 	}
 	else if (invokeParamCount + 1 == method->parameters_count)
 	{
-		IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(method));
+		IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(method));
 		selfSo = localVarBase + argIdxs[0];
-		// explicit this
-		CHECK_NOT_NULL_THROW(obj);
-#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-		selfSo->obj = IS_CLASS_VALUE_TYPE(method->klass) ? obj + 1 : obj;
-#else
 		selfSo->obj = obj;
-#endif
 		instanceM2NMethod(method, argIdxs, localVarBase, ret);
 	}
 	else
@@ -1246,14 +1240,22 @@ inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * met
 		IL2CPP_ASSERT(invokeParamCount == method->parameters_count + 1);
 		IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(method));
 		selfSo = localVarBase + argIdxs[1];
-#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
+		CHECK_NOT_NULL_THROW(selfSo->obj);
+#if HYBRIDCLR_UNITY_2020
 		if (IS_CLASS_VALUE_TYPE(method->klass))
 		{
 			selfSo->obj -= 1;
+			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
+			// 恢复.否则多次调用时出错
+			selfSo->obj += 1;
 		}
-#endif
-		CHECK_NOT_NULL_THROW(selfSo->obj);
+		else
+		{
+			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
+		}
+#else
 		staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
+#endif
 	}
 }
 
@@ -4733,7 +4735,7 @@ else \
 					{
 						CHECK_NOT_NULL_THROW((localVarBase + __argBase)->obj);
 					}
-				    CALL_INTERP_VOID((ip + 8), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase));
+					CALL_INTERP_VOID((ip + 8), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase));
 				    continue;
 				}
 				case HiOpcodeEnum::CallInterp_ret:
@@ -4745,7 +4747,7 @@ else \
 					{
 						CHECK_NOT_NULL_THROW((localVarBase + __argBase)->obj);
 					}
-				    CALL_INTERP_RET((ip + 16), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase), (void*)(localVarBase + __ret));
+					CALL_INTERP_RET((ip + 16), __methodInfo, (StackObject*)(void*)(localVarBase + __argBase), (void*)(localVarBase + __ret));
 				    continue;
 				}
 				case HiOpcodeEnum::CallVirtual_void:
@@ -4959,7 +4961,6 @@ else \
 							}
 							case -1:
 							{
-								CHECK_NOT_NULL_THROW(target);
 								_argBasePtr->obj = target;
 								break;
 							}
@@ -5004,8 +5005,7 @@ else \
 								}
 							case -1:
 								{
-									CHECK_NOT_NULL_THROW(target);
-									FixCallNativeThisPointer(method, _argBasePtr, target);
+									_argBasePtr->obj = target;
 									_managed2NativeCallMethod = _instanceM2NMethod;
 									break;
 								}
@@ -5091,7 +5091,6 @@ else \
 							}
 							case -1:
 							{
-								CHECK_NOT_NULL_THROW(target);
 								_argBasePtr->obj = target;
 								break;
 							}
@@ -5136,8 +5135,7 @@ else \
 								}
 							case -1:
 								{
-									CHECK_NOT_NULL_THROW(target);
-									FixCallNativeThisPointer(method, _argBasePtr, target);
+									_argBasePtr->obj = target;
 									_managed2NativeCallMethod = _instanceM2NMethod;
 									break;
 								}
@@ -5224,7 +5222,6 @@ else \
 							}
 							case -1:
 							{
-								CHECK_NOT_NULL_THROW(target);
 								_argBasePtr->obj = target;
 								break;
 							}
@@ -5269,8 +5266,7 @@ else \
 								}
 							case -1:
 								{
-									CHECK_NOT_NULL_THROW(target);
-									FixCallNativeThisPointer(method, _argBasePtr, target);
+									_argBasePtr->obj = target;
 									_managed2NativeCallMethod = _instanceM2NMethod;
 									break;
 								}
