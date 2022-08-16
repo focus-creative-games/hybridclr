@@ -69,6 +69,20 @@ namespace hybridclr
 			}
 		}
 
+		static void NotSupportNative2Managed()
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportNative2Managed"));
+		}
+
+		static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
+		{
+			char sigName[1000];
+			ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
+			TEMP_FORMAT(errMsg, "Invoke method missing. ABI:%s sinature:%s %s.%s::%s", HYBRIDCLR_ABI_NAME, sigName, method->klass->namespaze, method->klass->name, method->name);
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
+			return nullptr;
+		}
+
 		template<typename T>
 		const Managed2NativeCallMethod GetManaged2NativeMethod(const T* method, bool forceStatic)
 		{
@@ -84,7 +98,7 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = g_native2manageds.find(sigName);
-			return it != g_native2manageds.end() ? it->second : nullptr;
+			return it != g_native2manageds.end() ? it->second : NotSupportNative2Managed;
 		}
 
 		template<typename T>
@@ -93,7 +107,7 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = g_adjustThunks.find(sigName);
-			return it != g_adjustThunks.end() ? it->second : nullptr;
+			return it != g_adjustThunks.end() ? it->second : NotSupportNative2Managed;
 		}
 
 		static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
@@ -107,20 +121,6 @@ namespace hybridclr
 			Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
 			TEMP_FORMAT(errMsg, "%s. %s.%s::%s", desc, klass->namespaze, klass->name, il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex));
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
-		}
-
-		static void NotSupportNative2Managed()
-		{
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportNative2Managed"));
-		}
-
-		static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
-		{
-			char sigName[1000];
-			ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
-			TEMP_FORMAT(errMsg, "Invoke method missing. ABI:%s sinature:%s %s.%s::%s", HYBRIDCLR_ABI_NAME, sigName, method->klass->namespaze, method->klass->name, method->name);
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
-			return nullptr;
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetMethodPointer(const Il2CppMethodDefinition* method)
