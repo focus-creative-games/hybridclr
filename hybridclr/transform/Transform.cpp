@@ -2967,6 +2967,10 @@ else \
 				// TODO token cache optimistic
 				IL2CPP_ASSERT(shareMethod);
 				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(shareMethod));
+				if (!metadata::IsVirtualMethod(shareMethod->flags))
+				{
+					goto LabelCall;
+				}
 
 				int32_t resolvedTotalArgdNum = shareMethod->parameters_count + 1;
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgdNum;
