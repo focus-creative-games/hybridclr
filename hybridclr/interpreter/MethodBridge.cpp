@@ -246,13 +246,6 @@ namespace hybridclr
 			}
 		}
 
-		struct HFATypeInfo
-		{
-			const Il2CppType* eleType;
-			int32_t count;
-		};
-
-
 		static bool ComputeHFATypeInfo0(Il2CppClass* klass, HFATypeInfo& typeInfo)
 		{
 			il2cpp::vm::Class::SetupFields(klass);
@@ -296,7 +289,7 @@ namespace hybridclr
 			return typeInfo.count <= 4;
 		}
 
-		static bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo)
+		bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo)
 		{
 			typeInfo = {};
 			int32_t size = metadata::GetTypeValueSize(klass);

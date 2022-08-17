@@ -338,6 +338,222 @@ namespace interpreter
 		CallDelegate_ret,
 		CallDelegate_ret_expand,
 		NewDelegate,
+		CallCommonNativeInstance_v_0,
+		CallCommonNativeInstance_i1_0,
+		CallCommonNativeInstance_u1_0,
+		CallCommonNativeInstance_i2_0,
+		CallCommonNativeInstance_u2_0,
+		CallCommonNativeInstance_i4_0,
+		CallCommonNativeInstance_i8_0,
+		CallCommonNativeInstance_f4_0,
+		CallCommonNativeInstance_f8_0,
+		CallCommonNativeInstance_v2f_0,
+		CallCommonNativeInstance_v3f_0,
+		CallCommonNativeInstance_v4f_0,
+		CallCommonNativeInstance_v_i4_1,
+		CallCommonNativeInstance_v_i4_2,
+		CallCommonNativeInstance_v_i4_3,
+		CallCommonNativeInstance_v_i4_4,
+		CallCommonNativeInstance_v_i8_1,
+		CallCommonNativeInstance_v_i8_2,
+		CallCommonNativeInstance_v_i8_3,
+		CallCommonNativeInstance_v_i8_4,
+		CallCommonNativeInstance_v_f4_1,
+		CallCommonNativeInstance_v_f4_2,
+		CallCommonNativeInstance_v_f4_3,
+		CallCommonNativeInstance_v_f4_4,
+		CallCommonNativeInstance_v_f8_1,
+		CallCommonNativeInstance_v_f8_2,
+		CallCommonNativeInstance_v_f8_3,
+		CallCommonNativeInstance_v_f8_4,
+		CallCommonNativeInstance_u1_i4_1,
+		CallCommonNativeInstance_u1_i4_2,
+		CallCommonNativeInstance_u1_i4_3,
+		CallCommonNativeInstance_u1_i4_4,
+		CallCommonNativeInstance_u1_i8_1,
+		CallCommonNativeInstance_u1_i8_2,
+		CallCommonNativeInstance_u1_i8_3,
+		CallCommonNativeInstance_u1_i8_4,
+		CallCommonNativeInstance_u1_f4_1,
+		CallCommonNativeInstance_u1_f4_2,
+		CallCommonNativeInstance_u1_f4_3,
+		CallCommonNativeInstance_u1_f4_4,
+		CallCommonNativeInstance_u1_f8_1,
+		CallCommonNativeInstance_u1_f8_2,
+		CallCommonNativeInstance_u1_f8_3,
+		CallCommonNativeInstance_u1_f8_4,
+		CallCommonNativeInstance_i4_i4_1,
+		CallCommonNativeInstance_i4_i4_2,
+		CallCommonNativeInstance_i4_i4_3,
+		CallCommonNativeInstance_i4_i4_4,
+		CallCommonNativeInstance_i4_i8_1,
+		CallCommonNativeInstance_i4_i8_2,
+		CallCommonNativeInstance_i4_i8_3,
+		CallCommonNativeInstance_i4_i8_4,
+		CallCommonNativeInstance_i4_f4_1,
+		CallCommonNativeInstance_i4_f4_2,
+		CallCommonNativeInstance_i4_f4_3,
+		CallCommonNativeInstance_i4_f4_4,
+		CallCommonNativeInstance_i4_f8_1,
+		CallCommonNativeInstance_i4_f8_2,
+		CallCommonNativeInstance_i4_f8_3,
+		CallCommonNativeInstance_i4_f8_4,
+		CallCommonNativeInstance_i8_i4_1,
+		CallCommonNativeInstance_i8_i4_2,
+		CallCommonNativeInstance_i8_i4_3,
+		CallCommonNativeInstance_i8_i4_4,
+		CallCommonNativeInstance_i8_i8_1,
+		CallCommonNativeInstance_i8_i8_2,
+		CallCommonNativeInstance_i8_i8_3,
+		CallCommonNativeInstance_i8_i8_4,
+		CallCommonNativeInstance_i8_f4_1,
+		CallCommonNativeInstance_i8_f4_2,
+		CallCommonNativeInstance_i8_f4_3,
+		CallCommonNativeInstance_i8_f4_4,
+		CallCommonNativeInstance_i8_f8_1,
+		CallCommonNativeInstance_i8_f8_2,
+		CallCommonNativeInstance_i8_f8_3,
+		CallCommonNativeInstance_i8_f8_4,
+		CallCommonNativeInstance_f4_i4_1,
+		CallCommonNativeInstance_f4_i4_2,
+		CallCommonNativeInstance_f4_i4_3,
+		CallCommonNativeInstance_f4_i4_4,
+		CallCommonNativeInstance_f4_i8_1,
+		CallCommonNativeInstance_f4_i8_2,
+		CallCommonNativeInstance_f4_i8_3,
+		CallCommonNativeInstance_f4_i8_4,
+		CallCommonNativeInstance_f4_f4_1,
+		CallCommonNativeInstance_f4_f4_2,
+		CallCommonNativeInstance_f4_f4_3,
+		CallCommonNativeInstance_f4_f4_4,
+		CallCommonNativeInstance_f4_f8_1,
+		CallCommonNativeInstance_f4_f8_2,
+		CallCommonNativeInstance_f4_f8_3,
+		CallCommonNativeInstance_f4_f8_4,
+		CallCommonNativeInstance_f8_i4_1,
+		CallCommonNativeInstance_f8_i4_2,
+		CallCommonNativeInstance_f8_i4_3,
+		CallCommonNativeInstance_f8_i4_4,
+		CallCommonNativeInstance_f8_i8_1,
+		CallCommonNativeInstance_f8_i8_2,
+		CallCommonNativeInstance_f8_i8_3,
+		CallCommonNativeInstance_f8_i8_4,
+		CallCommonNativeInstance_f8_f4_1,
+		CallCommonNativeInstance_f8_f4_2,
+		CallCommonNativeInstance_f8_f4_3,
+		CallCommonNativeInstance_f8_f4_4,
+		CallCommonNativeInstance_f8_f8_1,
+		CallCommonNativeInstance_f8_f8_2,
+		CallCommonNativeInstance_f8_f8_3,
+		CallCommonNativeInstance_f8_f8_4,
+		CallCommonNativeStatic_v_0,
+		CallCommonNativeStatic_i1_0,
+		CallCommonNativeStatic_u1_0,
+		CallCommonNativeStatic_i2_0,
+		CallCommonNativeStatic_u2_0,
+		CallCommonNativeStatic_i4_0,
+		CallCommonNativeStatic_i8_0,
+		CallCommonNativeStatic_f4_0,
+		CallCommonNativeStatic_f8_0,
+		CallCommonNativeStatic_v2f_0,
+		CallCommonNativeStatic_v3f_0,
+		CallCommonNativeStatic_v4f_0,
+		CallCommonNativeStatic_v_i4_1,
+		CallCommonNativeStatic_v_i4_2,
+		CallCommonNativeStatic_v_i4_3,
+		CallCommonNativeStatic_v_i4_4,
+		CallCommonNativeStatic_v_i8_1,
+		CallCommonNativeStatic_v_i8_2,
+		CallCommonNativeStatic_v_i8_3,
+		CallCommonNativeStatic_v_i8_4,
+		CallCommonNativeStatic_v_f4_1,
+		CallCommonNativeStatic_v_f4_2,
+		CallCommonNativeStatic_v_f4_3,
+		CallCommonNativeStatic_v_f4_4,
+		CallCommonNativeStatic_v_f8_1,
+		CallCommonNativeStatic_v_f8_2,
+		CallCommonNativeStatic_v_f8_3,
+		CallCommonNativeStatic_v_f8_4,
+		CallCommonNativeStatic_u1_i4_1,
+		CallCommonNativeStatic_u1_i4_2,
+		CallCommonNativeStatic_u1_i4_3,
+		CallCommonNativeStatic_u1_i4_4,
+		CallCommonNativeStatic_u1_i8_1,
+		CallCommonNativeStatic_u1_i8_2,
+		CallCommonNativeStatic_u1_i8_3,
+		CallCommonNativeStatic_u1_i8_4,
+		CallCommonNativeStatic_u1_f4_1,
+		CallCommonNativeStatic_u1_f4_2,
+		CallCommonNativeStatic_u1_f4_3,
+		CallCommonNativeStatic_u1_f4_4,
+		CallCommonNativeStatic_u1_f8_1,
+		CallCommonNativeStatic_u1_f8_2,
+		CallCommonNativeStatic_u1_f8_3,
+		CallCommonNativeStatic_u1_f8_4,
+		CallCommonNativeStatic_i4_i4_1,
+		CallCommonNativeStatic_i4_i4_2,
+		CallCommonNativeStatic_i4_i4_3,
+		CallCommonNativeStatic_i4_i4_4,
+		CallCommonNativeStatic_i4_i8_1,
+		CallCommonNativeStatic_i4_i8_2,
+		CallCommonNativeStatic_i4_i8_3,
+		CallCommonNativeStatic_i4_i8_4,
+		CallCommonNativeStatic_i4_f4_1,
+		CallCommonNativeStatic_i4_f4_2,
+		CallCommonNativeStatic_i4_f4_3,
+		CallCommonNativeStatic_i4_f4_4,
+		CallCommonNativeStatic_i4_f8_1,
+		CallCommonNativeStatic_i4_f8_2,
+		CallCommonNativeStatic_i4_f8_3,
+		CallCommonNativeStatic_i4_f8_4,
+		CallCommonNativeStatic_i8_i4_1,
+		CallCommonNativeStatic_i8_i4_2,
+		CallCommonNativeStatic_i8_i4_3,
+		CallCommonNativeStatic_i8_i4_4,
+		CallCommonNativeStatic_i8_i8_1,
+		CallCommonNativeStatic_i8_i8_2,
+		CallCommonNativeStatic_i8_i8_3,
+		CallCommonNativeStatic_i8_i8_4,
+		CallCommonNativeStatic_i8_f4_1,
+		CallCommonNativeStatic_i8_f4_2,
+		CallCommonNativeStatic_i8_f4_3,
+		CallCommonNativeStatic_i8_f4_4,
+		CallCommonNativeStatic_i8_f8_1,
+		CallCommonNativeStatic_i8_f8_2,
+		CallCommonNativeStatic_i8_f8_3,
+		CallCommonNativeStatic_i8_f8_4,
+		CallCommonNativeStatic_f4_i4_1,
+		CallCommonNativeStatic_f4_i4_2,
+		CallCommonNativeStatic_f4_i4_3,
+		CallCommonNativeStatic_f4_i4_4,
+		CallCommonNativeStatic_f4_i8_1,
+		CallCommonNativeStatic_f4_i8_2,
+		CallCommonNativeStatic_f4_i8_3,
+		CallCommonNativeStatic_f4_i8_4,
+		CallCommonNativeStatic_f4_f4_1,
+		CallCommonNativeStatic_f4_f4_2,
+		CallCommonNativeStatic_f4_f4_3,
+		CallCommonNativeStatic_f4_f4_4,
+		CallCommonNativeStatic_f4_f8_1,
+		CallCommonNativeStatic_f4_f8_2,
+		CallCommonNativeStatic_f4_f8_3,
+		CallCommonNativeStatic_f4_f8_4,
+		CallCommonNativeStatic_f8_i4_1,
+		CallCommonNativeStatic_f8_i4_2,
+		CallCommonNativeStatic_f8_i4_3,
+		CallCommonNativeStatic_f8_i4_4,
+		CallCommonNativeStatic_f8_i8_1,
+		CallCommonNativeStatic_f8_i8_2,
+		CallCommonNativeStatic_f8_i8_3,
+		CallCommonNativeStatic_f8_i8_4,
+		CallCommonNativeStatic_f8_f4_1,
+		CallCommonNativeStatic_f8_f4_2,
+		CallCommonNativeStatic_f8_f4_3,
+		CallCommonNativeStatic_f8_f4_4,
+		CallCommonNativeStatic_f8_f8_1,
+		CallCommonNativeStatic_f8_f8_2,
+		CallCommonNativeStatic_f8_f8_3,
+		CallCommonNativeStatic_f8_f8_4,
 		BoxVarVar,
 		UnBoxVarVar,
 		UnBoxAnyVarVar,
@@ -3664,6 +3880,2716 @@ namespace interpreter
 		uint8_t __pad13;
 		uint8_t __pad14;
 		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_0 : IRCommon
+	{
+		uint16_t self;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i1_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i2_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_u2_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v2f_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v3f_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v4f_0 : IRCommon
+	{
+		uint16_t self;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_i8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_v_f8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_i8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_u1_f8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_i8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i4_f8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_i8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_i8_f8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_i8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f4_f8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_i8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f4_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f4_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f4_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f4_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f8_1 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f8_2 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f8_3 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeInstance_f8_f8_4 : IRCommon
+	{
+		uint16_t self;
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint8_t __pad14;
+		uint8_t __pad15;
+		uint32_t method;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_0 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i1_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i2_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u2_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v2f_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v3f_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v4f_0 : IRCommon
+	{
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_i8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_v_f8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_i8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_u1_f8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_i8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i4_f8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_i8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_i8_f8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_i8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f4_f8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_i8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f4_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f4_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f4_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f4_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f8_1 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f8_2 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t ret;
+		uint32_t method;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f8_3 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t ret;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint32_t method;
+	};
+
+
+	struct IRCallCommonNativeStatic_f8_f8_4 : IRCommon
+	{
+		uint16_t param0;
+		uint16_t param1;
+		uint16_t param2;
+		uint16_t param3;
+		uint16_t ret;
+		uint32_t method;
 	};
 
 

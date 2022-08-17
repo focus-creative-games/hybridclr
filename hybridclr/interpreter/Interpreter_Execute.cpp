@@ -5324,6 +5324,3044 @@ else \
 				    ip += 16;
 				    continue;
 				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i1_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int8_t(*_NativeMethod_)(void*, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i2_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int16_t(*_NativeMethod_)(void*, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u2_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint16_t(*_NativeMethod_)(void*, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v2f_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef HtVector2f(*_NativeMethod_)(void*, MethodInfo*);
+				    *(HtVector2f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v3f_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef HtVector3f(*_NativeMethod_)(void*, MethodInfo*);
+				    *(HtVector3f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v4f_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef HtVector4f(*_NativeMethod_)(void*, MethodInfo*);
+				    *(HtVector4f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int32_t, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int64_t, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, float, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, float, float, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, float, float, float, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, double, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, double, double, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_v_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef void(*_NativeMethod_)(void*, double, double, double, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, float, float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_u1_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef uint8_t(*_NativeMethod_)(void*, double, double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, float, float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i4_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int32_t(*_NativeMethod_)(void*, double, double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int32_t, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int64_t, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, float, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, float, float, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, float, float, float, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, double, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, double, double, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_i8_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef int64_t(*_NativeMethod_)(void*, double, double, double, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int32_t, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int64_t, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, float, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, float, float, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, float, float, float, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, double, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, double, double, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f4_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef float(*_NativeMethod_)(void*, double, double, double, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int32_t, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int64_t, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, float, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, float, float, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, float, float, float, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, double, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, double, double, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeInstance_f8_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 16);
+					uint16_t __self = *(uint16_t*)(ip + 2);
+					uint16_t __param0 = *(uint16_t*)(ip + 4);
+					uint16_t __param1 = *(uint16_t*)(ip + 6);
+					uint16_t __param2 = *(uint16_t*)(ip + 8);
+					uint16_t __param3 = *(uint16_t*)(ip + 10);
+					uint16_t __ret = *(uint16_t*)(ip + 12);
+				    void* _self = (*(void**)(localVarBase + __self));
+				    CHECK_NOT_NULL_THROW(_self);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    typedef double(*_NativeMethod_)(void*, double, double, double, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_self, (*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i1_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int8_t(*_NativeMethod_)(MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i2_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int16_t(*_NativeMethod_)(MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u2_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint16_t(*_NativeMethod_)(MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v2f_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef HtVector2f(*_NativeMethod_)(MethodInfo*);
+				    *(HtVector2f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v3f_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef HtVector3f(*_NativeMethod_)(MethodInfo*);
+				    *(HtVector3f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v4f_0:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef HtVector4f(*_NativeMethod_)(MethodInfo*);
+				    *(HtVector4f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(float, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(float, float, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(float, float, float, float, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 4);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(double, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(double, double, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_v_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef void(*_NativeMethod_)(double, double, double, double, MethodInfo*);
+				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(float, float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_u1_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef uint8_t(*_NativeMethod_)(double, double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(float, float, float, float, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i4_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int32_t(*_NativeMethod_)(double, double, double, double, MethodInfo*);
+				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(float, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(float, float, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(float, float, float, float, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(double, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(double, double, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_i8_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef int64_t(*_NativeMethod_)(double, double, double, double, MethodInfo*);
+				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(float, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(float, float, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(float, float, float, float, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(double, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(double, double, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f4_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef float(*_NativeMethod_)(double, double, double, double, MethodInfo*);
+				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_i8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f4_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f4_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(float, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f4_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(float, float, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f4_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(float, float, float, float, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f8_1:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f8_2:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 8);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __ret = *(uint16_t*)(ip + 6);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(double, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f8_3:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __ret = *(uint16_t*)(ip + 8);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(double, double, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallCommonNativeStatic_f8_f8_4:
+				{
+					uint32_t __method = *(uint32_t*)(ip + 12);
+					uint16_t __param0 = *(uint16_t*)(ip + 2);
+					uint16_t __param1 = *(uint16_t*)(ip + 4);
+					uint16_t __param2 = *(uint16_t*)(ip + 6);
+					uint16_t __param3 = *(uint16_t*)(ip + 8);
+					uint16_t __ret = *(uint16_t*)(ip + 10);
+				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
+				    Interpreter::RuntimeClassCCtorInit(_resolvedMethod);
+				    typedef double(*_NativeMethod_)(double, double, double, double, MethodInfo*);
+				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
+				    ip += 16;
+				    continue;
+				}
 
 				//!!!}}FUNCTION
 #pragma endregion
