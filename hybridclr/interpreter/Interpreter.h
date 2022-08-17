@@ -22,7 +22,7 @@ namespace interpreter
 		{
 			Il2CppClass* klass = method->klass;
 			il2cpp::vm::ClassInlines::InitFromCodegen(klass);
-			if (!IS_CCTOR_FINISH_OR_NO_CCTOR(klass) && hybridclr::metadata::IsStaticMethod(method))
+			if (!IS_CCTOR_FINISH_OR_NO_CCTOR(klass))
 			{
 				il2cpp_codegen_runtime_class_init(klass);
 			}
