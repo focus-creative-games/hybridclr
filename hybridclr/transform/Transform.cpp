@@ -6,6 +6,8 @@
 #include "vm/Exception.h"
 #include "vm/String.h"
 
+#include "../interpreter/InterpreterUtil.h"
+
 #include "TransformContext.h"
 
 using namespace hybridclr::metadata;
