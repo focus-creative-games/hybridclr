@@ -9,7 +9,7 @@ namespace hybridclr
 namespace interpreter
 {
 
-	IL2CPP_FORCE_INLINE void RuntimeClassCCtorInit(Il2CppClass* klass)
+	IL2CPP_FORCE_INLINE void RuntimeInitClassCCtor(Il2CppClass* klass)
 	{
 		il2cpp::vm::ClassInlines::InitFromCodegen(klass);
 		if (!IS_CCTOR_FINISH_OR_NO_CCTOR(klass))
@@ -18,9 +18,22 @@ namespace interpreter
 		}
 	}
 
-	IL2CPP_FORCE_INLINE void RuntimeClassCCtorInit(const MethodInfo* method)
+	IL2CPP_FORCE_INLINE void RuntimeInitClassCCtor(const MethodInfo* method)
 	{
-		RuntimeClassCCtorInit(method->klass);
+		RuntimeInitClassCCtor(method->klass);
+	}
+
+	IL2CPP_FORCE_INLINE void RuntimeInitClassCCtorWithoutInitClass(Il2CppClass* klass)
+	{
+		if (!IS_CCTOR_FINISH_OR_NO_CCTOR(klass))
+		{
+			il2cpp_codegen_runtime_class_init(klass);
+		}
+	}
+
+	IL2CPP_FORCE_INLINE void RuntimeInitClassCCtorWithoutInitClass(const MethodInfo* method)
+	{
+		RuntimeInitClassCCtorWithoutInitClass(method->klass);
 	}
 
 	inline bool IsNeedExpandLocationType(LocationDataType type)

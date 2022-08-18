@@ -1192,7 +1192,7 @@ inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * met
 		}
 		else
 		{
-			RuntimeClassCCtorInit(method);
+			RuntimeInitClassCCtor(method);
 			staticM2NMethod(method, argIdxs + 1, localVarBase, ret);
 		}
 	}
@@ -4662,7 +4662,7 @@ else \
 					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__methodInfo]);
-					RuntimeClassCCtorInit(_resolvedMethod);
+					RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_resolvedMethod, ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, nullptr);
 				    ip += 16;
 				    continue;
@@ -4674,7 +4674,7 @@ else \
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__methodInfo]);
-					RuntimeClassCCtorInit(_resolvedMethod);
+					RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    void* _ret = (void*)(localVarBase + __ret);
 				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_resolvedMethod, ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
 				    ip += 16;
@@ -4688,7 +4688,7 @@ else \
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__methodInfo]);
-					RuntimeClassCCtorInit(_resolvedMethod);
+					RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    void* _ret = (void*)(localVarBase + __ret);
 				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(_resolvedMethod, ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
@@ -4967,7 +4967,7 @@ else \
 										_argBasePtr++;
 										_resolvedArgIdxs++;
 										_managed2NativeCallMethod = _staticM2NMethod;
-										RuntimeClassCCtorInit(method);
+										RuntimeInitClassCCtor(method);
 									}
 									break;
 								}
@@ -5097,7 +5097,7 @@ else \
 										_argBasePtr++;
 										_resolvedArgIdxs++;
 										_managed2NativeCallMethod = _staticM2NMethod;
-										RuntimeClassCCtorInit(method);
+										RuntimeInitClassCCtor(method);
 									}
 									break;
 								}
@@ -5228,7 +5228,7 @@ else \
 										_argBasePtr++;
 										_resolvedArgIdxs++;
 										_managed2NativeCallMethod = _staticM2NMethod;
-										RuntimeClassCCtorInit(method);
+										RuntimeInitClassCCtor(method);
 									}
 									break;
 								}
@@ -6923,7 +6923,7 @@ else \
 				{
 					uint32_t __method = *(uint32_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -6934,7 +6934,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int8_t(*_NativeMethod_)(MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -6945,7 +6945,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -6956,7 +6956,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int16_t(*_NativeMethod_)(MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -6967,7 +6967,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint16_t(*_NativeMethod_)(MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -6978,7 +6978,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -6989,7 +6989,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -7000,7 +7000,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -7011,7 +7011,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -7022,7 +7022,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef HtVector2f(*_NativeMethod_)(MethodInfo*);
 				    *(HtVector2f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -7033,7 +7033,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef HtVector3f(*_NativeMethod_)(MethodInfo*);
 				    *(HtVector3f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -7044,7 +7044,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef HtVector4f(*_NativeMethod_)(MethodInfo*);
 				    *(HtVector4f*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)(_resolvedMethod);
 				    ip += 8;
@@ -7055,7 +7055,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int32_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 8;
@@ -7067,7 +7067,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7080,7 +7080,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7094,7 +7094,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7105,7 +7105,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int64_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 8;
@@ -7117,7 +7117,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7130,7 +7130,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7144,7 +7144,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7155,7 +7155,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(float, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 8;
@@ -7167,7 +7167,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(float, float, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7180,7 +7180,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(float, float, float, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7194,7 +7194,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(float, float, float, float, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7205,7 +7205,7 @@ else \
 					uint32_t __method = *(uint32_t*)(ip + 4);
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(double, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 8;
@@ -7217,7 +7217,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(double, double, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7230,7 +7230,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(double, double, double, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7244,7 +7244,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef void(*_NativeMethod_)(double, double, double, double, MethodInfo*);
 				    ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7256,7 +7256,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7269,7 +7269,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7283,7 +7283,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7298,7 +7298,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7310,7 +7310,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7323,7 +7323,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7337,7 +7337,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7352,7 +7352,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7364,7 +7364,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7377,7 +7377,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(float, float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7391,7 +7391,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(float, float, float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7406,7 +7406,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(float, float, float, float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7418,7 +7418,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7431,7 +7431,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(double, double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7445,7 +7445,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(double, double, double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7460,7 +7460,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef uint8_t(*_NativeMethod_)(double, double, double, double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7472,7 +7472,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7485,7 +7485,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7499,7 +7499,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7514,7 +7514,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7526,7 +7526,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7539,7 +7539,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7553,7 +7553,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7568,7 +7568,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7580,7 +7580,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7593,7 +7593,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(float, float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7607,7 +7607,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(float, float, float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7622,7 +7622,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(float, float, float, float, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7634,7 +7634,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7647,7 +7647,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(double, double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7661,7 +7661,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(double, double, double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7676,7 +7676,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int32_t(*_NativeMethod_)(double, double, double, double, MethodInfo*);
 				    *(int32_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7688,7 +7688,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int32_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7701,7 +7701,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7715,7 +7715,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7730,7 +7730,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7742,7 +7742,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int64_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7755,7 +7755,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7769,7 +7769,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7784,7 +7784,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7796,7 +7796,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(float, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7809,7 +7809,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(float, float, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7823,7 +7823,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(float, float, float, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7838,7 +7838,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(float, float, float, float, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7850,7 +7850,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(double, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7863,7 +7863,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(double, double, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7877,7 +7877,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(double, double, double, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7892,7 +7892,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef int64_t(*_NativeMethod_)(double, double, double, double, MethodInfo*);
 				    *(int64_t*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7904,7 +7904,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int32_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7917,7 +7917,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7931,7 +7931,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -7946,7 +7946,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -7958,7 +7958,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int64_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -7971,7 +7971,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -7985,7 +7985,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8000,7 +8000,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -8012,7 +8012,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(float, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -8025,7 +8025,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(float, float, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -8039,7 +8039,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(float, float, float, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8054,7 +8054,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(float, float, float, float, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -8066,7 +8066,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(double, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -8079,7 +8079,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(double, double, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -8093,7 +8093,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(double, double, double, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8108,7 +8108,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef float(*_NativeMethod_)(double, double, double, double, MethodInfo*);
 				    *(float*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -8120,7 +8120,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int32_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -8133,7 +8133,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int32_t, int32_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -8147,7 +8147,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int32_t, int32_t, int32_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8162,7 +8162,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int32_t, int32_t, int32_t, int32_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int32_t*)(localVarBase + __param0)), (*(int32_t*)(localVarBase + __param1)), (*(int32_t*)(localVarBase + __param2)), (*(int32_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -8174,7 +8174,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int64_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -8187,7 +8187,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int64_t, int64_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -8201,7 +8201,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int64_t, int64_t, int64_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8216,7 +8216,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(int64_t, int64_t, int64_t, int64_t, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(int64_t*)(localVarBase + __param0)), (*(int64_t*)(localVarBase + __param1)), (*(int64_t*)(localVarBase + __param2)), (*(int64_t*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -8228,7 +8228,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(float, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -8241,7 +8241,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(float, float, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -8255,7 +8255,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(float, float, float, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8270,7 +8270,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(float, float, float, float, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(float*)(localVarBase + __param0)), (*(float*)(localVarBase + __param1)), (*(float*)(localVarBase + __param2)), (*(float*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -8282,7 +8282,7 @@ else \
 					uint16_t __param0 = *(uint16_t*)(ip + 2);
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(double, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), _resolvedMethod);
 				    ip += 16;
@@ -8295,7 +8295,7 @@ else \
 					uint16_t __param1 = *(uint16_t*)(ip + 4);
 					uint16_t __ret = *(uint16_t*)(ip + 6);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(double, double, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), _resolvedMethod);
 				    ip += 16;
@@ -8309,7 +8309,7 @@ else \
 					uint16_t __param2 = *(uint16_t*)(ip + 6);
 					uint16_t __ret = *(uint16_t*)(ip + 8);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(double, double, double, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), _resolvedMethod);
 				    ip += 16;
@@ -8324,7 +8324,7 @@ else \
 					uint16_t __param3 = *(uint16_t*)(ip + 8);
 					uint16_t __ret = *(uint16_t*)(ip + 10);
 				    MethodInfo* _resolvedMethod = ((MethodInfo*)imi->resolveDatas[__method]);
-				    RuntimeClassCCtorInit(_resolvedMethod);
+				    RuntimeInitClassCCtorWithoutInitClass(_resolvedMethod);
 				    typedef double(*_NativeMethod_)(double, double, double, double, MethodInfo*);
 				    *(double*)(void*)(localVarBase + __ret) = ((_NativeMethod_)_resolvedMethod->methodPointer)((*(double*)(localVarBase + __param0)), (*(double*)(localVarBase + __param1)), (*(double*)(localVarBase + __param2)), (*(double*)(localVarBase + __param3)), _resolvedMethod);
 				    ip += 16;
@@ -9297,7 +9297,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int8_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9307,7 +9307,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9317,7 +9317,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int16_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9327,7 +9327,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9337,7 +9337,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int32_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9347,7 +9347,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9357,7 +9357,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(int64_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9367,7 +9367,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9377,7 +9377,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9387,7 +9387,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9397,7 +9397,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9407,7 +9407,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9417,7 +9417,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9427,7 +9427,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9437,7 +9437,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
@@ -9448,7 +9448,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((void*)(localVarBase + __dst), (((byte*)__klass->static_fields) + __offset), __size);
 				    ip += 16;
 				    continue;
@@ -9459,7 +9459,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
 					uint32_t __size = *(uint32_t*)(ip + 12);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((void*)(localVarBase + __dst), (((byte*)__klass->static_fields) + __offset), __size);
 				    ip += 16;
 				    continue;
@@ -9469,7 +9469,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int8_t*)(((byte*)__klass->static_fields) + __offset) = (*(int8_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9479,7 +9479,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint8_t*)(((byte*)__klass->static_fields) + __offset) = (*(uint8_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9489,7 +9489,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int16_t*)(((byte*)__klass->static_fields) + __offset) = (*(int16_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9499,7 +9499,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint16_t*)(((byte*)__klass->static_fields) + __offset) = (*(uint16_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9509,7 +9509,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int32_t*)(((byte*)__klass->static_fields) + __offset) = (*(int32_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9519,7 +9519,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint32_t*)(((byte*)__klass->static_fields) + __offset) = (*(uint32_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9529,7 +9529,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int64_t*)(((byte*)__klass->static_fields) + __offset) = (*(int64_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9539,7 +9539,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint64_t*)(((byte*)__klass->static_fields) + __offset) = (*(uint64_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9549,7 +9549,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9559,7 +9559,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9569,7 +9569,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9579,7 +9579,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9589,7 +9589,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9599,7 +9599,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9609,7 +9609,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9620,7 +9620,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
 				    continue;
@@ -9631,7 +9631,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
 					uint32_t __size = *(uint32_t*)(ip + 12);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
 				    continue;
@@ -9641,7 +9641,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(void**)(localVarBase + __dst)) = ((byte*)__klass->static_fields) + __offset;
 				    ip += 16;
 				    continue;
@@ -9659,7 +9659,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(void**)(localVarBase + __dst)) = (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset;
 				    ip += 16;
 				    continue;
@@ -9669,7 +9669,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int8_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9679,7 +9679,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9689,7 +9689,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int16_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9699,7 +9699,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9709,7 +9709,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int32_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9719,7 +9719,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9729,7 +9729,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(int64_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9739,7 +9739,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9749,7 +9749,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9759,7 +9759,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9769,7 +9769,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9779,7 +9779,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9789,7 +9789,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9799,7 +9799,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9809,7 +9809,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
@@ -9820,7 +9820,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					int32_t __offset = *(int32_t*)(ip + 12);
 					uint16_t __size = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, __size);
 				    ip += 16;
 				    continue;
@@ -9831,7 +9831,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
 					int32_t __offset = *(int32_t*)(ip + 8);
 					uint32_t __size = *(uint32_t*)(ip + 12);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((void*)(localVarBase + __dst), (byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, __size);
 				    ip += 16;
 				    continue;
@@ -9841,7 +9841,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int8_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int8_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9851,7 +9851,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint8_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint8_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9861,7 +9861,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int16_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int16_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9871,7 +9871,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint16_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint16_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9881,7 +9881,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int32_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int32_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9891,7 +9891,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint32_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint32_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9901,7 +9901,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(int64_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(int64_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9911,7 +9911,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    *(uint64_t*)((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset) = (*(uint64_t*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9921,7 +9921,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9931,7 +9931,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9941,7 +9941,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9951,7 +9951,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9961,7 +9961,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9971,7 +9971,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9981,7 +9981,7 @@ else \
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
 				    continue;
@@ -9992,7 +9992,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
 				    continue;
@@ -10003,7 +10003,7 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 2);
 					uint16_t __data = *(uint16_t*)(ip + 4);
 					uint32_t __size = *(uint32_t*)(ip + 12);
-				    RuntimeClassCCtorInit(__klass);
+				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
 				    continue;

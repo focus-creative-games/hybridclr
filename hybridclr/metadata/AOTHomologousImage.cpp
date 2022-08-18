@@ -342,6 +342,7 @@ namespace metadata
 			nullptr, DecodeTokenTableType(token), DecodeTokenRowIndex(token));
 
 		IL2CPP_ASSERT(method);
+		il2cpp::vm::Class::Init(method->klass);
 		{
 			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 			_token2ResolvedDataCache.insert({ key, (void*)method });
@@ -382,6 +383,7 @@ namespace metadata
 		ReadFieldRefInfoFromToken(klassGenericContainer, methodGenericContainer, DecodeTokenTableType(token), DecodeTokenRowIndex(token), fri);
 		const Il2CppType* resultType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(&fri.containerType, genericContext, true) : &fri.containerType;
 		const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(*resultType, fri.field);
+		il2cpp::vm::Class::Init(fieldInfo->parent);
 		{
 			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 			_token2ResolvedDataCache.insert({ key, (void*)fieldInfo });
