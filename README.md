@@ -107,6 +107,18 @@ HybridCLR虽然与il2cpp相关，但绝大多数核心代码独立于il2cpp，�
 
 毕业于清华大学物理系，2006年CMO金牌，奥数国家集训队成员，保送清华基科班。专注于游戏技术，擅长开发架构和基础技术设施。
 
+## 赞助
+
+我们为开发HybridCLR投入巨量人力及其他资源，你们的赞助如同雪中送炭会让我们坚持下来，并且让我们做得更快更好。感谢热心慷慨的你们！
+
+**微信**
+
+![weixin](./docs/sponsor/weixin.JPG)
+
+**支付宝**
+
+![zhifubao](./docs/sponsor/zhifubao.JPG)
+
 ## license
 
 HybridCLR is licensed under the [MIT](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE) license
