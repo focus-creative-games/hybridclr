@@ -840,6 +840,7 @@ namespace interpreter
 
 	inline void InitNullableValueType(void* nullableValueTypeObj, void* data, Il2CppClass* klass)
 	{
+		IL2CPP_ASSERT(klass->castClass->size_inited);
 		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
 		std::memmove(GetNulllableDataOffset(nullableValueTypeObj, size), data, size);
 		*GetNulllableHasValueOffset(nullableValueTypeObj, size) = 1;
@@ -852,6 +853,7 @@ namespace interpreter
 
 	inline bool IsNullableHasValue(void* nullableValueObj, Il2CppClass* klass)
 	{
+		IL2CPP_ASSERT(klass->castClass->size_inited);
 		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
 		return *(GetNulllableHasValueOffset(nullableValueObj, size));
 	}
@@ -859,6 +861,7 @@ namespace interpreter
 	inline void GetNullableValueOrDefault2StackDataByType(void* dst, void* nullableValueObj, Il2CppClass* klass)
 	{
 		Il2CppClass* eleClass = klass->castClass;
+		IL2CPP_ASSERT(eleClass->size_inited);
 		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
 		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
 		void* srcData = GetNulllableDataOffset(nullableValueObj, size);
@@ -953,6 +956,7 @@ namespace interpreter
 	inline void GetNullableValueOrDefault2StackDataByType(void* dst, void* nullableValueObj, void* defaultData, Il2CppClass* klass)
 	{
 		Il2CppClass* eleClass = klass->castClass;
+		IL2CPP_ASSERT(eleClass->size_inited);
 		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
 		void* srcData;
 		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);

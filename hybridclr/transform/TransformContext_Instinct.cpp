@@ -28,6 +28,7 @@ namespace transform
 			else if (std::strcmp(klassName, "Nullable`1") == 0)
 			{
 				il2cpp::vm::Class::SetupFields(klass);
+				il2cpp::vm::Class::SetupFields(klass->castClass);
 				uint16_t topOffset = GetEvalStackTopOffset();
 				uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 				if (strcmp(methodName, ".ctor") == 0)
