@@ -1790,7 +1790,7 @@ else \
 
 				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 
-				if (IsInterpreterType(klass))
+				if (IsInterpreterImplement(shareMethod))
 				{
 					if (IS_CLASS_VALUE_TYPE(klass))
 					{
