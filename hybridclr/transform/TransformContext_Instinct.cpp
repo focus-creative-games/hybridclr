@@ -17,7 +17,7 @@ namespace transform
 			if (std::strcmp(klassName, "Object") == 0)
 			{
 				// special handle
-				if (strcmp(methodName, ".ctor") == 0)
+				if (std::strcmp(methodName, ".ctor") == 0)
 				{
 					PopStack();
 					return true;

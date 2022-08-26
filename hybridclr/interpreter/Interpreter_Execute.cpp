@@ -4970,7 +4970,7 @@ else \
 									{
 										_argBasePtr++;
 										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod;
+										_managed2NativeCallMethod = _staticM2NMethod; 
 										RuntimeInitClassCCtor(method);
 									}
 									break;
@@ -5100,7 +5100,7 @@ else \
 									{
 										_argBasePtr++;
 										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod;
+										_managed2NativeCallMethod = _staticM2NMethod; 
 										RuntimeInitClassCCtor(method);
 									}
 									break;
@@ -5231,7 +5231,7 @@ else \
 									{
 										_argBasePtr++;
 										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod;
+										_managed2NativeCallMethod = _staticM2NMethod; 
 										RuntimeInitClassCCtor(method);
 									}
 									break;
@@ -10981,6 +10981,15 @@ else \
 				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, _index);
 				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
 				    il2cpp_array_setrefwithsize(_arr, _eleSize, _index, (*(void**)(localVarBase + __value)));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::NewString:
+				{
+					uint16_t __str = *(uint16_t*)(ip + 2);
+					uint16_t __chars = *(uint16_t*)(ip + 4);
+				    Il2CppArray* _chars = (*(Il2CppArray**)(localVarBase + __chars));
+				    (*(Il2CppString**)(localVarBase + __str)) = il2cpp::vm::String::NewUtf16((const Il2CppChar*)il2cpp::vm::Array::GetFirstElementAddress(_chars), il2cpp::vm::Array::GetLength(_chars));
 				    ip += 8;
 				    continue;
 				}

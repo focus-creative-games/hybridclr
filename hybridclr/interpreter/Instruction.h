@@ -827,6 +827,7 @@ namespace interpreter
 		NewVector4_4,
 		ArrayGetGenericValueImpl,
 		ArraySetGenericValueImpl,
+		NewString,
 
 		//!!!}}OPCODE
 	};
@@ -9375,6 +9376,15 @@ namespace interpreter
 		uint16_t arr;
 		uint16_t index;
 		uint16_t value;
+	};
+
+
+	struct IRNewString : IRCommon
+	{
+		uint16_t str;
+		uint16_t chars;
+		uint8_t __pad6;
+		uint8_t __pad7;
 	};
 
 

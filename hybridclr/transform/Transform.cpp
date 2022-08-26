@@ -1707,6 +1707,7 @@ else \
 				shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(shareMethod);
 				Il2CppClass* klass = shareMethod->klass;
+				uint8_t paramCount = shareMethod->parameters_count;
 
 				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(shareMethod));
 				if (strcmp(klass->namespaze, "System") == 0)
@@ -1719,7 +1720,24 @@ else \
 						ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 						continue;
 					}
-					if (strcmp(klass->name, "Nullable`1") == 0)
+					else if (klass == il2cpp_defaults.string_class)
+					{
+						if (paramCount == 1)
+						{
+							const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
+							if (paramType->type == IL2CPP_TYPE_SZARRAY)
+							{
+								if (paramType->data.type->type == IL2CPP_TYPE_CHAR)
+								{
+									CreateAddIR(ir, NewString);
+									ir->str = ctx.GetEvalStackTopOffset();
+									ir->chars = ctx.GetEvalStackTopOffset();
+									continue;
+								}
+							}
+						}
+					}
+					else if (strcmp(klass->name, "Nullable`1") == 0)
 					{
 						IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 						IL2CPP_ASSERT(evalStackTop > 0);
@@ -1736,7 +1754,6 @@ else \
 				if (klass->byval_arg.type == IL2CPP_TYPE_ARRAY)
 				{
 					const char* methodName = shareMethod->name;
-					uint8_t paramCount = shareMethod->parameters_count;
 					if (strcmp(methodName, ".ctor") == 0)
 					{
 						if (klass->rank == paramCount)
