@@ -406,7 +406,7 @@ namespace metadata
 
 		bool HasAttribute(CustomAttributeIndex index, Il2CppClass* attribute)
 		{
-			const Il2CppCustomAttributeTypeRange* typeRange = &_customAttributeHandles[index];
+			const Il2CppCustomAttributeTypeRange* typeRange = &_customAttributeHandles[DecodeMetadataIndex(index)];
 			return HasAttribute(typeRange, attribute);
 		}
 
@@ -416,14 +416,14 @@ namespace metadata
 			return HasAttribute(attrCache, attribute);
 		}
 
-		bool HasAttribute(uint32_t token, Il2CppClass* attribute)
+		bool HasAttributeByToken(uint32_t token, Il2CppClass* attribute)
 		{
 			CustomAttributeIndex index = GetCustomAttributeIndex(token);
 			if (index == kCustomAttributeIndexInvalid)
 			{
 				return false;
 			}
-			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(index);
+			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(DecodeMetadataIndex(index));
 			return HasAttribute(attrCache, attribute);
 		}
 

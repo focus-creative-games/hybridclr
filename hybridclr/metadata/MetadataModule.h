@@ -222,7 +222,7 @@ namespace metadata
 
 		static bool HasAttribute(const Il2CppImage* image, uint32_t token, Il2CppClass* attribute)
 		{
-			return GetImage(image)->HasAttribute(token, attribute);
+			return GetImage(image)->HasAttributeByToken(token, attribute);
 		}
 
 		static std::tuple<void*, void*> GetCustomAttributeDataRange(const Il2CppImage* image, uint32_t token)
