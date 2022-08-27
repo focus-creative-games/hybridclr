@@ -168,6 +168,11 @@ namespace metadata
 			return GetImage(imageIndex)->GetParameterDefinitionFromIndex(index);
 		}
 
+		static const Il2CppType* GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex index)
+		{
+			return GetImage(klass)->GetInterfaceFromIndex(klass, index);
+		}
+
 		static const Il2CppType* GetInterfaceFromOffset(const Il2CppClass* klass, TypeInterfaceIndex offset)
 		{
 			return GetImage(klass)->GetInterfaceFromOffset(klass, offset);
@@ -186,6 +191,11 @@ namespace metadata
 		static Il2CppClass* GetNestedTypeFromOffset(const Il2CppClass* klass, TypeNestedTypeIndex offset)
 		{
 			return GetImage(klass)->GetNestedTypeFromOffset(klass, offset);
+		}
+
+		static Il2CppClass* GetNestedTypeFromOffset(const Il2CppTypeDefinition* typeDefinition, TypeNestedTypeIndex offset)
+		{
+			return GetImage(typeDefinition)->GetNestedTypeFromOffset(typeDefinition, offset);
 		}
 
 		static Il2CppMetadataTypeHandle GetNestedTypes(Il2CppMetadataTypeHandle handle, void** iter)

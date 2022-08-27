@@ -1,7 +1,6 @@
 #include "MetadataModule.h"
 
 #include "Baselib.h"
-#include "Cpp/ReentrantLock.h"
 #include "os/Atomic.h"
 #include "os/Mutex.h"
 #include "os/File.h"
@@ -30,7 +29,7 @@ namespace hybridclr
     {
         IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
         method->initInterpCallMethodPointer = true;
-#if HYBRIDCLR_UNITY_2021
+#if HYBRIDCLR_UNITY_2021_OR_NEW
         if (hybridclr::metadata::MetadataModule::IsImplementedByInterpreter(method))
         {
             method->interpCallMethodPointer = hybridclr::interpreter::InterpreterModule::GetMethodPointer(method);

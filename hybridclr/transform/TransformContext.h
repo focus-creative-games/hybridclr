@@ -429,7 +429,7 @@ namespace transform
 
 		void AddInst(IRCommon* ir)
 		{
-			IL2CPP_ASSERT(ir->type);
+			IL2CPP_ASSERT(ir->type != HiOpcodeEnum::None);
 			curbb->insts.push_back(ir);
 		}
 

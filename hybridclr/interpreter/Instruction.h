@@ -22,6 +22,7 @@ namespace interpreter
 
 	enum class HiOpcodeEnum : uint16_t
 	{
+		None,
 		//!!!{{OPCODE
 		InitLocals_n_2,
 		InitLocals_n_4,

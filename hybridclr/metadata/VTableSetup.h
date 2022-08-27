@@ -3,6 +3,9 @@
 #include <vector>
 #include <unordered_map>
 
+#include "metadata/Il2CppTypeHash.h"
+#include "metadata/Il2CppTypeCompare.h"
+
 #include "../CommonDef.h"
 #include "MetadataUtil.h"
 

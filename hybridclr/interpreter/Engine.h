@@ -16,18 +16,18 @@
 #include "MethodBridge.h"
 
 
-#if DEBUG
-#define PUSH_STACK_FRAME(method) do { \
-	Il2CppStackFrameInfo stackFrameInfo = { method, (uintptr_t)method->methodPointer }; \
-	il2cpp::vm::StackTrace::PushFrame(stackFrameInfo); \
-} while(0)
-
-#define POP_STACK_FRAME() do { il2cpp::vm::StackTrace::PopFrame(); } while(0)
-
-#else 
+//#if DEBUG
+//#define PUSH_STACK_FRAME(method) do { \
+//	Il2CppStackFrameInfo stackFrameInfo = { method, (uintptr_t)method->methodPointer }; \
+//	il2cpp::vm::StackTrace::PushFrame(stackFrameInfo); \
+//} while(0)
+//
+//#define POP_STACK_FRAME() do { il2cpp::vm::StackTrace::PopFrame(); } while(0)
+//
+//#else 
 #define PUSH_STACK_FRAME(method)
 #define POP_STACK_FRAME() 
-#endif
+//#endif
 
 namespace hybridclr
 {
@@ -193,7 +193,12 @@ namespace interpreter
 			{
 				InterpFrame* frame = _frameBase + i;
 				const MethodInfo* method = frame->method->method;
-				Il2CppStackFrameInfo stackFrameInfo = { method, (uintptr_t)method->methodPointer };
+				Il2CppStackFrameInfo stackFrameInfo = {
+					method
+#if HYBRIDCLR_UNITY_2020_OR_NEW
+					, (uintptr_t)method->methodPointer
+#endif
+				};
 				stackFrames->push_back(stackFrameInfo);
 			}
 		}

@@ -4,7 +4,10 @@
 #include "il2cpp-config.h"
 #include "il2cpp-class-internals.h"
 
+#if HYBRIDCLR_UNITY_2010_OR_NEW
 #include "Baselib.h"
+#endif
+
 #include "vm/Array.h"
 #include "vm/Type.h"
 #include "vm/Runtime.h"
@@ -15,6 +18,13 @@
 #elif HYBRIDCLR_UNITY_2021
 #include "icalls/mscorlib/System/RuntimeType.h"
 #include "icalls/mscorlib/System/RuntimeTypeHandle.h"
+#elif HYBRIDCLR_UNITY_2019
+#include "icalls/mscorlib/System/MonoType.h"
+#if IL2CPP_SIZEOF_VOID_P == 8
+#define PLATFORM_ARCH_64 1
+#else
+#define PLATFORM_ARCH_64 0
+#endif
 #else
 #error "not suppport unity version"
 #endif
@@ -189,5 +199,68 @@ namespace hybridclr
 		return il2cpp::icalls::mscorlib::System::RuntimeType::getFullName((Il2CppReflectionRuntimeType*)refType, false, false);
 	}
 
+}
+
+#elif HYBRIDCLR_UNITY_2019
+
+#define IS_CLASS_VALUE_TYPE(klass) ((klass)->valuetype)
+#define IS_CCTOR_FINISH_OR_NO_CCTOR(klass) ((klass)->cctor_finished) || !((klass)->has_cctor)
+#define GET_METHOD_PARAMETER_TYPE(param) param.parameter_type
+#define GET_ARRAY_ELEMENT_ADDRESS load_array_elema
+#define GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(tr) ((tr).start)
+
+#define SET_IL2CPPTYPE_VALUE_TYPE(type, v) 
+#define GET_IL2CPPTYPE_VALUE_TYPE(type)
+
+#define VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD 1
+
+//#define ADJUST_VALUE_TYPE_THIS_POINTER(newPtr, oldPtr) newPtr = oldPtr - 1
+//// #define RECOVERY_VALUE_TYPE_THIS_POINTER(newPtr, oldPtr) newPtr = oldPtr + 1
+//#define CHECK_UNADJUST_VALUE_TYPE_THIS_POINTER(klass, ptr)
+
+namespace hybridclr
+{
+	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
+
+	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
+	{
+		Il2CppMethodPointer methodPointer = method->methodPointer;
+		if (methodPointer || method->initInterpCallMethodPointer)
+		{
+			return methodPointer;
+		}
+		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
+	}
+
+	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
+	{
+		return il2cpp::icalls::mscorlib::System::Type::internal_from_name(name, true, false);
+	}
+
+	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)
+	{
+		il2cpp::vm::Type::ConstructDelegate(delegate, target, GetInterpreterDirectlyCallMethodPointer(method), method);
+	}
+
+	inline const MethodInfo* GetGenericVirtualMethod(const MethodInfo* result, const MethodInfo* inflateMethod)
+	{
+		return il2cpp::vm::Runtime::GetGenericVirtualMethod(result, inflateMethod);
+	}
+
+	inline void* GetNulllableDataOffset(void* nullableObj, uint32_t size)
+	{
+		return nullableObj;
+	}
+
+	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, uint32_t size)
+	{
+		return (uint8_t*)nullableObj + size;
+	}
+
+	inline Il2CppString* GetKlassFullName(const Il2CppType* type)
+	{
+		Il2CppReflectionType* refType = il2cpp::icalls::mscorlib::System::Type::internal_from_handle((intptr_t)type);
+		return il2cpp::icalls::mscorlib::System::MonoType::getFullName(refType, false, false);
+	}
 }
 #endif

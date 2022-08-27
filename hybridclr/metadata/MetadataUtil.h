@@ -148,6 +148,11 @@ namespace metadata
         return IsInterpreterType(method->klass);
     }
 
+    inline bool IsInterpreterMethod(const Il2CppMethodDefinition* method)
+    {
+        return IsInterpreterIndex(method->declaringType);
+    }
+
     inline bool IsInterpreterImplement(const MethodInfo* method)
     {
         return method->isInterpterImpl;

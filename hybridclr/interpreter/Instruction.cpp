@@ -6,6 +6,7 @@ namespace interpreter
 {
     uint16_t g_instructionSizes[] =
     {
+		0,
         //!!!{{INST_SIZE
 		8,
 		8,

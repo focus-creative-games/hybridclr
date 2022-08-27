@@ -45,6 +45,10 @@ namespace metadata
 		uint32_t signatureBlobIndex;
 		uint32_t getterMethodIndex; // start from 1;
 		uint32_t setterMethodIndex;
+#if HYBRIDCLR_UNITY_2019
+		Il2CppTypeDefinition* declaringType;
+		Il2CppPropertyDefinition il2cppDefinition;
+#endif
 	};
 
 	struct EventDetail
@@ -55,6 +59,10 @@ namespace metadata
 		uint32_t addMethodIndex; // start from 1
 		uint32_t removeMethodIndex; // start from 1
 		uint32_t fireMethodIndex; // start from 1;
+#if HYBRIDCLR_UNITY_2019
+		Il2CppTypeDefinition* declaringType;
+		Il2CppEventDefinition il2cppDefinition;
+#endif
 	};
 
 	struct CustomAttribute
@@ -209,10 +217,17 @@ namespace metadata
 			return &_methodDefines[index];
 		}
 
+		const Il2CppGenericParameter* GetGenericParameterByGlobalIndex(uint32_t index)
+		{
+			IL2CPP_ASSERT(index < (uint32_t)_genericParams.size());
+			return &_genericParams[index];
+		}
+
 		const Il2CppGenericParameter* GetGenericParameterByRawIndex(const Il2CppGenericContainer* container, uint32_t index)
 		{
-			IL2CPP_ASSERT(container->genericParameterStart + index < (uint32_t)_genericParams.size());
-			return &_genericParams[container->genericParameterStart + index];
+			uint32_t globalIndex = DecodeMetadataIndex(container->genericParameterStart) + index;
+			IL2CPP_ASSERT(globalIndex < (uint32_t)_genericParams.size());
+			return &_genericParams[globalIndex];
 		}
 
 		Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override
@@ -249,7 +264,14 @@ namespace metadata
 			return _typeDetails[index].methodImpls;
 		}
 
+		Il2CppType* GetGenericParameterConstraintFromIndex(GenericParameterConstraintIndex index)
+		{
+			IL2CPP_ASSERT((size_t)index < _genericConstraints.size());
+			return &_types[_genericConstraints[index]];
+		}
+
 		Il2CppClass* GetNestedTypeFromOffset(const Il2CppClass* klass, TypeNestedTypeIndex offset);
+		Il2CppClass* GetNestedTypeFromOffset(const Il2CppTypeDefinition* typeDef, TypeNestedTypeIndex offset);
 
 		const MethodInfo* GetMethodInfoFromMethodDefinitionRawIndex(uint32_t index);
 		const MethodInfo* GetMethodInfoFromMethodDefinition(const Il2CppMethodDefinition* methodDef);
@@ -270,7 +292,30 @@ namespace metadata
 			return &_params[index].paramDef;
 		}
 
-		uint32_t GetFieldOffset(const Il2CppClass* klass, int32_t fieldIndexInType, FieldInfo* field);
+		const Il2CppParameterDefaultValue* GetParameterDefaultValueEntryByRawIndex(uint32_t index)
+		{
+			IL2CPP_ASSERT(index < (uint32_t)_paramDefaultValues.size());
+			return &_paramDefaultValues[index];
+		}
+
+		uint32_t InterpreterImage::GetFieldOffset(const Il2CppTypeDefinition* typeDef, int32_t fieldIndexInType, FieldInfo* field)
+		{
+			uint32_t fieldActualIndex = DecodeMetadataIndex(typeDef->fieldStart) + fieldIndexInType;
+			IL2CPP_ASSERT(fieldActualIndex < (uint32_t)_fieldDetails.size());
+			return _fieldDetails[fieldActualIndex].offset;
+		}
+
+		uint32_t GetFieldOffset(TypeDefinitionIndex typeIndex, int32_t fieldIndexInType, FieldInfo* field)
+		{
+			Il2CppTypeDefinition* typeDef = _typeDetails[typeIndex].typeDef;
+			return GetFieldOffset(typeDef, fieldIndexInType, field);
+		}
+
+		uint32_t GetFieldOffset(const Il2CppClass* klass, int32_t fieldIndexInType, FieldInfo* field)
+		{
+			Il2CppTypeDefinition* typeDef = (Il2CppTypeDefinition*)(klass->typeMetadataHandle);
+			return GetFieldOffset(typeDef, fieldIndexInType, field);
+		}
 
 		const Il2CppFieldDefaultValue* GetFieldDefaultValueEntryByRawIndex(uint32_t index)
 		{
@@ -285,6 +330,15 @@ namespace metadata
 			return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(index);
 		}
 
+#ifdef HYBRIDCLR_UNITY_2019
+		Il2CppPropertyDefinition* GetPropertyDefinitionFromIndex(PropertyIndex index)
+		{
+			IL2CPP_ASSERT(index > 0 && index <= (int32_t)_propeties.size());
+			PropertyDetail& pd = _propeties[(uint32_t)index - 1];
+			return &pd.il2cppDefinition;
+		}
+#endif
+
 		Il2CppMetadataPropertyInfo GetPropertyInfo(const Il2CppClass* klass, TypePropertyIndex index)
 		{
 			const Il2CppTypeDefinition* typeDef = (Il2CppTypeDefinition*)klass->typeMetadataHandle;
@@ -296,6 +350,15 @@ namespace metadata
 			const MethodInfo* setter = pd.setterMethodIndex ? klass->methods[pd.setterMethodIndex - baseMethodIdx] : nullptr;
 			return { pd.name, getter, setter, pd.flags, EncodeToken(TableType::PROPERTY, rowIndex) };
 		}
+
+#ifdef HYBRIDCLR_UNITY_2019
+		const Il2CppEventDefinition* GetEventDefinitionFromIndex(EventIndex index)
+		{
+			IL2CPP_ASSERT(index > 0 && index < (int32_t)_events.size());
+			EventDetail& pd = _events[index - 1];
+			return &pd.il2cppDefinition;
+		}
+#endif
 
 		Il2CppMetadataEventInfo GetEventInfo(const Il2CppClass* klass, TypeEventIndex index)
 		{
@@ -315,7 +378,7 @@ namespace metadata
 		Il2CppMetadataCustomAttributeHandle GetCustomAttributeTypeToken(uint32_t token)
 		{
 			auto it = _tokenCustomAttributes.find(token);
-			return it != _tokenCustomAttributes.end() ? (Il2CppMetadataCustomAttributeHandle)&_customAttributeHandles[it->second.typeRangeIndex] : nullptr;
+			return it != _tokenCustomAttributes.end() ? (Il2CppMetadataCustomAttributeHandle)&_customAttributeHandles[DecodeMetadataIndex(it->second.typeRangeIndex)] : nullptr;
 		}
 
 		CustomAttributeIndex GetCustomAttributeIndex(uint32_t token)
@@ -339,6 +402,12 @@ namespace metadata
 			CustomAttributeIndex index = (CustomAttributeIndex)(typeRange - (const Il2CppCustomAttributeTypeRange*)&_customAttributeHandles[0]);
 			IL2CPP_ASSERT(index >= 0 && index < (CustomAttributeIndex)_customAttributeHandles.size());
 			return GenerateCustomAttributesCacheInternal(index);
+		}
+
+		bool HasAttribute(CustomAttributeIndex index, Il2CppClass* attribute)
+		{
+			const Il2CppCustomAttributeTypeRange* typeRange = &_customAttributeHandles[index];
+			return HasAttribute(typeRange, attribute);
 		}
 
 		bool HasAttribute(const Il2CppCustomAttributeTypeRange* typeRange, Il2CppClass* attribute)
@@ -375,6 +444,7 @@ namespace metadata
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
 
+		const Il2CppType* GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex index);
 		const Il2CppType* GetInterfaceFromOffset(const Il2CppClass* klass, TypeInterfaceIndex offset);
 		const Il2CppType* GetInterfaceFromOffset(const Il2CppTypeDefinition* typeDefine, TypeInterfaceIndex offset);
 

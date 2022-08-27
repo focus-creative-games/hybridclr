@@ -1213,7 +1213,7 @@ inline void CallDelegateMethod(uint16_t invokeParamCount, const MethodInfo * met
 		IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(method));
 		selfSo = localVarBase + argIdxs[1];
 		CHECK_NOT_NULL_THROW(selfSo->obj);
-#if HYBRIDCLR_UNITY_2020
+#ifndef HYBRIDCLR_UNITY_2021_OR_NEW
 		if (IS_CLASS_VALUE_TYPE(method->klass))
 		{
 			selfSo->obj -= 1;
