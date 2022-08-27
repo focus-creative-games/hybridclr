@@ -298,7 +298,7 @@ namespace metadata
 			return &_paramDefaultValues[index];
 		}
 
-		uint32_t InterpreterImage::GetFieldOffset(const Il2CppTypeDefinition* typeDef, int32_t fieldIndexInType, FieldInfo* field)
+		uint32_t GetFieldOffset(const Il2CppTypeDefinition* typeDef, int32_t fieldIndexInType, FieldInfo* field)
 		{
 			uint32_t fieldActualIndex = DecodeMetadataIndex(typeDef->fieldStart) + fieldIndexInType;
 			IL2CPP_ASSERT(fieldActualIndex < (uint32_t)_fieldDetails.size());
