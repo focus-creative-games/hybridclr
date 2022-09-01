@@ -11,6 +11,7 @@
 #include "vm/Array.h"
 #include "vm/Type.h"
 #include "vm/Runtime.h"
+#include "vm/GlobalMetadataFileInternals.h"
 #include "icalls/mscorlib/System/Type.h"
 
 #if HYBRIDCLR_UNITY_2020
@@ -75,22 +76,40 @@
 #define ENABLE_PLACEHOLDER_DLL 1
 #endif
 
-#if HYBRIDCLR_UNITY_2020
+#if HYBRIDCLR_UNITY_2019 || HYBRIDCLR_UNITY_2020
 
-#define IS_CLASS_VALUE_TYPE(klass) ((klass)->valuetype)
-#define IS_CCTOR_FINISH_OR_NO_CCTOR(klass) ((klass)->cctor_finished) || !((klass)->has_cctor)
-#define GET_METHOD_PARAMETER_TYPE(param) param.parameter_type
+inline bool IS_CLASS_VALUE_TYPE(const Il2CppClass* klass)
+{
+	return klass->valuetype;
+}
+
+inline bool IS_CCTOR_FINISH_OR_NO_CCTOR(const Il2CppClass* klass)
+{
+	return (klass->cctor_finished) || !(klass->has_cctor);
+}
+
+inline const Il2CppType* GET_METHOD_PARAMETER_TYPE(const ParameterInfo& param)
+{
+	return param.parameter_type;
+}
+
+inline uint32_t GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(const Il2CppCustomAttributeTypeRange& tr)
+{
+	return tr.start;
+}
+
+inline void SET_IL2CPPTYPE_VALUE_TYPE(Il2CppType& type, bool v)
+{
+
+}
+
+inline void COPY_IL2CPPTYPE_VALUE_TYPE_FLAG(Il2CppType& dst, const Il2CppType& src)
+{
+
+}
+
 #define GET_ARRAY_ELEMENT_ADDRESS load_array_elema
-#define GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(tr) ((tr).start)
-
-#define SET_IL2CPPTYPE_VALUE_TYPE(type, v) 
-#define GET_IL2CPPTYPE_VALUE_TYPE(type)
-
 #define VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD 1
-
-//#define ADJUST_VALUE_TYPE_THIS_POINTER(newPtr, oldPtr) newPtr = oldPtr - 1
-//// #define RECOVERY_VALUE_TYPE_THIS_POINTER(newPtr, oldPtr) newPtr = oldPtr + 1
-//#define CHECK_UNADJUST_VALUE_TYPE_THIS_POINTER(klass, ptr)
 
 namespace hybridclr
 {
@@ -139,17 +158,37 @@ namespace hybridclr
 }
 #elif HYBRIDCLR_UNITY_2021
 
-#define IS_CLASS_VALUE_TYPE(klass) ((klass)->byval_arg.valuetype)
-#define IS_CCTOR_FINISH_OR_NO_CCTOR(klass) ((klass)->cctor_finished_or_no_cctor)
-#define GET_METHOD_PARAMETER_TYPE(param) param
+inline bool IS_CLASS_VALUE_TYPE(const Il2CppClass* klass)
+{
+	return klass->byval_arg.valuetype;
+}
+
+inline bool IS_CCTOR_FINISH_OR_NO_CCTOR(const Il2CppClass* klass)
+{
+	return klass->cctor_finished_or_no_cctor;
+}
+
+inline const Il2CppType* GET_METHOD_PARAMETER_TYPE(const Il2CppType* param)
+{
+	return param;
+}
+
+inline uint32_t GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(const Il2CppCustomAttributeTypeRange& tr)
+{
+	return tr.startOffset;
+}
+
+inline void SET_IL2CPPTYPE_VALUE_TYPE(Il2CppType& type, bool v)
+{
+	type.valuetype = v;
+}
+
+inline void COPY_IL2CPPTYPE_VALUE_TYPE_FLAG(Il2CppType& dst, const Il2CppType& src)
+{
+	dst.valuetype = src.valuetype;
+}
+
 #define GET_ARRAY_ELEMENT_ADDRESS il2cpp_array_addr_with_size
-#define GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(tr) ((tr).startOffset)
-
-#define DECLARE_INVOKE_METHOD_BEGIN(__methodName__) void __methodName__(Il2CppMethodPointer methodPtr, const MethodInfo* method, void* __this, void** __args, void* __ret)
-#define DECLARE_INVOKE_METHOD_RET(__ret__) __ret = __ret__
-#define SET_IL2CPPTYPE_VALUE_TYPE(type, v) (type).valuetype = v
-#define GET_IL2CPPTYPE_VALUE_TYPE(type) (type).valuetype
-
 #define VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD 0
 
 namespace hybridclr
@@ -201,66 +240,6 @@ namespace hybridclr
 
 }
 
-#elif HYBRIDCLR_UNITY_2019
-
-#define IS_CLASS_VALUE_TYPE(klass) ((klass)->valuetype)
-#define IS_CCTOR_FINISH_OR_NO_CCTOR(klass) ((klass)->cctor_finished) || !((klass)->has_cctor)
-#define GET_METHOD_PARAMETER_TYPE(param) param.parameter_type
-#define GET_ARRAY_ELEMENT_ADDRESS load_array_elema
-#define GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(tr) ((tr).start)
-
-#define SET_IL2CPPTYPE_VALUE_TYPE(type, v) 
-#define GET_IL2CPPTYPE_VALUE_TYPE(type)
-
-#define VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD 1
-
-//#define ADJUST_VALUE_TYPE_THIS_POINTER(newPtr, oldPtr) newPtr = oldPtr - 1
-//// #define RECOVERY_VALUE_TYPE_THIS_POINTER(newPtr, oldPtr) newPtr = oldPtr + 1
-//#define CHECK_UNADJUST_VALUE_TYPE_THIS_POINTER(klass, ptr)
-
-namespace hybridclr
-{
-	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
-
-	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
-	{
-		Il2CppMethodPointer methodPointer = method->methodPointer;
-		if (methodPointer || method->initInterpCallMethodPointer)
-		{
-			return methodPointer;
-		}
-		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
-	}
-
-	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
-	{
-		return il2cpp::icalls::mscorlib::System::Type::internal_from_name(name, true, false);
-	}
-
-	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)
-	{
-		il2cpp::vm::Type::ConstructDelegate(delegate, target, GetInterpreterDirectlyCallMethodPointer(method), method);
-	}
-
-	inline const MethodInfo* GetGenericVirtualMethod(const MethodInfo* result, const MethodInfo* inflateMethod)
-	{
-		return il2cpp::vm::Runtime::GetGenericVirtualMethod(result, inflateMethod);
-	}
-
-	inline void* GetNulllableDataOffset(void* nullableObj, uint32_t size)
-	{
-		return nullableObj;
-	}
-
-	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, uint32_t size)
-	{
-		return (uint8_t*)nullableObj + size;
-	}
-
-	inline Il2CppString* GetKlassFullName(const Il2CppType* type)
-	{
-		Il2CppReflectionType* refType = il2cpp::icalls::mscorlib::System::Type::internal_from_handle((intptr_t)type);
-		return il2cpp::icalls::mscorlib::System::MonoType::getFullName(refType, false, false);
-	}
-}
+#else
+#error "not support unity version"
 #endif

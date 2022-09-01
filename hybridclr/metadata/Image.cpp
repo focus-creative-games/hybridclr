@@ -223,7 +223,7 @@ namespace metadata
             Il2CppGenericClass* genericClass = (Il2CppGenericClass*)IL2CPP_MALLOC_ZERO(sizeof(Il2CppGenericClass));
             ReadGenericClass(reader, klassGenericContainer, methodGenericContainer, *genericClass);
             type.data.generic_class = genericClass;
-            SET_IL2CPPTYPE_VALUE_TYPE(type, GET_IL2CPPTYPE_VALUE_TYPE(*genericClass->type));
+            COPY_IL2CPPTYPE_VALUE_TYPE_FLAG(type, *genericClass->type);
             break;
         }
         case IL2CPP_TYPE_TYPEDBYREF:
