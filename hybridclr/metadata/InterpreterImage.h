@@ -354,7 +354,7 @@ namespace metadata
 #ifdef HYBRIDCLR_UNITY_2019
 		const Il2CppEventDefinition* GetEventDefinitionFromIndex(EventIndex index)
 		{
-			IL2CPP_ASSERT(index > 0 && index < (int32_t)_events.size());
+			IL2CPP_ASSERT(index > 0 && index <= (int32_t)_events.size());
 			EventDetail& pd = _events[index - 1];
 			return &pd.il2cppDefinition;
 		}
