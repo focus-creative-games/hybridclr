@@ -222,6 +222,22 @@ namespace metadata
 		return nullptr;
 	}
 
+	static void RaiseParentOverridedMethodNotFindException(const Il2CppType* type, const char* methodName)
+	{
+		if (!type)
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException("type not exists"));
+		}
+
+		const Il2CppTypeDefinition* typeDefinition = GetUnderlyingTypeDefinition(type);
+
+		TEMP_FORMAT(errMsg, "VTableSetUp fail. virtual method: %s::%s::%s can't be find in declaring type or parent. It may be stripped by il2cpp",
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition->namespaceIndex), 
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition->nameIndex),
+			methodName);
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(errMsg));
+	}
+
 	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, bool throwExceptionIfNotFind)
 	{
 		for (VTableSetUp* curTdt = this; curTdt; curTdt = curTdt->_parent)
@@ -237,7 +253,7 @@ namespace metadata
 		}
 		if (throwExceptionIfNotFind)
 		{
-			RaiseMethodNotFindException(containerType, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex));
+			RaiseParentOverridedMethodNotFindException(this->_type, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex));
 		}
 		return nullptr;
 	}

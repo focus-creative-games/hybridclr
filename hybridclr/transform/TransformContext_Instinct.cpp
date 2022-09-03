@@ -35,6 +35,7 @@ namespace transform
 				{
 					if (paramCount == 1)
 					{
+						IL2CPP_ASSERT(evalStackTop >= 2);
 						CreateAddIR(ir, NullableCtorVarVar);
 						ir->dst = GetEvalStackOffset_2();
 						ir->data = GetEvalStackOffset_1();
@@ -49,6 +50,7 @@ namespace transform
 					uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 					if (paramCount == 0)
 					{
+						IL2CPP_ASSERT(evalStackTop >= 1);
 						CreateAddIR(ir, NullableGetValueOrDefaultVarVar);
 						ir->dst = topOffset;
 						ir->obj = topOffset;
@@ -61,6 +63,7 @@ namespace transform
 					}
 					else if (paramCount == 1)
 					{
+						IL2CPP_ASSERT(evalStackTop >= 2);
 						CreateAddIR(ir, NullableGetValueOrDefaultVarVar_1);
 						ir->dst = ir->obj = GetEvalStackOffset_2();
 						ir->defaultValue = topOffset;
@@ -74,6 +77,7 @@ namespace transform
 				}
 				else if (strcmp(methodName, "get_HasValue") == 0)
 				{
+					IL2CPP_ASSERT(evalStackTop >= 1);
 					uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 					CreateAddIR(ir, NullableHasValueVar);
 					ir->result = topOffset;
@@ -87,6 +91,7 @@ namespace transform
 				}
 				else if (strcmp(methodName, "get_Value") == 0)
 				{
+					IL2CPP_ASSERT(evalStackTop >= 1);
 					uint32_t classIndirectIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 					CreateAddIR(ir, NullableGetValueVarVar);
 					ir->dst = topOffset;
@@ -103,6 +108,7 @@ namespace transform
 			{
 				if (strcmp(methodName, "GetGenericValueImpl") == 0)
 				{
+					IL2CPP_ASSERT(evalStackTop >= 3);
 					uint16_t topOffset = GetEvalStackTopOffset();
 					CreateAddIR(ir, ArrayGetGenericValueImpl);
 					ir->arr = GetEvalStackOffset_3();
@@ -113,6 +119,7 @@ namespace transform
 				}
 				if (strcmp(methodName, "SetGenericValueImpl") == 0)
 				{
+					IL2CPP_ASSERT(evalStackTop >= 3);
 					uint16_t topOffset = GetEvalStackTopOffset();
 					CreateAddIR(ir, ArraySetGenericValueImpl);
 					ir->arr = GetEvalStackOffset_3();
@@ -169,7 +176,7 @@ namespace transform
 				}
 				else if (strcmp(methodName, "Exchange") == 0)
 				{
-					IL2CPP_ASSERT(evalStackTop >= 3);
+					IL2CPP_ASSERT(evalStackTop >= 2);
 					uint16_t retIdx = GetEvalStackOffset_2();
 					uint16_t locationIdx = retIdx;
 					uint16_t valueIdx = GetEvalStackOffset_1();
