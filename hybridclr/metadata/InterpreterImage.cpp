@@ -918,7 +918,7 @@ namespace metadata
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
 #if HYBRIDCLR_UNITY_2019
-				pd.il2cppDefinition.get = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
+				pd.il2cppDefinition.set = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
 #endif
 				pd.setterMethodIndex = method;
 			}
