@@ -68,12 +68,26 @@ namespace transform
 
 #define CI_branch1(opName) IL2CPP_ASSERT(evalStackTop >= 2); \
 brOffset = GetI1(ip+1); \
-ctx.Add_bc(ipOffset, brOffset, 2, HiOpcodeEnum::BranchVarVar_##opName##_i4, HiOpcodeEnum::BranchVarVar_##opName##_i8, HiOpcodeEnum::BranchVarVar_##opName##_f4, HiOpcodeEnum::BranchVarVar_##opName##_f8); \
+if (brOffset != 0) \
+{\
+	ctx.Add_bc(ipOffset, brOffset, 2, HiOpcodeEnum::BranchVarVar_##opName##_i4, HiOpcodeEnum::BranchVarVar_##opName##_i8, HiOpcodeEnum::BranchVarVar_##opName##_f4, HiOpcodeEnum::BranchVarVar_##opName##_f8); \
+}\
+else\
+{\
+	ctx.PopStackN(2);\
+}\
 ip += 2;
 
 #define CI_branch4(opName) IL2CPP_ASSERT(evalStackTop >= 2); \
 brOffset = GetI4LittleEndian(ip + 1); \
-ctx.Add_bc(ipOffset, brOffset, 5, HiOpcodeEnum::BranchVarVar_##opName##_i4, HiOpcodeEnum::BranchVarVar_##opName##_i8, HiOpcodeEnum::BranchVarVar_##opName##_f4, HiOpcodeEnum::BranchVarVar_##opName##_f8); \
+if (brOffset != 0) \
+{ \
+	ctx.Add_bc(ipOffset, brOffset, 5, HiOpcodeEnum::BranchVarVar_##opName##_i4, HiOpcodeEnum::BranchVarVar_##opName##_i8, HiOpcodeEnum::BranchVarVar_##opName##_f4, HiOpcodeEnum::BranchVarVar_##opName##_f8); \
+}\
+else \
+{\
+	ctx.PopStackN(2);\
+}\
 ip += 5;
 
 #define PopBranch() { \
@@ -1081,8 +1095,15 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				brOffset = GetI1(ip + 1);
-				int32_t targetOffset = ipOffset + brOffset + 2;
-				ctx.Add_brtruefalse(false, targetOffset);
+				if (brOffset != 0)
+				{
+					int32_t targetOffset = ipOffset + brOffset + 2;
+					ctx.Add_brtruefalse(false, targetOffset);
+				}
+				else
+				{
+					ctx.PopStack();
+				}
 				ip += 2;
 				continue;
 			}
@@ -1090,8 +1111,15 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				brOffset = GetI1(ip + 1);
-				int32_t targetOffset = ipOffset + brOffset + 2;
-				ctx.Add_brtruefalse(true, targetOffset);
+				if (brOffset != 0)
+				{
+					int32_t targetOffset = ipOffset + brOffset + 2;
+					ctx.Add_brtruefalse(true, targetOffset);
+				}
+				else
+				{
+					ctx.PopStack();
+				}
 				ip += 2;
 				continue;
 			}
@@ -1176,8 +1204,15 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				brOffset = GetI4LittleEndian(ip + 1);
-				int32_t targetOffset = ipOffset + brOffset + 5;
-				ctx.Add_brtruefalse(false, targetOffset);
+				if (brOffset != 0)
+				{
+					int32_t targetOffset = ipOffset + brOffset + 5;
+					ctx.Add_brtruefalse(false, targetOffset);
+				}
+				else
+				{
+					ctx.PopStack();
+				}
 				ip += 5;
 				continue;
 			}
@@ -1185,8 +1220,15 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				brOffset = GetI4LittleEndian(ip + 1);
-				int32_t targetOffset = ipOffset + brOffset + 5;
-				ctx.Add_brtruefalse(true, targetOffset);
+				if (brOffset != 0)
+				{
+					int32_t targetOffset = ipOffset + brOffset + 5;
+					ctx.Add_brtruefalse(true, targetOffset);
+				}
+				else
+				{
+					ctx.PopStack();
+				}
 				ip += 5;
 				continue;
 			}
