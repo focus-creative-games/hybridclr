@@ -2,6 +2,7 @@
 #include "Interpreter.h"
 
 #include <cmath>
+#include <algorithm>
 
 #include "codegen/il2cpp-codegen-il2cpp.h"
 #include "vm/Object.h"
@@ -571,6 +572,15 @@ namespace interpreter
 	{
 		CHECK_NOT_NULL_THROW(arr);
 		if (arr->max_length <= (il2cpp_array_size_t)index)
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException());
+		}
+	}
+
+	inline void CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(Il2CppArray* arr, int32_t startIndex, int32_t length)
+	{
+		CHECK_NOT_NULL_THROW(arr);
+		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length <= (il2cpp_array_size_t)startIndex + (il2cpp_array_size_t)length)
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException());
 		}
@@ -4970,7 +4980,7 @@ else \
 									{
 										_argBasePtr++;
 										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod; 
+										_managed2NativeCallMethod = _staticM2NMethod;
 										RuntimeInitClassCCtor(method);
 									}
 									break;
@@ -5100,7 +5110,7 @@ else \
 									{
 										_argBasePtr++;
 										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod; 
+										_managed2NativeCallMethod = _staticM2NMethod;
 										RuntimeInitClassCCtor(method);
 									}
 									break;
@@ -5231,7 +5241,7 @@ else \
 									{
 										_argBasePtr++;
 										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod; 
+										_managed2NativeCallMethod = _staticM2NMethod;
 										RuntimeInitClassCCtor(method);
 									}
 									break;
@@ -10989,7 +10999,38 @@ else \
 					uint16_t __str = *(uint16_t*)(ip + 2);
 					uint16_t __chars = *(uint16_t*)(ip + 4);
 				    Il2CppArray* _chars = (*(Il2CppArray**)(localVarBase + __chars));
+				    CHECK_NOT_NULL_THROW(_chars);
 				    (*(Il2CppString**)(localVarBase + __str)) = il2cpp::vm::String::NewUtf16((const Il2CppChar*)il2cpp::vm::Array::GetFirstElementAddress(_chars), il2cpp::vm::Array::GetLength(_chars));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::NewString_2:
+				{
+					uint16_t __str = *(uint16_t*)(ip + 2);
+					uint16_t __chars = *(uint16_t*)(ip + 4);
+					uint16_t __startIndex = *(uint16_t*)(ip + 6);
+					uint16_t __length = *(uint16_t*)(ip + 8);
+				    Il2CppArray* _chars = (*(Il2CppArray**)(localVarBase + __chars));
+				    int32_t _startIndex = (*(uint32_t*)(localVarBase + __startIndex));
+				    int32_t _length = (*(uint32_t*)(localVarBase + __length));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_chars, _startIndex, _length);
+				    (*(Il2CppString**)(localVarBase + __str)) = il2cpp::vm::String::NewUtf16(((const Il2CppChar*)il2cpp::vm::Array::GetFirstElementAddress(_chars)) + _startIndex, _length);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::NewString_3:
+				{
+					uint16_t __str = *(uint16_t*)(ip + 2);
+					uint16_t __c = *(uint16_t*)(ip + 4);
+					uint16_t __count = *(uint16_t*)(ip + 6);
+				    int32_t _count = (*(int32_t*)(localVarBase + __count));
+				    if (_count < 0)
+				    {
+				        il2cpp::vm::Exception::RaiseArgumentOutOfRangeException("new string(char c, int count)");
+				    }
+				    Il2CppChar _c = (Il2CppChar)(*(uint16_t*)(localVarBase + __c));
+				    Il2CppString* _str = (*(Il2CppString**)(localVarBase + __str)) = il2cpp::vm::String::NewSize(_count);
+				    std::fill_n(_str->chars, _count, _c);
 				    ip += 8;
 				    continue;
 				}

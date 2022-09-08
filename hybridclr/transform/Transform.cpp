@@ -1767,15 +1767,46 @@ else \
 						if (paramCount == 1)
 						{
 							const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
-							if (paramType->type == IL2CPP_TYPE_SZARRAY)
+							if (paramType->type == IL2CPP_TYPE_SZARRAY && paramType->data.type->type == IL2CPP_TYPE_CHAR)
 							{
-								if (paramType->data.type->type == IL2CPP_TYPE_CHAR)
-								{
-									CreateAddIR(ir, NewString);
-									ir->str = ctx.GetEvalStackTopOffset();
-									ir->chars = ctx.GetEvalStackTopOffset();
-									continue;
-								}
+								// new string(char[])
+								CreateAddIR(ir, NewString);
+								ir->str = ctx.GetEvalStackTopOffset();
+								ir->chars = ctx.GetEvalStackTopOffset();
+								continue;
+							}
+						}
+						else if (paramCount == 2)
+						{
+							// new string(char c, int count)
+							const Il2CppType* paramType1 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
+							const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
+							if (paramType1->type == IL2CPP_TYPE_CHAR && paramType2->type == IL2CPP_TYPE_I4)
+							{
+								CreateAddIR(ir, NewString_3);
+								ir->str = ctx.GetEvalStackOffset_2();
+								ir->c = ctx.GetEvalStackOffset_2();
+								ir->count = ctx.GetEvalStackOffset_1();
+								ctx.PopStack();
+								continue;
+							}
+						}
+						else if (paramCount == 3)
+						{
+							// new string(char[] chars, int startIndex, int length)
+							const Il2CppType* paramType1 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
+							const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
+							const Il2CppType* paramType3 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[2]);
+							if (paramType1->type == IL2CPP_TYPE_SZARRAY && paramType1->data.type->type == IL2CPP_TYPE_CHAR
+								&& paramType2->type == IL2CPP_TYPE_I4 && paramType3->type == IL2CPP_TYPE_I4)
+							{
+								CreateAddIR(ir, NewString_2);
+								ir->str = ctx.GetEvalStackOffset_3();
+								ir->chars = ctx.GetEvalStackOffset_3();
+								ir->startIndex = ctx.GetEvalStackOffset_2();
+								ir->length = ctx.GetEvalStackOffset_1();
+								ctx.PopStackN(2);
+								continue;
 							}
 						}
 					}

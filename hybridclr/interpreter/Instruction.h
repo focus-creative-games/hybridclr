@@ -829,6 +829,8 @@ namespace interpreter
 		ArrayGetGenericValueImpl,
 		ArraySetGenericValueImpl,
 		NewString,
+		NewString_2,
+		NewString_3,
 
 		//!!!}}OPCODE
 	};
@@ -9386,6 +9388,29 @@ namespace interpreter
 		uint16_t chars;
 		uint8_t __pad6;
 		uint8_t __pad7;
+	};
+
+
+	struct IRNewString_2 : IRCommon
+	{
+		uint16_t str;
+		uint16_t chars;
+		uint16_t startIndex;
+		uint16_t length;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRNewString_3 : IRCommon
+	{
+		uint16_t str;
+		uint16_t c;
+		uint16_t count;
 	};
 
 

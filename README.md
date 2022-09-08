@@ -15,6 +15,7 @@ HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/w
 ## 文档
 
 - [官方文档](https://focus-creative-games.github.io/hybridclr/index/)
+- [技术论坛](https://forum.focus-creative-games.com/topics)
 - [快速上手](https://focus-creative-games.github.io/hybridclr/start_up/)
 - [示例项目](https://github.com/focus-creative-games/hybridclr_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
