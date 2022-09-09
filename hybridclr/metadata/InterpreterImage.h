@@ -439,8 +439,12 @@ namespace metadata
 			}
 			return false;
 		}
-
+		
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
+
+#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
+		Il2CppArray* GetCustomAttributesDataInternal(uint32_t token);
+#endif
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
 

@@ -20,6 +20,7 @@
 #include "metadata/Il2CppTypeCompare.h"
 #include "metadata/GenericMetadata.h"
 #include "os/Atomic.h"
+#include "icalls/mscorlib/System/MonoCustomAttrs.h"
 
 #include "MetadataModule.h"
 #include "MetadataUtil.h"
@@ -658,6 +659,44 @@ namespace metadata
 		_customAttribtesCaches[index] = cache;
 		return cache;
 	}
+
+#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
+	Il2CppArray* InterpreterImage::GetCustomAttributesDataInternal(uint32_t token)
+	{
+		CustomAttributeIndex index = DecodeMetadataIndex(GetCustomAttributeIndex(token));
+		if (index == kCustomAttributeIndexInvalid)
+		{
+			return il2cpp::vm::Array::New(il2cpp_defaults.customattribute_data_class, 0);
+		}
+
+		IL2CPP_ASSERT(index < (CustomAttributeIndex)_customAttributeHandles.size());
+
+		Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[index];
+
+		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
+
+		int32_t count = (int32_t)(_customAttributeHandles[index + 1].startOffset - typeRange.startOffset);
+		Il2CppArray* result = il2cpp::vm::Array::New(il2cpp_defaults.customattribute_data_class, count);
+
+		int32_t start = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(typeRange));
+		for (int32_t i = 0; i < count; i++)
+		{
+			int32_t attrIndex = start + i;
+			IL2CPP_ASSERT(attrIndex >= 0 && attrIndex < (int32_t)_customAttribues.size());
+			CustomAttribute& ca = _customAttribues[attrIndex];
+			MethodRefInfo mri = {};
+			ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(ca.ctorMethodToken), DecodeTokenRowIndex(ca.ctorMethodToken), mri);
+			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(&mri.containerType, mri.methodDef);
+			IL2CPP_ASSERT(ctorMethod);
+			Il2CppClass* klass = ctorMethod->klass;
+			BlobReader reader = ca.value != 0 ? _rawImage.GetBlobReaderByRawIndex(ca.value) : BlobReader(nullptr, 0);
+			il2cpp::metadata::LazyCustomAttributeData data = {ctorMethod, reader.GetData(), reader.GetLength()};
+			Il2CppObject* attributeData = il2cpp::icalls::mscorlib::System::MonoCustomAttrs::CreateCustomAttributeData(il2cpp_defaults.corlib->assembly, data);
+			il2cpp_array_setref(result, i, attributeData);
+		}
+		return result;
+	}
+#endif
 
 	void InterpreterImage::InitMethodDefs0()
 	{
