@@ -1707,7 +1707,7 @@ namespace metadata
 		VirtualMethodImpl& vmi = td.vtable[vTableSlot];
 		if (vmi.method)
 		{
-			if (DecodeMetadataIndex(vmi.method->declaringType) == typeDefIndex)
+			if (vmi.method->declaringType == EncodeWithIndex(typeDefIndex))
 			{
 				return il2cpp::vm::GlobalMetadata::GetMethodInfoFromMethodHandle((Il2CppMetadataMethodDefinitionHandle)vmi.method);
 			}
