@@ -780,7 +780,7 @@ else \
 			{
 				IL2CPP_ASSERT(shareMethod);
 				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(shareMethod));
-				if (!metadata::IsVirtualMethod(shareMethod->flags))
+				if ((!metadata::IsVirtualMethod(shareMethod->flags)) || metadata::IsSealed(shareMethod->flags))
 				{
 					goto LabelCall;
 				}
