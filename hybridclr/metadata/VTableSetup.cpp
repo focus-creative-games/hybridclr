@@ -421,9 +421,9 @@ namespace metadata
 		for (auto& vm : _virtualMethods)
 		{
 			IL2CPP_ASSERT(vm.type == _type);
-			if (hybridclr::metadata::IsNewSlot(vm.method->flags))
+			uint16_t mflags = vm.method->flags;
+			if (hybridclr::metadata::IsNewSlot(mflags))
 			{
-
 				_methodImpls.push_back({ vm.method, _type, curOffset, vm.name });
 				IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == curOffset);
 				const_cast<Il2CppMethodDefinition*>(vm.method)->slot = curOffset;
@@ -442,7 +442,7 @@ namespace metadata
 				}
 				if (!matchImpl)
 				{
-					if (hybridclr::metadata::IsPrivateMethod(vm.method->flags))
+					if (hybridclr::metadata::IsPrivateMethod(mflags))
 					{
 						std::string csTypeName = GetKlassCStringFullName(_type);
 						TEMP_FORMAT(errMsg, "explicit implements method %s::%s can't find match MethodImpl", csTypeName.c_str(), vm.name);
@@ -514,7 +514,7 @@ namespace metadata
 					RaiseBadImageException(errMsg);
 				}
 			}
-			else
+			else if (!metadata::IsPrivateMethod(mflags))
 			{
 				// override parent virtual methods and interfaces
 				// TODO what if not find override ???
@@ -524,6 +524,13 @@ namespace metadata
 				IL2CPP_ASSERT(overrideParentMethod->method->slot != kInvalidIl2CppMethodSlot);
 				const_cast<Il2CppMethodDefinition*>(vm.method)->slot = overrideParentMethod->method->slot;
 				ApplyOverrideMethod(overrideParentMethod, vm.method, checkOverrideMaxIdx, implInterfaceOffsetIdxs);
+			}
+			else
+			{
+				_methodImpls.push_back({ vm.method, _type, curOffset, vm.name });
+				IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == curOffset);
+				const_cast<Il2CppMethodDefinition*>(vm.method)->slot = curOffset;
+				++curOffset;
 			}
 		}
 
