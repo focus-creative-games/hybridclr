@@ -852,8 +852,8 @@ namespace interpreter
 	{
 		IL2CPP_ASSERT(klass->castClass->size_inited);
 		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
-		std::memmove(GetNulllableDataOffset(nullableValueTypeObj, size), data, size);
-		*GetNulllableHasValueOffset(nullableValueTypeObj, size) = 1;
+		std::memmove(GetNulllableDataOffset(nullableValueTypeObj, klass), data, size);
+		*GetNulllableHasValueOffset(nullableValueTypeObj, klass) = 1;
 	}
 
 	inline void NewNullableValueType(void* nullableValueTypeObj, void* data, Il2CppClass* klass)
@@ -864,8 +864,7 @@ namespace interpreter
 	inline bool IsNullableHasValue(void* nullableValueObj, Il2CppClass* klass)
 	{
 		IL2CPP_ASSERT(klass->castClass->size_inited);
-		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
-		return *(GetNulllableHasValueOffset(nullableValueObj, size));
+		return *(GetNulllableHasValueOffset(nullableValueObj, klass));
 	}
 	
 	inline void GetNullableValueOrDefault2StackDataByType(void* dst, void* nullableValueObj, Il2CppClass* klass)
@@ -873,8 +872,8 @@ namespace interpreter
 		Il2CppClass* eleClass = klass->castClass;
 		IL2CPP_ASSERT(eleClass->size_inited);
 		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
-		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
-		void* srcData = GetNulllableDataOffset(nullableValueObj, size);
+		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, klass);
+		void* srcData = GetNulllableDataOffset(nullableValueObj, klass);
 
 	LabelGet:
 		IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(eleClass));
@@ -948,7 +947,7 @@ namespace interpreter
 			}
 			if (notNull)
 			{
-				std::memmove(dst, nullableValueObj, size);
+				std::memmove(dst, srcData, size);
 			}
 			else
 			{
@@ -969,10 +968,10 @@ namespace interpreter
 		IL2CPP_ASSERT(eleClass->size_inited);
 		uint32_t size = eleClass->instance_size - sizeof(Il2CppObject);
 		void* srcData;
-		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, size);
+		bool notNull = *GetNulllableHasValueOffset(nullableValueObj, klass);
 		if (notNull)
 		{
-			srcData = GetNulllableDataOffset(nullableValueObj, size);
+			srcData = GetNulllableDataOffset(nullableValueObj, klass);
 		}
 		else
 		{
@@ -1055,7 +1054,7 @@ namespace interpreter
 				eleClass = eleClass->castClass;
 				goto LabelGet;
 			}
-			std::memmove(dst, nullableValueObj, size);
+			std::memmove(dst, srcData, size);
 			break;
 		}
 		default:

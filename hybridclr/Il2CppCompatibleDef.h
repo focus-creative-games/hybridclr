@@ -140,14 +140,16 @@ namespace hybridclr
 		return il2cpp::vm::Runtime::GetGenericVirtualMethod(result, inflateMethod);
 	}
 
-	inline void* GetNulllableDataOffset(void* nullableObj, uint32_t size)
+	inline void* GetNulllableDataOffset(void* nullableObj, Il2CppClass* nullableClass)
 	{
-		return nullableObj;
+		uint32_t field_offset = nullableClass->fields[0].offset - sizeof(Il2CppObject); // offset of value field
+		return (uint8_t*)nullableObj + field_offset;
 	}
 
-	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, uint32_t size)
+	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, Il2CppClass* nullableClass)
 	{
-		return (uint8_t*)nullableObj + size;
+		uint32_t field_offset = nullableClass->fields[1].offset - sizeof(Il2CppObject); // offset of has_value field
+		return (uint8_t*)nullableObj + field_offset;
 	}
 
 	inline Il2CppString* GetKlassFullName(const Il2CppType* type)
@@ -222,14 +224,16 @@ namespace hybridclr
 		return vid.method;
 	}
 
-	inline void* GetNulllableDataOffset(void* nullableObj, uint32_t size)
+	inline void* GetNulllableDataOffset(void* nullableObj, Il2CppClass* nullableClass)
 	{
-		return (uint8_t*)nullableObj + size;
+		uint32_t field_offset = nullableClass->fields[1].offset - sizeof(Il2CppObject); // offset of value field
+		return (uint8_t*)nullableObj + field_offset;
 	}
 
-	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, uint32_t size)
+	inline uint8_t* GetNulllableHasValueOffset(void* nullableObj, Il2CppClass* nullableClass)
 	{
-		return (uint8_t*)nullableObj;
+		uint32_t field_offset = nullableClass->fields[0].offset - sizeof(Il2CppObject); // offset of has_value field
+		return (uint8_t*)nullableObj + field_offset;
 	}
 
 	inline Il2CppString* GetKlassFullName(const Il2CppType* type)
