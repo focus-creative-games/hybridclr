@@ -540,7 +540,7 @@ namespace metadata
         }
         case TableType::MEMBERREF:
         {
-            ReadMethodRefInfoFromMemberRef(klassGenericContainer, methodGenericContainer, nullptr, rowIndex, ret);
+            ReadMethodRefInfoFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, ret);
             break;
         }
         case TableType::METHODSPEC:
@@ -561,7 +561,7 @@ namespace metadata
             }
             case TableType::MEMBERREF:
             {
-                ReadMethodRefInfoFromMemberRef(klassGenericContainer, methodGenericContainer, ret.instantiation, methodRowIndex, ret);
+                ReadMethodRefInfoFromMemberRef(klassGenericContainer, methodGenericContainer, methodRowIndex, ret);
                 break;
             }
             default:
@@ -591,14 +591,14 @@ namespace metadata
     }
 
     void Image::ReadMethodRefInfoFromMemberRef(const Il2CppGenericContainer* klassGenericContainer,
-        const Il2CppGenericContainer* methodGenericContainer, Il2CppGenericInst* genericInstantiation, uint32_t rowIndex, MethodRefInfo& ret)
+        const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, MethodRefInfo& ret)
     {
         ResolveMemberRef rmr = {};
         ReadResolveMemberRefFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, rmr);
         IL2CPP_ASSERT(rmr.parent.parentType == TableType::TYPEDEF || rmr.parent.parentType == TableType::TYPEREF || rmr.parent.parentType == TableType::TYPESPEC);
         IL2CPP_ASSERT(rmr.signature.memberType == TableType::METHOD_POINTER);
         ret.containerType = rmr.parent.type;
-        ret.methodDef = ResolveMethodDefinition(&rmr.parent.type, rmr.name, rmr.signature.method, genericInstantiation);
+        ret.methodDef = ResolveMethodDefinition(&rmr.parent.type, rmr.name, rmr.signature.method, rmr.signature.method.genericParamCount);
     }
 
     void Image::ReadMethodSpecInstantiation(uint32_t signature, const Il2CppGenericContainer* klassGenericContainer,
