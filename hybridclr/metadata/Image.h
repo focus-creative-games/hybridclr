@@ -96,7 +96,7 @@ namespace metadata
 		virtual const Il2CppTypeDefinition* GetTypeFromRawIndex(uint32_t index) const = 0;
 		virtual Il2CppGenericContainer* GetGenericContainerByTypeDefIndex(int32_t typeDefIndex) = 0;
 
-		virtual MethodBody* GetMethodBody(const MethodInfo* method) = 0;
+		virtual MethodBody* GetMethodBody(uint32_t token) = 0;
 		virtual const MethodInfo* GetMethodInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext) = 0;
 		virtual const FieldInfo* GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext) = 0;
 		virtual void GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig) = 0;

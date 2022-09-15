@@ -140,9 +140,8 @@ namespace metadata
 			return rawIndex != 0 ? EncodeImageAndMetadataIndex(_index, rawIndex) : 0;
 		}
 
-		MethodBody* GetMethodBody(const MethodInfo* method) override
+		MethodBody* GetMethodBody(uint32_t token) override
 		{
-			uint32_t token = method->token;
 			IL2CPP_ASSERT(DecodeTokenTableType(token) == TableType::METHOD);
 			uint32_t rowIndex = DecodeTokenRowIndex(token);
 			IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= (uint32_t)_methodBodies.size());

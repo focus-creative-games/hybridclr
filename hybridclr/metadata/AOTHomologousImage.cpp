@@ -155,17 +155,18 @@ namespace metadata
 		}
 	}
 
-	MethodBody* AOTHomologousImage::GetMethodBody(const MethodInfo* method)
+	MethodBody* AOTHomologousImage::GetMethodBody(uint32_t token)
 	{
-		uint32_t token = method->token;
 		auto it = _token2MethodBodies.find(token);
 		if (it != _token2MethodBodies.end())
 		{
 			return it->second;
 		}
-		TbMethod methodData = _rawImage.ReadMethod(DecodeTokenRowIndex(token));
+		uint32_t rowIndex = DecodeTokenRowIndex(token);
+		IL2CPP_ASSERT(rowIndex > 0);
+		TbMethod methodData = _rawImage.ReadMethod(rowIndex);
 		MethodBody* body = new (IL2CPP_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
-		ReadMethodBody(*(Il2CppMethodDefinition*)GetUnderlyingMethodInfo(method)->methodMetadataHandle, methodData, *body);
+		ReadMethodBody(*_methodDefs[rowIndex - 1], methodData, *body);
 		_token2MethodBodies.insert({ token, body });
 		return body;
 	}
