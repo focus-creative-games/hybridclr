@@ -222,6 +222,18 @@ namespace metadata
 		return nullptr;
 	}
 
+	const VTableSetUp* VTableSetUp::FindAncestorTypeTree(const Il2CppType* implType)
+	{
+		for (VTableSetUp* cur = this; cur; cur = cur->_parent)
+		{
+			if (il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(cur->_type, implType))
+			{
+				return cur;
+			}
+		}
+		return nullptr;
+	}
+
 	static void RaiseParentOverridedMethodNotFindException(const Il2CppType* type, const char* methodName)
 	{
 		if (!type)
@@ -510,29 +522,33 @@ namespace metadata
 					break;
 				}
 			}
-			if (!findOverride && _parent && il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(_parent->_type, &mi.declaration.containerType))
+			if (!findOverride)
 			{
-				for (int idx = (int)_parent->_virtualMethods.size() - 1; idx >= 0; idx--)
+				const VTableSetUp* containerTs = FindAncestorTypeTree(&mi.declaration.containerType);
+				if (containerTs != nullptr)
 				{
-					GenericClassMethod& rvm = _parent->_virtualMethods[idx];
-					const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
-					if (std::strcmp(name1, name2))
+					for (int idx = (int)containerTs->_virtualMethods.size() - 1; idx >= 0; idx--)
 					{
-						continue;
-					}
-					if (IsOverrideMethodIgnoreName(&mi.declaration.containerType, mi.declaration.methodDef, rvm.type, rvm.method))
-					{
-						for (VirtualMethodImpl& ivmi : _methodImpls)
+						const GenericClassMethod& rvm = containerTs->_virtualMethods[idx];
+						const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
+						if (std::strcmp(name1, name2))
 						{
-							if (ivmi.method->slot == rvm.method->slot)
-							{
-								ivmi.type = _type;
-								ivmi.method = mi.body.methodDef;
-								ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(mi.body.methodDef->nameIndex);
-								findOverride = true;
-							}
+							continue;
 						}
-						break;
+						if (IsOverrideMethodIgnoreName(&mi.declaration.containerType, mi.declaration.methodDef, rvm.type, rvm.method))
+						{
+							for (VirtualMethodImpl& ivmi : _methodImpls)
+							{
+								if (ivmi.method->slot == rvm.method->slot)
+								{
+									ivmi.type = _type;
+									ivmi.method = mi.body.methodDef;
+									ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(mi.body.methodDef->nameIndex);
+									findOverride = true;
+								}
+							}
+							break;
+						}
 					}
 				}
 			}
