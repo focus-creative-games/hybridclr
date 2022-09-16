@@ -524,7 +524,7 @@ namespace metadata
 					{
 						for (VirtualMethodImpl& ivmi : _methodImpls)
 						{
-							if (ivmi.method == rvm.method)
+							if (ivmi.method->slot == rvm.method->slot)
 							{
 								ivmi.type = _type;
 								ivmi.method = mi.body.methodDef;
