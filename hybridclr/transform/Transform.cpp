@@ -2200,6 +2200,9 @@ else \
 			}
 			case OpcodeValue::STOBJ:
 			{
+				ctx.InsertMemoryBarrier();
+				ctx.ResetPrefixFlags();
+
 				IL2CPP_ASSERT(evalStackTop >= 2);
 				EvalStackVarInfo& dst = evalStack[evalStackTop - 2];
 				EvalStackVarInfo& src = evalStack[evalStackTop - 1];
@@ -2266,8 +2269,6 @@ else \
 				}
 				ctx.PopStackN(2);
 				IL2CPP_ASSERT(size == GetTypeValueSize(&objKlass->byval_arg));
-				ctx.InsertMemoryBarrier();
-				ctx.ResetPrefixFlags();
 				ip += 5;
 				continue;
 			}
