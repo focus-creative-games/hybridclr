@@ -3180,22 +3180,22 @@ ir->ele = ele.locOffset;
 				case OpcodeValue::INITBLK:
 				{
 					IL2CPP_ASSERT(evalStackTop >= 3);
+					ctx.InsertMemoryBarrier();
+					ctx.ResetPrefixFlags();
 					CreateAddIR(ir, InitblkVarVarVar);
 					ir->addr = ctx.GetEvalStackOffset_3();
 					ir->value = ctx.GetEvalStackOffset_2();
 					ir->size = ctx.GetEvalStackOffset_1();
 					ctx.PopStackN(3);
-					ctx.InsertMemoryBarrier();
-					ctx.ResetPrefixFlags();
 					ip += 2;
 					continue;
 				}
 				case OpcodeValue::CPBLK:
 				{
 					// we don't sure dst or src is volatile. so insert memory barrier ahead and end.
+					IL2CPP_ASSERT(evalStackTop >= 3);
 					ctx.InsertMemoryBarrier();
 					ctx.ResetPrefixFlags();
-					IL2CPP_ASSERT(evalStackTop >= 3);
 					CreateAddIR(ir, CpblkVarVar);
 					ir->dst = ctx.GetEvalStackOffset_3();
 					ir->src = ctx.GetEvalStackOffset_2();
