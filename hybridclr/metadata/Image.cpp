@@ -363,7 +363,9 @@ namespace metadata
         case TableType::ASSEMBLYREF:
         {
             TbAssemblyRef assRef = _rawImage.ReadAssemblyRef(rawIndex);
-            GetIl2CppTypeFromTypeDefinition(GetTypeDefinition(rawIndex, typeNamespace, typeName), type);
+            const Il2CppType* refType = GetIl2CppType(rawIndex, typeNamespace, typeName);
+            type.type = refType->type;
+            type.data = refType->data;
             break;
         }
         case TableType::TYPEREF:
@@ -671,7 +673,7 @@ namespace metadata
         }
     }
 
-    const Il2CppTypeDefinition* Image::GetTypeDefinition(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName)
+    const Il2CppType* Image::GetIl2CppType(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName)
     {
         TbAssemblyRef data = _rawImage.ReadAssemblyRef(assemblyRefIndex);
         const char* assName = _rawImage.GetStringFromRawIndex(data.name);
@@ -684,14 +686,14 @@ namespace metadata
             const Il2CppImage* image2 = il2cpp::vm::Assembly::GetImage(refAss);
             klass = il2cpp::vm::Class::FromName(image2, typeNamespaceStr, typeNameStr);
         }
-        if (!klass || !klass->typeMetadataHandle)
+        if (!klass)
         {
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(
                 CStringToStringView(typeNamespaceStr),
                 CStringToStringView(typeNameStr),
                 CStringToStringView(assName)));
         }
-        return (const Il2CppTypeDefinition*)klass->typeMetadataHandle;
+        return &klass->byval_arg;
     }
 
     void Image::ReadMethodBody(const Il2CppMethodDefinition& methodDef, const TbMethod& methodData, MethodBody& body)
