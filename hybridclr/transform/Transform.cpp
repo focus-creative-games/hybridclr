@@ -2717,6 +2717,12 @@ ir->ele = ele.locOffset;
 					ctx.PopStack();
 					ctx.PushStackByType(&objKlass->byval_arg);
 				}
+				else
+				{
+					CreateAddIR(ir, CastclassVar);
+					ir->obj = ctx.GetEvalStackTopOffset();
+					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+				}
 
 				ip += 5;
 				continue;
