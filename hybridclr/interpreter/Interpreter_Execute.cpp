@@ -1109,6 +1109,23 @@ namespace interpreter
 
 #define MEMORY_BARRIER() il2cpp::os::Atomic::FullMemoryBarrier()
 
+
+	inline int32_t UnsafeEnumCast(void* src, uint16_t type)
+	{
+		switch ((Il2CppTypeEnum)type)
+		{
+		case IL2CPP_TYPE_BOOLEAN: return *(int8_t*)src;
+		case IL2CPP_TYPE_CHAR: return *(uint16_t*)src;
+		case IL2CPP_TYPE_I1: return *(int8_t*)src;
+		case IL2CPP_TYPE_U1: return *(uint8_t*)src;
+		case IL2CPP_TYPE_I2: return *(int16_t*)src;
+		case IL2CPP_TYPE_U2: return *(uint16_t*)src;
+		case IL2CPP_TYPE_I4: return *(int32_t*)src;
+		case IL2CPP_TYPE_U4: return *(uint32_t*)src;
+		default: RaiseExecutionEngineException("UnsafeEnumCast not support type");
+		}
+	}
+
 #pragma endregion
 
 #pragma region function
@@ -11030,6 +11047,15 @@ else \
 				    Il2CppChar _c = (Il2CppChar)(*(uint16_t*)(localVarBase + __c));
 				    Il2CppString* _str = (*(Il2CppString**)(localVarBase + __str)) = il2cpp::vm::String::NewSize(_count);
 				    std::fill_n(_str->chars, _count, _c);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::UnsafeEnumCast:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __src = *(uint16_t*)(ip + 4);
+					uint16_t __srcType = *(uint16_t*)(ip + 6);
+				    (*(int32_t*)(localVarBase + __dst)) =  UnsafeEnumCast((void*)(localVarBase + __src), __srcType);
 				    ip += 8;
 				    continue;
 				}

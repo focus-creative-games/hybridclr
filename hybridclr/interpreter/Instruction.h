@@ -831,6 +831,7 @@ namespace interpreter
 		NewString,
 		NewString_2,
 		NewString_3,
+		UnsafeEnumCast,
 
 		//!!!}}OPCODE
 	};
@@ -9411,6 +9412,14 @@ namespace interpreter
 		uint16_t str;
 		uint16_t c;
 		uint16_t count;
+	};
+
+
+	struct IRUnsafeEnumCast : IRCommon
+	{
+		uint16_t dst;
+		uint16_t src;
+		uint16_t srcType;
 	};
 
 

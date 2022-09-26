@@ -213,6 +213,40 @@ namespace transform
 				}
 			}
 		}
+		else if (strcmp(klass->namespaze, "System.Runtime.CompilerServices") == 0)
+		{
+			if (strcmp(klass->name, "JitHelpers") == 0)
+			{
+				if (strcmp(methodName, "UnsafeEnumCast") == 0)
+				{
+					IL2CPP_ASSERT(evalStackTop >= 1);
+					CreateAddIR(ir, UnsafeEnumCast);
+					ir->dst = GetEvalStackTopOffset();
+					ir->src = GetEvalStackTopOffset();
+					const Il2CppType* srcType = method->genericMethod->context.method_inst->type_argv[0];
+					if (srcType->type == IL2CPP_TYPE_VALUETYPE || srcType->type == IL2CPP_TYPE_GENERICINST)
+					{
+						Il2CppClass* srcKlass = il2cpp::vm::Class::FromIl2CppType(srcType);
+						if (!srcKlass->enumtype)
+						{
+							RaiseExecutionEngineException("not support UnsafeEnumCast src type");
+						}
+						ir->srcType = (uint16_t)srcKlass->castClass->byval_arg.type;
+					}
+					else
+					{
+						ir->srcType = (uint16_t)srcType->type;
+					}
+					PopStack();
+					PushStackByReduceType(EvalStackReduceDataType::I4);
+					return true;
+				}
+				else if (strcmp(methodName, "UnsafeCast") == 0 || strcmp(methodName, "UnsafeEnumCastLong") == 0)
+				{
+					return true;
+				}
+			}
+		}
 		else if (strcmp(klass->namespaze, "UnityEngine") == 0)
 		{
 			if (strcmp(methodName, ".ctor") == 0)
