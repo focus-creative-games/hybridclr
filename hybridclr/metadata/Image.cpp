@@ -804,32 +804,27 @@ namespace metadata
         }
     }
 
-    const MethodInfo* Image::FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod)
+    const MethodInfo* Image::FindImplMethod(Il2CppClass* klass, const MethodInfo* method)
     {
-        void* iter = nullptr;
-        for (const MethodInfo* cur = nullptr; (cur = il2cpp::vm::Class::GetMethods(klass, &iter)) != nullptr; )
+        if (!IsVirtualMethod(method->flags))
         {
-            if (std::strcmp(cur->name, matchMethod->name)
-                || cur->parameters_count != matchMethod->parameters_count
-                || !il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(cur->return_type, matchMethod->return_type))
-            {
-                continue;
-            }
-            bool match = true;
-            for (uint32_t i = 0; i < cur->parameters_count; i++)
-            {
-                if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(GET_METHOD_PARAMETER_TYPE(cur->parameters[i]), GET_METHOD_PARAMETER_TYPE(matchMethod->parameters[i])))
-                {
-                    match = false;
-                    break;
-                }
-            }
-            if (match)
-            {
-                return cur;
-            }
+            return method;
         }
-        return nullptr;
+        const MethodInfo* result;
+        if (hybridclr::metadata::IsInterface(method->klass->flags))
+        {
+            result = il2cpp::vm::ClassInlines::GetInterfaceInvokeDataFromVTable(klass, method->klass, method->slot)->method;
+        }
+        else
+        {
+            result = klass->vtable[method->slot].method;
+        }
+        IL2CPP_ASSERT(!method->genericMethod || method->is_inflated);
+        if (method->genericMethod && method->genericMethod->context.method_inst/* && method->genericMethod*/) // means it's genericInstance method 或generic method
+        {
+            result = GetGenericVirtualMethod(result, method);
+        }
+        return result;
     }
 
 

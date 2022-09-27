@@ -3050,7 +3050,7 @@ ir->ele = ele.locOffset;
 					{
 						// impl in self
 						const MethodInfo* implMethod = image->FindImplMethod(conKlass, shareMethod);
-						if (implMethod)
+						if (implMethod->klass == conKlass)
 						{
 							shareMethod = implMethod;
 							goto LabelCall;
