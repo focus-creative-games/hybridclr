@@ -1122,7 +1122,7 @@ namespace interpreter
 		case IL2CPP_TYPE_U2: return *(uint16_t*)src;
 		case IL2CPP_TYPE_I4: return *(int32_t*)src;
 		case IL2CPP_TYPE_U4: return *(uint32_t*)src;
-		default: RaiseExecutionEngineException("UnsafeEnumCast not support type");
+		default: RaiseExecutionEngineException("UnsafeEnumCast not support type"); return -1;
 		}
 	}
 
