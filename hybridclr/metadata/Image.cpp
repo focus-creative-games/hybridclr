@@ -810,6 +810,7 @@ namespace metadata
         {
             return method;
         }
+        il2cpp::vm::Class::Init(klass);
         const MethodInfo* result;
         if (hybridclr::metadata::IsInterface(method->klass->flags))
         {
