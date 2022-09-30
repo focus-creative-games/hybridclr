@@ -580,9 +580,18 @@ namespace interpreter
 	inline void CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(Il2CppArray* arr, int32_t startIndex, int32_t length)
 	{
 		CHECK_NOT_NULL_THROW(arr);
-		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length <= (il2cpp_array_size_t)startIndex + (il2cpp_array_size_t)length)
+		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length - (il2cpp_array_size_t)startIndex <= (il2cpp_array_size_t)length)
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException());
+		}
+	}
+
+	inline void CHECK_NOT_NULL_AND_ARRAY_BOUNDARY2(Il2CppArray* arr, int32_t startIndex, int32_t length)
+	{
+		CHECK_NOT_NULL_THROW(arr);
+		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length - (il2cpp_array_size_t)startIndex <= (il2cpp_array_size_t)length)
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentOutOfRangeException(""));
 		}
 	}
 
@@ -11029,7 +11038,7 @@ else \
 				    Il2CppArray* _chars = (*(Il2CppArray**)(localVarBase + __chars));
 				    int32_t _startIndex = (*(uint32_t*)(localVarBase + __startIndex));
 				    int32_t _length = (*(uint32_t*)(localVarBase + __length));
-				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_chars, _startIndex, _length);
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY2(_chars, _startIndex, _length);
 				    (*(Il2CppString**)(localVarBase + __str)) = il2cpp::vm::String::NewUtf16(((const Il2CppChar*)il2cpp::vm::Array::GetFirstElementAddress(_chars)) + _startIndex, _length);
 				    ip += 16;
 				    continue;
