@@ -38,6 +38,17 @@ namespace hybridclr
 			return *state;
 		}
 
+		void InterpreterModule::FreeThreadLocalMachineState()
+		{
+			MachineState* state = nullptr;
+			s_machineState.GetValue((void**)&state);
+			if (state)
+			{
+				delete state;
+				s_machineState.SetValue(nullptr);
+			}
+		}
+
 		void InterpreterModule::Initialize()
 		{
 			for (size_t i = 0; ; i++)

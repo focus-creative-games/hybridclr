@@ -19,6 +19,7 @@ namespace interpreter
 
 
 		static MachineState& GetCurrentThreadMachineState();
+		static void FreeThreadLocalMachineState();
 
 		static InterpMethodInfo* GetInterpMethodInfo(const MethodInfo* methodInfo);
 

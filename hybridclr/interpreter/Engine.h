@@ -57,6 +57,8 @@ namespace interpreter
 		~MachineState()
 		{
 			il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
+			IL2CPP_FREE(_frameBase);
+			IL2CPP_FREE(_exceptionFlowBase);
 		}
 
 		StackObject* AllocArgments(uint32_t argCount)
