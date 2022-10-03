@@ -40,17 +40,17 @@ namespace interpreter
 		MachineState()
 		{
 			HybridCLRConfig& hc = HybridCLRConfig::GetIns();
-			_stackSize = hc.GetInterpreterThreadObjectStackSize();
+			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
 			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
 			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
 			_stackTopIdx = 0;
 
 			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
-			_frameCount = hc.GetInterpreterThreadFrameStackSize();
+			_frameCount = (int32_t)hc.GetInterpreterThreadFrameStackSize();
 			_frameTopIdx = 0;
 
 			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(hc.GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
-			_exceptionFlowCount = hc.GetInterpreterThreadExceptionFlowSize();
+			_exceptionFlowCount = (int32_t)hc.GetInterpreterThreadExceptionFlowSize();
 			_exceptionFlowTopIdx = 0;
 		}
 
@@ -61,7 +61,7 @@ namespace interpreter
 			IL2CPP_FREE(_exceptionFlowBase);
 		}
 
-		StackObject* AllocArgments(uint32_t argCount)
+		StackObject* AllocArgments(int32_t argCount)
 		{
 			if (_stackTopIdx + argCount > _stackSize)
 			{
@@ -77,12 +77,12 @@ namespace interpreter
 			return _stackBase;
 		}
 
-		ptrdiff_t GetStackTop() const
+		int32_t GetStackTop() const
 		{
 			return _stackTopIdx;
 		}
 
-		StackObject* AllocStackSlot(uint32_t slotNum)
+		StackObject* AllocStackSlot(int32_t slotNum)
 		{
 			if (_stackTopIdx + slotNum > _stackSize)
 			{
@@ -96,7 +96,7 @@ namespace interpreter
 			return dataPtr;
 		}
 
-		void SetStackTop(ptrdiff_t oldTop)
+		void SetStackTop(int32_t oldTop)
 		{
 			_stackTopIdx = oldTop;
 		}
@@ -121,7 +121,7 @@ namespace interpreter
 			--_frameTopIdx;
 		}
 
-		void PopFrameN(uint32_t count)
+		void PopFrameN(int32_t count)
 		{
 			IL2CPP_ASSERT(count > 0 && _frameTopIdx >= count);
 			_frameTopIdx -= count;
@@ -191,7 +191,7 @@ namespace interpreter
 
 		void CollectFrames(il2cpp::vm::StackFrames* stackFrames)
 		{
-			for (uint32_t i = 0; i < _frameTopIdx; i++)
+			for (int32_t i = 0; i < _frameTopIdx; i++)
 			{
 				InterpFrame* frame = _frameBase + i;
 				const MethodInfo* method = frame->method->method;
@@ -208,16 +208,16 @@ namespace interpreter
 	private:
 
 		StackObject* _stackBase;
-		ptrdiff_t _stackSize;
-		ptrdiff_t _stackTopIdx;
+		int32_t _stackSize;
+		int32_t _stackTopIdx;
 
 		InterpFrame* _frameBase;
-		uint32_t _frameTopIdx;
-		uint32_t _frameCount;
+		int32_t _frameTopIdx;
+		int32_t _frameCount;
 
 		ExceptionFlowInfo* _exceptionFlowBase;
-		uint32_t _exceptionFlowTopIdx;
-		uint32_t _exceptionFlowCount;
+		int32_t _exceptionFlowTopIdx;
+		int32_t _exceptionFlowCount;
 
 
 		std::stack<const Il2CppImage*> _executingImageStack;
@@ -263,7 +263,7 @@ namespace interpreter
 
 		InterpFrame* EnterFrameFromInterpreter(const InterpMethodInfo* imi, StackObject* argBase)
 		{
-			ptrdiff_t oldStackTop = _machineState.GetStackTop();
+			int32_t oldStackTop = _machineState.GetStackTop();
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 			InterpFrame* newFrame = _machineState.PushFrame();
 			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
@@ -274,7 +274,7 @@ namespace interpreter
 
 		InterpFrame* EnterFrameFromNative(const InterpMethodInfo* imi, StackObject* argBase)
 		{
-			ptrdiff_t oldStackTop = _machineState.GetStackTop();
+			int32_t oldStackTop = _machineState.GetStackTop();
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize);
 			InterpFrame* newFrame = _machineState.PushFrame();
 			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
@@ -322,7 +322,7 @@ namespace interpreter
 		size_t GetFrameCount() const { return _machineState.GetFrameTopIdx() - _frameBaseIdx; }
 	private:
 		MachineState& _machineState;
-		ptrdiff_t _stackBaseIdx;
+		int32_t _stackBaseIdx;
 		uint32_t _frameBaseIdx;
 	};
 }

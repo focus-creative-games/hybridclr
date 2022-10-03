@@ -67,7 +67,7 @@ namespace hybridclr
 		{
 			const InterpMethodInfo* method;
 			StackObject* stackBasePtr;
-			ptrdiff_t oldStackTop;
+			int32_t oldStackTop;
 			void* ret;
 			byte* ip;
 
