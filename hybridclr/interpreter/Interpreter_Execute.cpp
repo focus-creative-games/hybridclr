@@ -580,7 +580,7 @@ namespace interpreter
 	inline void CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(Il2CppArray* arr, int32_t startIndex, int32_t length)
 	{
 		CHECK_NOT_NULL_THROW(arr);
-		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length - (il2cpp_array_size_t)startIndex <= (il2cpp_array_size_t)length)
+		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length - (il2cpp_array_size_t)startIndex < (il2cpp_array_size_t)length)
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetIndexOutOfRangeException());
 		}
@@ -589,7 +589,7 @@ namespace interpreter
 	inline void CHECK_NOT_NULL_AND_ARRAY_BOUNDARY2(Il2CppArray* arr, int32_t startIndex, int32_t length)
 	{
 		CHECK_NOT_NULL_THROW(arr);
-		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length - (il2cpp_array_size_t)startIndex <= (il2cpp_array_size_t)length)
+		if (arr->max_length <= (il2cpp_array_size_t)startIndex || arr->max_length - (il2cpp_array_size_t)startIndex < (il2cpp_array_size_t)length)
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentOutOfRangeException(""));
 		}
