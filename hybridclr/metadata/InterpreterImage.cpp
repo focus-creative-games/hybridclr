@@ -1338,7 +1338,8 @@ namespace metadata
 
 	void InterpreterImage::GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig)
 	{
-		ReadStandAloneSig(token, klassGenericContainer, methodGenericContainer, methodSig);
+		TbStandAloneSig sas = _rawImage.ReadStandAloneSig(DecodeTokenRowIndex(token));
+		ReadStandAloneSig(sas.signature, klassGenericContainer, methodGenericContainer, methodSig);
 		if (genericContext)
 		{
 			// FIXME. memory leak

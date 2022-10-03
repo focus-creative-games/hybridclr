@@ -921,34 +921,43 @@ else \
 
 				ResolveStandAloneMethodSig methodSig;
 				image->GetStandAloneMethodSigFromToken(token, klassContainer, methodContainer, genericContext, methodSig);
+				if (IsPrologExplicitThis(methodSig.flags))
+				{
+					RaiseNotSupportedException("not support StandAloneMethodSig flags:EXPLICITTHIS");
+				}
 
 				int32_t methodIdx = ctx.GetEvalStackTopOffset();
 				//uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(methodSig);
 				IL2CPP_ASSERT(managed2NativeMethod);
 				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
+				bool hasThis = metadata::IsPrologHasThis(methodSig.flags);
 
-
-				int32_t resolvedTotalArgNum = methodSig.paramCount;
+				int32_t resolvedTotalArgNum = methodSig.paramCount + hasThis;
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
 				int32_t argIdxDataIndex;
 				uint16_t* __argIdxs;
 				AllocResolvedData(resolveDatas, needDataSlotNum, argIdxDataIndex, __argIdxs);
 
-
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgNum - 1 /*funtion ptr*/;
-				for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
+
+				if (hasThis)
 				{
-					int32_t curArgIdx = i;
+					__argIdxs[0] = evalStack[callArgEvalStackIdxBase].locOffset;
+				}
+
+				for (uint32_t i = 0; i < methodSig.paramCount; i++)
+				{
+					uint32_t curArgIdx = i + hasThis;
 					__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 				}
 
 				ctx.PopStackN(resolvedTotalArgNum + 1);
 
-				if (!IsReturnVoidMethod(shareMethod))
+				if (!IsVoidType(&methodSig.returnType))
 				{
-					ctx.PushStackByType(shareMethod->return_type);
-					interpreter::LocationDataType locDataType = GetLocationDataTypeByType(shareMethod->return_type);
+					ctx.PushStackByType(&methodSig.returnType);
+					interpreter::LocationDataType locDataType = GetLocationDataTypeByType(&methodSig.returnType);
 					if (interpreter::IsNeedExpandLocationType(locDataType))
 					{
 						CreateAddIR(ir, CallInd_ret_expand);

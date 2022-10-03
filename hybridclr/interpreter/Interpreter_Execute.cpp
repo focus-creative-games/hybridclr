@@ -4900,7 +4900,20 @@ else \
 					uint32_t __managed2NativeMethod = *(uint32_t*)(ip + 4);
 					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, nullptr);
+				    Managed2NativeCallMethod _nativeMethodPointer = ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod]);
+					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
+					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
+					MethodInfo* _method = (MethodInfo*)(localVarBase + __methodInfo)->ptr;
+					if (metadata::IsInstanceMethod(_method))
+					{
+				        CHECK_NOT_NULL_THROW(_argBasePtr->obj);
+					}
+					if (IsInterpreterImplement(_method))
+					{
+				        CALL_INTERP_VOID((ip + 16), _method, _argBasePtr);
+				        continue;
+					}
+				    _nativeMethodPointer(_method, _argIdxsPtr, localVarBase, nullptr);
 				    ip += 16;
 				    continue;
 				}
@@ -4911,7 +4924,20 @@ else \
 					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
 					uint16_t __ret = *(uint16_t*)(ip + 2);
 				    void* _ret = (void*)(localVarBase + __ret);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    Managed2NativeCallMethod _nativeMethodPointer = ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod]);
+					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
+					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
+					MethodInfo* _method = (MethodInfo*)(localVarBase + __methodInfo)->ptr;
+					if (metadata::IsInstanceMethod(_method))
+					{
+				        CHECK_NOT_NULL_THROW(_argBasePtr->obj);
+					}
+					if (IsInterpreterImplement(_method))
+					{
+				        CALL_INTERP_RET((ip + 16), _method, _argBasePtr, _ret);
+				        continue;
+					}
+				    _nativeMethodPointer(_method, _argIdxsPtr, localVarBase, _ret);
 				    ip += 16;
 				    continue;
 				}
@@ -4923,7 +4949,20 @@ else \
 					uint16_t __ret = *(uint16_t*)(ip + 4);
 					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
 				    void* _ret = (void*)(localVarBase + __ret);
-				    ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod])(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase, _ret);
+				    Managed2NativeCallMethod _nativeMethodPointer = ((Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeMethod]);
+					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
+					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
+					MethodInfo* _method = (MethodInfo*)(localVarBase + __methodInfo)->ptr;
+					if (metadata::IsInstanceMethod(_method))
+					{
+				        CHECK_NOT_NULL_THROW(_argBasePtr->obj);
+					}
+					if (IsInterpreterImplement(_method))
+					{
+				        CALL_INTERP_RET((ip + 24), _method, _argBasePtr, _ret);
+				        continue;
+					}
+				    _nativeMethodPointer(_method, _argIdxsPtr, localVarBase, _ret);
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;

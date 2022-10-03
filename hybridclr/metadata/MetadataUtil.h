@@ -133,6 +133,16 @@ namespace metadata
         return IsInterpreterIndex(image->token);
     }
 
+    inline bool IsPrologHasThis(uint32_t flags)
+    {
+        return flags & 0x20;
+    }
+
+    inline bool IsPrologExplicitThis(uint32_t flags)
+    {
+        return flags & 0x40;
+    }
+
 #pragma endregion
 
 

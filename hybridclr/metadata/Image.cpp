@@ -656,7 +656,10 @@ namespace metadata
         uint8_t sig = reader.ReadByte();
         methodSig.flags = sig;
         uint32_t paramCount = reader.ReadCompressedUint32();
-        IL2CPP_ASSERT(paramCount >= 1 && paramCount <= 0xFFFE);
+        if (paramCount > 0xFFFE)
+        {
+            RaiseBadImageException("ReadStandAloneSig exceed max param count");
+        }
         methodSig.paramCount = paramCount;
         ReadType(reader, klassGenericContainer, methodGenericContainer, methodSig.returnType);
         if (paramCount > 0)
@@ -666,10 +669,15 @@ namespace metadata
             {
                 ReadType(reader, klassGenericContainer, methodGenericContainer, params[i]);
             }
+            methodSig.params = params;
         }
         else
         {
             methodSig.params = nullptr;
+        }
+        if (reader.NonEmpty())
+        {
+            RaiseNotSupportedException("ReadStandAloneSig don't support sentinel params");
         }
     }
 
