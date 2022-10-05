@@ -120,6 +120,11 @@ namespace metadata
         }
         return nullptr;
     }
+#else
+    static Il2CppAssembly* FindPlaceHolderAssembly(const char* assemblyNameNoExt)
+    {
+        return nullptr;
+    }
 #endif
 
     Il2CppAssembly* Assembly::LoadFromFile(const char* assemblyFile)
@@ -189,7 +194,7 @@ namespace metadata
         {
             if (ass->token)
             {
-                RaiseExecutionEngineException("not support load placeholder assembly repeatly!");
+                RaiseExecutionEngineException("reloading placeholder assembly is not supported!");
             }
             image2 = ass->image;
             IL2CPP_FREE((void*)ass->image->name);
