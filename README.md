@@ -27,6 +27,8 @@ HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/w
 - 零学习和使用成本。 HybridCLR将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
 - 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://focus-creative-games.github.io/hybridclr/performance)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/hybridclr/memory)
+- 由于对泛型的完美支持，使得因为AOT泛型问题跟il2cpp不兼容的库现在能够完美地在il2cpp下运行
+- 支持一些il2cpp不支持的特性，如__makeref、 __reftype、__refvalue指令
 - 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
 
 ## 工作原理
