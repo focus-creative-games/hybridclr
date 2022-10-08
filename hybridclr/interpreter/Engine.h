@@ -263,6 +263,9 @@ namespace interpreter
 
 		InterpFrame* EnterFrameFromInterpreter(const InterpMethodInfo* imi, StackObject* argBase)
 		{
+#if IL2CPP_ENABLE_PROFILER
+			il2cpp_codegen_profiler_method_enter(imi->method);
+#endif
 			int32_t oldStackTop = _machineState.GetStackTop();
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 			InterpFrame* newFrame = _machineState.PushFrame();
@@ -274,6 +277,9 @@ namespace interpreter
 
 		InterpFrame* EnterFrameFromNative(const InterpMethodInfo* imi, StackObject* argBase)
 		{
+#if IL2CPP_ENABLE_PROFILER
+			il2cpp_codegen_profiler_method_enter(imi->method);
+#endif
 			int32_t oldStackTop = _machineState.GetStackTop();
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize);
 			InterpFrame* newFrame = _machineState.PushFrame();
@@ -301,6 +307,9 @@ namespace interpreter
 			IL2CPP_ASSERT(_machineState.GetFrameTopIdx() > _frameBaseIdx);
 			POP_STACK_FRAME();
 			InterpFrame* frame = _machineState.GetTopFrame();
+#if IL2CPP_ENABLE_PROFILER
+			il2cpp_codegen_profiler_method_exit(frame->method->method);
+#endif
 			if (frame->exFlowBase)
 			{
 				_machineState.SetExceptionFlowTop(frame->exFlowBase);
