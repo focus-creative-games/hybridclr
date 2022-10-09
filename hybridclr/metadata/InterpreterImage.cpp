@@ -64,7 +64,7 @@ namespace metadata
 
 	void InterpreterImage::BuildIl2CppAssembly(Il2CppAssembly* ass)
 	{
-		ass->token = EncodeWithIndex(GetIndex());
+		ass->token = EncodeToken(TableType::ASSEMBLY, 1);
 		ass->referencedAssemblyStart = EncodeWithIndex(1);
 		ass->referencedAssemblyCount = _rawImage.GetTableRowNum(TableType::ASSEMBLYREF);
 
