@@ -78,9 +78,11 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ## 支持与联系
 
-- QQ群：651188171 HybridCLR(wolong)技术交流群 **(官方主群)**。可以反馈bug，但**不要在群里咨询基础使用问题**。
-- QQ群：428404198 HybridCLR(wolong)新手群 **(新手群)**。新手使用过程中遇到问题，都可以在群里咨询。
-- 邮箱：hybridclr@focus-creative-games.com
+- QQ官方1群：651188171（满）。可以反馈bug，但**不要在群里咨询基础使用问题**。
+- QQ官方2群：680274677（新）。可以反馈bug，但**不要在群里咨询基础使用问题**。
+- QQ新手1群：428404198。新手使用过程中遇到问题，都可以在群里咨询。
+- 官方邮箱：hybridclr@focus-creative-games.com
+- 商业合作邮箱: business@focus-creative-games.com
 - [商业化支持](https://focus-creative-games.github.io/hybridclr/price/)
 
 ## 后续开发规划
