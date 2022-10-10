@@ -180,6 +180,11 @@ namespace metadata
 			return (uint32_t)(typeDef - &_typesDefines[0]);
 		}
 
+		uint32_t GetTypeRawIndexByEncodedIl2CppTypeIndex(int32_t il2cppTypeIndex) const
+		{
+			return GetTypeRawIndex((const Il2CppTypeDefinition*)_types[DecodeMetadataIndex(il2cppTypeIndex)].data.typeHandle);
+		}
+
 		const Il2CppTypeDefinition* GetTypeFromRawIndex(uint32_t index) const override
 		{
 			IL2CPP_ASSERT((size_t)index < _typesDefines.size());

@@ -178,6 +178,11 @@ namespace metadata
 			SET_IL2CPPTYPE_VALUE_TYPE(cppType, isValueType);
 			cppType.data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
+#if HYBRIDCLR_UNITY_2019
+			Il2CppType byRefType = cppType;
+			byRefType.byref = 1;
+			cur.byrefTypeIndex = AddIl2CppTypeCache(byRefType);
+#endif
 
 			if (IsInterface(cur.flags))
 			{
@@ -1548,7 +1553,8 @@ namespace metadata
 			if (IsInterpreterType(parentTypeDef) && parentTypeDef->vtableStart == 0)
 			{
 				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
-				ComputeVTable1(&_typeDetails[DecodeMetadataIndex(parentTypeDef->byvalTypeIndex)]);
+				int32_t typeDefIndex = GetTypeRawIndexByEncodedIl2CppTypeIndex(parentTypeDef->byvalTypeIndex);
+				ComputeVTable1(&_typeDetails[typeDefIndex]);
 			}
 			vtableCount += parentTypeDef->vtable_count;
 		}
@@ -1600,7 +1606,8 @@ namespace metadata
 			if (IsInterpreterType(parentTypeDef) && parentTypeDef->interfaceOffsetsStart == 0)
 			{
 				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
-				ComputeVTable2(&_typeDetails[DecodeMetadataIndex(parentTypeDef->byvalTypeIndex)]);
+				int32_t typeDefIndex = GetTypeRawIndexByEncodedIl2CppTypeIndex(parentTypeDef->byvalTypeIndex);
+				ComputeVTable2(&_typeDetails[typeDefIndex]);
 			}
 		}
 
@@ -1660,14 +1667,10 @@ namespace metadata
 			return _methodDefine2InfoCaches[index];
 		}
 		const Il2CppMethodDefinition* methodDefinition = GetMethodDefinitionFromRawIndex(index);
-		const Il2CppType* type = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(methodDefinition->declaringType);
-		//Il2CppClass* typeInfo = GetTypeInfoFromTypeDefinitionRawIndex(DecodeMetadataIndex());
-
-		IL2CPP_ASSERT(type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS);
-		const Il2CppTypeDefinition* typeDefinition = reinterpret_cast<const Il2CppTypeDefinition*>(type->data.typeHandle);
+		const Il2CppTypeDefinition* typeDefinition = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(methodDefinition->declaringType);
 		int32_t indexInClass = index - DecodeMetadataIndex(typeDefinition->methodStart);
 		IL2CPP_ASSERT(indexInClass >= 0 && indexInClass < typeDefinition->method_count);
-		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)typeDefinition);
 		il2cpp::vm::Class::SetupMethods(klass);
 		// il2cpp::vm::Class::Init(klass);
 		return _methodDefine2InfoCaches[index] = klass->methods[indexInClass];
