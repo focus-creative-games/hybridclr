@@ -1135,6 +1135,16 @@ namespace interpreter
 		}
 	}
 
+	inline void ConstructorDelegate2(MethodInfo* ctor, Il2CppDelegate* del, Il2CppObject* target, MethodInfo* method)
+	{
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+		void* ctorArgs[2] = { target, (void*)&method };
+		ctor->invoker_method(ctor->methodPointer, ctor, del, ctorArgs, NULL);
+#else
+		RaiseNotSupportedException("ConstructorDelegate2");
+#endif
+	}
+
 #pragma endregion
 
 #pragma region function
@@ -5367,6 +5377,18 @@ else \
 				    Il2CppDelegate* del = (Il2CppDelegate*)il2cpp::vm::Object::New(__klass);
 				    ConstructDelegate(del, (*(Il2CppObject**)(localVarBase + __obj)), (*(MethodInfo**)(localVarBase + __method)));
 				    (*(Il2CppObject**)(localVarBase + __dst)) = (Il2CppObject*)del;
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorDelegate:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					MethodInfo* __ctor = ((MethodInfo*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint16_t __method = *(uint16_t*)(ip + 6);
+				    Il2CppDelegate* _del = (Il2CppDelegate*)il2cpp::vm::Object::New(__ctor->klass);
+				    ConstructorDelegate2(__ctor, _del, (*(Il2CppObject**)(localVarBase + __obj)), (*(MethodInfo**)(localVarBase + __method)));
+				    (*(Il2CppObject**)(localVarBase + __dst)) = (Il2CppObject*)_del;
 				    ip += 16;
 				    continue;
 				}

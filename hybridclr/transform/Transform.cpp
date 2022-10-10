@@ -1868,10 +1868,28 @@ else \
 				if (IsMulticastDelegate(shareMethod))
 				{
 					IL2CPP_ASSERT(evalStackTop >= 2);
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+					const MethodInfo* ctor = il2cpp::vm::Class::GetMethodFromName(shareMethod->klass, ".ctor", 2);
+					if (ctor && ctor->methodPointer && !ctor->isInterpterImpl)
+					{
+						CreateAddIR(ir, CtorDelegate);
+						ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
+						ir->ctor = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, ctor);
+						ir->method = ctx.GetEvalStackOffset_1();
+					}
+					else
+					{
+						CreateAddIR(ir, NewDelegate);
+						ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
+						ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
+						ir->method = ctx.GetEvalStackOffset_1();
+					}
+#else
 					CreateAddIR(ir, NewDelegate);
 					ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
 					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
 					ir->method = ctx.GetEvalStackOffset_1();
+#endif
 					ctx.PopStackN(2);
 					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 					continue;

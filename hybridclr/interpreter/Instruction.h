@@ -339,6 +339,7 @@ namespace interpreter
 		CallDelegate_ret,
 		CallDelegate_ret_expand,
 		NewDelegate,
+		CtorDelegate,
 		CallCommonNativeInstance_v_0,
 		CallCommonNativeInstance_i1_0,
 		CallCommonNativeInstance_u1_0,
@@ -3881,6 +3882,19 @@ namespace interpreter
 		uint16_t obj;
 		uint16_t method;
 		uint32_t klass;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCtorDelegate : IRCommon
+	{
+		uint16_t dst;
+		uint16_t obj;
+		uint16_t method;
+		uint32_t ctor;
 		uint8_t __pad12;
 		uint8_t __pad13;
 		uint8_t __pad14;
