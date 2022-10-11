@@ -253,6 +253,26 @@ namespace metadata
         return !method->genericMethod || method->is_generic ? method : method->genericMethod->methodDefinition;
     }
 
+    inline bool IsChildTypeOfMulticastDelegate(const Il2CppClass* klass)
+    {
+        return klass->parent == il2cpp_defaults.multicastdelegate_class;
+    }
+
+    inline int32_t GetActualParamCount(const MethodInfo* methodInfo)
+    {
+        return IsInstanceMethod(methodInfo) ? (methodInfo->parameters_count + 1) : methodInfo->parameters_count;
+    }
+
+    inline int32_t GetFieldOffset(const FieldInfo* fieldInfo)
+    {
+        Il2CppClass* klass = fieldInfo->parent;
+        return IS_CLASS_VALUE_TYPE(klass) ? (fieldInfo->offset - sizeof(Il2CppObject)) : fieldInfo->offset;
+    }
+
+    inline int32_t GetThreadStaticFieldOffset(const FieldInfo* fieldInfo)
+    {
+        return il2cpp::vm::MetadataCache::GetThreadLocalStaticOffsetForField(const_cast<FieldInfo*>(fieldInfo));
+    }
 
     const Il2CppType* TryInflateIfNeed(const Il2CppType* selfType, const Il2CppGenericContext* genericContext, bool inflateMethodVars);
     const Il2CppType* TryInflateIfNeed(const Il2CppType* containerType, const Il2CppType* selfType);

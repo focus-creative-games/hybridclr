@@ -789,7 +789,7 @@ else \
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgNum;
 				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
 
-				bool isMultiDelegate = IsMulticastDelegate(shareMethod);
+				bool isMultiDelegate = IsChildTypeOfMulticastDelegate(shareMethod->klass);
 				if (!isMultiDelegate && IsInterpreterMethod(shareMethod))
 				{
 					ctx.PopStackN(resolvedTotalArgNum);
@@ -1865,7 +1865,7 @@ else \
 					}
 				}
 
-				if (IsMulticastDelegate(shareMethod))
+				if (IsChildTypeOfMulticastDelegate(shareMethod->klass))
 				{
 					IL2CPP_ASSERT(evalStackTop >= 2);
 #if HYBRIDCLR_UNITY_2021_OR_NEW

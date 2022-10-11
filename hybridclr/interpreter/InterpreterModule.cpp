@@ -8,6 +8,7 @@
 #include "vm/MetadataLock.h"
 #include "vm/Class.h"
 #include "vm/Object.h"
+#include "vm/Method.h"
 
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
@@ -243,15 +244,30 @@ namespace hybridclr
 			return __this + IS_CLASS_VALUE_TYPE(__this->klass);
 		}
 
+		static int32_t CalcMethodArgumentStackObjectCount(const MethodInfo* method)
+		{
+			bool isInstanceMethod = metadata::IsInstanceMethod(method);
+			int32_t argumentCountIncludeThis = isInstanceMethod;
+			for (uint8_t i = 0; i < method->parameters_count; i++)
+			{
+				argumentCountIncludeThis += GetTypeArgDesc(GET_METHOD_PARAMETER_TYPE(method->parameters[i])).stackObjectSize;
+			}
+			return argumentCountIncludeThis;
+		}
+
+	static void RaiseExecutionEngineExceptionMethodIsNotFound(const MethodInfo* method)
+	{
+		if (il2cpp::vm::Method::GetClass(method))
+			RaiseExecutionEngineException(il2cpp::vm::Method::GetFullName(method).c_str());
+		else
+			RaiseExecutionEngineException(il2cpp::vm::Method::GetNameWithGenericTypes(method).c_str());
+	}
+
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 	static void InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
 	{
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
-		int32_t argumentCountIncludeThis = isInstanceMethod;
-		for (uint8_t i = 0; i < method->parameters_count; i++)
-		{
-			argumentCountIncludeThis += GetTypeArgDesc(GET_METHOD_PARAMETER_TYPE(method->parameters[i])).stackObjectSize;
-		}
+		int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(method);
 		StackObject* args = (StackObject*)alloca(sizeof(StackObject) * argumentCountIncludeThis);
 		if (isInstanceMethod)
 		{
@@ -260,15 +276,81 @@ namespace hybridclr
 		ConvertInvokeArgs(args + isInstanceMethod, method, __args);
 		Interpreter::Execute(method, args, __ret);
 	}
+
+	static void InterpreterDelegateInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
+	{
+		Il2CppMulticastDelegate* del = (Il2CppMulticastDelegate*)__this;
+		Il2CppDelegate** firstSubDel;
+		int32_t subDelCount;
+		if (del->delegates)
+		{
+			firstSubDel = (Il2CppDelegate**)il2cpp::vm::Array::GetFirstElementAddress(del->delegates);
+			subDelCount = il2cpp::vm::Array::GetLength(del->delegates);
+		}
+		else
+		{
+			firstSubDel = (Il2CppDelegate**)&del;
+			subDelCount = 1;
+		}
+
+		for (int32_t i = 0; i < subDelCount; i++)
+		{
+			Il2CppDelegate* cur = firstSubDel[i];
+			const MethodInfo* curMethod = cur->method;
+			Il2CppObject* curTarget = cur->target;
+			if (curMethod->invoker_method == nullptr)
+			{
+				RaiseExecutionEngineExceptionMethodIsNotFound(curMethod);
+			}
+			bool isInstanceMethod = metadata::IsInstanceMethod(curMethod);
+			int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(curMethod);
+			switch ((int)(method->parameters_count - curMethod->parameters_count))
+			{
+			case 0:
+			{
+				if (isInstanceMethod && !curTarget)
+				{
+					il2cpp::vm::Exception::RaiseNullReferenceException();
+				}
+				curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args, __ret);
+				break;
+			}
+			case -1:
+			{
+				IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(curMethod));
+				void** newArgs = (void**)malloc(sizeof(void*) * (size_t)curMethod->parameters_count);
+				newArgs[0] = curTarget;
+				for (int k = 0, endK = curMethod->parameters_count; k < endK; k++)
+				{
+					newArgs[k + 1] = __args[k];
+				}
+				curMethod->invoker_method(curMethod->methodPointer, curMethod, nullptr, newArgs, __ret);
+				break;
+			}
+			case 1:
+			{
+				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(curMethod) && curMethod->parameters_count);
+				curTarget = (Il2CppObject*)__args[0];
+				if (!curTarget)
+				{
+					il2cpp::vm::Exception::RaiseNullReferenceException();
+				}
+				curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args + 1, __ret);
+				break;
+			}
+			default:
+			{
+				RaiseExecutionEngineException("bad delegate method");
+				break;
+			}
+			}
+		}
+	}
 #else
 	static void* InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args)
 	{
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
-		int32_t argumentCountIncludeThis = isInstanceMethod;
-		for (uint8_t i = 0; i < method->parameters_count; i++)
-		{
-			argumentCountIncludeThis += GetTypeArgDesc(GET_METHOD_PARAMETER_TYPE(method->parameters[i])).stackObjectSize;
-		}
+		int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(method);
 		if (isInstanceMethod)
 		{
 			__this = AdjustValueTypeSelfPointer((Il2CppObject*)__this);
@@ -298,16 +380,92 @@ namespace hybridclr
 			return TranslateNativeValueToBoxValue(method->return_type, ret);
 		}
 	}
+
+	static void* InterpreterDelegateInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args)
+	{
+		Il2CppMulticastDelegate* del = (Il2CppMulticastDelegate*)__this;
+		Il2CppDelegate** firstSubDel;
+		int32_t subDelCount;
+		if (del->delegates)
+		{
+			firstSubDel = (Il2CppDelegate**)il2cpp::vm::Array::GetFirstElementAddress(del->delegates);
+			subDelCount = il2cpp::vm::Array::GetLength(del->delegates);
+		}
+		else
+		{
+			firstSubDel = (Il2CppDelegate**)&del;
+			subDelCount = 1;
+		}
+		void* ret = nullptr;
+		for (int32_t i = 0; i < subDelCount; i++)
+		{
+			Il2CppDelegate* cur = firstSubDel[i];
+			const MethodInfo* curMethod = cur->method;
+			Il2CppObject* curTarget = cur->target;
+			if (curMethod->invoker_method == nullptr)
+			{
+				RaiseExecutionEngineExceptionMethodIsNotFound(curMethod);
+			}
+			bool isInstanceMethod = metadata::IsInstanceMethod(curMethod);
+			int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(curMethod);
+			switch ((int)(method->parameters_count - curMethod->parameters_count))
+			{
+			case 0:
+			{
+				if (isInstanceMethod && !curTarget)
+				{
+					il2cpp::vm::Exception::RaiseNullReferenceException();
+				}
+				ret = curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args);
+				break;
+			}
+			case -1:
+			{
+				IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(curMethod));
+				void** newArgs = (void**)malloc(sizeof(void*) * (size_t)curMethod->parameters_count);
+				newArgs[0] = curTarget;
+				for (int k = 0, endK = curMethod->parameters_count; k < endK; k++)
+				{
+					newArgs[k + 1] = __args[k];
+				}
+				ret = curMethod->invoker_method(curMethod->methodPointer, curMethod, nullptr, newArgs);
+				break;
+			}
+			case 1:
+			{
+				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(curMethod) && curMethod->parameters_count);
+				curTarget = (Il2CppObject*)__args[0];
+				if (!curTarget)
+				{
+					il2cpp::vm::Exception::RaiseNullReferenceException();
+				}
+				curTarget = curTarget - IS_CLASS_VALUE_TYPE(curMethod->klass);
+				ret = curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args + 1);
+				break;
+			}
+			default:
+			{
+				RaiseExecutionEngineException("bad delegate method");
+				break;
+			}
+			}
+		}
+		return ret;
+	}
 #endif
 
 	InvokerMethod InterpreterModule::GetMethodInvoker(const Il2CppMethodDefinition* method)
 	{
-		return InterpterInvoke;
+		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
+		const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex);
+		// special for Delegate::DynamicInvoke
+		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(methodName, "Invoke") ? InterpterInvoke : InterpreterDelegateInvoke;
 	}
 
 	InvokerMethod InterpreterModule::GetMethodInvoker(const MethodInfo* method)
 	{
-		return InterpterInvoke;
+		Il2CppClass* klass = method->klass;
+		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(method->name, "Invoke") ? InterpterInvoke : InterpreterDelegateInvoke;
 	}
 
 	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(const MethodInfo* methodInfo)

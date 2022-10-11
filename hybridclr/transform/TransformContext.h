@@ -107,28 +107,6 @@ namespace transform
 	const int32_t MAX_STACK_SIZE = (2 << 16) - 1;
 	const int32_t MAX_VALUE_TYPE_SIZE = (2 << 16) - 1;
 
-
-	inline bool IsMulticastDelegate(const MethodInfo* method)
-	{
-		return  (method->klass) && method->klass->parent == il2cpp_defaults.multicastdelegate_class;
-	}
-
-	inline int32_t GetActualParamCount(const MethodInfo* methodInfo)
-	{
-		return IsInstanceMethod(methodInfo) ? (methodInfo->parameters_count + 1) : methodInfo->parameters_count;
-	}
-
-	inline int32_t GetFieldOffset(const FieldInfo* fieldInfo)
-	{
-		Il2CppClass* klass = fieldInfo->parent;
-		return IS_CLASS_VALUE_TYPE(klass) ? (fieldInfo->offset - sizeof(Il2CppObject)) : fieldInfo->offset;
-	}
-
-	inline int32_t GetThreadStaticFieldOffset(const FieldInfo* fieldInfo)
-	{
-		return il2cpp::vm::MetadataCache::GetThreadLocalStaticOffsetForField(const_cast<FieldInfo*>(fieldInfo));
-	}
-
 	uint32_t GetOrAddResolveDataIndex(std::unordered_map<const void*, uint32_t>& ptr2Index, std::vector<uint64_t>& resolvedDatas, const void* ptr);
 	EvalStackReduceDataType GetEvalStackReduceDataType(const Il2CppType* type);
 	int32_t GetSizeByReduceType(EvalStackReduceDataType type);
