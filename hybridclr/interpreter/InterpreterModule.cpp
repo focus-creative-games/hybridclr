@@ -160,7 +160,39 @@ namespace hybridclr
 
 		void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 		{
-			if (hybridclr::metadata::IsInterpreterMethod(method) || method->invoker_method == nullptr)
+			if (hybridclr::metadata::IsInterpreterImplement(method))
+			{
+				IL2CPP_ASSERT(method->parameters_count <= 32);
+				StackObject newArgs[32];
+				int32_t argBaseOffset;
+				if (hybridclr::metadata::IsInstanceMethod(method))
+				{
+					newArgs[0] = localVarBase[argVarIndexs[0]];
+					argBaseOffset = 1;
+				}
+				else
+				{
+					argBaseOffset = 0;
+				}
+				for (uint8_t i = 0; i < method->parameters_count; i++)
+				{
+					int32_t argOffset = argBaseOffset + i;
+					const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
+					StackObject* argValue = localVarBase + argVarIndexs[argOffset];
+					if (argType->byref || hybridclr::interpreter::IsSimpleStackObjectCopyArg(GetLocationDataTypeByType(argType)))
+					{
+						newArgs[argOffset] = *argValue;
+					}
+					else
+					{
+						newArgs[argOffset].ptr = argValue;
+					}
+				}
+
+				hybridclr::interpreter::Interpreter::Execute(method, newArgs, ret);
+				return;
+			}
+			if (method->invoker_method == nullptr)
 			{
 				char sigName[1000];
 				ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
@@ -185,16 +217,14 @@ namespace hybridclr
 			{
 				const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
 				StackObject* argValue = localVarBase + argVarIndexBase[i];
-				void* argValuePtr;
 				if (!argType->byref && hybridclr::metadata::IsValueType(argType))
 				{
-					argValuePtr = argValue;
+					invokeParams[i] = argValue;
 				}
 				else
 				{
-					argValuePtr = argValue->ptr;
+					invokeParams[i] = argValue->ptr;
 				}
-				invokeParams[i] = argValuePtr;
 			}
 #if HYBRIDCLR_UNITY_2021_OR_NEW
 			method->invoker_method(method->methodPointer, method, thisPtr, invokeParams, ret);
