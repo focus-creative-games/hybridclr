@@ -3848,8 +3848,7 @@ namespace interpreter
 	{
 		uint16_t ret;
 		uint16_t invokeParamCount;
-		uint8_t __pad6;
-		uint8_t __pad7;
+		uint16_t retTypeStackObjectSize;
 		uint32_t managed2NativeStaticMethod;
 		uint32_t managed2NativeInstanceMethod;
 		uint32_t argIdxs;

@@ -890,8 +890,8 @@ else \
 					}
 					else
 					{
-						interpreter::LocationDataType locDataType = GetLocationDataTypeByType(returnType);
-						if (IsNeedExpandLocationType(locDataType))
+						interpreter::ArgDesc retDesc = GetTypeArgDesc(returnType);
+						if (IsNeedExpandLocationType(retDesc.type))
 						{
 							CreateAddIR(ir, CallDelegate_ret_expand);
 							ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
@@ -899,7 +899,7 @@ else \
 							ir->argIdxs = argIdxDataIndex;
 							ir->ret = retIdx;
 							ir->invokeParamCount = shareMethod->parameters_count;
-							ir->retLocationType = (uint8_t)locDataType;
+							ir->retLocationType = (uint8_t)retDesc.type;
 						}
 						else
 						{
@@ -908,6 +908,7 @@ else \
 							ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
 							ir->argIdxs = argIdxDataIndex;
 							ir->ret = retIdx;
+							ir->retTypeStackObjectSize = retDesc.stackObjectSize;
 							ir->invokeParamCount = shareMethod->parameters_count;
 						}
 					}

@@ -63,13 +63,7 @@ namespace interpreter
 
 		StackObject* AllocArgments(int32_t argCount)
 		{
-			if (_stackTopIdx + argCount > _stackSize)
-			{
-				il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocArguments"));
-			}
-			StackObject* args = _stackBase + _stackTopIdx;
-			_stackTopIdx += argCount;
-			return args;
+			return AllocStackSlot(argCount);
 		}
 
 		StackObject* GetStackBasePtr() const
@@ -333,6 +327,28 @@ namespace interpreter
 		MachineState& _machineState;
 		int32_t _stackBaseIdx;
 		uint32_t _frameBaseIdx;
+	};
+
+	class StackObjectAllocScope
+	{
+	private:
+		MachineState& _state;
+		const int32_t _originStackTop;
+		const int32_t _count;
+		StackObject* _data;
+	public:
+		StackObjectAllocScope(MachineState& state, int32_t count) : _state(state), _count(count), _originStackTop(_state.GetStackTop())
+		{
+			_data = state.AllocStackSlot(count);
+		}
+
+		~StackObjectAllocScope()
+		{
+			IL2CPP_ASSERT(_state.GetStackTop() > _originStackTop);
+			_state.SetStackTop(_originStackTop);
+		}
+
+		StackObject* GetData() const { return _data; }
 	};
 }
 }
