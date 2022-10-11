@@ -234,7 +234,14 @@ namespace metadata
 		{
 			Il2CppClass* klass = method->klass;
 			Il2CppClass* parent = klass->parent;
-			return parent != il2cpp_defaults.multicastdelegate_class && parent != il2cpp_defaults.delegate_class && AOTHomologousImage::FindImageByAssembly(klass->image->assembly);
+			if (parent != il2cpp_defaults.multicastdelegate_class && parent != il2cpp_defaults.delegate_class)
+			{
+				return AOTHomologousImage::FindImageByAssembly(klass->image->assembly);
+			}
+			else
+			{
+				return strcmp(method->name, "Invoke") == 0;
+			}
 		}
 
 		static Il2CppMethodPointer GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method);
