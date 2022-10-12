@@ -179,7 +179,7 @@ namespace hybridclr
 					int32_t argOffset = argBaseOffset + i;
 					const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
 					StackObject* argValue = localVarBase + argVarIndexs[argOffset];
-					if (argType->byref || hybridclr::interpreter::IsSimpleStackObjectCopyArg(GetLocationDataTypeByType(argType)))
+					if (IsPassArgAsValue(argType))
 					{
 						newArgs[argOffset] = *argValue;
 					}
@@ -274,17 +274,6 @@ namespace hybridclr
 			return __this + IS_CLASS_VALUE_TYPE(__this->klass);
 		}
 
-		static int32_t CalcMethodArgumentStackObjectCount(const MethodInfo* method)
-		{
-			bool isInstanceMethod = metadata::IsInstanceMethod(method);
-			int32_t argumentCountIncludeThis = isInstanceMethod;
-			for (uint8_t i = 0; i < method->parameters_count; i++)
-			{
-				argumentCountIncludeThis += GetTypeArgDesc(GET_METHOD_PARAMETER_TYPE(method->parameters[i])).stackObjectSize;
-			}
-			return argumentCountIncludeThis;
-		}
-
 	static void RaiseExecutionEngineExceptionMethodIsNotFound(const MethodInfo* method)
 	{
 		if (il2cpp::vm::Method::GetClass(method))
@@ -297,8 +286,7 @@ namespace hybridclr
 	static void InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
 	{
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
-		int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(method);
-		StackObject* args = (StackObject*)alloca(sizeof(StackObject) * argumentCountIncludeThis);
+		StackObject args[256];
 		if (isInstanceMethod)
 		{
 			args[0].ptr = __this;
@@ -332,13 +320,11 @@ namespace hybridclr
 			{
 				RaiseExecutionEngineExceptionMethodIsNotFound(curMethod);
 			}
-			bool isInstanceMethod = metadata::IsInstanceMethod(curMethod);
-			int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(curMethod);
 			switch ((int)(method->parameters_count - curMethod->parameters_count))
 			{
 			case 0:
 			{
-				if (isInstanceMethod && !curTarget)
+				if (metadata::IsInstanceMethod(curMethod) && !curTarget)
 				{
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}
@@ -380,14 +366,13 @@ namespace hybridclr
 	static void* InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args)
 	{
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
-		int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(method);
 		if (isInstanceMethod)
 		{
 			__this = AdjustValueTypeSelfPointer((Il2CppObject*)__this);
 		}
+		StackObject args[256];
 		if (method->return_type->type == IL2CPP_TYPE_VOID)
 		{
-			StackObject* args = (StackObject*)alloca(sizeof(StackObject) * argumentCountIncludeThis);
 			if (isInstanceMethod)
 			{
 				args[0].ptr = __this;
@@ -398,14 +383,13 @@ namespace hybridclr
 		}
 		else
 		{
-			int32_t returnTypeSize = GetTypeArgDesc(method->return_type).stackObjectSize;
-			StackObject* args = (StackObject*)alloca(sizeof(StackObject) * (argumentCountIncludeThis + returnTypeSize));
 			if (isInstanceMethod)
 			{
 				args[0].ptr = __this;
 			}
 			ConvertInvokeArgs(args + isInstanceMethod, method, __args);
-			StackObject* ret = args + argumentCountIncludeThis;
+			IL2CPP_ASSERT(GetTypeArgDesc(method->return_type).stackObjectSize <= 1024);
+			StackObject ret[1024];
 			Interpreter::Execute(method, args, ret);
 			return TranslateNativeValueToBoxValue(method->return_type, ret);
 		}
@@ -436,13 +420,11 @@ namespace hybridclr
 			{
 				RaiseExecutionEngineExceptionMethodIsNotFound(curMethod);
 			}
-			bool isInstanceMethod = metadata::IsInstanceMethod(curMethod);
-			int32_t argumentCountIncludeThis = CalcMethodArgumentStackObjectCount(curMethod);
 			switch ((int)(method->parameters_count - curMethod->parameters_count))
 			{
 			case 0:
 			{
-				if (isInstanceMethod && !curTarget)
+				if (metadata::IsInstanceMethod(curMethod) && !curTarget)
 				{
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}

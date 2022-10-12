@@ -884,19 +884,20 @@ else \
 						}
 						continue;
 					}
-					else if (std::strcmp(shareMethod->name, "BeginInvoke") == 0)
+					Il2CppMethodPointer directlyCallMethodPointer = GetInterpreterDirectlyCallMethodPointer(shareMethod);
+					if (std::strcmp(shareMethod->name, "BeginInvoke") == 0)
 					{
-						if (IsInterpreterMethod(shareMethod))
+						if (IsInterpreterMethod(shareMethod) || directlyCallMethodPointer == nullptr)
 						{
-							RaiseExecutionEngineException("not support begin invoke");
+							RaiseExecutionEngineException("not support call Interpreter Delegate::BeginInvoke");
 							continue;
 						}
 					}
 					else if (std::strcmp(shareMethod->name, "EndInvoke") == 0)
 					{
-						if (IsInterpreterMethod(shareMethod))
+						if (IsInterpreterMethod(shareMethod) || directlyCallMethodPointer == nullptr)
 						{
-							RaiseExecutionEngineException("not support begin invoke");
+							RaiseExecutionEngineException("not support call Interpreter Delegate::EndInvoke");
 							continue;
 						}
 					}
