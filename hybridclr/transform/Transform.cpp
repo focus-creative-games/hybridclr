@@ -843,74 +843,91 @@ else \
 				{
 					retIdx = -1;
 				}
-				if (!isMultiDelegate)
+				if (isMultiDelegate)
 				{
-					if (retIdx < 0)
+					if (std::strcmp(shareMethod->name, "Invoke") == 0)
 					{
-						CreateAddIR(ir, CallVirtual_void);
-						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
-						ir->methodInfo = methodDataIndex;
-						ir->argIdxs = argIdxDataIndex;
-					}
-					else
-					{
-						interpreter::LocationDataType locDataType = GetLocationDataTypeByType(returnType);
-						if (IsNeedExpandLocationType(locDataType))
+						Managed2NativeCallMethod staticManaged2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, true);
+						IL2CPP_ASSERT(staticManaged2NativeMethod);
+						uint32_t staticManaged2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)staticManaged2NativeMethod);
+						if (retIdx < 0)
 						{
-							CreateAddIR(ir, CallVirtual_ret_expand);
-							ir->managed2NativeMethod = managed2NativeMethodDataIdx;
-							ir->methodInfo = methodDataIndex;
+							CreateAddIR(ir, CallDelegate_void);
+							ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
+							ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
 							ir->argIdxs = argIdxDataIndex;
-							ir->ret = retIdx;
-							ir->retLocationType = (uint8_t)locDataType;
+							ir->invokeParamCount = shareMethod->parameters_count;
 						}
 						else
 						{
-							CreateAddIR(ir, CallVirtual_ret);
-							ir->managed2NativeMethod = managed2NativeMethodDataIdx;
-							ir->methodInfo = methodDataIndex;
-							ir->argIdxs = argIdxDataIndex;
-							ir->ret = retIdx;
+							interpreter::ArgDesc retDesc = GetTypeArgDesc(returnType);
+							if (IsNeedExpandLocationType(retDesc.type))
+							{
+								CreateAddIR(ir, CallDelegate_ret_expand);
+								ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
+								ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
+								ir->argIdxs = argIdxDataIndex;
+								ir->ret = retIdx;
+								ir->invokeParamCount = shareMethod->parameters_count;
+								ir->retLocationType = (uint8_t)retDesc.type;
+							}
+							else
+							{
+								CreateAddIR(ir, CallDelegate_ret);
+								ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
+								ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
+								ir->argIdxs = argIdxDataIndex;
+								ir->ret = retIdx;
+								ir->retTypeStackObjectSize = retDesc.stackObjectSize;
+								ir->invokeParamCount = shareMethod->parameters_count;
+							}
+						}
+						continue;
+					}
+					else if (std::strcmp(shareMethod->name, "BeginInvoke") == 0)
+					{
+						if (IsInterpreterMethod(shareMethod))
+						{
+							RaiseExecutionEngineException("not support begin invoke");
+							continue;
+						}
+					}
+					else if (std::strcmp(shareMethod->name, "EndInvoke") == 0)
+					{
+						if (IsInterpreterMethod(shareMethod))
+						{
+							RaiseExecutionEngineException("not support begin invoke");
+							continue;
 						}
 					}
 				}
+
+				if (retIdx < 0)
+				{
+					CreateAddIR(ir, CallVirtual_void);
+					ir->managed2NativeMethod = managed2NativeMethodDataIdx;
+					ir->methodInfo = methodDataIndex;
+					ir->argIdxs = argIdxDataIndex;
+				}
 				else
 				{
-
-					Managed2NativeCallMethod staticManaged2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, true);
-					IL2CPP_ASSERT(staticManaged2NativeMethod);
-					uint32_t staticManaged2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)staticManaged2NativeMethod);
-					if (retIdx < 0)
+					interpreter::LocationDataType locDataType = GetLocationDataTypeByType(returnType);
+					if (IsNeedExpandLocationType(locDataType))
 					{
-						CreateAddIR(ir, CallDelegate_void);
-						ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
-						ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
+						CreateAddIR(ir, CallVirtual_ret_expand);
+						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
+						ir->methodInfo = methodDataIndex;
 						ir->argIdxs = argIdxDataIndex;
-						ir->invokeParamCount = shareMethod->parameters_count;
+						ir->ret = retIdx;
+						ir->retLocationType = (uint8_t)locDataType;
 					}
 					else
 					{
-						interpreter::ArgDesc retDesc = GetTypeArgDesc(returnType);
-						if (IsNeedExpandLocationType(retDesc.type))
-						{
-							CreateAddIR(ir, CallDelegate_ret_expand);
-							ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
-							ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
-							ir->argIdxs = argIdxDataIndex;
-							ir->ret = retIdx;
-							ir->invokeParamCount = shareMethod->parameters_count;
-							ir->retLocationType = (uint8_t)retDesc.type;
-						}
-						else
-						{
-							CreateAddIR(ir, CallDelegate_ret);
-							ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
-							ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
-							ir->argIdxs = argIdxDataIndex;
-							ir->ret = retIdx;
-							ir->retTypeStackObjectSize = retDesc.stackObjectSize;
-							ir->invokeParamCount = shareMethod->parameters_count;
-						}
+						CreateAddIR(ir, CallVirtual_ret);
+						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
+						ir->methodInfo = methodDataIndex;
+						ir->argIdxs = argIdxDataIndex;
+						ir->ret = retIdx;
 					}
 				}
 				continue;
