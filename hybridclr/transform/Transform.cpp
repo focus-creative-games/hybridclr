@@ -852,7 +852,7 @@ else \
 						uint32_t staticManaged2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)staticManaged2NativeMethod);
 						if (retIdx < 0)
 						{
-							CreateAddIR(ir, CallDelegate_void);
+							CreateAddIR(ir, CallDelegateInvoke_void);
 							ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
 							ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
 							ir->argIdxs = argIdxDataIndex;
@@ -863,7 +863,7 @@ else \
 							interpreter::ArgDesc retDesc = GetTypeArgDesc(returnType);
 							if (IsNeedExpandLocationType(retDesc.type))
 							{
-								CreateAddIR(ir, CallDelegate_ret_expand);
+								CreateAddIR(ir, CallDelegateInvoke_ret_expand);
 								ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
 								ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
 								ir->argIdxs = argIdxDataIndex;
@@ -873,7 +873,7 @@ else \
 							}
 							else
 							{
-								CreateAddIR(ir, CallDelegate_ret);
+								CreateAddIR(ir, CallDelegateInvoke_ret);
 								ir->managed2NativeStaticMethod = staticManaged2NativeMethodDataIdx;
 								ir->managed2NativeInstanceMethod = managed2NativeMethodDataIdx;
 								ir->argIdxs = argIdxDataIndex;
@@ -889,7 +889,10 @@ else \
 					{
 						if (IsInterpreterMethod(shareMethod) || directlyCallMethodPointer == nullptr)
 						{
-							RaiseExecutionEngineException("not support call Interpreter Delegate::BeginInvoke");
+							CreateAddIR(ir, CallDelegateBeginInvoke);
+							ir->methodInfo = methodDataIndex;
+							ir->result = retIdx;
+							ir->argIdxs = argIdxDataIndex;
 							continue;
 						}
 					}
@@ -897,7 +900,19 @@ else \
 					{
 						if (IsInterpreterMethod(shareMethod) || directlyCallMethodPointer == nullptr)
 						{
-							RaiseExecutionEngineException("not support call Interpreter Delegate::EndInvoke");
+							if (retIdx < 0)
+							{
+								CreateAddIR(ir, CallDelegateEndInvoke_void);
+								ir->methodInfo = methodDataIndex;
+								ir->asyncResult = __argIdxs[1];
+							}
+							else
+							{
+								CreateAddIR(ir, CallDelegateEndInvoke_ret);
+								ir->methodInfo = methodDataIndex;
+								ir->asyncResult = __argIdxs[1];
+								ir->ret = retIdx;
+							}
 							continue;
 						}
 					}

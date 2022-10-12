@@ -1223,6 +1223,10 @@ inline void FixCallNativeThisPointer(const MethodInfo * method, StackObject * ds
 #endif
 }
 
+#pragma endregion
+
+#pragma region delegate
+
 inline void InvokeSingleDelegate(uint16_t invokeParamCount, const MethodInfo * method, Il2CppObject * obj, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t * argIdxs, StackObject * localVarBase, void* ret)
 {
 	StackObject* target;
@@ -1279,6 +1283,48 @@ inline void InvokeSingleDelegate(uint16_t invokeParamCount, const MethodInfo * m
 		RaiseExecutionEngineException("bad delegate");
 	}
 	}
+}
+
+inline Il2CppObject* InvokeDelegateBeginInvoke(const MethodInfo* method, uint16_t* argIdxs, StackObject* localVarBase)
+{
+	int32_t paramCount = method->parameters_count;
+	RuntimeDelegate* del = (RuntimeDelegate*)localVarBase[argIdxs[0]].obj;
+	CHECK_NOT_NULL_THROW(del);
+	RuntimeDelegate* callBack = (RuntimeDelegate*)localVarBase[argIdxs[paramCount - 1]].obj;
+	RuntimeObject* ctx = (RuntimeObject*)localVarBase[argIdxs[paramCount]].obj;
+	StackObject newArgs[256];
+	newArgs[paramCount - 1] = {};
+	for (int i = 0; i < paramCount - 2; i++)
+	{
+		const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
+		StackObject* argSrc = localVarBase + argIdxs[i+1];
+		StackObject* argDst = newArgs + i;
+		if (argType->byref)
+		{
+			argSrc = (StackObject*)argSrc->ptr;
+		}
+		if (hybridclr::metadata::IsValueType(argType))
+		{
+			argDst->obj = il2cpp::vm::Object::Box(il2cpp::vm::Class::FromIl2CppType(argType), argSrc);
+		}
+		else
+		{
+			*argDst = *argSrc;
+		}
+	}
+	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)del, (void**)newArgs, callBack, ctx);
+}
+
+inline void InvokeDelegateEndInvokeVoid(MethodInfo* method, Il2CppAsyncResult* asyncResult)
+{
+	il2cpp_codegen_delegate_end_invoke(asyncResult, 0);
+}
+
+inline void InvokeDelegateEndInvokeRet(MethodInfo* method, Il2CppAsyncResult* asyncResult, void* ret)
+{
+	Il2CppObject* result = il2cpp_codegen_delegate_end_invoke(asyncResult, 0);
+	Il2CppClass* retKlass = il2cpp::vm::Class::FromIl2CppType(method->return_type);
+	HiUnboxAny2StackObject(result, retKlass, ret);
 }
 
 #pragma endregion
@@ -4982,7 +5028,7 @@ else \
 				    ip += 24;
 				    continue;
 				}
-				case HiOpcodeEnum::CallDelegate_void:
+				case HiOpcodeEnum::CallDelegateInvoke_void:
 				{
 					uint32_t __managed2NativeStaticMethod = *(uint32_t*)(ip + 4);
 					uint32_t __managed2NativeInstanceMethod = *(uint32_t*)(ip + 8);
@@ -5100,7 +5146,7 @@ else \
 				    ip += 16;
 				    continue;
 				}
-				case HiOpcodeEnum::CallDelegate_ret:
+				case HiOpcodeEnum::CallDelegateInvoke_ret:
 				{
 					uint32_t __managed2NativeStaticMethod = *(uint32_t*)(ip + 8);
 					uint32_t __managed2NativeInstanceMethod = *(uint32_t*)(ip + 12);
@@ -5224,7 +5270,7 @@ else \
 				    ip += 24;
 				    continue;
 				}
-				case HiOpcodeEnum::CallDelegate_ret_expand:
+				case HiOpcodeEnum::CallDelegateInvoke_ret_expand:
 				{
 					uint32_t __managed2NativeStaticMethod = *(uint32_t*)(ip + 8);
 					uint32_t __managed2NativeInstanceMethod = *(uint32_t*)(ip + 12);
@@ -5345,6 +5391,32 @@ else \
 					}
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallDelegateBeginInvoke:
+				{
+					uint16_t __result = *(uint16_t*)(ip + 2);
+					uint32_t __methodInfo = *(uint32_t*)(ip + 4);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 8);
+					(*(Il2CppObject**)(localVarBase + __result)) = InvokeDelegateBeginInvoke(((MethodInfo*)imi->resolveDatas[__methodInfo]), ((uint16_t*)&imi->resolveDatas[__argIdxs]), localVarBase);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallDelegateEndInvoke_void:
+				{
+					uint32_t __methodInfo = *(uint32_t*)(ip + 4);
+					uint16_t __asyncResult = *(uint16_t*)(ip + 2);
+				    InvokeDelegateEndInvokeVoid(((MethodInfo*)imi->resolveDatas[__methodInfo]), (Il2CppAsyncResult*)(*(Il2CppObject**)(localVarBase + __asyncResult)));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CallDelegateEndInvoke_ret:
+				{
+					uint32_t __methodInfo = *(uint32_t*)(ip + 8);
+					uint16_t __asyncResult = *(uint16_t*)(ip + 2);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+				    InvokeDelegateEndInvokeRet(((MethodInfo*)imi->resolveDatas[__methodInfo]), (Il2CppAsyncResult*)(*(Il2CppObject**)(localVarBase + __asyncResult)), (void*)(localVarBase + __ret));
+				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::NewDelegate:
