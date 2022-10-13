@@ -5056,7 +5056,7 @@ else \
 								}
 								else
 								{
-									_argBasePtr = localVarBase + _resolvedArgIdxs[1];
+									_argBasePtr = __invokeParamCount == 0 ? _argBasePtr + 1 : localVarBase + _resolvedArgIdxs[1];
 								}
 								break;
 							}
@@ -5135,7 +5135,7 @@ else \
 								}
 								else
 								{
-									_argBasePtr = localVarBase + _resolvedArgIdxs[1];
+									_argBasePtr = __invokeParamCount == 0 ? _argBasePtr + 1 : localVarBase + _resolvedArgIdxs[1];
 								}
 								break;
 							}
@@ -5215,7 +5215,7 @@ else \
 								}
 								else
 								{
-									_argBasePtr = localVarBase + _resolvedArgIdxs[1];
+									_argBasePtr = __invokeParamCount == 0 ? _argBasePtr + 1 : localVarBase + _resolvedArgIdxs[1];
 								}
 								break;
 							}
