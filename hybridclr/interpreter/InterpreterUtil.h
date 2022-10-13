@@ -69,6 +69,28 @@ namespace interpreter
 		}
 	}
 
+	inline void CopyLocationData2StackDataByType(StackObject* dst, StackObject* src, LocationDataType type)
+	{
+		switch (type)
+		{
+		case hybridclr::interpreter::LocationDataType::I1:
+			*(int32_t*)dst = *(int8_t*)src;
+			break;
+		case hybridclr::interpreter::LocationDataType::U1:
+			*(int32_t*)dst = *(uint8_t*)src;
+			break;
+		case hybridclr::interpreter::LocationDataType::I2:
+			*(int32_t*)dst = *(int16_t*)src;
+			break;
+		case hybridclr::interpreter::LocationDataType::U2:
+			*(int32_t*)dst = *(uint16_t*)src;
+			break;
+		default:
+			*dst = *src;
+			break;
+		}
+	}
+
 	inline void ExpandLocationData2StackDataByType(void* retValue, Il2CppTypeEnum type)
 	{
 		switch (type)

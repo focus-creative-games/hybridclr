@@ -5260,8 +5260,7 @@ else \
 							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
 					}
-					*(StackObject*)_ret = tempRet[0];
-				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
+				    CopyLocationData2StackDataByType((StackObject*)_ret, tempRet, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;
 				}
