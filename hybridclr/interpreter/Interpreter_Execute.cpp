@@ -675,7 +675,7 @@ namespace interpreter
 		else
 		{
 			std::memmove(data, UnBox(obj, klass), klass->instance_size - sizeof(Il2CppObject));
-			ExpandLocationData2StackDataByType(data, klass->byval_arg.type);
+			ExpandLocationData2StackDataByType(data, klass);
 		}
 	}
 

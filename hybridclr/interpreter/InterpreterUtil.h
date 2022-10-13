@@ -91,8 +91,9 @@ namespace interpreter
 		}
 	}
 
-	inline void ExpandLocationData2StackDataByType(void* retValue, Il2CppTypeEnum type)
+	inline void ExpandLocationData2StackDataByType(void* retValue, Il2CppClass* klass)
 	{
+		Il2CppTypeEnum type = klass->enumtype ? klass->castClass->byval_arg.type : klass->byval_arg.type;
 		switch (type)
 		{
 		case IL2CPP_TYPE_BOOLEAN:
