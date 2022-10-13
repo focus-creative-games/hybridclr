@@ -661,6 +661,58 @@ namespace interpreter
 		return UnBox(obj, klass);
 	}
 
+	inline void CopyObjectData2StackDataByType(void* dst, void* src, Il2CppClass* klass)
+	{
+		IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+		Il2CppTypeEnum type = klass->enumtype ? klass->castClass->byval_arg.type : klass->byval_arg.type;
+		switch (type)
+		{
+		case IL2CPP_TYPE_BOOLEAN:
+		case IL2CPP_TYPE_I1:
+			*(int32_t*)dst = *(int8_t*)src;
+			break;
+		case IL2CPP_TYPE_U1:
+			*(int32_t*)dst = *(uint8_t*)src;
+			break;
+		case IL2CPP_TYPE_I2:
+			*(int32_t*)dst = *(int16_t*)src;
+			break;
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_CHAR:
+			*(int32_t*)dst = *(uint16_t*)src;
+			break;
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		case IL2CPP_TYPE_R4:
+			*(int32_t*)dst = *(int32_t*)src;
+			break;
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		case IL2CPP_TYPE_R8:
+			*(int64_t*)dst = *(int64_t*)src;
+			break;
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+#if HYBRIDCLR_ARCH_64
+			* (int64_t*)dst = *(int64_t*)src;
+#else
+			* (int32_t*)dst = *(int32_t*)src;
+#endif
+			break;
+		default:
+			int32_t dataSize = klass->instance_size - sizeof(Il2CppObject);
+			if (dataSize <= sizeof(StackObject))
+			{
+				*(StackObject*)dst = *(StackObject*)src;
+			}
+			else
+			{
+				std::memmove(dst, src, dataSize);
+			}
+			break;
+		}
+	}
+
 	inline void HiUnboxAny2StackObject(Il2CppObject* obj, Il2CppClass* klass, void* data)
 	{
 		if (il2cpp::vm::Class::IsNullable(klass))
@@ -674,8 +726,7 @@ namespace interpreter
 		}
 		else
 		{
-			std::memmove(data, UnBox(obj, klass), klass->instance_size - sizeof(Il2CppObject));
-			ExpandLocationData2StackDataByType(data, klass);
+			CopyObjectData2StackDataByType(data, UnBox(obj, klass), klass);
 		}
 	}
 
@@ -1288,24 +1339,24 @@ inline Il2CppObject* InvokeDelegateBeginInvoke(const MethodInfo* method, uint16_
 	CHECK_NOT_NULL_THROW(del);
 	RuntimeDelegate* callBack = (RuntimeDelegate*)localVarBase[argIdxs[paramCount - 1]].obj;
 	RuntimeObject* ctx = (RuntimeObject*)localVarBase[argIdxs[paramCount]].obj;
-	StackObject newArgs[256];
+	void* newArgs[256];
 	newArgs[paramCount - 1] = {};
 	for (int i = 0; i < paramCount - 2; i++)
 	{
 		const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
 		StackObject* argSrc = localVarBase + argIdxs[i+1];
-		StackObject* argDst = newArgs + i;
+		void** argDst = newArgs + i;
 		if (argType->byref)
 		{
 			argSrc = (StackObject*)argSrc->ptr;
 		}
 		if (hybridclr::metadata::IsValueType(argType))
 		{
-			argDst->obj = il2cpp::vm::Object::Box(il2cpp::vm::Class::FromIl2CppType(argType), argSrc);
+			*argDst = il2cpp::vm::Object::Box(il2cpp::vm::Class::FromIl2CppType(argType), argSrc);
 		}
 		else
 		{
-			*argDst = *argSrc;
+			*argDst = argSrc->ptr;
 		}
 	}
 	return (RuntimeObject*)il2cpp_codegen_delegate_begin_invoke((RuntimeDelegate*)del, (void**)newArgs, callBack, ctx);

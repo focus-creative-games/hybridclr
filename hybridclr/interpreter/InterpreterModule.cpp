@@ -388,8 +388,8 @@ namespace hybridclr
 				args[0].ptr = __this;
 			}
 			ConvertInvokeArgs(args + isInstanceMethod, method, __args);
-			IL2CPP_ASSERT(GetTypeArgDesc(method->return_type).stackObjectSize <= 1024);
-			StackObject ret[1024];
+			IL2CPP_ASSERT(GetTypeArgDesc(method->return_type).stackObjectSize <= hybridclr::metadata::kMaxRetValueTypeStackObjectSize);
+			StackObject ret[hybridclr::metadata::kMaxRetValueTypeStackObjectSize];
 			Interpreter::Execute(method, args, ret);
 			return TranslateNativeValueToBoxValue(method->return_type, ret);
 		}
