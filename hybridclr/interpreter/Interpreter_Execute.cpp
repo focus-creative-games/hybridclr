@@ -4973,6 +4973,10 @@ else \
 				        CALL_INTERP_VOID((ip + 16), _method, _argBasePtr);
 				        continue;
 					}
+					if (!GetInterpreterDirectlyCallMethodPointer(_method))
+					{
+				        RaiseAOTGenericMethodNotInstantiatedException(_method);
+					}
 				    _nativeMethodPointer(_method, _argIdxsPtr, localVarBase, nullptr);
 				    ip += 16;
 				    continue;
@@ -4996,6 +5000,10 @@ else \
 					{
 				        CALL_INTERP_RET((ip + 16), _method, _argBasePtr, _ret);
 				        continue;
+					}
+					if (!GetInterpreterDirectlyCallMethodPointer(_method))
+					{
+				        RaiseAOTGenericMethodNotInstantiatedException(_method);
 					}
 				    _nativeMethodPointer(_method, _argIdxsPtr, localVarBase, _ret);
 				    ip += 16;
@@ -5021,6 +5029,10 @@ else \
 					{
 				        CALL_INTERP_RET((ip + 24), _method, _argBasePtr, _ret);
 				        continue;
+					}
+					if (!GetInterpreterDirectlyCallMethodPointer(_method))
+					{
+				        RaiseAOTGenericMethodNotInstantiatedException(_method);
 					}
 				    _nativeMethodPointer(_method, _argIdxsPtr, localVarBase, _ret);
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
