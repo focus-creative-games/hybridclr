@@ -861,6 +861,12 @@ else \
 						else
 						{
 							interpreter::ArgDesc retDesc = GetTypeArgDesc(returnType);
+							if (retDesc.stackObjectSize > kMaxRetValueTypeStackObjectSize)
+							{
+								std::string methodName = GetMethodNameWithSignature(shareMethod);
+								TEMP_FORMAT(errMsg, " return type size of method:%s is %d, excced kMaxRetValueTypeStackObjectSize:%d", methodName.c_str(), retDesc.stackObjectSize, kMaxRetValueTypeStackObjectSize);
+								il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
+							}
 							if (IsNeedExpandLocationType(retDesc.type))
 							{
 								CreateAddIR(ir, CallDelegateInvoke_ret_expand);

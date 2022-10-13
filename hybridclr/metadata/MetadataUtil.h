@@ -316,6 +316,8 @@ namespace metadata
 
 #pragma region misc
 
+    const int32_t kMaxRetValueTypeStackObjectSize = 256;
+
     int32_t GetTypeValueSize(const Il2CppType* type);
 
     inline int32_t GetTypeValueSize(const Il2CppClass* klass)

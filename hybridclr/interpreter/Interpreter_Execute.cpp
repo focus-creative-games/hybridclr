@@ -1238,14 +1238,12 @@ inline void InvokeSingleDelegate(uint16_t invokeParamCount, const MethodInfo * m
 		{
 			CHECK_NOT_NULL_THROW(obj);
 			target = localVarBase + argIdxs[0];
-			Il2CppObject* oldTarget = target->obj;
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 			target->obj = obj + IS_CLASS_VALUE_TYPE(method->klass);
 #else
 			target->obj = obj;
 #endif
 			instanceM2NMethod(method, argIdxs, localVarBase, ret);
-			target->obj = oldTarget;
 		}
 		else
 		{
@@ -1258,10 +1256,8 @@ inline void InvokeSingleDelegate(uint16_t invokeParamCount, const MethodInfo * m
 	{
 		IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(method));
 		target = localVarBase + argIdxs[0];
-		Il2CppObject* oldTarget = target->obj;
 		target->obj = obj;
 		instanceM2NMethod(method, argIdxs, localVarBase, ret);
-		target->obj = oldTarget;
 		break;
 	}
 	case 1:
@@ -1564,6 +1560,9 @@ else \
 		Il2CppException* lastUnwindException;
 
 		PREPARE_NEW_FRAME_FROM_NATIVE(methodInfo, args, ret);
+
+		StackObject tempRet[kMaxRetValueTypeStackObjectSize];
+
 	LoopStart:
 		try
 		{
@@ -5084,48 +5083,7 @@ else \
 						{
 							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-							Managed2NativeCallMethod _managed2NativeCallMethod = nullptr;
-							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
-							{
-							case 0:
-								{
-									if (hybridclr::metadata::IsInstanceMethod(method))
-									{
-										CHECK_NOT_NULL_THROW(target);
-										FixCallNativeThisPointer(method, _argBasePtr, target);
-										_managed2NativeCallMethod = _instanceM2NMethod;
-									}
-									else
-									{
-										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod;
-										RuntimeInitClassCCtor(method);
-									}
-									break;
-								}
-							case -1:
-								{
-									_argBasePtr->obj = target;
-									_managed2NativeCallMethod = _instanceM2NMethod;
-									break;
-								}
-							case 1:
-								{
-									_resolvedArgIdxs++;
-									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
-					#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-									_argBasePtr->obj -= IS_CLASS_VALUE_TYPE(method->klass);
-					#endif
-									CHECK_NOT_NULL_THROW(_argBasePtr->obj);
-									_managed2NativeCallMethod = _staticM2NMethod;
-									break;
-								}
-							default:
-								{
-									RaiseExecutionEngineException("CallInterpDelegate");
-								}
-							}
-							_managed2NativeCallMethod(method, _resolvedArgIdxs, localVarBase, _ret);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
 					}
 					else
@@ -5140,7 +5098,7 @@ else \
 							IL2CPP_ASSERT(subDel->delegates == nullptr);
 							const MethodInfo* method = subDel->delegate.method;
 							Il2CppObject* target = subDel->delegate.target;
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, nullptr);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
 					}
 				    ip += 16;
@@ -5204,48 +5162,7 @@ else \
 						{
 							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-							Managed2NativeCallMethod _managed2NativeCallMethod = nullptr;
-							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
-							{
-							case 0:
-								{
-									if (hybridclr::metadata::IsInstanceMethod(method))
-									{
-										CHECK_NOT_NULL_THROW(target);
-										FixCallNativeThisPointer(method, _argBasePtr, target);
-										_managed2NativeCallMethod = _instanceM2NMethod;
-									}
-									else
-									{
-										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod;
-										RuntimeInitClassCCtor(method);
-									}
-									break;
-								}
-							case -1:
-								{
-									_argBasePtr->obj = target;
-									_managed2NativeCallMethod = _instanceM2NMethod;
-									break;
-								}
-							case 1:
-								{
-									_resolvedArgIdxs++;
-									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
-					#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-									_argBasePtr->obj -= IS_CLASS_VALUE_TYPE(method->klass);
-					#endif
-									CHECK_NOT_NULL_THROW(_argBasePtr->obj);
-									_managed2NativeCallMethod = _staticM2NMethod;
-									break;
-								}
-							default:
-								{
-									RaiseExecutionEngineException("CallInterpDelegate");
-								}
-							}
-							_managed2NativeCallMethod(method, _resolvedArgIdxs, localVarBase, _ret);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
 					}
 					else
@@ -5253,9 +5170,6 @@ else \
 						Il2CppArray* dels = _del->delegates;
 						Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 						Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-						constexpr int32_t TEMP_RET_SIZE = 128;
-						StackObject tempRet[TEMP_RET_SIZE];
-						IL2CPP_ASSERT(__retTypeStackObjectSize <= TEMP_RET_SIZE);
 						for (il2cpp_array_size_t i = 0; i < dels->max_length; i++)
 						{
 							Il2CppMulticastDelegate* subDel = il2cpp_array_get(dels, Il2CppMulticastDelegate *, i);
@@ -5265,8 +5179,8 @@ else \
 							Il2CppObject* target = subDel->delegate.target;
 							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
-						CopyStackObject((StackObject*)_ret, tempRet, __retTypeStackObjectSize);
 					}
+					CopyStackObject((StackObject*)_ret, tempRet, __retTypeStackObjectSize);
 				    ip += 24;
 				    continue;
 				}
@@ -5328,48 +5242,7 @@ else \
 						{
 							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-							Managed2NativeCallMethod _managed2NativeCallMethod = nullptr;
-							switch ((int32_t)__invokeParamCount - (int32_t)method->parameters_count)
-							{
-							case 0:
-								{
-									if (hybridclr::metadata::IsInstanceMethod(method))
-									{
-										CHECK_NOT_NULL_THROW(target);
-										FixCallNativeThisPointer(method, _argBasePtr, target);
-										_managed2NativeCallMethod = _instanceM2NMethod;
-									}
-									else
-									{
-										_resolvedArgIdxs++;
-										_managed2NativeCallMethod = _staticM2NMethod;
-										RuntimeInitClassCCtor(method);
-									}
-									break;
-								}
-							case -1:
-								{
-									_argBasePtr->obj = target;
-									_managed2NativeCallMethod = _instanceM2NMethod;
-									break;
-								}
-							case 1:
-								{
-									_resolvedArgIdxs++;
-									_argBasePtr = localVarBase + _resolvedArgIdxs[0];
-					#if HYBRIDCLR_UNITY_2021_OR_NEW == 0
-									_argBasePtr->obj -= IS_CLASS_VALUE_TYPE(method->klass);
-					#endif
-									CHECK_NOT_NULL_THROW(_argBasePtr->obj);
-									_managed2NativeCallMethod = _staticM2NMethod;
-									break;
-								}
-							default:
-								{
-									RaiseExecutionEngineException("CallInterpDelegate");
-								}
-							}
-							_managed2NativeCallMethod(method, _resolvedArgIdxs, localVarBase, _ret);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
 					}
 					else
@@ -5377,7 +5250,6 @@ else \
 						Il2CppArray* dels = _del->delegates;
 						Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 						Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-						StackObject tempRet[1];
 						for (il2cpp_array_size_t i = 0; i < dels->max_length; i++)
 						{
 							Il2CppMulticastDelegate* subDel = il2cpp_array_get(dels, Il2CppMulticastDelegate *, i);
@@ -5387,8 +5259,8 @@ else \
 							Il2CppObject* target = subDel->delegate.target;
 							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
 						}
-						*(StackObject*)_ret = tempRet[0];
 					}
+					*(StackObject*)_ret = tempRet[0];
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;
