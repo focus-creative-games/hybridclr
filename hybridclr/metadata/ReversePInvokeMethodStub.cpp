@@ -5,14 +5,15 @@ namespace hybridclr
 {
 namespace metadata
 {
-	//!!!{{REVERSE_PINVOKE_METHOD_STUB
-
+	
 	void CallLuaFunction(void* xState, int32_t wrapperIndex)
 	{
 		const MethodInfo* method = MetadataModule::GetMethodInfoByReversePInvokeWrapperIndex(wrapperIndex);
 		typedef void (*Callback)(void* xState, const MethodInfo* method);
-		((Callback)InitAndGetInterpreterDirectlyCallMethodPointer(method))(xState, method);
+		((Callback)(method->methodPointerCallByInterp))(xState, method);
 	}
+
+	//!!!{{REVERSE_PINVOKE_METHOD_STUB
 
 	void __ReversePInvokeMethod_0(void* xState)
 	{
