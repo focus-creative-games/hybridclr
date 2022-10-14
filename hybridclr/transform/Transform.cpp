@@ -694,20 +694,9 @@ else \
 					continue;
 				}
 
-				if (!GetInterpreterDirectlyCallMethodPointer(shareMethod))
+				if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
 				{
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
-				}
-
-				if (resolvedIsInstanceMethod)
-				{
-#if VALUE_TYPE_METHOD_POINTER_IS_ADJUST_METHOD
-					if (IS_CLASS_VALUE_TYPE(shareMethod->klass))
-					{
-						CreateAddIR(ir, AdjustValueTypeRefVar);
-						ir->data = ctx.GetEvalStackOffset(callArgEvalStackIdxBase);
-					}
-#endif
 				}
 
 				if (ctx.TryAddCallCommonInstruments(shareMethod, methodDataIndex))
@@ -890,7 +879,7 @@ else \
 						}
 						continue;
 					}
-					Il2CppMethodPointer directlyCallMethodPointer = GetInterpreterDirectlyCallMethodPointer(shareMethod);
+					Il2CppMethodPointer directlyCallMethodPointer = InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod);
 					if (std::strcmp(shareMethod->name, "BeginInvoke") == 0)
 					{
 						if (IsInterpreterMethod(shareMethod) || directlyCallMethodPointer == nullptr)
@@ -1935,7 +1924,7 @@ else \
 					continue;
 				}
 
-				if (!GetInterpreterDirectlyCallMethodPointer(shareMethod))
+				if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
 				{
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
 				}

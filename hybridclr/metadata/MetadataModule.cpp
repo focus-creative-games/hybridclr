@@ -25,29 +25,6 @@ using namespace il2cpp;
 
 namespace hybridclr
 {
-    Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method)
-    {
-        IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
-        method->initInterpCallMethodPointer = true;
-#if HYBRIDCLR_UNITY_2021_OR_NEW
-        if (hybridclr::metadata::MetadataModule::IsImplementedByInterpreter(method))
-        {
-            method->interpCallMethodPointer = hybridclr::interpreter::InterpreterModule::GetMethodPointer(method);
-            method->isInterpterImpl = true;
-        }
-        return method->interpCallMethodPointer;
-#else
-        if (hybridclr::metadata::MetadataModule::IsImplementedByInterpreter(method))
-        {
-            method->methodPointer = method->klass->valuetype && hybridclr::metadata::IsInstanceMethod(method) ?
-                hybridclr::interpreter::InterpreterModule::GetAdjustThunkMethodPointer(method)
-                : hybridclr::interpreter::InterpreterModule::GetMethodPointer(method);
-            method->invoker_method = hybridclr::interpreter::InterpreterModule::GetMethodInvoker(method);
-            method->isInterpterImpl = true;
-        }
-        return method->methodPointer;
-#endif
-    }
 
 namespace metadata
 {

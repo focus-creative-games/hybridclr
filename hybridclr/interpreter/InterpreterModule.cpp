@@ -269,11 +269,6 @@ namespace hybridclr
 			return it != g_managed2natives.end()? it->second : Managed2NativeCallByReflectionInvoke;
 		}
 
-		inline void* AdjustValueTypeSelfPointer(Il2CppObject* __this)
-		{
-			return __this + IS_CLASS_VALUE_TYPE(__this->klass);
-		}
-
 	static void RaiseExecutionEngineExceptionMethodIsNotFound(const MethodInfo* method)
 	{
 		if (il2cpp::vm::Method::GetClass(method))
@@ -365,29 +360,21 @@ namespace hybridclr
 #else
 	static void* InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args)
 	{
+		StackObject args[256];
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
 		if (isInstanceMethod)
 		{
-			__this = AdjustValueTypeSelfPointer((Il2CppObject*)__this);
+			__this = (Il2CppObject*)__this + IS_CLASS_VALUE_TYPE(((Il2CppObject*)__this)->klass);
+			args[0].ptr = __this;
 		}
-		StackObject args[256];
+		ConvertInvokeArgs(args + isInstanceMethod, method, __args);
 		if (method->return_type->type == IL2CPP_TYPE_VOID)
 		{
-			if (isInstanceMethod)
-			{
-				args[0].ptr = __this;
-			}
-			ConvertInvokeArgs(args + isInstanceMethod, method, __args);
 			Interpreter::Execute(method, args, nullptr);
 			return nullptr;
 		}
 		else
 		{
-			if (isInstanceMethod)
-			{
-				args[0].ptr = __this;
-			}
-			ConvertInvokeArgs(args + isInstanceMethod, method, __args);
 			IL2CPP_ASSERT(GetTypeArgDesc(method->return_type).stackObjectSize <= hybridclr::metadata::kMaxRetValueTypeStackObjectSize);
 			StackObject ret[hybridclr::metadata::kMaxRetValueTypeStackObjectSize];
 			Interpreter::Execute(method, args, ret);

@@ -98,5 +98,6 @@ namespace interpreter
 		return type <= LocationDataType::U8;
 	}
 	Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value);
+
 }
 }

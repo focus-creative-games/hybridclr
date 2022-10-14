@@ -76,6 +76,26 @@
 #define ENABLE_PLACEHOLDER_DLL 1
 #endif
 
+namespace hybridclr
+{
+
+	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
+
+	inline Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
+	{
+		Il2CppMethodPointer methodPointer = method->methodPointerCallByInterp;
+		if (methodPointer)
+		{
+			return methodPointer;
+		}
+		if (method->initInterpCallMethodPointer)
+		{
+			return methodPointer;
+		}
+		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
+	}
+}
+
 #if HYBRIDCLR_UNITY_2019 || HYBRIDCLR_UNITY_2020
 
 inline bool IS_CLASS_VALUE_TYPE(const Il2CppClass* klass)
@@ -113,18 +133,6 @@ inline void COPY_IL2CPPTYPE_VALUE_TYPE_FLAG(Il2CppType& dst, const Il2CppType& s
 
 namespace hybridclr
 {
-	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
-
-	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
-	{
-		Il2CppMethodPointer methodPointer = method->methodPointer;
-		if (methodPointer || method->initInterpCallMethodPointer)
-		{
-			return methodPointer;
-		}
-		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
-	}
-
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
 	{
 		return il2cpp::icalls::mscorlib::System::Type::internal_from_name(name, true, false);
@@ -132,7 +140,7 @@ namespace hybridclr
 
 	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)
 	{
-		il2cpp::vm::Type::ConstructDelegate(delegate, target, GetInterpreterDirectlyCallMethodPointer(method), method);
+		il2cpp::vm::Type::ConstructDelegate(delegate, target, InitAndGetInterpreterDirectlyCallMethodPointer(method), method);
 	}
 
 	inline const MethodInfo* GetGenericVirtualMethod(const MethodInfo* result, const MethodInfo* inflateMethod)
@@ -195,17 +203,6 @@ inline void COPY_IL2CPPTYPE_VALUE_TYPE_FLAG(Il2CppType& dst, const Il2CppType& s
 
 namespace hybridclr
 {
-	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
-
-	inline Il2CppMethodPointer GetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)
-	{
-		Il2CppMethodPointer methodPointer = method->indirect_call_via_invokers ? method->interpCallMethodPointer : method->methodPointer;
-		if (methodPointer || method->initInterpCallMethodPointer)
-		{
-			return methodPointer;
-		}
-		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
-	}
 
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
 	{
@@ -216,7 +213,7 @@ namespace hybridclr
 	{
 		delegate->target = target;
 		delegate->method = method;
-		delegate->invoke_impl = GetInterpreterDirectlyCallMethodPointer(method);
+		delegate->invoke_impl = InitAndGetInterpreterDirectlyCallMethodPointer(method);
 		delegate->invoke_impl_this = target;
 	}
 

@@ -11,7 +11,7 @@ namespace metadata
 	{
 		const MethodInfo* method = MetadataModule::GetMethodInfoByReversePInvokeWrapperIndex(wrapperIndex);
 		typedef void (*Callback)(void* xState, const MethodInfo* method);
-		((Callback)GetInterpreterDirectlyCallMethodPointer(method))(xState, method);
+		((Callback)InitAndGetInterpreterDirectlyCallMethodPointer(method))(xState, method);
 	}
 
 	void __ReversePInvokeMethod_0(void* xState)
