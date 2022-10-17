@@ -6,6 +6,12 @@ namespace hybridclr
 {
 namespace metadata
 {
-	extern Il2CppMethodPointer s_ReversePInvokeMethodStub[];
+	struct ReversePInvokeMethodData
+	{
+		const char* methodSig;
+		Il2CppMethodPointer methodPointer;
+	};
+
+	extern ReversePInvokeMethodData g_reversePInvokeMethodStub[];
 }
 }
