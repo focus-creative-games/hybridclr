@@ -1,5 +1,3 @@
-#include "MethodBridge.h"
-
 #include <codegen/il2cpp-codegen-metadata.h>
 #include "vm/ClassInlines.h"
 #include "vm/Object.h"
@@ -8,14 +6,15 @@
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
 
-#include "Interpreter.h"
-#include "MemoryUtil.h"
-#include "InstrinctDef.h"
+#include "../interpreter/MethodBridge.h"
+#include "../interpreter/Interpreter.h"
+#include "../interpreter/MemoryUtil.h"
+#include "../interpreter/InstrinctDef.h"
 
 using namespace hybridclr::interpreter;
 
 #if HYBRIDCLR_ABI_UNIVERSAL_64
-//!!!{{INVOKE_STUB
+//!!!{{CODE
 
 // System.SByte AOTDefs.TC_Ret::Ret_sbyte_minus1()
 static void __M2N_i1(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
@@ -1937,7 +1936,7 @@ static void __M2N_i4i8S256i8(const MethodInfo* method, uint16_t* argVarIndexs, S
 }
 
 
-// System.Int32 System.Collections.Generic.IComparer`1::Compare(T,T)
+// System.Int32 System.Collections.Generic.Comparer`1::Compare(T,T)
 static void __M2N_i4i8S256S256(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
     typedef int32_t (*NativeMethod)(int64_t __arg0, ValueTypeSize<256> __arg1, ValueTypeSize<256> __arg2, const MethodInfo* method);
@@ -1977,7 +1976,7 @@ static void __M2N_i4i8S272i8(const MethodInfo* method, uint16_t* argVarIndexs, S
 }
 
 
-// System.Int32 System.Collections.Generic.Comparer`1::Compare(T,T)
+// System.Int32 System.Collections.Generic.IComparer`1::Compare(T,T)
 static void __M2N_i4i8S272S272(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
     typedef int32_t (*NativeMethod)(int64_t __arg0, ValueTypeSize<272> __arg1, ValueTypeSize<272> __arg2, const MethodInfo* method);
@@ -21073,7 +21072,7 @@ static void __M2N_vu1u1i8(const MethodInfo* method, uint16_t* argVarIndexs, Stac
 }
 
 
-// System.Void UnityEngine.Assertions.Assert::AreNotEqual<T>(T,T,System.String,System.Collections.Generic.IEqualityComparer`1<T>)
+// System.Void UnityEngine.Assertions.Assert::AreEqual<T>(T,T,System.String,System.Collections.Generic.IEqualityComparer`1<T>)
 static void __M2N_vu1u1i8i8(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
     typedef void (*NativeMethod)(uint8_t __arg0, uint8_t __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method);
@@ -21193,7 +21192,7 @@ static void __M2N_vu8u8i8(const MethodInfo* method, uint16_t* argVarIndexs, Stac
 }
 
 
-// System.Void UnityEngine.Assertions.Assert::AreEqual<T>(T,T,System.String,System.Collections.Generic.IEqualityComparer`1<T>)
+// System.Void UnityEngine.Assertions.Assert::AreNotEqual<T>(T,T,System.String,System.Collections.Generic.IEqualityComparer`1<T>)
 static void __M2N_vu8u8i8i8(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 {
     typedef void (*NativeMethod)(uint64_t __arg0, uint64_t __arg1, int64_t __arg2, int64_t __arg3, const MethodInfo* method);
@@ -24194,7 +24193,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"vvf4i8vf4i4i4i4i4vf4i8i4", __M2N_vvf4i8vf4i4i4i4i4vf4i8i4},
 	{"vvf4i8vf4u1", __M2N_vvf4i8vf4u1},
 	{"vvf4vf2vf2u1", __M2N_vvf4vf2vf2u1},
-	{nullptr, nullptr},
+	{"", nullptr},
 };
 
 // System.SByte AOTDefs.TC_Ret/F1::Invoke()
@@ -25467,7 +25466,7 @@ static int32_t __N2M_i4i8S256(int64_t __arg0, ValueTypeSize<256> __arg1, const M
 }
 
 
-// System.Int32 System.Collections.Generic.IComparer`1::Compare(T,T)
+// System.Int32 System.Collections.Generic.Comparer`1::Compare(T,T)
 static int32_t __N2M_i4i8S256S256(int64_t __arg0, ValueTypeSize<256> __arg1, ValueTypeSize<256> __arg2, const MethodInfo* method)
 {
     StackObject args[4] = {*(uint64_t*)&__arg0, (uint64_t)&__arg1, (uint64_t)&__arg2 };
@@ -25487,7 +25486,7 @@ static int32_t __N2M_i4i8S272(int64_t __arg0, ValueTypeSize<272> __arg1, const M
 }
 
 
-// System.Int32 System.Collections.Generic.Comparer`1::Compare(T,T)
+// System.Int32 System.Collections.Generic.IComparer`1::Compare(T,T)
 static int32_t __N2M_i4i8S272S272(int64_t __arg0, ValueTypeSize<272> __arg1, ValueTypeSize<272> __arg2, const MethodInfo* method)
 {
     StackObject args[4] = {*(uint64_t*)&__arg0, (uint64_t)&__arg1, (uint64_t)&__arg2 };
@@ -32487,7 +32486,7 @@ static uint64_t __N2M_u8i8i8i4(int64_t __arg0, int64_t __arg1, int32_t __arg2, c
 }
 
 
-// T RefFunc`2::EndInvoke(A&,System.IAsyncResult)
+// T RefFunc`1::EndInvoke(T&,System.IAsyncResult)
 static uint64_t __N2M_u8i8i8i8(int64_t __arg0, int64_t __arg1, int64_t __arg2, const MethodInfo* method)
 {
     StackObject args[4] = {*(uint64_t*)&__arg0, *(uint64_t*)&__arg1, *(uint64_t*)&__arg2 };
@@ -40511,5 +40510,5 @@ NativeAdjustThunkMethodInfo hybridclr::interpreter::g_adjustThunkStub[] =
 	{nullptr, nullptr},
 };
 
-//!!!}}INVOKE_STUB
+//!!!}}CODE
 #endif
