@@ -88,17 +88,17 @@ namespace metadata
             TEMP_FORMAT(methodSigBuf, "GetReversePInvokeWrapper fail. not find wrapper of method:%s", GetMethodNameWithSignature(method).c_str());
             RaiseExecutionEngineException(methodSigBuf);
         }
-
-        ReversePInvokeMethodData& data = g_reversePInvokeMethodStub[it2->second];
+        int32_t wrapperIndex = it2->second;
+        ReversePInvokeMethodData& data = g_reversePInvokeMethodStub[wrapperIndex];
         if (data.methodPointer == nullptr || std::strcmp(data.methodSig, sigName))
         {
             TEMP_FORMAT(methodSigBuf, "GetReversePInvokeWrapper fail. exceed max wrapper num of method:%s", GetMethodNameWithSignature(method).c_str());
             RaiseExecutionEngineException(methodSigBuf);
         }
 
-        s_methodSig2Indexs[sigName] = it2->second + 1;
+        s_methodSig2Indexs[sigName] = wrapperIndex + 1;
 
-        ReversePInvokeInfo& rpi = s_reverseInfos[it2->second];
+        ReversePInvokeInfo& rpi = s_reverseInfos[wrapperIndex];
         rpi.methodInfo = method;
         s_methodInfo2ReverseInfos.insert({ method, &rpi });
         return rpi.methodPointer;
