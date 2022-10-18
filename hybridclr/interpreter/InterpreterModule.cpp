@@ -255,6 +255,10 @@ namespace hybridclr
 
 		Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const MethodInfo* method, bool forceStatic)
 		{
+			if (method->methodPointerCallByInterp == NotSupportNative2Managed)
+			{
+				return Managed2NativeCallByReflectionInvoke;
+			}
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = g_managed2natives.find(sigName);
@@ -266,7 +270,7 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(&method.returnType, method.params, method.paramCount, metadata::IsPrologHasThis(method.flags), sigName, sizeof(sigName) - 1);
 			auto it = g_managed2natives.find(sigName);
-			return it != g_managed2natives.end()? it->second : Managed2NativeCallByReflectionInvoke;
+			return it != g_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
 		}
 
 	static void RaiseExecutionEngineExceptionMethodIsNotFound(const MethodInfo* method)
