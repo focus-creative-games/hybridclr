@@ -23,7 +23,7 @@ namespace interpreter
 		{
 			return { LocationDataType::SR, (uint32_t)metadata::GetStackSizeByByteSize(size) };
 		}
-#elif HYBRIDCLR_ABI_UNIVERSAL_64 || HYBRIDCLR_ABI_UNIVERSAL_32
+#elif HYBRIDCLR_ABI_UNIVERSAL_64 || HYBRIDCLR_ABI_UNIVERSAL_32 || HYBRIDCLR_ABI_WEBGL32
 		if (size <= 8)
 		{
 			return { LocationDataType::U8, 1 };

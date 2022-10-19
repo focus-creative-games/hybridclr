@@ -123,6 +123,13 @@ namespace hybridclr
 			}
 		}
 
+
+		struct HFATypeInfo
+		{
+			const Il2CppType* eleType;
+			int32_t count;
+		};
+
 		static bool ComputeHFATypeInfo0(Il2CppClass* klass, HFATypeInfo& typeInfo)
 		{
 			il2cpp::vm::Class::SetupFields(klass);
@@ -166,7 +173,7 @@ namespace hybridclr
 			return typeInfo.count <= 4;
 		}
 
-		bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo)
+		static bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo)
 		{
 			typeInfo = {};
 			int32_t size = metadata::GetTypeValueSize(klass);
@@ -185,6 +192,84 @@ namespace hybridclr
 			{
 				int32_t fieldSize = typeInfo.eleType->type == IL2CPP_TYPE_R4 ? 4 : 8;
 				return size == fieldSize * typeInfo.count;
+			}
+			return false;
+		}
+
+		struct SingletonStruct
+		{
+			const Il2CppType* type;
+		};
+
+		static bool ComputSingletonStruct0(Il2CppClass* klass, SingletonStruct& ss)
+		{
+			il2cpp::vm::Class::SetupFields(klass);
+			if (klass->enumtype)
+			{
+				if (ss.type == nullptr)
+				{
+					ss.type = &klass->castClass->byval_arg;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			for (uint16_t i = 0; i < klass->field_count; i++)
+			{
+				FieldInfo* field = klass->fields + i;
+				const Il2CppType* ftype = field->type;
+				if (!metadata::IsInstanceField(ftype))
+				{
+					continue;
+				}
+				switch (ftype->type)
+				{
+				case IL2CPP_TYPE_TYPEDBYREF: return false;
+				case IL2CPP_TYPE_VALUETYPE:
+				{
+					if (!ComputSingletonStruct0(il2cpp::vm::Class::FromIl2CppType(ftype), ss))
+					{
+						return false;
+					}
+					break;
+				}
+				case IL2CPP_TYPE_GENERICINST:
+				{
+					Il2CppClass* fieldKlass = il2cpp::vm::Class::FromIl2CppType(ftype);
+					if (IS_CLASS_VALUE_TYPE(fieldKlass))
+					{
+						if (!ComputSingletonStruct0(fieldKlass, ss))
+						{
+							return false;
+						}
+						break;
+					}
+					// else fallback
+				}
+				default:
+				{
+					if (ss.type == nullptr)
+					{
+						ss.type = ftype;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				}
+			}
+			return true;
+		}
+
+		static bool ComputSingletonStruct(Il2CppClass* klass, SingletonStruct& ss)
+		{
+			ss = {};
+			if (ComputSingletonStruct0(klass, ss) && ss.type)
+			{
+				return true;
 			}
 			return false;
 		}
@@ -223,7 +308,7 @@ namespace hybridclr
 		}
 		static void AppendValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, bool returnValue, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
-#if HYBRIDCLR_ABI_UNIVERSAL_32 || HYBRIDCLR_ABI_UNIVERSAL_64
+#if HYBRIDCLR_ABI_UNIVERSAL_32 || HYBRIDCLR_ABI_UNIVERSAL_64 || HYBRIDCLR_ABI_WEBGL32
 			switch (aligment)
 			{
 			case 0:
@@ -274,6 +359,8 @@ namespace hybridclr
 #error "not support ABI"
 #endif
 		}
+
+		static void AppendSignature(const Il2CppType* type, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos);
 
 		static void AppendValueTypeSignature(Il2CppClass* klass, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
@@ -332,6 +419,17 @@ namespace hybridclr
 #elif HYBRIDCLR_ABI_UNIVERSAL_32
 			uint8_t actualAligment = klass->naturalAligment <= 4 ? 1 : 8;
 			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
+#elif HYBRIDCLR_ABI_WEBGL32
+			//SingletonStruct ss = {};
+			//if (ComputSingletonStruct(klass, ss))
+			//{
+			//	AppendSignature(ss.type, returnType, sigBuf, bufferSize, pos);
+			//}
+			//else
+			//{
+			uint8_t actualAligment = klass->naturalAligment;
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
+			//}
 #else
 #error "not support platform"
 #endif
@@ -380,7 +478,7 @@ namespace hybridclr
 			switch (type->type)
 			{
 			case IL2CPP_TYPE_VOID: AppendString(sigBuf, bufferSize, pos, "v"); break;
-#if IL2CPP_TARGET_ARM64 || HYBRIDCLR_TARGET_X64 || IL2CPP_TARGET_ARMV7 || HYBRIDCLR_TARGET_X86 || IL2CPP_TARGET_JAVASCRIPT
+#if HYBRIDCLR_ABI_ARM_64 || HYBRIDCLR_ABI_UNIVERSAL_64 || HYBRIDCLR_ABI_UNIVERSAL_32 || HYBRIDCLR_ABI_WEBGL32
 			case IL2CPP_TYPE_BOOLEAN: AppendString(sigBuf, bufferSize, pos, "u1"); break;
 			case IL2CPP_TYPE_I1: AppendString(sigBuf, bufferSize, pos, "i1"); break;
 			case IL2CPP_TYPE_U1: AppendString(sigBuf, bufferSize, pos, "u1"); break;
@@ -399,7 +497,7 @@ namespace hybridclr
 			case IL2CPP_TYPE_TYPEDBYREF:
 			{
 				IL2CPP_ASSERT(sizeof(Il2CppTypedRef) == sizeof(void*) * 3);
-				AppendValueTypeSignature(il2cpp_defaults.typed_reference_class, returnType, sigBuf, bufferSize, pos);
+				AppendValueTypeSignatureByAligmentAndSize(sizeof(Il2CppTypedRef), PTR_SIZE, returnType, sigBuf, bufferSize, pos);
 				break;
 			}
 			case IL2CPP_TYPE_VALUETYPE:

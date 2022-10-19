@@ -76,12 +76,5 @@ namespace interpreter
 	bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize);
 	bool ComputeSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize);
 
-	struct HFATypeInfo
-	{
-		const Il2CppType* eleType;
-		int32_t count;
-	};
-
-	bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo);
 }
 }
