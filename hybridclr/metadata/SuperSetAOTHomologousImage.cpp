@@ -128,7 +128,7 @@ namespace metadata
 	static const Il2CppMethodDefinition* FindMatchMethod(const Il2CppClass* klass1, const SuperSetMethodDefDetail& method2)
 	{
 		il2cpp::vm::Class::SetupMethods(const_cast<Il2CppClass*>(klass1));
-		Il2CppGenericContainer* klassGenContainer = klass1->is_generic ? (Il2CppGenericContainer*)klass1->genericContainerHandle : nullptr;
+		const Il2CppGenericContainer* klassGenContainer = klass1->is_generic ? GetGenericContainerFromIl2CppType(&klass1->byval_arg) : nullptr;
 		for (uint16_t i = 0; i < klass1->method_count; i++)
 		{
 			const MethodInfo* method1 = klass1->methods[i];
@@ -210,7 +210,7 @@ namespace metadata
 	const Il2CppFieldDefinition* FindMatchField(const Il2CppClass* klass1, const SuperSetFieldDefDetail& field2)
 	{
 		il2cpp::vm::Class::SetupFields(const_cast<Il2CppClass*>(klass1));
-		Il2CppGenericContainer* klassGenContainer = klass1->is_generic ? (Il2CppGenericContainer*)klass1->genericContainerHandle : nullptr;
+		const Il2CppGenericContainer* klassGenContainer = klass1->is_generic ? GetGenericContainerFromIl2CppType(&klass1->byval_arg) : nullptr;
 		for (uint16_t i = 0; i < klass1->field_count; i++)
 		{
 			const FieldInfo* field1 = klass1->fields + i;
