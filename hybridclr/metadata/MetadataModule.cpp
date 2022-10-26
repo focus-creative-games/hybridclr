@@ -18,7 +18,8 @@
 #include "../interpreter/InterpreterModule.h"
 
 #include "InterpreterImage.h"
-#include "AOTHomologousImage.h"
+#include "ConsistentAOTHomologousImage.h"
+#include "SuperSetAOTHomologousImage.h"
 #include "ReversePInvokeMethodStub.h"
 
 using namespace il2cpp;
@@ -102,6 +103,33 @@ namespace metadata
         rpi.methodInfo = method;
         s_methodInfo2ReverseInfos.insert({ method, &rpi });
         return rpi.methodPointer;
+    }
+
+
+    LoadImageErrorCode MetadataModule::LoadMetadataForAOTAssembly(void* dllBytes, uint32_t dllSize, HomologousImageMode mode)
+    {
+        il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
+
+        AOTHomologousImage* image = nullptr;
+        switch (mode)
+        {
+        case HomologousImageMode::CONSISTENT: image = new ConsistentAOTHomologousImage(); break;
+        case HomologousImageMode::SUPERSET: image = new SuperSetAOTHomologousImage(); break;
+        default: return LoadImageErrorCode::INVALID_HOMOLOGOUS_MODE;
+        }
+
+        LoadImageErrorCode err = image->Load((byte*)CopyBytes(dllBytes, dllSize), dllSize);
+        if (err != LoadImageErrorCode::OK)
+        {
+            return err;
+        }
+        if (AOTHomologousImage::FindImageByAssemblyLocked(image->GetAOTAssembly(), lock))
+        {
+            return LoadImageErrorCode::HOMOLOGOUS_ASSEMBLY_HAS_LOADED;
+        }
+        image->InitRuntimeMetadatas();
+        AOTHomologousImage::RegisterLocked(image, lock);
+        return LoadImageErrorCode::OK;
     }
 }
 }

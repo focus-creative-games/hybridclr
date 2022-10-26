@@ -408,12 +408,20 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_VAR:
 		{
+			if ((int32_t)sigType->data.__genericParameterIndex >= klassGenericContainer->type_argc)
+			{
+				return false;
+			}
 			Il2CppMetadataGenericParameterHandle sigGph = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(
 				(Il2CppMetadataGenericContainerHandle)klassGenericContainer, sigType->data.__genericParameterIndex);
 			return dstType->data.genericParameterHandle == sigGph;
 		}
 		case IL2CPP_TYPE_MVAR:
 		{
+			if ((int32_t)sigType->data.__genericParameterIndex >= methodGenericContainer->type_argc)
+			{
+				return false;
+			}
 			Il2CppMetadataGenericParameterHandle sigGph = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(
 				(Il2CppMetadataGenericContainerHandle)methodGenericContainer, sigType->data.__genericParameterIndex);
 			return dstType->data.genericParameterHandle == sigGph;
@@ -513,13 +521,27 @@ namespace metadata
 	}
 
 
-	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer, uint32_t genericArgCount)
+	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
 	{
 		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
 		{
 			return false;
 		}
-		Il2CppGenericContainer* methodGenericContainer = nullptr;
+		Il2CppGenericContainer* methodGenericContainer = methodDef->is_generic ? (Il2CppGenericContainer*)methodDef->genericContainerHandle : nullptr;
+		if (methodGenericContainer)
+		{
+			if (methodGenericContainer->type_argc != resolveSig.genericParamCount)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if (resolveSig.genericParamCount)
+			{
+				return false;
+			}
+		}
 		const Il2CppType* returnType1 = &resolveSig.returnType;
 		const Il2CppType* returnType2 = methodDef->return_type;
 		if (!IsMatchSigType(returnType2, returnType1, klassGenericContainer, methodGenericContainer))
@@ -538,7 +560,7 @@ namespace metadata
 		return true;
 	}
 
-	bool IsMatchMethodSig(const Il2CppMethodDefinition* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer, uint32_t genericArgCount)
+	bool IsMatchMethodSig(const Il2CppMethodDefinition* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
 	{
 		if (methodDef->parameterCount != (uint16_t)resolveSig.params.size())
 		{
@@ -548,19 +570,15 @@ namespace metadata
 		// if generic param not match. return false
 		if (methodDef->genericContainerIndex == kGenericContainerIndexInvalid)
 		{
-			if (genericArgCount != 0)
+			if (resolveSig.genericParamCount)
 			{
 				return false;
 			}
 		}
 		else
 		{
-			if (genericArgCount == 0)
-			{
-				return false;
-			}
 			methodGenericContainer = (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(methodDef->genericContainerIndex);
-			if (genericArgCount != methodGenericContainer->type_argc)
+			if (resolveSig.genericParamCount != methodGenericContainer->type_argc)
 			{
 				return false;
 			}
@@ -612,7 +630,7 @@ namespace metadata
 	}
 
 
-	const Il2CppMethodDefinition* ResolveMethodDefinition(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, int32_t genericParamCount)
+	const Il2CppMethodDefinition* ResolveMethodDefinition(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig)
 	{
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
 		const Il2CppGenericContainer* klassGenericContainer = GetGenericContainerFromIl2CppType(type);
@@ -621,7 +639,7 @@ namespace metadata
 		{
 			const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef->methodStart + i);
 			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex);
-			if (std::strcmp(resolveMethodName, methodName) == 0 && IsMatchMethodSig(methodDef, resolveSig, klassGenericContainer, genericParamCount))
+			if (std::strcmp(resolveMethodName, methodName) == 0 && IsMatchMethodSig(methodDef, resolveSig, klassGenericContainer))
 			{
 				return methodDef;
 			}

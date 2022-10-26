@@ -1,14 +1,14 @@
 #include "CommonDef.h"
 
-#include "metadata/AOTHomologousImage.h"
+#include "metadata/MetadataModule.h"
 #include "HybridCLRConfig.h"
 
 extern "C"
 {
 
-	IL2CPP_EXPORT int32_t DEFAULT_CALL RuntimeApi_LoadMetadataForAOTAssembly(void* dllBytes, uint32_t dllSize)
+	IL2CPP_EXPORT int32_t DEFAULT_CALL RuntimeApi_LoadMetadataForAOTAssembly(void* dllBytes, uint32_t dllSize, int32_t mode)
 	{
-		return hybridclr::metadata::AOTHomologousImage::LoadMetadataForAOTAssembly(dllBytes, dllSize);
+		return (int32_t)hybridclr::metadata::MetadataModule::LoadMetadataForAOTAssembly(dllBytes, dllSize, (hybridclr::metadata::HomologousImageMode)mode);
 	}
 
 	IL2CPP_EXPORT uint32_t DEFAULT_CALL RuntimeApi_GetInterpreterThreadObjectStackSize()

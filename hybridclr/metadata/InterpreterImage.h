@@ -185,13 +185,13 @@ namespace metadata
 			return GetTypeRawIndex((const Il2CppTypeDefinition*)_types[DecodeMetadataIndex(il2cppTypeIndex)].data.typeHandle);
 		}
 
-		const Il2CppTypeDefinition* GetTypeFromRawIndex(uint32_t index) const override
+		const Il2CppTypeDefinition* GetTypeFromRawIndex(uint32_t index) const
 		{
 			IL2CPP_ASSERT((size_t)index < _typesDefines.size());
 			return &_typesDefines[index];
 		}
 
-		const Il2CppType* GetIl2CppTypeFromRawIndex(uint32_t index) const override
+		const Il2CppType* GetIl2CppTypeFromRawIndex(uint32_t index) const
 		{
 			IL2CPP_ASSERT((size_t)index < _types.size());
 			return &_types[index];
@@ -255,7 +255,7 @@ namespace metadata
 			return nullptr;
 		}
 
-		Il2CppGenericContainer* GetGenericContainerByTypeDefIndex(int32_t typeDefIndex) override
+		Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override
 		{
 			IL2CPP_ASSERT(typeDefIndex < (int32_t)_typeDetails.size());
 			return GetGenericContainerByTypeDefinition(&_typesDefines[typeDefIndex]);
@@ -458,20 +458,12 @@ namespace metadata
 
 		Il2CppInterfaceOffsetInfo GetInterfaceOffsetInfo(const Il2CppTypeDefinition* typeDefine, TypeInterfaceOffsetIndex index);
 
-		const MethodInfo* GetMethodInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext) override;
-		const FieldInfo* GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext) override;
-		void GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig) override;
-
 		uint32_t AddIl2CppTypeCache(Il2CppType& type);
 
 		uint32_t AddIl2CppGenericContainers(Il2CppGenericContainer& geneContainer);
 
-		void ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret);
-		const MethodInfo* ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex);
-		const MethodInfo* GetMethodInfo(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext) override;
-		
+		void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 		void ReadMethodDefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr);
-		
 
 		void InitBasic(Il2CppImage* image);
 		void BuildIl2CppImage(Il2CppImage* image);

@@ -352,7 +352,7 @@ namespace metadata
 
 			BlobReader br = _rawImage.GetBlobReaderByRawIndex(data.signature);
 			FieldRefSig frs;
-			ReadFieldRefSig(br, GetGenericContainerByTypeDefIndex(DecodeMetadataIndex(fd.typeDefIndex)), frs);
+			ReadFieldRefSig(br, GetGenericContainerByTypeDefRawIndex(DecodeMetadataIndex(fd.typeDefIndex)), frs);
 			frs.type.attrs = data.flags;
 
 			//cur = {};
@@ -1179,222 +1179,12 @@ namespace metadata
 		return il2cppAssRef;
 	}
 
-	// FIXME 此处bug较多，仍需要仔细检查
-	const MethodInfo* InterpreterImage::GetMethodInfo(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext)
-	{
-		const Il2CppType* finalContainerType = TryInflateIfNeed(containerType, genericContext, true);
-		const MethodInfo* method = GetMethodInfoFromMethodDef(containerType, methodDef);
-		IL2CPP_ASSERT(method);
-		// final genericContext = finalContainerType.class_inst + mri.instantiation
-		if (instantiation)
-		{
-			const Il2CppGenericInst* finalClassIns = finalContainerType->type == IL2CPP_TYPE_GENERICINST ? finalContainerType->data.generic_class->context.class_inst : nullptr;
-			const Il2CppGenericInst* finalMethodIns = instantiation;
-			Il2CppGenericContext finalGenericContext = { finalClassIns, finalMethodIns };
-			method = method->is_inflated ? method->genericMethod->methodDefinition : method;
-			method = il2cpp::metadata::GenericMetadata::Inflate(method, &finalGenericContext);
-			IL2CPP_ASSERT(method);
-		}
-		return method;
-	}
-
-	/*
-	const MethodInfo* InterpreterImage::ResolveMethodInfo(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, const Il2CppGenericInst* genericInstantiation, const Il2CppGenericContext* genericContext)
-	{
-		if (type->type != IL2CPP_TYPE_ARRAY)
-		{
-			const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
-			const Il2CppGenericContainer* klassGenericContainer = GetGenericContainerFromIl2CppType(type);
-			const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
-			for (uint32_t i = 0; i < typeDef->method_count; i++)
-			{
-				const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef->methodStart + i);
-				const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex);
-				if (std::strcmp(resolveMethodName, methodName) == 0 && IsMatchMethodSig(methodDef, resolveSig, klassGenericContainer, genericInstantiation ? genericInstantiation->type_argc : 0))
-				{
-					return GetMethodInfo(type, methodDef, genericInstantiation, genericContext);
-				}
-			}
-		}
-		else
-		{
-			IL2CPP_ASSERT(genericInstantiation == nullptr);
-			Il2CppClass* arrayKlass = il2cpp::vm::Class::FromIl2CppType(type);
-			il2cpp::vm::Class::SetupMethods(arrayKlass);
-			//const Il2CppType* genericClassInstArgv[] = { &arrayKlass->element_class->byval_arg };
-			const Il2CppType** genericClassInstArgv = genericContext && genericContext->class_inst ? genericContext->class_inst->type_argv : nullptr;
-			const Il2CppType** genericMethodInstArgv = genericContext && genericContext->method_inst ? genericContext->method_inst->type_argv : nullptr;
-
-			// FIXME MEMORY LEAK
-			for (uint16_t i = 0; i < arrayKlass->method_count; i++)
-			{
-				const MethodInfo* method = arrayKlass->methods[i];
-				if (std::strcmp(resolveMethodName, method->name) == 0 && IsMatchMethodSig(method, resolveSig, genericClassInstArgv, genericMethodInstArgv))
-				{
-					return method;
-				}
-			}
-		}
-		RaiseMethodNotFindException(type, resolveMethodName);
-		return nullptr;
-	}
-	*/
-
-	const MethodInfo* InterpreterImage::ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer,
-		const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex)
+	void InterpreterImage::ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret)
 	{
 		IL2CPP_ASSERT(rowIndex > 0);
-		switch (tableType)
-		{
-		case TableType::METHOD:
-		{
-			const Il2CppMethodDefinition* methodDef = GetMethodDefinitionFromRawIndex(rowIndex - 1);
-			const Il2CppType* type = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(GetTypeFromRawIndex(DecodeMetadataIndex(methodDef->declaringType))->byvalTypeIndex));
-			return GetMethodInfo(type, methodDef, genericInst, genericContext);
-		}
-		case TableType::MEMBERREF:
-		{
-			ResolveMemberRef rmr = {};
-			ReadResolveMemberRefFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, rmr);
-			IL2CPP_ASSERT(rmr.parent.parentType == TableType::TYPEDEF || rmr.parent.parentType == TableType::TYPEREF || rmr.parent.parentType == TableType::TYPESPEC);
-			IL2CPP_ASSERT(rmr.signature.memberType == TableType::METHOD_POINTER);
-			if (genericContext)
-			{
-				rmr.parent.type = *TryInflateIfNeed(&rmr.parent.type, genericContext, true);
-			}
-			return ResolveMethodInfo(&rmr.parent.type, rmr.name, rmr.signature.method, genericInst, genericContext);
-		}
-		case TableType::METHODSPEC:
-		{
-			TbMethodSpec methodSpec = _rawImage.ReadMethodSpec(rowIndex);
-			Il2CppGenericInst* genericInstantiation = nullptr;
-			// FIXME! genericInstantiation memory leak
-			ReadMethodSpecInstantiation(methodSpec.instantiation, klassGenericContainer, methodGenericContainer, genericInstantiation);
-			// FIXME memory leak
-			genericInstantiation = TryInflateGenericInst(genericInstantiation, genericContext);
-
-			TableType methodTableType = DecodeMethodDefOrRefCodedIndexTableType(methodSpec.method);
-			uint32_t methodRowIndex = DecodeMethodDefOrRefCodedIndexRowIndex(methodSpec.method);
-			switch (methodTableType)
-			{
-			case TableType::METHOD:
-			{
-				return ReadMethodInfoFromToken(klassGenericContainer, methodGenericContainer, genericContext, genericInstantiation, methodTableType, methodRowIndex);
-			}
-			case TableType::MEMBERREF:
-			{
-				return ReadMethodInfoFromToken(klassGenericContainer, methodGenericContainer, genericContext, genericInstantiation, methodTableType, methodRowIndex);
-			}
-			default:
-			{
-				RaiseBadImageException("ReadMethodSpec invaild TableType");
-				return nullptr;
-			}
-			}
-			break;
-		}
-		default:
-		{
-			RaiseBadImageException("ReadMethodInfoFromToken invaild TableType");
-			return nullptr;
-		}
-		}
-	}
-
-
-	const MethodInfo* InterpreterImage::GetMethodInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
-	{
-		auto key = std::tuple<uint32_t, const Il2CppGenericContext*>(token, genericContext);
-		{
-			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-			auto it = _token2ResolvedDataCache.find(key);
-			if (it != _token2ResolvedDataCache.end())
-			{
-				return (const MethodInfo*)it->second;
-			}
-		}
-
-		const MethodInfo* method = ReadMethodInfoFromToken(klassGenericContainer, methodGenericContainer, genericContext,
-			nullptr, DecodeTokenTableType(token), DecodeTokenRowIndex(token));
-
-		//MethodRefInfo mri = {};
-		//ReadMethodRefInfoFromToken(klassGenericContainer, methodGenericContainer, , , mri);
-		//const Il2CppType* finalContainerType = TryInflateIfNeed(&mri.containerType, genericContext, true);
-		//const MethodInfo* method = GetMethodInfoFromMethodDef(&mri.containerType, mri.methodDef);
-		//// final genericContext = finalContainerType.class_inst + mri.instantiation
-		//if (mri.instantiation)
-
-		//{
-		//	const Il2CppGenericInst* finalClassIns = finalContainerType->type == IL2CPP_TYPE_GENERICINST ? finalContainerType->data.generic_class->context.class_inst : nullptr;
-		//	const Il2CppGenericInst* finalMethodIns = mri.instantiation;
-		//	Il2CppGenericContext finalGenericContext = { finalClassIns, finalMethodIns };
-		//	method = method->is_inflated ? method->genericMethod->methodDefinition : method;
-		//	method = il2cpp::metadata::GenericMetadata::Inflate(method, &finalGenericContext);
-		//}
-
-		IL2CPP_ASSERT(method);
-		il2cpp::vm::Class::Init(method->klass);
-		{
-			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-			_token2ResolvedDataCache.insert({ key, (void*)method });
-		}
-		return method;
-	}
-
-	void InterpreterImage::GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig)
-	{
-		TbStandAloneSig sas = _rawImage.ReadStandAloneSig(DecodeTokenRowIndex(token));
-		ReadStandAloneSig(sas.signature, klassGenericContainer, methodGenericContainer, methodSig);
-		if (genericContext)
-		{
-			// FIXME. memory leak
-			methodSig.returnType = *TryInflateIfNeed(&methodSig.returnType, genericContext, true);
-			for (uint32_t i = 0; i < methodSig.paramCount; i++)
-			{
-				methodSig.params[i] = *TryInflateIfNeed(methodSig.params + i, genericContext, true);
-			}
-		}
-	}
-
-	void InterpreterImage::ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret)
-	{
-		IL2CPP_ASSERT(rowIndex > 0);
-		if (tableType == TableType::FIELD)
-		{
-			const FieldDetail& fd = GetFieldDetailFromRawIndex(rowIndex - 1);
-			ret.containerType = *GetIl2CppTypeFromRawTypeDefIndex(DecodeMetadataIndex(fd.typeDefIndex));
-			ret.field = &fd.fieldDef;
-			//ret.classType = *image.GetIl2CppTypeFromRawTypeDefIndex(DecodeMetadataIndex(ret.field->typeIndex));
-		}
-		else
-		{
-			IL2CPP_ASSERT(tableType == TableType::MEMBERREF);
-			ReadFieldRefInfoFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, ret);
-		}
-	}
-
-	const FieldInfo* InterpreterImage::GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
-	{
-		auto key = std::tuple<uint32_t, const Il2CppGenericContext*>(token, genericContext);
-		{
-			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-			auto it = _token2ResolvedDataCache.find(key);
-			if (it != _token2ResolvedDataCache.end())
-			{
-				return (const FieldInfo*)it->second;
-			}
-		}
-
-		FieldRefInfo fri;
-		ReadFieldRefInfoFromToken(klassGenericContainer, methodGenericContainer, DecodeTokenTableType(token), DecodeTokenRowIndex(token), fri);
-		const Il2CppType* resultType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(&fri.containerType, genericContext, true) : &fri.containerType;
-		const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(*resultType, fri.field);
-		il2cpp::vm::Class::Init(fieldInfo->parent);
-		{
-			il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-			_token2ResolvedDataCache.insert({ key, (void*)fieldInfo });
-		}
-		return fieldInfo;
+		const FieldDetail& fd = GetFieldDetailFromRawIndex(rowIndex - 1);
+		ret.containerType = *GetIl2CppTypeFromRawTypeDefIndex(DecodeMetadataIndex(fd.typeDefIndex));
+		ret.field = &fd.fieldDef;
 	}
 
 	void InterpreterImage::GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc)
@@ -1404,7 +1194,7 @@ namespace metadata
 		if (gc->is_method)
 		{
 			const Il2CppMethodDefinition* methodDef = GetMethodDefinitionFromRawIndex(DecodeMetadataIndex(gc->ownerIndex));
-			klassGc = GetGenericContainerByTypeDefIndex(DecodeMetadataIndex(methodDef->declaringType));
+			klassGc = GetGenericContainerByTypeDefRawIndex(DecodeMetadataIndex(methodDef->declaringType));
 			methodGc = GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef->genericContainerIndex));
 		}
 		else
