@@ -304,6 +304,10 @@ namespace metadata
                 {
                     type.attrs |= PARAM_ATTRIBUTE_OUT;
                 }
+                else if (std::strcmp(modTypeName, "OptionalAttribute") == 0)
+                {
+                    type.attrs |= PARAM_ATTRIBUTE_OPTIONAL;
+                }
             }
             goto readAgain;
             break;

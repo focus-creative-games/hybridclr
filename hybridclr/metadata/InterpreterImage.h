@@ -23,6 +23,7 @@ namespace metadata
 
 	struct ParamDetail
 	{
+		Il2CppType type;
 		Il2CppParameterDefinition paramDef;
 		const Il2CppMethodDefinition* methodDef;
 		//uint32_t methodIndex;
@@ -298,8 +299,9 @@ namespace metadata
 
 		const Il2CppParameterDefaultValue* GetParameterDefaultValueEntryByRawIndex(uint32_t index)
 		{
-			IL2CPP_ASSERT(index < (uint32_t)_paramDefaultValues.size());
-			return &_paramDefaultValues[index];
+			IL2CPP_ASSERT(index > 0 && index <= (uint32_t)_params.size());
+			uint32_t defaultValueIndex = _params[index - 1].defaultValueIndex;
+			return defaultValueIndex != kDefaultValueIndexNull ? &_paramDefaultValues[defaultValueIndex] : nullptr;
 		}
 
 		uint32_t GetFieldOffset(const Il2CppTypeDefinition* typeDef, int32_t fieldIndexInType, FieldInfo* field)

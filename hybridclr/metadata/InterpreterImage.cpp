@@ -812,6 +812,11 @@ namespace metadata
 						IL2CPP_ASSERT(paramDetail.parameterIndex == data.sequence - 1);
 						pd.nameIndex = EncodeWithIndex(data.name);
 						pd.token = EncodeToken(TableType::PARAM, paramRowIndex);
+						if (data.flags)
+						{
+							paramDetail.type.attrs = data.flags;
+							pd.typeIndex = AddIl2CppTypeCache(paramDetail.type);
+						}
 					}
 					else
 					{
@@ -1894,11 +1899,11 @@ namespace metadata
 		for (; reader.NonEmpty(); )
 		{
 			ParamDetail curParam = {};
-			Il2CppType paramType = {};
-			ReadType(reader, klassGenericContainer, methodGenericContainer, paramType);
+			curParam.type = {};
+			ReadType(reader, klassGenericContainer, methodGenericContainer, curParam.type);
 			curParam.parameterIndex = readParamNum++;
 			curParam.methodDef = &methodDef;
-			curParam.paramDef.typeIndex = AddIl2CppTypeCache(paramType);
+			curParam.paramDef.typeIndex = AddIl2CppTypeCache(curParam.type);
 			paramArr.push_back(curParam);
 		}
 		IL2CPP_ASSERT(readParamNum == (int)paramCount);
