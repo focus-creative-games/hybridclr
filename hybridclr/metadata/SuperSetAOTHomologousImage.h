@@ -38,6 +38,7 @@ namespace hybridclr
 			const char* name;
 			Il2CppType type;
 			const Il2CppTypeDefinition* declaringTypeDef;
+			const Il2CppType* declaringIl2CppType;
 			const Il2CppFieldDefinition* aotFieldDef;
 		};
 

@@ -244,6 +244,7 @@ namespace metadata
 				field.name = _rawImage.GetStringFromRawIndex(data.name);
 
 				field.declaringTypeDef = type.aotTypeDef;
+				field.declaringIl2CppType = type.aotIl2CppType;
 				if (type.aotTypeDef == nullptr)
 				{
 					continue;
@@ -322,7 +323,7 @@ namespace metadata
 	{
 		IL2CPP_ASSERT(rowIndex > 0);
 		SuperSetFieldDefDetail& fd = _fields[rowIndex - 1];
-		ret.containerType = fd.type;
+		ret.containerType = *fd.declaringIl2CppType;
 		ret.field = fd.aotFieldDef;
 	}
 }
