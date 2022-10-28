@@ -77,7 +77,7 @@ namespace metadata
 			const Il2CppTypeDefinition* parentTypeDef = parent.aotTypeDef;
 			if (parentTypeDef == nullptr)
 			{
-				return;
+				goto labelInitDefault;
 			}
 
 			void* iter = nullptr;
@@ -109,6 +109,7 @@ namespace metadata
 				return;
 			}
 		}
+		labelInitDefault:
 		type.aotIl2CppType = &_defaultIl2CppType;
 		//TEMP_FORMAT(msg, "type: %s::%s can't find homologous type in assembly:%s", type.namespaze, type.name, _aotAssembly->aname.name);
 		//RaiseExecutionEngineException(msg);
