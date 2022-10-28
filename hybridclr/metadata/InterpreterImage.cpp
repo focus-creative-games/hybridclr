@@ -493,7 +493,7 @@ namespace metadata
 			Il2CppType type = {};
 			type.type = (Il2CppTypeEnum)data.type;
 			TypeIndex dataTypeIndex = AddIl2CppTypeCache(type);
-
+			bool isNullValue = type.type == IL2CPP_TYPE_CLASS;
 			switch (parentType)
 			{
 			case TableType::FIELD:
@@ -505,7 +505,7 @@ namespace metadata
 				fdv.fieldIndex = rowIndex - 1;
 				fdv.typeIndex = dataTypeIndex;
 				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(type.type, data.value);
-				fdv.dataIndex = (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
+				fdv.dataIndex = isNullValue ? kDefaultValueIndexNull : (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
 				_fieldDefaultValues.push_back(fdv);
 				break;
 			}
@@ -518,7 +518,7 @@ namespace metadata
 				pdv.typeIndex = dataTypeIndex;
 				pdv.parameterIndex = fd.parameterIndex;
 				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(type.type, data.value);
-				pdv.dataIndex = (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
+				pdv.dataIndex = isNullValue ? kDefaultValueIndexNull : (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
 				_paramDefaultValues.push_back(pdv);
 				break;
 			}
