@@ -15,10 +15,7 @@ namespace metadata
 
 	void SuperSetAOTHomologousImage::InitRuntimeMetadatas()
 	{
-		_defaultTypeDef = {};
-		_defaultIl2CppType = {};
-		_defaultFieldDef = {};
-		_defaultMethodDef = {};
+		_defaultIl2CppType = il2cpp_defaults.missing_class->byval_arg;
 
 		InitTypes0();
 		InitNestedClass();
@@ -325,6 +322,85 @@ namespace metadata
 		SuperSetFieldDefDetail& fd = _fields[rowIndex - 1];
 		ret.containerType = *fd.declaringIl2CppType;
 		ret.field = fd.aotFieldDef;
+	}
+
+	void SuperSetAOTHomologousImage::ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName, Il2CppType& type)
+	{
+		TableType tokenType;
+		uint32_t rawIndex;
+		DecodeResolutionScopeCodedIndex(scope, tokenType, rawIndex);
+		switch (tokenType)
+		{
+		case TableType::MODULE:
+		{
+			RaiseNotSupportedException("Image::ReadTypeFromResolutionScope not support ResolutionScore.MODULE");
+			break;
+		}
+		case TableType::MODULEREF:
+		{
+			RaiseNotSupportedException("Image::ReadTypeFromResolutionScope not support ResolutionScore.MODULEREF");
+			break;
+		}
+		case TableType::ASSEMBLYREF:
+		{
+			TbAssemblyRef assRef = _rawImage.ReadAssemblyRef(rawIndex);
+			const Il2CppType* refType = GetIl2CppType(rawIndex, typeNamespace, typeName, false);
+			if (refType)
+			{
+				type.type = refType->type;
+				type.data = refType->data;
+			}
+			else
+			{
+				type = _defaultIl2CppType;
+			}
+			break;
+		}
+		case TableType::TYPEREF:
+		{
+			Il2CppType enClosingType = {};
+			ReadTypeFromTypeRef(rawIndex, enClosingType);
+			IL2CPP_ASSERT(typeNamespace == 0);
+			const char* name = _rawImage.GetStringFromRawIndex(typeName);
+
+			void* iter = nullptr;
+			Il2CppMetadataTypeHandle enclosingTypeDef = enClosingType.data.typeHandle;
+			if (!enclosingTypeDef)
+			{
+				//TEMP_FORMAT(errMsg, "Image::ReadTypeFromResolutionScope ReadTypeFromResolutionScope.TYPEREF enclosingType:%s", name);
+				//RaiseExecutionEngineException(errMsg);
+				type = _defaultIl2CppType;
+				break;
+			}
+			bool find = false;
+			for (const Il2CppTypeDefinition* nextTypeDef; (nextTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetNestedTypes(enclosingTypeDef, &iter));)
+			{
+				const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nextTypeDef->nameIndex);
+				IL2CPP_ASSERT(nestedTypeName);
+				if (!std::strcmp(name, nestedTypeName))
+				{
+					GetIl2CppTypeFromTypeDefinition(nextTypeDef, type);
+					find = true;
+					break;
+				}
+			}
+			if (!find)
+			{
+				//std::string enclosingTypeName = GetKlassCStringFullName(&enClosingType);
+				//TEMP_FORMAT(errMsg, "Image::ReadTypeFromResolutionScope ReadTypeFromResolutionScope.TYPEREF fail. type:%s.%s", enclosingTypeName.c_str(), name);
+				//RaiseExecutionEngineException(errMsg);
+				type = _defaultIl2CppType;
+				break;
+			}
+			break;
+		}
+		default:
+		{
+			RaiseBadImageException("Image::ReadTypeFromResolutionScope invaild TableType");
+			break;
+		}
+		}
+		IL2CPP_ASSERT(type.data.typeHandle);
 	}
 }
 }

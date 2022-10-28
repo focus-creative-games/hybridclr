@@ -57,6 +57,7 @@ namespace hybridclr
 			void InitMethods();
 			void InitFields();
 
+			void ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName, Il2CppType& type) override;
 			MethodBody* GetMethodBody(uint32_t token) override;
 			const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
 			Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
@@ -64,10 +65,7 @@ namespace hybridclr
 			const Il2CppMethodDefinition* GetMethodDefinitionFromRawIndex(uint32_t index) override;
 			void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 		private:
-			Il2CppTypeDefinition _defaultTypeDef;
 			Il2CppType _defaultIl2CppType;
-			Il2CppMethodDefinition _defaultMethodDef;
-			Il2CppFieldDefinition _defaultFieldDef;
 
 			std::vector<SuperSetTypeDefDetail> _typeDefs;
 			std::unordered_map<int32_t, SuperSetTypeDefDetail*> _aotTypeIndex2TypeDefs;

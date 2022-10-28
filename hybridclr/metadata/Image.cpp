@@ -367,7 +367,7 @@ namespace metadata
         case TableType::ASSEMBLYREF:
         {
             TbAssemblyRef assRef = _rawImage.ReadAssemblyRef(rawIndex);
-            const Il2CppType* refType = GetIl2CppType(rawIndex, typeNamespace, typeName);
+            const Il2CppType* refType = GetIl2CppType(rawIndex, typeNamespace, typeName, true);
             type.type = refType->type;
             type.data = refType->data;
             break;
@@ -686,7 +686,7 @@ namespace metadata
         }
     }
 
-    const Il2CppType* Image::GetIl2CppType(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName)
+    const Il2CppType* Image::GetIl2CppType(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
     {
         TbAssemblyRef data = _rawImage.ReadAssemblyRef(assemblyRefIndex);
         const char* assName = _rawImage.GetStringFromRawIndex(data.name);
@@ -701,6 +701,10 @@ namespace metadata
         }
         if (!klass)
         {
+            if (!raiseExceptionIfNotFound)
+            {
+                return nullptr;
+            }
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(
                 CStringToStringView(typeNamespaceStr),
                 CStringToStringView(typeNameStr),
