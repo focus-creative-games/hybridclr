@@ -33,7 +33,7 @@ HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/w
 
 ## 工作原理
 
-HybridCLR从mono的 [hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/) 技术中得到启发，为unity的il2cpp之类的AOT runtime额外提供了interpreter模块，将它们由纯AOT运行时改造为"AOT + Interpreter"混合运行方式。
+HybridCLR从mono的 [mixed mode execution](https://www.mono-project.com/news/2017/11/13/mono-interpreter/) 技术中得到启发，为unity的il2cpp之类的AOT runtime额外提供了interpreter模块，将它们由纯AOT运行时改造为"AOT + Interpreter"混合运行方式。
 
 ![icon](docs/images/architecture.png)
 

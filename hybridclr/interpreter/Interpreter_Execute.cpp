@@ -14,6 +14,7 @@
 #include "vm/Thread.h"
 #include "vm/Runtime.h"
 #include "metadata/GenericMetadata.h"
+#include "vm-utils/icalls/mscorlib/System.Threading/Interlocked.h"
 
 #include "../metadata/MetadataModule.h"
 
@@ -1132,39 +1133,32 @@ namespace interpreter
 
 	inline int32_t HiInterlockedCompareExchange(int32_t* location, int32_t newValue, int32_t oldValue)
 	{
-		return il2cpp::os::Atomic::CompareExchange(location, newValue, oldValue);
+		return il2cpp::icalls::mscorlib::System::Threading::Interlocked::CompareExchange(location, newValue, oldValue);
 	}
-
 
 	inline int64_t HiInterlockedCompareExchange(int64_t* location, int64_t newValue, int64_t oldValue)
 	{
-		return il2cpp::os::Atomic::CompareExchange64(location, newValue, oldValue);
+		return il2cpp::icalls::mscorlib::System::Threading::Interlocked::CompareExchange64(location, newValue, oldValue);
 	}
-
 
 	inline void* HiInterlockedCompareExchange(void** location, void* newValue, void* oldValue)
 	{
-		return il2cpp::os::Atomic::CompareExchangePointer(location, newValue, oldValue);
+		return il2cpp::icalls::mscorlib::System::Threading::Interlocked::CompareExchange_T(location, newValue, oldValue);
 	}
 
 	inline int32_t HiInterlockedExchange(int32_t* location, int32_t newValue)
 	{
-		return il2cpp::os::Atomic::Exchange(location, newValue);
+		return il2cpp::icalls::mscorlib::System::Threading::Interlocked::Exchange(location, newValue);
 	}
 
 	inline int64_t HiInterlockedExchange(int64_t* location, int64_t newValue)
 	{
-#if HYBRIDCLR_ARCH_64
-		return il2cpp::os::Atomic::Exchange64(location, newValue);
-#else
-		RaiseExecutionEngineException("not support LockedExchange64");
-		return newValue;
-#endif
+		return il2cpp::icalls::mscorlib::System::Threading::Interlocked::Exchange64(location, newValue);
 	}
 
 	inline void* HiInterlockedExchange(void** location, void* newValue)
 	{
-		return il2cpp::os::Atomic::ExchangePointer(location, newValue);
+		return il2cpp::icalls::mscorlib::System::Threading::Interlocked::ExchangePointer(location, newValue);
 	}
 
 #define MEMORY_BARRIER() il2cpp::os::Atomic::FullMemoryBarrier()
