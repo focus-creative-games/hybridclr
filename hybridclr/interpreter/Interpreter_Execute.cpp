@@ -14,7 +14,11 @@
 #include "vm/Thread.h"
 #include "vm/Runtime.h"
 #include "metadata/GenericMetadata.h"
+#if HYBRIDCLR_UNITY_2020_OR_NEW
 #include "vm-utils/icalls/mscorlib/System.Threading/Interlocked.h"
+#else
+#include "icalls/mscorlib/System.Threading/Interlocked.h"
+#endif
 
 #include "../metadata/MetadataModule.h"
 
