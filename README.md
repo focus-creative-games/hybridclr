@@ -12,6 +12,8 @@ HybridCLR是一个**特性完整、零成本、高性能、低内存**的**近�
 
 HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行，从底层彻底支持了热更新。
 
+HybridCLR开创性地实现了 `Differential Hybrid Execution(DHE)` 增量热更新技术。即可以对AOT dll任意增删改，会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平。
+
 ## 文档
 
 - [官方文档](https://focus-creative-games.github.io/hybridclr/about/)
@@ -29,7 +31,7 @@ HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/w
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/hybridclr/memory)
 - 由于对泛型的完美支持，使得因为AOT泛型问题跟il2cpp不兼容的库现在能够完美地在il2cpp下运行
 - 支持一些il2cpp不支持的特性，如__makeref、 __reftype、__refvalue指令
-- 原生支持hotfix修复AOT部分代码。几乎不增加任何开发和运行开销。
+- `Differential Hybrid Execution(DHE)` 增量热更新技术
 
 ## 工作原理
 
