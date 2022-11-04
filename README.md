@@ -8,11 +8,15 @@
 <br/>
 <br/>
 
+HybridCLR是 focus-creative-games（代码哲学） 公司的代表作品，我们希望通过我们的聪明才智深刻地改变整个行业，帮助游戏团队制作出更优秀的游戏。
+
 HybridCLR是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的Unity全平台原生c#热更方案。
 
 HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行，从底层彻底支持了热更新。
 
 HybridCLR开创性地实现了 `Differential Hybrid Execution(DHE)` 增量热更新技术。即可以对AOT dll任意增删改，会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平。
+
+欢迎拥抱现代原生C#热更新技术 ！！！
 
 ## 文档
 
@@ -64,19 +68,9 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ## 稳定性状况
 
-目前PC(x86及x64)、macOS(x86、x64、Arm64)、Android(arm v7及v8)、iOS(64bit) 可稳定使用。已经有数百个大中小型商业游戏项目完成接入，其中一些在紧锣密鼓作上线前测试。
+目前是正式稳定版本。已有数百个大中小型商业游戏项目完成接入，其中有几十个已经双端上线或者已经正式对外测试中。上线的项目中包括MMMORPG、重度卡牌、重度塔防之类的游戏。
 
-鉴于在多个重度上线（准上线）项目上有超过4个月的稳定表现，预计于**10月份发布正式版本**。
-
-## 上线的商业项目
-
-目前有超过7款上线商业项目及多款（未详细统计）对外测试的商业手游项目(非独立游戏！)。
-
-- 2022.6.7上线第一款Android+iOS双端三消类型手游
-- 2022.8.5上线第二款双端重度RPG卡牌手游
-- 2022.8.8上线第三款双端重度RPG塔防手游
-- 2022.9上线第4款双端传奇类MMORPG手游
-- 其他参见收集的一些 [已经上线的商业项目](https://focus-creative-games.github.io/hybridclr/business_games/)
+我们在前期收集了部分 [已经上线的商业项目](https://focus-creative-games.github.io/hybridclr/business_games/)。
 
 ## 支持与联系
 
@@ -89,11 +83,10 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ## 后续开发规划
 
-- 指令优化，执行性能将有大幅提升 (2022.10 -)
-- 支持增量式GC (2022.10 -)
-- 支持extern函数
-- 支持 `Hybrid Dll` 技术
-- 为 **[godot引擎](https://godotengine.org/)** 添加`.net 7 + HybridCLR`支持
+- 指令优化，执行性能将有大幅提升 (2022.12 -)
+- 支持增量式GC (2023.1 -)
+- 支持extern函数 (2023.1 -)
+- 为 **[godot引擎](https://godotengine.org/)** 添加`.net 7 + HybridCLR`支持 (2023.3 -)
 
 ## 关于作者
 
