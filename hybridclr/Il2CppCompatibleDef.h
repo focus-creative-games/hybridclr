@@ -1,12 +1,15 @@
 #pragma once
-#include "../hybridclr-compatible-config.h"
+
+//!!!{{UNITY_CONFIG
+#define HYBRIDCLR_UNITY_VERSION 2020333
+#define HYBRIDCLR_UNITY_2020 1
+#define HYBRIDCLR_UNITY_2019_OR_NEW 1
+#define HYBRIDCLR_UNITY_2020_OR_NEW 1
+
+//!!!}}UNITY_CONFIG
 
 #include "il2cpp-config.h"
 #include "il2cpp-class-internals.h"
-
-#if HYBRIDCLR_UNITY_2010_OR_NEW
-#include "Baselib.h"
-#endif
 
 #include "vm/Array.h"
 #include "vm/Type.h"
@@ -79,6 +82,7 @@
 
 namespace hybridclr
 {
+	extern const char* g_differentialHybridAssemblies[];
 
 	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
 

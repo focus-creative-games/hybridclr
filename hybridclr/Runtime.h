@@ -1,14 +1,12 @@
 #pragma once
 
 #include "CommonDef.h"
-#include "HybridCLRConfig.h"
+#include "Config.h"
 
 namespace hybridclr
 {
 
-
-
-	class ModuleManager
+	class Runtime
 	{
 	public:
 		static void Initialize();

@@ -120,6 +120,16 @@ namespace metadata
             return value;
         }
 
+        bool TryRead32(uint32_t& value)
+        {
+            if (_readPos + 4 <= _length)
+            {
+                value = Read32();
+                return true;
+            }
+            return false;
+        }
+
         uint64_t Read64()
         {
             IL2CPP_ASSERT(_readPos + 8 <= _length);

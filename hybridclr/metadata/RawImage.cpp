@@ -39,9 +39,9 @@ namespace hybridclr
 		const int kCliHeaderOffset32 = 208;
 		const int kCliHeaderOffset64 = 224;
 
-		LoadImageErrorCode RawImage::Load(const byte* imageData, size_t length)
+		LoadImageErrorCode RawImage::Load(const void* rawImageData, size_t length)
 		{
-			_ptrRawData = imageData;
+			const byte* imageData = _ptrRawData = (const byte*)rawImageData;
 			_imageLength = uint32_t(length);
 			_ptrRawDataEnd = imageData + length;
 

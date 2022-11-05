@@ -9,7 +9,7 @@
 #include "vm/StackTrace.h"
 
 #include "../metadata/MetadataUtil.h"
-#include "../HybridCLRConfig.h"
+#include "../Config.h"
 
 #include "InterpreterDefs.h"
 #include "MemoryUtil.h"
@@ -39,7 +39,7 @@ namespace interpreter
 	public:
 		MachineState()
 		{
-			HybridCLRConfig& hc = HybridCLRConfig::GetIns();
+			Config& hc = Config::GetIns();
 			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
 			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
 			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));

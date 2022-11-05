@@ -33,8 +33,6 @@ namespace metadata
 		}
 
 		LoadImageErrorCode Load(const byte* imageData, size_t length);
-
-		virtual void InitRuntimeMetadatas() = 0;
 	protected:
 		const Il2CppAssembly* _aotAssembly;
 	};

@@ -113,8 +113,6 @@ namespace metadata
 	{
 		IL2CPP_ASSERT(_rawImage.GetTable(TableType::EXPORTEDTYPE).rowNum == 0);
 
-		il2cpp::os::FastAutoLock metaLock(&il2cpp::vm::g_MetadataLock);
-
 		InitGenericParamDefs0();
 		InitTypeDefs_0();
 		InitMethodDefs0();
@@ -310,7 +308,6 @@ namespace metadata
 
 		// extra 16 for not name params
 		_params.reserve(tb.rowNum + 16);
-		_paramRawIndex2ActualParamIndex.resize(tb.rowNum);
 		//for (uint32_t i = 0; i < tb.rowNum; i++)
 		//{
 		//	uint32_t rowIndex = i + 1;
@@ -512,8 +509,7 @@ namespace metadata
 			}
 			case TableType::PARAM:
 			{
-				int32_t actualIndex = _paramRawIndex2ActualParamIndex[rowIndex - 1];
-				ParamDetail& fd = _params[actualIndex];
+				ParamDetail& fd = _params[rowIndex - 1];
 				fd.defaultValueIndex = (uint32_t)_paramDefaultValues.size();
 
 				Il2CppParameterDefaultValue pdv = {};
@@ -809,13 +805,11 @@ namespace metadata
 					TbParam data = _rawImage.ReadParam(paramRowIndex);
 					if (data.sequence > 0)
 					{
-						int32_t actualParamIndex = actualParamStart + data.sequence - 1;
-						ParamDetail& paramDetail = _params[actualParamIndex];
+						ParamDetail& paramDetail = _params[actualParamStart + data.sequence - 1];
 						Il2CppParameterDefinition& pd = paramDetail.paramDef;
 						IL2CPP_ASSERT(paramDetail.parameterIndex == data.sequence - 1);
 						pd.nameIndex = EncodeWithIndex(data.name);
 						pd.token = EncodeToken(TableType::PARAM, paramRowIndex);
-						_paramRawIndex2ActualParamIndex[paramRowIndex - 1] = actualParamIndex;
 						if (data.flags)
 						{
 							paramDetail.type.attrs = data.flags;

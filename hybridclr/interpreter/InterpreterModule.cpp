@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "vm/GlobalMetadata.h"
+#include "vm/MetadataCache.h"
 #include "vm/MetadataLock.h"
 #include "vm/Class.h"
 #include "vm/Object.h"
@@ -12,6 +13,8 @@
 
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
+#include "../metadata/InterpreterImage.h"
+#include "../metadata/DifferentialHybridImage.h"
 #include "../transform/Transform.h"
 
 #include "MethodBridge.h"
@@ -138,23 +141,59 @@ namespace hybridclr
 
 		Il2CppMethodPointer InterpreterModule::GetMethodPointer(const Il2CppMethodDefinition* method)
 		{
+			metadata::InterpreterImage* image = metadata::MetadataModule::GetImage(method);
+			if (image && image->IsHotPatch())
+			{
+				Il2CppMethodPointer methodPointer = ((metadata::DifferentialHybridImage*)image)->TryGetMethodPointer(method);
+				if (methodPointer)
+				{
+					return methodPointer;
+				}
+			}
 			Il2CppMethodPointer ncm = GetNative2ManagedMethod(method, false);
 			return ncm ? ncm : (Il2CppMethodPointer)NotSupportNative2Managed;
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetMethodPointer(const MethodInfo* method)
 		{
+			metadata::InterpreterImage* image = metadata::MetadataModule::GetImage(method);
+			if (image && image->IsHotPatch())
+			{
+				Il2CppMethodPointer methodPointer = ((metadata::DifferentialHybridImage*)image)->TryGetMethodPointer(method);
+				if (methodPointer)
+				{
+					return methodPointer;
+				}
+			}
 			Il2CppMethodPointer ncm = GetNative2ManagedMethod(method, false);
 			return ncm ? ncm : (Il2CppMethodPointer)NotSupportNative2Managed;
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const Il2CppMethodDefinition* method)
 		{
+			metadata::InterpreterImage* image = metadata::MetadataModule::GetImage(method);
+			if (image && image->IsHotPatch())
+			{
+				Il2CppMethodPointer methodPointer = ((metadata::DifferentialHybridImage*)image)->TryGetAdjustThunkMethodPointer(method);
+				if (methodPointer)
+				{
+					return methodPointer;
+				}
+			}
 			return GetNativeAdjustMethodMethod(method, false);
 		}
 
 		Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const MethodInfo* method)
 		{
+			metadata::InterpreterImage* image = metadata::MetadataModule::GetImage(method);
+			if (image && image->IsHotPatch())
+			{
+				Il2CppMethodPointer methodPointer = ((metadata::DifferentialHybridImage*)image)->TryGetAdjustThunkMethodPointer(method);
+				if (methodPointer)
+				{
+					return methodPointer;
+				}
+			}
 			return GetNativeAdjustMethodMethod(method, false);
 		}
 
@@ -459,6 +498,15 @@ namespace hybridclr
 
 	InvokerMethod InterpreterModule::GetMethodInvoker(const Il2CppMethodDefinition* method)
 	{
+		metadata::InterpreterImage* image = metadata::MetadataModule::GetImage(method);
+		if (image && image->IsHotPatch())
+		{
+			InvokerMethod methodInvoker = ((metadata::DifferentialHybridImage*)image)->TryGetMethodInvoker(method);
+			if (methodInvoker)
+			{
+				return methodInvoker;
+			}
+		}
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
 		const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex);
 		// special for Delegate::DynamicInvoke
@@ -469,6 +517,11 @@ namespace hybridclr
 	{
 		Il2CppClass* klass = method->klass;
 		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(method->name, "Invoke") ? InterpterInvoke : InterpreterDelegateInvoke;
+	}
+
+	bool InterpreterModule::IsImplementsByInterpreter(const MethodInfo* method)
+	{
+		return method->invoker_method == InterpreterDelegateInvoke || method->invoker_method == InterpterInvoke;
 	}
 
 	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(const MethodInfo* methodInfo)
@@ -490,7 +543,7 @@ namespace hybridclr
 		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token);
 		if (methodBody == nullptr || methodBody->ilcodes == nullptr)
 		{
-			TEMP_FORMAT(errMsg, "%s.%s::%s method body is null. not support external method currently.", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
+			TEMP_FORMAT(errMsg, "not support extern method: %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		}
 		InterpMethodInfo* imi = new (IL2CPP_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;

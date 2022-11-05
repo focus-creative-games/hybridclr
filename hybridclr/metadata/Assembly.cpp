@@ -11,6 +11,7 @@
 #include "vm/Image.h"
 #include "vm/Class.h"
 #include "vm/String.h"
+#include "vm/MetadataLock.h"
 
 #include "Image.h"
 #include "MetadataModule.h"
@@ -25,60 +26,7 @@ namespace metadata
 
 
 
-    bool GetMappedFileBuffer(const char* assemblyFile, void*& buf, uint64_t& fileLength)
-    {
-        int err = 0;
-        il2cpp::os::FileHandle* fh = il2cpp::os::File::Open(assemblyFile, FileMode::kFileModeOpen, FileAccess::kFileAccessRead, FileShare::kFileShareReadWrite, 0, &err);
-
-        if (err != 0)
-        {
-            return false;
-        }
-
-        fileLength = il2cpp::os::File::GetLength(fh, &err);
-        if (err != 0)
-        {
-            il2cpp::os::File::Close(fh, &err);
-            return false;
-        }
-
-        buf = il2cpp::utils::MemoryMappedFile::Map(fh);
-
-        il2cpp::os::File::Close(fh, &err);
-        if (err != 0)
-        {
-            il2cpp::utils::MemoryMappedFile::Unmap(buf);
-            buf = NULL;
-            return false;
-        }
-        return true;
-    }
-
 #if ENABLE_PLACEHOLDER_DLL == 1
-    static const char* s_ignorePlaceHolderDlls[] =
-    {
-        //"UnityEngine.",
-        //"Unity.",
-        "WindowsRuntimeMetadata.dll",
-        nullptr,
-    };
-
-    static bool NeedCreatePlaceHolderDll(const char* assemblyName)
-    {
-        // if assemblyName is path
-        if (std::strstr(assemblyName, "/") || std::strstr(assemblyName, "\\"))
-        {
-            return false;
-        }
-        for (const char** ignoreDll = s_ignorePlaceHolderDlls; *ignoreDll; ignoreDll++)
-        {
-            if (std::strstr(assemblyName, *ignoreDll))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     static const char* CreateAssemblyNameWithoutExt(const char* assemblyName)
     {
@@ -129,23 +77,13 @@ namespace metadata
 
     Il2CppAssembly* Assembly::LoadFromFile(const char* assemblyFile)
     {
-        void* fileBuffer;
-        uint64_t fileLength;
-        if (!GetMappedFileBuffer(assemblyFile, fileBuffer, fileLength))
+        // if pass an assembly name, 
+        if (!std::strstr(assemblyFile, "/") && !std::strstr(assemblyFile, "\\"))
         {
-
-#if ENABLE_PLACEHOLDER_DLL == 1
-            if (!NeedCreatePlaceHolderDll(assemblyFile))
-            {
-                return nullptr;
-            }
-            return CreatePlaceHolderAssembly(assemblyFile);
-#else
             return nullptr;
-#endif
         }
-
-        return LoadFromBytes((const byte*)fileBuffer, fileLength, false);
+        IL2CPP_NOT_IMPLEMENTED(Assembly::LoadFromFile);
+        return nullptr;
     }
 
     Il2CppAssembly* Assembly::LoadFromBytes(const void* assemblyData, uint64_t length, bool copyData)
@@ -155,6 +93,7 @@ namespace metadata
 
     Il2CppAssembly* Assembly::Create(const byte* assemblyData, uint64_t length, bool copyData)
     {
+        il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
         if (!assemblyData)
         {
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentNullException("rawAssembly is null"));

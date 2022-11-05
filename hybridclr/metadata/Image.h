@@ -102,6 +102,7 @@ namespace metadata
 
 		virtual MethodBody* GetMethodBody(uint32_t token) = 0;
 		virtual void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) = 0;
+		virtual void InitRuntimeMetadatas() = 0;
 	protected:
 		RawImage _rawImage;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, std::hash<uint32_t>> _il2cppStringCache;

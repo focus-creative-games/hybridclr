@@ -1,4 +1,4 @@
-#include "ModuleManager.h"
+#include "Runtime.h"
 
 #include "vm/Exception.h"
 #include "vm/String.h"
@@ -16,7 +16,7 @@
 namespace hybridclr
 {
 
-	void ModuleManager::Initialize()
+	void Runtime::Initialize()
 	{
 		metadata::MetadataModule::Initialize();
 		interpreter::InterpreterModule::Initialize();

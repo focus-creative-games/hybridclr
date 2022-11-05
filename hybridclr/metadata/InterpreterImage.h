@@ -106,11 +106,11 @@ namespace metadata
 
 		}
 
-		LoadImageErrorCode Load(const byte* imageData, size_t length)
+		LoadImageErrorCode Load(const void* imageData, size_t length)
 		{
 			if (_inited)
 			{
-				RaiseExecutionEngineException("image can't be init twicely");
+				RaiseExecutionEngineException("image can't be init again");
 			}
 			_inited = true;
 			return _rawImage.Load(imageData, length);
@@ -129,6 +129,11 @@ namespace metadata
 		const Il2CppImage* GetIl2CppImage() const
 		{
 			return _il2cppImage;
+		}
+
+		virtual bool IsHotPatch() const
+		{
+			return false;
 		}
 
 		uint32_t EncodeWithIndex(uint32_t rawIndex) const
@@ -299,8 +304,8 @@ namespace metadata
 
 		const Il2CppParameterDefaultValue* GetParameterDefaultValueEntryByRawIndex(uint32_t index)
 		{
-			IL2CPP_ASSERT(index < (uint32_t)_params.size());
-			uint32_t defaultValueIndex = _params[index].defaultValueIndex;
+			IL2CPP_ASSERT(index > 0 && index <= (uint32_t)_params.size());
+			uint32_t defaultValueIndex = _params[index - 1].defaultValueIndex;
 			return defaultValueIndex != kDefaultValueIndexNull ? &_paramDefaultValues[defaultValueIndex] : nullptr;
 		}
 
@@ -471,8 +476,8 @@ namespace metadata
 		void BuildIl2CppImage(Il2CppImage* image);
 		void BuildIl2CppAssembly(Il2CppAssembly* assembly);
 
-		void InitRuntimeMetadatas();
-	private:
+		void InitRuntimeMetadatas() override;
+	protected:
 
 		void InitTypeDefs_0();
 		void InitTypeDefs_1();
@@ -538,7 +543,6 @@ namespace metadata
 		std::vector<MethodBody> _methodBodies;
 
 		std::vector<ParamDetail> _params;
-		std::vector<int32_t> _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count
 		std::vector<Il2CppParameterDefaultValue> _paramDefaultValues;
 
 		std::vector<Il2CppGenericParameter> _genericParams;

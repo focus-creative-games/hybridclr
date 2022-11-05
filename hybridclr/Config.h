@@ -4,18 +4,18 @@
 
 namespace hybridclr
 {
-	class HybridCLRConfig
+	class Config
 	{
 
 	public:
-		HybridCLRConfig()
+		Config()
 		{
 			_threadObjectStackSize = 1024 * 128;
 			_threadFrameStackSize = 1024 * 2;
 			_threadExceptionFlowSize = 512;
 		}
 
-		static HybridCLRConfig& GetIns()
+		static Config& GetIns()
 		{
 			return s_ins;
 		}
@@ -51,7 +51,7 @@ namespace hybridclr
 		}
 
 	private:
-		static HybridCLRConfig s_ins;
+		static Config s_ins;
 
 	private:
 		uint32_t _threadObjectStackSize;

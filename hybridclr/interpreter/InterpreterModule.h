@@ -33,6 +33,8 @@ namespace interpreter
 		static InvokerMethod GetMethodInvoker(const Il2CppMethodDefinition* method);
 		static InvokerMethod GetMethodInvoker(const MethodInfo* method);
 
+		static bool IsImplementsByInterpreter(const MethodInfo* method);
+
 	private:
 
 		static il2cpp::os::ThreadLocalValue s_machineState;
