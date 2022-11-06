@@ -77,13 +77,16 @@ namespace metadata
 
     Il2CppAssembly* Assembly::LoadFromFile(const char* assemblyFile)
     {
+#if ENABLE_PLACEHOLDER_DLL == 1
         // if pass an assembly name, 
-        if (!std::strstr(assemblyFile, "/") && !std::strstr(assemblyFile, "\\"))
+        if (std::strstr(assemblyFile, "/") || std::strstr(assemblyFile, "\\"))
         {
             return nullptr;
         }
-        IL2CPP_NOT_IMPLEMENTED(Assembly::LoadFromFile);
+        return CreatePlaceHolderAssembly(assemblyFile);
+#else
         return nullptr;
+#endif
     }
 
     Il2CppAssembly* Assembly::LoadFromBytes(const void* assemblyData, uint64_t length, bool copyData)
