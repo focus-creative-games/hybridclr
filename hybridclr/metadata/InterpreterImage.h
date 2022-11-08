@@ -304,8 +304,8 @@ namespace metadata
 
 		const Il2CppParameterDefaultValue* GetParameterDefaultValueEntryByRawIndex(uint32_t index)
 		{
-			IL2CPP_ASSERT(index > 0 && index <= (uint32_t)_params.size());
-			uint32_t defaultValueIndex = _params[index - 1].defaultValueIndex;
+			IL2CPP_ASSERT(index < (uint32_t)_params.size());
+			uint32_t defaultValueIndex = _params[index].defaultValueIndex;
 			return defaultValueIndex != kDefaultValueIndexNull ? &_paramDefaultValues[defaultValueIndex] : nullptr;
 		}
 
@@ -543,6 +543,7 @@ namespace metadata
 		std::vector<MethodBody> _methodBodies;
 
 		std::vector<ParamDetail> _params;
+		std::vector<int32_t> _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count
 		std::vector<Il2CppParameterDefaultValue> _paramDefaultValues;
 
 		std::vector<Il2CppGenericParameter> _genericParams;
