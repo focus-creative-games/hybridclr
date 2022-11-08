@@ -279,7 +279,7 @@ namespace metadata
 
 	Il2CppMethodPointer DifferentialHybridImage::TryGetAdjustThunkMethodPointer(const Il2CppMethodDefinition* method)
 	{
-		uint32_t index = method - &_methodDefines[0];
+		ptrdiff_t index = method - &_methodDefines[0];
 		return _methodMappings[index].aotAdjustorThunk;
 	}
 
@@ -294,7 +294,7 @@ namespace metadata
 
 	InvokerMethod DifferentialHybridImage::TryGetMethodInvoker(const Il2CppMethodDefinition* method)
 	{
-		uint32_t index = method - &_methodDefines[0];
+		ptrdiff_t index = method - &_methodDefines[0];
 		return _methodMappings[index].aotMethodInvoker;
 	}
 }
