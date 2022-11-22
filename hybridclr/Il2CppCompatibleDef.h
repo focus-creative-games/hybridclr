@@ -145,7 +145,10 @@ namespace hybridclr
 
 	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)
 	{
-		il2cpp::vm::Type::ConstructDelegate(delegate, target, InitAndGetInterpreterDirectlyCallMethodPointer(method), method);
+		delegate->method_ptr = InitAndGetInterpreterDirectlyCallMethodPointer(method);
+		delegate->method = method;
+		delegate->target = target;
+		//il2cpp::vm::Type::ConstructDelegate(delegate, target, InitAndGetInterpreterDirectlyCallMethodPointer(method), method);
 	}
 
 	inline const MethodInfo* GetGenericVirtualMethod(const MethodInfo* result, const MethodInfo* inflateMethod)
