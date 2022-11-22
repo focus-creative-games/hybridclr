@@ -33,6 +33,8 @@ namespace metadata
 		}
 
 		LoadImageErrorCode Load(const byte* imageData, size_t length);
+
+		bool GetModuleIl2CppType(Il2CppType& type, uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound) override;
 	protected:
 		const Il2CppAssembly* _aotAssembly;
 	};

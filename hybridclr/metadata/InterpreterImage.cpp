@@ -1910,5 +1910,30 @@ namespace metadata
 		}
 		IL2CPP_ASSERT(readParamNum == (int)paramCount);
 	}
+
+	bool InterpreterImage::GetModuleIl2CppType(Il2CppType& resultType, uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
+	{
+		IL2CPP_ASSERT(moduleRowIndex == 1);
+		const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
+		const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
+		for (TypeDefinitionDetail& type : _typeDetails)
+		{
+			if (type.typeDef->namespaceIndex == typeNamespace && type.typeDef->nameIndex == typeName)
+			{
+				GetIl2CppTypeFromTypeDefinition(type.typeDef, resultType);
+				return true;
+			}
+		}
+		resultType = {};
+		if (!raiseExceptionIfNotFound)
+		{
+			return false;
+		}
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(
+			CStringToStringView(typeNamespaceStr),
+			CStringToStringView(typeNameStr),
+			CStringToStringView(_il2cppImage->nameNoExt)));
+		return false;
+	}
 }
 }

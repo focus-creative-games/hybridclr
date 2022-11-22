@@ -63,6 +63,31 @@ namespace metadata
 
 		return LoadImageErrorCode::OK;
 	}
+
+	bool AOTHomologousImage::GetModuleIl2CppType(Il2CppType& resultType, uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
+	{
+		IL2CPP_ASSERT(moduleRowIndex == 1);
+		const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
+		const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
+		
+		const Il2CppImage* aotImage = il2cpp::vm::Assembly::GetImage(_aotAssembly);
+		Il2CppClass* klass = il2cpp::vm::Class::FromName(aotImage, typeNamespaceStr, typeNameStr);
+		if (klass)
+		{
+			resultType = klass->byval_arg;
+			return true;
+		}
+		resultType = {};
+		if (!raiseExceptionIfNotFound)
+		{
+			return false;
+		}
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(
+			CStringToStringView(typeNamespaceStr),
+			CStringToStringView(typeNameStr),
+			CStringToStringView(aotImage->nameNoExt)));
+		return false;
+	}
 }
 }
 

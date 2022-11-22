@@ -334,7 +334,10 @@ namespace metadata
 		{
 		case TableType::MODULE:
 		{
-			RaiseNotSupportedException("Image::ReadTypeFromResolutionScope not support ResolutionScore.MODULE");
+			if (!GetModuleIl2CppType(type, rawIndex, typeNamespace, typeName, false))
+			{
+				type = _defaultIl2CppType;
+			}
 			break;
 		}
 		case TableType::MODULEREF:
