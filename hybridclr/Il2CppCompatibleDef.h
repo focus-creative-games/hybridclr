@@ -1,13 +1,5 @@
 #pragma once
 
-//!!!{{UNITY_CONFIG
-#define HYBRIDCLR_UNITY_VERSION 2020333
-#define HYBRIDCLR_UNITY_2020 1
-#define HYBRIDCLR_UNITY_2019_OR_NEW 1
-#define HYBRIDCLR_UNITY_2020_OR_NEW 1
-
-//!!!}}UNITY_CONFIG
-
 #include "il2cpp-config.h"
 #include "il2cpp-class-internals.h"
 
