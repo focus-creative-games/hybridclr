@@ -24,6 +24,7 @@
 
 #include "MetadataModule.h"
 #include "MetadataUtil.h"
+#include "ClassFieldLayoutCalculator.h"
 
 #include "../interpreter/Engine.h"
 #include "../interpreter/InterpreterModule.h"
@@ -134,10 +135,10 @@ namespace metadata
 		InitMethodSemantics();
 		InitConsts();
 		InitCustomAttributes();
+		InitTypeDefs_2();
 
 		InitClassLayouts();
 
-		InitTypeDefs_2();
 		InitInterfaces();
 
 		InitClass();
@@ -1052,7 +1053,50 @@ namespace metadata
 			if (data.classSize > 0)
 			{
 				Il2CppTypeDefinitionSizes& typeSizes = _typeDetails[data.parent - 1].typeSizes;
-				typeSizes.instance_size = typeSizes.native_size = sizeof(Il2CppObject) + data.classSize;
+				typeSizes.instance_size = data.classSize + sizeof(Il2CppObject);
+			}
+		}
+
+		ClassFieldLayoutCalculator calculator(this);
+		for (TypeDefinitionDetail& type : _typeDetails)
+		{
+			const Il2CppType* il2cppType = GetIl2CppTypeFromRawTypeDefIndex(type.index);
+			calculator.CalcClassNotStaticFields(il2cppType);
+		}
+
+		for (TypeDefinitionDetail& type : _typeDetails)
+		{
+			const Il2CppType* il2cppType = GetIl2CppTypeFromRawTypeDefIndex(type.index);
+			calculator.CalcClassStaticFields(il2cppType);
+			ClassLayoutInfo* layout = calculator.GetClassLayoutInfo(il2cppType);
+			Il2CppTypeDefinition* typeDef = type.typeDef;
+
+			auto& sizes = type.typeSizes;
+			sizes.native_size = layout->nativeSize;
+			sizes.static_fields_size = layout->staticFieldsSize;
+			sizes.thread_static_fields_size = layout->threadStaticFieldsSize;
+			if (sizes.instance_size == 0)
+			{
+				sizes.instance_size = layout->instanceSize;
+			}
+			int32_t fieldStart = DecodeMetadataIndex(typeDef->fieldStart);
+			for (int32_t i = 0, end = typeDef->field_count; i < end ; i++)
+			{
+				FieldDetail& fd = _fieldDetails[fieldStart + i];
+				FieldLayout& fieldLayout = layout->fields[i];
+				if (fd.offset == 0)
+				{
+					fd.offset = fieldLayout.offset;
+				}
+				else if (fd.offset == THREAD_LOCAL_STATIC_MASK)
+				{
+					fd.offset = fieldLayout.offset;
+				}
+				else
+				{
+					IL2CPP_ASSERT(fd.offset == fieldLayout.offset);
+					int a = 0;
+				}
 			}
 		}
 	}
@@ -1091,14 +1135,9 @@ namespace metadata
 		{
 			return klass;
 		}
-		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-		klass = _classList[index];
-		if (klass)
-		{
-			return klass;
-		}
 		klass = il2cpp::vm::GlobalMetadata::FromTypeDefinition(EncodeWithIndex(index));
 		IL2CPP_ASSERT(klass->interfaces_count <= klass->interface_offsets_count || _typesDefines[index].interfaceOffsetsStart == 0);
+		il2cpp::os::Atomic::FullMemoryBarrier();
 		_classList[index] = klass;
 		return klass;
 	}

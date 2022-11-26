@@ -124,7 +124,7 @@ namespace metadata
 
 		static uint32_t GetFieldOffset(const Il2CppClass* klass, int32_t fieldIndexInType, FieldInfo* field)
 		{
-			return GetImage(klass)->GetFieldOffset(klass, fieldIndexInType, field);
+			return GetImage(klass)->GetFieldOffset(klass, fieldIndexInType);
 		}
 
 		static const MethodInfo* GetMethodInfoFromMethodDefinitionIndex(uint32_t index)
