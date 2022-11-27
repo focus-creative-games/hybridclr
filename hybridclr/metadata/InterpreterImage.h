@@ -512,13 +512,10 @@ namespace metadata
 		void InitEvents();
 		void InitMethodSemantics();
 		void InitInterfaces();
-		void InitVTables_1();
-		void InitVTables_2();
+		void InitVTables();
 
 		void ComputeBlittable(Il2CppTypeDefinition* def, std::vector<bool>& computFlags);
-
-		void ComputeVTable1(TypeDefinitionDetail* tdd);
-		void ComputeVTable2(TypeDefinitionDetail* tdd);
+		void ComputeVTable(TypeDefinitionDetail* tdd);
 
 		void SetIl2CppImage(Il2CppImage* image)
 		{

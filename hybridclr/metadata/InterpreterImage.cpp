@@ -136,15 +136,10 @@ namespace metadata
 		InitConsts();
 		InitCustomAttributes();
 		InitTypeDefs_2();
-
 		InitClassLayouts();
-
 		InitInterfaces();
-
 		InitClass();
-
-		InitVTables_1();
-		InitVTables_2();
+		InitVTables();
 	}
 
 	void InterpreterImage::InitTypeDefs_0()
@@ -1375,64 +1370,7 @@ namespace metadata
 		}
 	}
 
-	void InterpreterImage::ComputeVTable1(TypeDefinitionDetail* tdd)
-	{
-		Il2CppTypeDefinition& typeDef = *tdd->typeDef;
-		if (IsInterface(typeDef.flags) || typeDef.vtableStart != 0)
-		{
-			return;
-		}
-
-		const Il2CppType* type = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(typeDef.byvalTypeIndex));
-
-		int32_t vtableCount = 0;
-
-		if (typeDef.parentIndex != kInvalidIndex)
-		{
-			const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef.parentIndex);
-			const Il2CppTypeDefinition* parentTypeDef = GetUnderlyingTypeDefinition(parentType);
-			if (IsInterpreterType(parentTypeDef) && parentTypeDef->vtableStart == 0)
-			{
-				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
-				int32_t typeDefIndex = GetTypeRawIndexByEncodedIl2CppTypeIndex(parentTypeDef->byvalTypeIndex);
-				ComputeVTable1(&_typeDetails[typeDefIndex]);
-			}
-			vtableCount += parentTypeDef->vtable_count;
-		}
-
-		for (uint32_t i = 0; i < typeDef.interfaces_count; i++)
-		{
-			const Il2CppType* intType = il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(&typeDef, i);
-			const Il2CppTypeDefinition* intTypeDef = GetUnderlyingTypeDefinition(intType);
-			vtableCount += intTypeDef->method_count;
-		}
-
-		for (uint32_t i = 0; i < typeDef.method_count; i++)
-		{
-			const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef.methodStart + i);
-			if (hybridclr::metadata::IsVirtualMethod(methodDef->flags))
-			{
-				++vtableCount;
-			}
-		}
-
-		typeDef.vtableStart = EncodeWithIndex(0);
-		// 计算出的vtableCount是一个保守上界,并非准确值.
-		// 在ComputVTable2中会重新修正
-		typeDef.vtable_count = vtableCount;
-	}
-
-	void InterpreterImage::InitVTables_1()
-	{
-		const Table& typeDefTb = _rawImage.GetTable(TableType::TYPEDEF);
-
-		for (TypeDefinitionDetail& td : _typeDetails)
-		{
-			ComputeVTable1(&td);
-		}
-	}
-
-	void InterpreterImage::ComputeVTable2(TypeDefinitionDetail* tdd)
+	void InterpreterImage::ComputeVTable(TypeDefinitionDetail* tdd)
 	{
 		Il2CppTypeDefinition& typeDef = *tdd->typeDef;
 		if (IsInterface(typeDef.flags) || typeDef.interfaceOffsetsStart != 0)
@@ -1448,7 +1386,7 @@ namespace metadata
 			{
 				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
 				int32_t typeDefIndex = GetTypeRawIndexByEncodedIl2CppTypeIndex(parentTypeDef->byvalTypeIndex);
-				ComputeVTable2(&_typeDetails[typeDefIndex]);
+				ComputeVTable(&_typeDetails[typeDefIndex]);
 			}
 		}
 
@@ -1467,28 +1405,22 @@ namespace metadata
 			_interfaceOffsets.push_back({ ioi.type, ioi.offset });
 		}
 
+		typeDef.vtableStart = EncodeWithIndex(0);
 		typeDef.vtable_count = (uint16_t)vms.size();
 		typeDef.interfaceOffsetsStart = EncodeWithIndex(offsetsStart);
 		typeDef.interface_offsets_count = (uint16_t)interfaceOffsetInfos.size();
 
-		// klass may create by prev BuildTree
 		Il2CppClass* klass = _classList[tdd->index];
-		if (klass)
-		{
-			IL2CPP_ASSERT(klass->vtable_count >= typeDef.vtable_count);
-			klass->vtable_count = typeDef.vtable_count;
-			IL2CPP_ASSERT(klass->interface_offsets_count == 0);
-			klass->interface_offsets_count = typeDef.interface_offsets_count;
-		}
+		IL2CPP_ASSERT(!klass);
 	}
 
-	void InterpreterImage::InitVTables_2()
+	void InterpreterImage::InitVTables()
 	{
 		const Table& typeDefTb = _rawImage.GetTable(TableType::TYPEDEF);
 
 		for (TypeDefinitionDetail& td : _typeDetails)
 		{
-			ComputeVTable2(&td);
+			ComputeVTable(&td);
 		}
 
 		for (auto& e : _cacheTrees)

@@ -219,7 +219,7 @@ namespace metadata
         fields.resize(typeDef->field_count, {});
 
         bool isCurAssemblyType = DecodeImageIndex(typeDef->byvalTypeIndex) == _image->GetIndex();
-        if (type->type == IL2CPP_TYPE_VALUETYPE && !isCurAssemblyType)
+        if ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) && !isCurAssemblyType)
         {
             Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
             il2cpp::vm::Class::SetupFields(klass);
