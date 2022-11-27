@@ -1051,7 +1051,7 @@ namespace transform
 				{
 					return true;
 				}
-				if (ec.handlerOffsets <= leaveOffset && leaveOffset < ec.handlerLength + ec.handlerLength)
+				if (ec.handlerOffsets <= leaveOffset && leaveOffset < ec.handlerOffsets + ec.handlerLength)
 				{
 					return false;
 				}
