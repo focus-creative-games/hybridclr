@@ -309,23 +309,30 @@ namespace metadata
 			return defaultValueIndex != kDefaultValueIndexNull ? &_paramDefaultValues[defaultValueIndex] : nullptr;
 		}
 
-		uint32_t GetFieldOffset(const Il2CppTypeDefinition* typeDef, int32_t fieldIndexInType, FieldInfo* field)
+		uint32_t GetFieldOffset(const Il2CppTypeDefinition* typeDef, int32_t fieldIndexInType)
 		{
 			uint32_t fieldActualIndex = DecodeMetadataIndex(typeDef->fieldStart) + fieldIndexInType;
 			IL2CPP_ASSERT(fieldActualIndex < (uint32_t)_fieldDetails.size());
 			return _fieldDetails[fieldActualIndex].offset;
 		}
 
-		uint32_t GetFieldOffset(TypeDefinitionIndex typeIndex, int32_t fieldIndexInType, FieldInfo* field)
+		uint32_t GetFieldOffset(TypeDefinitionIndex typeIndex, int32_t fieldIndexInType)
 		{
 			Il2CppTypeDefinition* typeDef = _typeDetails[typeIndex].typeDef;
-			return GetFieldOffset(typeDef, fieldIndexInType, field);
+			return GetFieldOffset(typeDef, fieldIndexInType);
 		}
 
-		uint32_t GetFieldOffset(const Il2CppClass* klass, int32_t fieldIndexInType, FieldInfo* field)
+		uint32_t GetFieldOffset(const Il2CppClass* klass, int32_t fieldIndexInType)
 		{
 			Il2CppTypeDefinition* typeDef = (Il2CppTypeDefinition*)(klass->typeMetadataHandle);
-			return GetFieldOffset(typeDef, fieldIndexInType, field);
+			return GetFieldOffset(typeDef, fieldIndexInType);
+		}
+
+		int32_t GetPackingSize(const Il2CppTypeDefinition* typeDef)
+		{
+			int32_t typeIndex = GetTypeRawIndex(typeDef);
+			auto it = _classLayouts.find(typeIndex);
+			return it != _classLayouts.end() ? it->second.packingSize : 0;
 		}
 
 		const Il2CppFieldDefaultValue* GetFieldDefaultValueEntryByRawIndex(uint32_t index)
@@ -505,13 +512,10 @@ namespace metadata
 		void InitEvents();
 		void InitMethodSemantics();
 		void InitInterfaces();
-		void InitVTables_1();
-		void InitVTables_2();
+		void InitVTables();
 
 		void ComputeBlittable(Il2CppTypeDefinition* def, std::vector<bool>& computFlags);
-
-		void ComputeVTable1(TypeDefinitionDetail* tdd);
-		void ComputeVTable2(TypeDefinitionDetail* tdd);
+		void ComputeVTable(TypeDefinitionDetail* tdd);
 
 		void SetIl2CppImage(Il2CppImage* image)
 		{

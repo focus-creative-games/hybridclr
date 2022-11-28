@@ -526,13 +526,13 @@ namespace hybridclr
 
 	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(const MethodInfo* methodInfo)
 	{
-		RuntimeInitClassCCtor(methodInfo);
 		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 
 		if (methodInfo->interpData)
 		{
 			return (InterpMethodInfo*)methodInfo->interpData;
 		}
+		RuntimeInitClassCCtor(methodInfo);
 		IL2CPP_ASSERT(methodInfo->isInterpterImpl);
 
 		metadata::Image* image = metadata::IsInterpreterMethod(methodInfo) ? hybridclr::metadata::MetadataModule::GetImage(methodInfo->klass)

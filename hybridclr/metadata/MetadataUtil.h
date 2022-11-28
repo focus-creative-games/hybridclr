@@ -4,6 +4,8 @@
 #include "vm/GlobalMetadata.h"
 #include "vm/Exception.h"
 #include "utils/HashUtils.h"
+#include "metadata/Il2CppTypeHash.h"
+#include "metadata/Il2CppTypeCompare.h"
 
 #include "../CommonDef.h"
 #include "MetadataDef.h"
@@ -384,6 +386,20 @@ namespace metadata
                 && t1.valuetype == t2.valuetype
 #endif
                 ;
+        }
+    };
+
+
+    struct Il2CppTypeHash {
+        size_t operator()(const Il2CppType* x) const noexcept {
+            return il2cpp::metadata::Il2CppTypeHash::Hash(x);
+        }
+    };
+
+    struct Il2CppTypeEqualTo
+    {
+        bool operator()(const Il2CppType* a, const Il2CppType* b) const {
+            return il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(a, b);
         }
     };
 
