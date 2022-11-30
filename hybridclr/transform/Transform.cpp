@@ -282,7 +282,7 @@ else \
 
 
 		// init local vars
-		if (body.flags & (uint32_t)CorILMethodFormat::InitLocals)
+		if ((body.flags & (uint32_t)CorILMethodFormat::InitLocals) && totalLocalSize > 0)
 		{
 			ctx.AddInst(CreateInitLocals(pool, totalLocalSize * sizeof(StackObject)));
 		}
