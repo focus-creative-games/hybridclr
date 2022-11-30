@@ -245,6 +245,10 @@ namespace hybridclr
 			{
 				thisPtr = localVarBase[argVarIndexs[0]].obj;
 				argVarIndexBase = argVarIndexs + 1;
+				if (IS_CLASS_VALUE_TYPE(method->klass))
+				{
+					thisPtr = (Il2CppObject*)thisPtr - 1;
+				}
 			}
 			else
 			{
