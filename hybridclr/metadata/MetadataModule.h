@@ -269,8 +269,6 @@ namespace metadata
 		}
 
 		static LoadImageErrorCode LoadMetadataForAOTAssembly(const void* dllBytes, uint32_t dllSize, HomologousImageMode mode);
-		static LoadImageErrorCode UseDifferentialHybridAOTAssembly(const char* assemblyName);
-		static LoadImageErrorCode LoadDifferentialHybridAssembly(const void* dllBytes, uint32_t dllSize, const void* optionData, uint32_t optionCount);
 	private:
 		static void InitReversePInvokeInfo();
 

@@ -5,15 +5,6 @@
 
 extern "C"
 {
-	IL2CPP_EXPORT int32_t DEFAULT_CALL RuntimeApi_UseDifferentialHybridAOTAssembly(const char* assemblyName)
-	{
-		return (int32_t)hybridclr::metadata::MetadataModule::UseDifferentialHybridAOTAssembly(assemblyName);
-	}
-
-	IL2CPP_EXPORT int32_t DEFAULT_CALL RuntimeApi_LoadDifferentialHybridAssembly(const void* dllBytes, uint32_t dllSize, const void* optionData, uint32_t optionCount)
-	{
-		return (int32_t)hybridclr::metadata::MetadataModule::LoadDifferentialHybridAssembly(dllBytes, dllSize, optionData, optionCount);
-	}
 
 	IL2CPP_EXPORT int32_t DEFAULT_CALL RuntimeApi_LoadMetadataForAOTAssembly(void* dllBytes, uint32_t dllSize, int32_t mode)
 	{

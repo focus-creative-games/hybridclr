@@ -131,11 +131,6 @@ namespace metadata
 			return _il2cppImage;
 		}
 
-		virtual bool IsHotPatch() const
-		{
-			return false;
-		}
-
 		uint32_t EncodeWithIndex(uint32_t rawIndex) const
 		{
 			return EncodeImageAndMetadataIndex(_index, rawIndex);

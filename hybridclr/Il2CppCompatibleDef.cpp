@@ -7,15 +7,6 @@
 namespace hybridclr
 {
 
-	const char* g_differentialHybridAssemblies[]
-	{
-
-	//!!!{{DHE
-
-	//!!!}}DHE
-		nullptr,
-	};
-
 	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method)
 	{
 		IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
