@@ -693,6 +693,10 @@ namespace metadata
         const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
         const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
         const Il2CppAssembly* refAss = il2cpp::vm::Assembly::GetLoadedAssembly(assName);
+        if (!refAss && std::strcmp(assName, ASSEMBLY_NAME_NETSTANDARD) == 0)
+        {
+            refAss = il2cpp::vm::Assembly::GetLoadedAssembly(ASSEMBLY_NAME_MSCORLIB);
+        }
         Il2CppClass* klass = nullptr;
         if (refAss)
         {

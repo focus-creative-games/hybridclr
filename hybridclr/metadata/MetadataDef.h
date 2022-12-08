@@ -9,6 +9,8 @@ namespace hybridclr
 {
 namespace metadata
 {
+#define ASSEMBLY_NAME_NETSTANDARD "netstandard"
+#define ASSEMBLY_NAME_MSCORLIB "mscorlib"
 
 	enum class CorILMethodFormat : uint8_t
 	{
