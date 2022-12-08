@@ -501,7 +501,7 @@ namespace hybridclr
 		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token);
 		if (methodBody == nullptr || methodBody->ilcodes == nullptr)
 		{
-			TEMP_FORMAT(errMsg, "not support extern method: %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
+			TEMP_FORMAT(errMsg, "Method body is null. %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		}
 		InterpMethodInfo* imi = new (IL2CPP_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;
