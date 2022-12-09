@@ -35,6 +35,14 @@ namespace interpreter
 
 		static bool IsImplementsByInterpreter(const MethodInfo* method);
 
+		static bool HasImplementNative2Managed(const MethodInfo* method)
+		{
+			return method->methodPointerCallByInterp != (Il2CppMethodPointer)NotSupportNative2Managed;
+		}
+
+		static void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
+
+		static void NotSupportNative2Managed();
 	private:
 
 		static il2cpp::os::ThreadLocalValue s_machineState;

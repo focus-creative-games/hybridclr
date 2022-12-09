@@ -85,7 +85,7 @@ namespace hybridclr
 			}
 		}
 
-		static void NotSupportNative2Managed()
+		void InterpreterModule::NotSupportNative2Managed()
 		{
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportNative2Managed"));
 		}
@@ -114,7 +114,7 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = g_native2manageds.find(sigName);
-			return it != g_native2manageds.end() ? it->second : NotSupportNative2Managed;
+			return it != g_native2manageds.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
 		}
 
 		template<typename T>
@@ -123,7 +123,7 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = g_adjustThunks.find(sigName);
-			return it != g_adjustThunks.end() ? it->second : NotSupportNative2Managed;
+			return it != g_adjustThunks.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
 		}
 
 		static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
@@ -197,7 +197,7 @@ namespace hybridclr
 			return GetNativeAdjustMethodMethod(method, false);
 		}
 
-		void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+		void InterpreterModule::Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 		{
 			if (hybridclr::metadata::IsInterpreterImplement(method))
 			{
