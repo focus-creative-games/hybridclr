@@ -83,6 +83,10 @@ namespace metadata
         {
             return nullptr;
         }
+        if (std::strcmp(assemblyFile, "netstandard.dll") == 0)
+        {
+            return nullptr;
+        }
         return CreatePlaceHolderAssembly(assemblyFile);
 #else
         return nullptr;

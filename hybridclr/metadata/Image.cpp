@@ -27,6 +27,31 @@ namespace hybridclr
 {
 namespace metadata
 {
+
+    static const char* s_netstandardRefs[]
+    {
+        "mscorlib",
+        "System",
+        "System.Core",
+        "System.Numerics",
+        "System.Collections",
+        "System.Collections.Concurrent",
+        "System.Numerics.Vectors",
+        "System.Data",
+        "System.Configuration",
+        "System.IO.Compression",
+        "System.Net",
+        "System.Security",
+        "System.Xml",
+        "System.Xml.Linq",
+        "System.Xml.Serialization",
+        "System.Runtime.Serialization",
+        "System.Json",
+        "System.Diagnostics.Tracing",
+        "System.Net.Http",
+        nullptr,
+    };
+
     bool Image::IsValueTypeFromToken(TableType tableType, uint32_t rowIndex)
     {
         switch (tableType)
@@ -686,6 +711,24 @@ namespace metadata
         }
     }
 
+    static Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr)
+    {
+        for (const char** ptrAssName = s_netstandardRefs; *ptrAssName; ptrAssName++)
+        {
+            const Il2CppAssembly* refAss = il2cpp::vm::Assembly::GetLoadedAssembly(*ptrAssName);
+            if (refAss)
+            {
+                const Il2CppImage* image2 = il2cpp::vm::Assembly::GetImage(refAss);
+                Il2CppClass* klass = il2cpp::vm::Class::FromName(image2, namespaceStr, nameStr);
+                if (klass)
+                {
+                    return klass;
+                }
+            }
+        }
+        return nullptr;
+    }
+
     const Il2CppType* Image::GetIl2CppType(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
     {
         TbAssemblyRef data = _rawImage.ReadAssemblyRef(assemblyRefIndex);
@@ -693,15 +736,15 @@ namespace metadata
         const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
         const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
         const Il2CppAssembly* refAss = il2cpp::vm::Assembly::GetLoadedAssembly(assName);
-        if (!refAss && std::strcmp(assName, ASSEMBLY_NAME_NETSTANDARD) == 0)
-        {
-            refAss = il2cpp::vm::Assembly::GetLoadedAssembly(ASSEMBLY_NAME_MSCORLIB);
-        }
         Il2CppClass* klass = nullptr;
         if (refAss)
         {
             const Il2CppImage* image2 = il2cpp::vm::Assembly::GetImage(refAss);
             klass = il2cpp::vm::Class::FromName(image2, typeNamespaceStr, typeNameStr);
+        }
+        else if (!refAss && std::strcmp(assName, "netstandard") == 0)
+        {
+            klass = FindNetStandardExportedType(typeNamespaceStr, typeNameStr);
         }
         if (!klass)
         {
