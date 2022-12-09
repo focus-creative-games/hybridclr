@@ -1269,6 +1269,10 @@ namespace interpreter
 
 inline void InvokeSingleDelegate(uint16_t invokeParamCount, const MethodInfo * method, Il2CppObject * obj, Managed2NativeCallMethod staticM2NMethod, Managed2NativeCallMethod instanceM2NMethod, uint16_t * argIdxs, StackObject * localVarBase, void* ret)
 {
+	if (!InterpreterModule::HasImplementNative2Managed(method))
+	{
+		instanceM2NMethod = staticM2NMethod = InterpreterModule::Managed2NativeCallByReflectionInvoke;
+	}
 	StackObject* target;
 	switch ((int32_t)invokeParamCount - (int32_t)method->parameters_count)
 	{
