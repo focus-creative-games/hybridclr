@@ -91,6 +91,21 @@ namespace hybridclr
 		}
 		return InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
 	}
+
+	inline Il2CppMethodPointer InitAndGetInterpreterDirectlyCallVirtualMethodPointer(const MethodInfo* method)
+	{
+		Il2CppMethodPointer methodPointer = method->virtualMethodPointerCallByInterp;
+		if (methodPointer)
+		{
+			return methodPointer;
+		}
+		if (method->initInterpCallMethodPointer)
+		{
+			return methodPointer;
+		}
+		InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
+		return method->virtualMethodPointerCallByInterp;
+	}
 }
 
 #if HYBRIDCLR_UNITY_2019 || HYBRIDCLR_UNITY_2020
@@ -137,7 +152,7 @@ namespace hybridclr
 
 	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)
 	{
-		delegate->method_ptr = InitAndGetInterpreterDirectlyCallMethodPointer(method);
+		delegate->method_ptr = InitAndGetInterpreterDirectlyCallVirtualMethodPointer(method);
 		delegate->method = method;
 		delegate->target = target;
 		//il2cpp::vm::Type::ConstructDelegate(delegate, target, InitAndGetInterpreterDirectlyCallMethodPointer(method), method);
@@ -213,7 +228,7 @@ namespace hybridclr
 	{
 		delegate->target = target;
 		delegate->method = method;
-		delegate->invoke_impl = InitAndGetInterpreterDirectlyCallMethodPointer(method);
+		delegate->invoke_impl = InitAndGetInterpreterDirectlyCallVirtualMethodPointer(method);
 		delegate->invoke_impl_this = target;
 	}
 
