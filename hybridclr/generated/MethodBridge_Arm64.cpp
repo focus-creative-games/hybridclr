@@ -18478,7 +18478,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"vvf4i8vf4i4i4i4i4vf4i8i4", __M2N_vvf4i8vf4i4i4i4i4vf4i8i4},
 	{"vvf4i8vf4u1", __M2N_vvf4i8vf4u1},
 	{"vvf4vf2vf2u1", __M2N_vvf4vf2vf2u1},
-	{"", nullptr},
+	{nullptr, nullptr},
 };
 
 // System.SByte AOTDefs.TC_Ret/F1::Invoke()

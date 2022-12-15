@@ -19099,7 +19099,7 @@ Managed2NativeMethodInfo hybridclr::interpreter::g_managed2nativeStub[] =
 	{"vu8u8", __M2N_vu8u8},
 	{"vu8u8i4", __M2N_vu8u8i4},
 	{"vu8u8i4i4", __M2N_vu8u8i4i4},
-	{"", nullptr},
+	{nullptr, nullptr},
 };
 
 // T System.Collections.Generic.IEnumerator`1::get_Current()
