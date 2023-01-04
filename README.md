@@ -50,7 +50,6 @@ HybridCLR从mono的 [mixed mode execution](https://www.mono-project.com/news/201
 - 实现了一个IL指令集到自定义的寄存器指令集的compiler
 - 实现了一个高效的寄存器解释器
 - 额外提供大量的instinct函数，提升解释器性能
-- 提供hotfix AOT的支持
 
 ## 与其他流行的c#热更新方案的区别
 
@@ -68,13 +67,9 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ## 稳定性状况
 
-当前版本已经较为稳定，标记为Release Candidate 版本。
+当前已经发布了稳定完善的**1.0**正式版本，足以满足大中型商业项目的稳定性要求。自2022.6.7上线第一个游戏起，线上项目中只发生过一起小bug，并且迅速地在几个小时内被修复。
 
-当前版本已经相当完善，除了剩余几个高级特性将在特性分支上稳步推进，主线的后续工作基本是修复bug及定期跟进Unity最新版本。
-
-目前已有数百个大中小型商业游戏项目完成接入，其中有几十个已经双端上线或者已经正式对外测试中。上线的项目中包括MMMORPG、重度卡牌、重度塔防之类的游戏。
-
-我们在前期收集了部分 [已经上线的商业项目](https://focus-creative-games.github.io/hybridclr/business_games/)。
+目前至少有数百个商业游戏项目完成接入，其中有几十个已经双端上线，上线的项目中包括MMORPG、重度卡牌、重度塔防之类的游戏。很多大家熟知的头部公司也已经接入多个项目并且很快就要上线。
 
 ## 支持与联系
 
@@ -82,7 +77,6 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 - QQ官方2群：680274677（新）。可以反馈bug，但**不要在群里咨询基础使用问题**。
 - QQ新手1群：428404198。新手使用过程中遇到问题，都可以在群里咨询。
 - 官方邮箱：hybridclr@focus-creative-games.com
-- 商业合作邮箱: business@focus-creative-games.com
 - [商业化支持](https://focus-creative-games.github.io/hybridclr/price/)
 
 ## 后续开发规划
@@ -91,7 +85,6 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 - 支持增量式GC
 - 支持extern函数
 - 其他优化
-- 为 **[godot引擎](https://godotengine.org/)** 添加`.net 7 + HybridCLR`支持 (2023.3 -)
 
 ## 关于作者
 
