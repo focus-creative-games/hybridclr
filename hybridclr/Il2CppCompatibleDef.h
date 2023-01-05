@@ -75,6 +75,8 @@
 namespace hybridclr
 {
 
+	extern const char* g_placeHolderAssemblies[];
+
 	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method);
 
 	inline Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointer(const MethodInfo* method)

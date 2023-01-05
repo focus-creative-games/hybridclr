@@ -24,8 +24,6 @@ namespace metadata
 
     std::vector<Il2CppAssembly*> s_placeHolderAssembies;
 
-
-
 #if ENABLE_PLACEHOLDER_DLL == 1
 
     static const char* CreateAssemblyNameWithoutExt(const char* assemblyName)
@@ -75,22 +73,15 @@ namespace metadata
     }
 #endif
 
-    Il2CppAssembly* Assembly::LoadFromFile(const char* assemblyFile)
+    void Assembly::InitializePlaceHolderAssemblies()
     {
-#if ENABLE_PLACEHOLDER_DLL == 1
-        // if pass an assembly name, 
-        if (std::strstr(assemblyFile, "/") || std::strstr(assemblyFile, "\\"))
+        for (const char** ptrPlaceHolderName = g_placeHolderAssemblies; *ptrPlaceHolderName; ++ptrPlaceHolderName)
         {
-            return nullptr;
+            const char* nameWithExtension = ConcatNewString(*ptrPlaceHolderName, ".dll");
+            Il2CppAssembly* placeHolderAss = CreatePlaceHolderAssembly(nameWithExtension);
+            IL2CPP_FREE((void*)nameWithExtension);
+            il2cpp::vm::MetadataCache::RegisterInterpreterAssembly(placeHolderAss);
         }
-        if (std::strcmp(assemblyFile, "netstandard.dll") == 0)
-        {
-            return nullptr;
-        }
-        return CreatePlaceHolderAssembly(assemblyFile);
-#else
-        return nullptr;
-#endif
     }
 
     Il2CppAssembly* Assembly::LoadFromBytes(const void* assemblyData, uint64_t length, bool copyData)

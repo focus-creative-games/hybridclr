@@ -17,6 +17,7 @@
 
 #include "../interpreter/InterpreterModule.h"
 
+#include "Assembly.h"
 #include "InterpreterImage.h"
 #include "ConsistentAOTHomologousImage.h"
 #include "SuperSetAOTHomologousImage.h"
@@ -65,6 +66,7 @@ namespace metadata
     {
         InitReversePInvokeInfo();
         InterpreterImage::Initialize();
+        Assembly::InitializePlaceHolderAssemblies();
     }
 
     Il2CppMethodPointer MetadataModule::GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method)
