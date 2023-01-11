@@ -14,7 +14,7 @@ HybridCLR是一个**特性完整、零成本、高性能、低内存**的**近�
 
 HybridCLR扩充了il2cpp的代码，使它由纯[AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime变成‘AOT+Interpreter’ 混合runtime，进而原生支持动态加载assembly，使得基于il2cpp backend打包的游戏不仅能在Android平台，也能在IOS、Consoles等限制了JIT的平台上高效地以**AOT+interpreter**混合模式执行，从底层彻底支持了热更新。
 
-HybridCLR开创性地实现了 `Differential Hybrid Execution(DHE)` 增量热更新技术。即可以对AOT dll任意增删改，会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平。
+HybridCLR不仅支持传统的全解释执行模式，还开创性地实现了 `Differential Hybrid Execution(DHE)` 差分混合执行技术。即可以对AOT dll任意增删改，会智能地让变化或者新增的类和函数以interpreter模式运行，但未改动的类和函数以AOT方式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平。
 
 欢迎拥抱现代原生C#热更新技术 ！！！
 
@@ -29,13 +29,13 @@ HybridCLR开创性地实现了 `Differential Hybrid Execution(DHE)` 增量热更
 
 ## 特性
 
-- 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了 下文中"限制和注意事项" 之外的特性都支持。
-- 零学习和使用成本。 HybridCLR将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，也没有什么特殊限制。
+- 特性完整。 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，除了[限制事项](https://focus-creative-games.github.io/hybridclr/limit/)之外的特性都支持。
+- 零学习和使用成本。 HybridCLR将纯AOT runtime增强为完整的runtime，使得热更新代码与AOT代码无缝工作。脚本类与AOT类在同一个运行时内，可以随意写继承、反射、多线程(volatile、ThreadStatic、Task、async)之类的代码。不需要额外写任何特殊代码、没有代码生成，几乎没有限制。
 - 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://focus-creative-games.github.io/hybridclr/performance)
 - 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://focus-creative-games.github.io/hybridclr/memory)
 - 由于对泛型的完美支持，使得因为AOT泛型问题跟il2cpp不兼容的库现在能够完美地在il2cpp下运行
 - 支持一些il2cpp不支持的特性，如__makeref、 __reftype、__refvalue指令
-- `Differential Hybrid Execution(DHE)` 增量热更新技术
+- `Differential Hybrid Execution(DHE)` 差分混合执行技术
 
 ## 工作原理
 
@@ -75,7 +75,8 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 - QQ官方1群：651188171（满）。可以反馈bug，但**不要在群里咨询基础使用问题**。
 - QQ官方2群：680274677（新）。可以反馈bug，但**不要在群里咨询基础使用问题**。
-- QQ新手1群：428404198。新手使用过程中遇到问题，都可以在群里咨询。
+- QQ新手1群：428404198。新手使用过程中遇到问题，都可以免费在群里咨询。
+- **QQ悬赏互助群**：762953653。悬赏提问，快速解决问题。
 - 官方邮箱：hybridclr@focus-creative-games.com
 - [商业化支持](https://focus-creative-games.github.io/hybridclr/price/)
 
