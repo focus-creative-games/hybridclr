@@ -43,6 +43,7 @@ namespace interpreter
 		static void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
 
 		static void NotSupportNative2Managed();
+		static void NotSupportAdjustorThunk();
 	private:
 
 		static il2cpp::os::ThreadLocalValue s_machineState;

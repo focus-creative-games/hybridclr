@@ -89,6 +89,11 @@ namespace hybridclr
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportNative2Managed"));
 		}
 
+		void InterpreterModule::NotSupportAdjustorThunk()
+		{
+			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportAdjustorThunk"));
+		}
+
 		static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
 		{
 			char sigName[1000];
@@ -122,7 +127,7 @@ namespace hybridclr
 			char sigName[1000];
 			ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
 			auto it = g_adjustThunks.find(sigName);
-			return it != g_adjustThunks.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
+			return it != g_adjustThunks.end() ? it->second : InterpreterModule::NotSupportAdjustorThunk;
 		}
 
 		static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
@@ -288,12 +293,13 @@ namespace hybridclr
 	}
 
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-	static void InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
+	static void InterpterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
 	{
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
 		StackObject args[256];
 		if (isInstanceMethod)
 		{
+			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
 			args[0].ptr = __this;
 		}
 		ConvertInvokeArgs(args + isInstanceMethod, method, __args);
@@ -368,13 +374,13 @@ namespace hybridclr
 		}
 	}
 #else
-	static void* InterpterInvoke(Il2CppMethodPointer, const MethodInfo* method, void* __this, void** __args)
+	static void* InterpterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args)
 	{
 		StackObject args[256];
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
 		if (isInstanceMethod)
 		{
-			__this = (Il2CppObject*)__this + IS_CLASS_VALUE_TYPE(((Il2CppObject*)__this)->klass);
+			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
 			args[0].ptr = __this;
 		}
 		ConvertInvokeArgs(args + isInstanceMethod, method, __args);
