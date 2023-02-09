@@ -34,6 +34,55 @@ namespace interpreter
 	extern Native2ManagedMethodInfo g_native2managedStub[];
 	extern NativeAdjustThunkMethodInfo g_adjustThunkStub[];
 
+
+	template<int N>
+	struct WebGLSpeicalValueType
+	{
+		union
+		{
+			struct
+			{
+			};
+			uint8_t __padding[N];
+		};
+	};
+
+	template<int N>
+	struct WebGLSpeicalValueTypeAlign2
+	{
+		union
+		{
+			struct
+			{
+			};
+			uint16_t __padding[N/2];
+		};
+	};
+
+	template<int N>
+	struct WebGLSpeicalValueTypeAlign4
+	{
+		union
+		{
+			struct
+			{
+			};
+			uint32_t __padding[N / 4];
+		};
+	};
+
+	template<int N>
+	struct WebGLSpeicalValueTypeAlign8
+	{
+		union
+		{
+			struct
+			{
+			};
+			uint64_t __padding[N / 8];
+		};
+	};
+
 	template<int N>
 	struct ValueTypeSize
 	{

@@ -268,6 +268,30 @@ namespace hybridclr
 			return false;
 		}
 
+		static bool IsWebGLSpecialValueType(Il2CppClass* klass)
+		{
+			if (klass->enumtype)
+			{
+				return false;
+			}
+			if (klass->field_count == 0)
+			{
+				return true;
+			}
+			il2cpp::vm::Class::SetupFields(klass);
+			for (uint16_t i = 0; i < klass->field_count; i++)
+			{
+				FieldInfo* field = klass->fields + i;
+				const Il2CppType* ftype = field->type;
+				if (!metadata::IsInstanceField(ftype))
+				{
+					continue;
+				}
+				return false;
+			}
+			return true;
+		}
+
 		static void AppendString(char* sigBuf, size_t bufSize, size_t& pos, const char* str)
 		{
 			size_t len = std::strlen(str);
@@ -300,6 +324,7 @@ namespace hybridclr
 				RaiseExecutionEngineException("");
 			}
 		}
+
 		static void AppendValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, bool returnValue, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
 #if HYBRIDCLR_ABI_UNIVERSAL_32 || HYBRIDCLR_ABI_UNIVERSAL_64 || HYBRIDCLR_ABI_WEBGL32
@@ -352,6 +377,39 @@ namespace hybridclr
 #else
 #error "not support ABI"
 #endif
+		}
+
+		static void AppendEmptyValueTypeSignatureByAligmentAndSize(int32_t typeSize, uint8_t aligment, char* sigBuf, size_t bufferSize, size_t& pos)
+		{
+			switch (aligment)
+			{
+			case 0:
+			case 1:
+			{
+				pos += std::sprintf(sigBuf + pos, "X%d", typeSize);
+				break;
+			}
+			case 2:
+			{
+				pos += std::sprintf(sigBuf + pos, "Y%d", typeSize);
+				break;
+			}
+			case 4:
+			{
+				pos += std::sprintf(sigBuf + pos, "Z%d", typeSize);
+				break;
+			}
+			case 8:
+			{
+				pos += std::sprintf(sigBuf + pos, "W%d", typeSize);
+				break;
+			}
+			default:
+			{
+				TEMP_FORMAT(errMsg, "not support aligment:%d size:%d", aligment, typeSize);
+				RaiseExecutionEngineException(errMsg);
+			}
+			}
 		}
 
 		static void AppendSignature(const Il2CppType* type, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos);
@@ -414,16 +472,15 @@ namespace hybridclr
 			uint8_t actualAligment = klass->naturalAligment <= 4 ? 1 : 8;
 			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
 #elif HYBRIDCLR_ABI_WEBGL32
-			//SingletonStruct ss = {};
-			//if (ComputSingletonStruct(klass, ss))
-			//{
-			//	AppendSignature(ss.type, returnType, sigBuf, bufferSize, pos);
-			//}
-			//else
-			//{
 			uint8_t actualAligment = klass->naturalAligment;
-			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
-			//}
+			if (IsWebGLSpecialValueType(klass))
+			{
+				AppendEmptyValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
+			}
+			else
+			{
+				AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
+			}
 #else
 #error "not support platform"
 #endif
