@@ -143,7 +143,7 @@ namespace hybridclr
 	inline void RaiseAOTGenericMethodNotInstantiatedException(const MethodInfo* method)
 	{
 		std::string methodName = GetMethodNameWithSignature(method);
-		TEMP_FORMAT(errMsg, "AOT generic method not instantiated in aot module. %s", methodName.c_str());
+		TEMP_FORMAT(errMsg, "AOT generic method not instantiated in aot. assembly:%s, method:%s", method->klass->image->name, methodName.c_str());
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(errMsg));
 	}
 
