@@ -88,7 +88,6 @@ namespace metadata
 		const Il2CppType* _type;
 		const Il2CppTypeDefinition* _typeDef;
 		const char* _name; // TODO remove
-		std::vector<const Il2CppMethodDefinition*> _methods;
 
 		std::vector<GenericClassMethod> _virtualMethods;
 		std::vector<VirtualMethodImpl> _methodImpls;
