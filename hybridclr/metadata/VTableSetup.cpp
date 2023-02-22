@@ -39,7 +39,6 @@ namespace metadata
 			tdt->_interfaces.push_back(intf);
 		}
 
-		tdt->_methods = genericType->_methods;
 		for (GenericClassMethod& gcm : genericType->_virtualMethods)
 		{
 			tdt->_virtualMethods.push_back({ TryInflateIfNeed(type, genericType->_type, gcm.type), gcm.method, gcm.name });
@@ -102,7 +101,6 @@ namespace metadata
 		{
 			const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef->methodStart + i);
 			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex);
-			tdt->_methods.push_back(methodDef);
 			if (hybridclr::metadata::IsVirtualMethod(methodDef->flags))
 			{
 				tdt->_virtualMethods.push_back({ type, methodDef, methodName });
