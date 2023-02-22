@@ -208,6 +208,32 @@ namespace metadata
 		}
 	}
 
+	const Il2CppType* VTableSetUp::FindImplType(const Il2CppMethodDefinition* methodDef)
+	{
+		Il2CppTypeDefinition* declarType = (Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(methodDef->declaringType);
+		for (VTableSetUp* cur = this; cur; cur = cur->_parent)
+		{
+			if (declarType == cur->_typeDef)
+			{
+				return cur->_type;
+			}
+			for(VTableSetUp* itf : cur->_interfaces)
+			{
+				if (declarType == itf->_typeDef)
+				{
+					return itf->_type;
+				}
+			}
+		}
+		TEMP_FORMAT(errMsg, "VTableSetUp::FindImplType can't find impl type for method:%s.%s::%s",
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(declarType->namespaceIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(declarType->nameIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex)
+			);
+		RaiseExecutionEngineException(errMsg);
+		return nullptr;
+	}
+
 	const VTableSetUp* VTableSetUp::FindAncestorTypeTree(const Il2CppType* implType)
 	{
 		for (VTableSetUp* cur = this; cur; cur = cur->_parent)
@@ -282,8 +308,7 @@ namespace metadata
 				}
 				continue;
 			}
-			Il2CppTypeDefinition* declaringType = (Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(overideMethodDef->declaringType);
-			const Il2CppType* implType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(declaringType->byvalTypeIndex);
+			const Il2CppType* implType = FindImplType(overideMethodDef);
 			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(overideMethodDef->nameIndex);
 			uint16_t slot = i;
 			_methodImpls.push_back({ overideMethodDef, implType, slot, methodName });
