@@ -13,6 +13,7 @@
 #include "vm/Exception.h"
 #include "vm/Thread.h"
 #include "vm/Runtime.h"
+#include "vm/Reflection.h"
 #include "metadata/GenericMetadata.h"
 #if HYBRIDCLR_UNITY_2020_OR_NEW
 #include "vm-utils/icalls/mscorlib/System.Threading/Interlocked.h"
@@ -11067,6 +11068,13 @@ else \
 					uint16_t __src = *(uint16_t*)(ip + 4);
 					uint16_t __srcType = *(uint16_t*)(ip + 6);
 				    (*(int32_t*)(localVarBase + __dst)) =  UnsafeEnumCast((void*)(localVarBase + __src), __srcType);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::AssemblyGetExecutingAssembly:
+				{
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    (*(Il2CppObject**)(localVarBase + __ret)) = (Il2CppObject*)il2cpp::vm::Reflection::GetAssemblyObject(imi->method->klass->image->assembly);
 				    ip += 8;
 				    continue;
 				}

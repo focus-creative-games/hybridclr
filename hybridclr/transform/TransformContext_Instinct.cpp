@@ -8,11 +8,12 @@ namespace transform
 	bool TransformContext::TryAddInstinctInstrumentsByName(const MethodInfo* method)
 	{
 		Il2CppClass* klass = method->klass;
+		const char* namespaceName = klass->namespaze;
 		const char* klassName = klass->name;
 		const char* methodName = method->name;
 		uint32_t paramCount = method->parameters_count;
 
-		if (std::strcmp(klass->namespaze, "System") == 0)
+		if (std::strcmp(namespaceName, "System") == 0)
 		{
 			if (std::strcmp(klassName, "Object") == 0)
 			{
@@ -130,7 +131,7 @@ namespace transform
 				}
 			}
 		}
-		else if (strcmp(klass->namespaze, "System.Threading") == 0)
+		else if (strcmp(namespaceName, "System.Threading") == 0)
 		{
 			if (strcmp(klassName, "Interlocked") == 0)
 			{
@@ -213,7 +214,7 @@ namespace transform
 				}
 			}
 		}
-		else if (strcmp(klass->namespaze, "System.Runtime.CompilerServices") == 0)
+		else if (strcmp(namespaceName, "System.Runtime.CompilerServices") == 0)
 		{
 			if (strcmp(klass->name, "JitHelpers") == 0)
 			{
@@ -247,7 +248,18 @@ namespace transform
 				}
 			}
 		}
-		else if (strcmp(klass->namespaze, "UnityEngine") == 0)
+		else if (strcmp(klassName, "Assembly") == 0 && strcmp(namespaceName, "System.Reflection") == 0)
+		{
+			if (strcmp(methodName, "GetExecutingAssembly") == 0)
+			{
+				IL2CPP_ASSERT(evalStackTop >= 0);
+				CreateAddIR(ir, AssemblyGetExecutingAssembly);
+				ir->ret = GetEvalStackNewTopOffset();
+				PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+				return true;
+			}
+		}
+		else if (strcmp(namespaceName, "UnityEngine") == 0)
 		{
 			if (strcmp(methodName, ".ctor") == 0)
 			{

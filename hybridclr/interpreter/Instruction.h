@@ -836,6 +836,7 @@ namespace interpreter
 		NewString_2,
 		NewString_3,
 		UnsafeEnumCast,
+		AssemblyGetExecutingAssembly,
 
 		//!!!}}OPCODE
 	};
@@ -9469,6 +9470,16 @@ namespace interpreter
 		uint16_t dst;
 		uint16_t src;
 		uint16_t srcType;
+	};
+
+
+	struct IRAssemblyGetExecutingAssembly : IRCommon
+	{
+		uint16_t ret;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
 	};
 
 
