@@ -285,28 +285,28 @@ namespace metadata
         }
         else
         {
-            uint8_t aligment;
+            uint8_t parentMinimumAligment;
             int32_t parentActualSize = 0;
             if (typeDef->parentIndex != kInvalidIndex)
             {
-                const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
-                if (IsValueType(parentType))
+                if (IsValueType(typeDef))
                 {
-                    aligment = 1;
-                    parentActualSize = 0;
+                    parentMinimumAligment = 1;
+                    parentActualSize = sizeof(Il2CppObject);
                 }
                 else
                 {
+                    const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
                     CalcClassNotStaticFields(parentType);
                     ClassLayoutInfo* parentLayout = GetClassLayoutInfo(parentType);
                     parentActualSize = parentLayout->actualSize;
-                    aligment = PTR_SIZE;
+                    parentMinimumAligment = parentLayout->alignment;
                 }
             }
             else
             {
                 parentActualSize = sizeof(Il2CppObject);
-                aligment = PTR_SIZE;
+                parentMinimumAligment = PTR_SIZE;
             }
 
             std::vector<FieldLayout*> instanceFields;
@@ -315,11 +315,12 @@ namespace metadata
                 if (IsInstanceField(field.type))
                     instanceFields.push_back(&field);
             }
+
             FieldLayoutData layoutData;
-            LayoutFields(parentActualSize, aligment, packingSize, instanceFields, layoutData);
-            if (layoutData.classSize == 0)
+            LayoutFields(parentActualSize, parentMinimumAligment, packingSize, instanceFields, layoutData);
+            if (fields.empty() && IsValueType(type))
             {
-                layoutData.classSize = layoutData.actualClassSize = layoutData.nativeSize = 1;
+                layoutData.classSize = layoutData.actualClassSize = layoutData.nativeSize = IL2CPP_SIZEOF_STRUCT_WITH_NO_INSTANCE_FIELDS + sizeof(Il2CppObject);;
             }
             layout.alignment = layoutData.minimumAlignment;
             layout.naturalAlignment = layoutData.naturalAlignment;
