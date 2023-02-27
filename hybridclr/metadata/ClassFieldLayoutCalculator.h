@@ -75,7 +75,7 @@ namespace metadata
 		void CalcClassNotStaticFields(const Il2CppType* type);
 		void CalcClassStaticFields(const Il2CppType* type);
 
-		void LayoutFields(int32_t parentSize, int32_t actualParentSize, int32_t parentAlignment, uint8_t packing, std::vector<FieldLayout*>& fields, FieldLayoutData& data);
+		void LayoutFields(int32_t actualParentSize, int32_t parentAlignment, uint8_t packing, std::vector<FieldLayout*>& fields, FieldLayoutData& data);
 		SizeAndAlignment GetTypeSizeAndAlignment(const Il2CppType* type);
 	};
 }

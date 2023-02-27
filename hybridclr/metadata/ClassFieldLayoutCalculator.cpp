@@ -132,9 +132,9 @@ namespace metadata
         return size;
     }
 
-    void ClassFieldLayoutCalculator::LayoutFields(int32_t parentSize, int32_t actualParentSize, int32_t parentAlignment, uint8_t packing, std::vector<FieldLayout*>& fields, FieldLayoutData& data)
+    void ClassFieldLayoutCalculator::LayoutFields(int32_t actualParentSize, int32_t parentAlignment, uint8_t packing, std::vector<FieldLayout*>& fields, FieldLayoutData& data)
     {
-        data.classSize = parentSize;
+        //data.classSize = parentSize;
         data.actualClassSize = actualParentSize;
         IL2CPP_ASSERT(parentAlignment <= std::numeric_limits<uint8_t>::max());
         data.minimumAlignment = static_cast<uint8_t>(parentAlignment);
@@ -279,26 +279,34 @@ namespace metadata
             }
             // TODO FIXME. not consider packingSize
 
-            layout.alignment = packingSize;
-            layout.naturalAlignment = 1;
-            layout.actualSize = layout.instanceSize = instanceSize;
+            layout.naturalAlignment = layout.alignment = std::max(packingSize, (uint8_t)1);
+            layout.actualSize = layout.instanceSize = AlignTo(instanceSize, layout.alignment);
             layout.nativeSize = -1;
         }
         else
         {
-            int32_t parentSize = 0;
+            uint8_t aligment;
             int32_t parentActualSize = 0;
             if (typeDef->parentIndex != kInvalidIndex)
             {
                 const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
-                CalcClassNotStaticFields(parentType);
-                ClassLayoutInfo* parentLayout = GetClassLayoutInfo(parentType);
-                parentSize = parentLayout->instanceSize;
-                parentActualSize = parentLayout->actualSize;
+                if (IsValueType(parentType))
+                {
+                    aligment = 1;
+                    parentActualSize = 0;
+                }
+                else
+                {
+                    CalcClassNotStaticFields(parentType);
+                    ClassLayoutInfo* parentLayout = GetClassLayoutInfo(parentType);
+                    parentActualSize = parentLayout->actualSize;
+                    aligment = PTR_SIZE;
+                }
             }
             else
             {
-                parentSize = parentActualSize = sizeof(Il2CppObject);
+                parentActualSize = sizeof(Il2CppObject);
+                aligment = PTR_SIZE;
             }
 
             std::vector<FieldLayout*> instanceFields;
@@ -308,7 +316,11 @@ namespace metadata
                     instanceFields.push_back(&field);
             }
             FieldLayoutData layoutData;
-            LayoutFields(parentSize, parentActualSize, 1, packingSize, instanceFields, layoutData);
+            LayoutFields(parentActualSize, aligment, packingSize, instanceFields, layoutData);
+            if (layoutData.classSize == 0)
+            {
+                layoutData.classSize = layoutData.actualClassSize = layoutData.nativeSize = 1;
+            }
             layout.alignment = layoutData.minimumAlignment;
             layout.naturalAlignment = layoutData.naturalAlignment;
             layout.actualSize = layoutData.actualClassSize;
@@ -344,13 +356,13 @@ namespace metadata
         if (!staticFields.empty())
         {
             FieldLayoutData staticLayoutData;
-            LayoutFields(0, 0, 1, 0, staticFields, staticLayoutData);
+            LayoutFields(0, 1, 0, staticFields, staticLayoutData);
             layout.staticFieldsSize = staticLayoutData.classSize;
         }
         if (!threadStaticFields.empty())
         {
             FieldLayoutData threadStaticLayoutData;
-            LayoutFields(0, 0, 1, 0, threadStaticFields, threadStaticLayoutData);
+            LayoutFields(0, 1, 0, threadStaticFields, threadStaticLayoutData);
             layout.threadStaticFieldsSize = threadStaticLayoutData.classSize;
             for (FieldLayout* field : threadStaticFields)
             {
