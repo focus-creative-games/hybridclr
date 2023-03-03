@@ -480,11 +480,6 @@ namespace metadata
 			for (uint16_t idx = rioi.offset, end = rioi.offset + (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
 			{
 				VirtualMethodImpl& vmi = _methodImpls[idx];
-				if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(vmi.type, rioi.type))
-				{
-					continue;
-				}
-
 				// override by virtual method
 				const GenericClassMethod* implVm = FindImplMethod(vmi.type, vmi.method, false);
 				if (implVm)
