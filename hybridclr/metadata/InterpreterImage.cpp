@@ -1512,7 +1512,7 @@ namespace metadata
 		uint32_t methodIndex = DecodeTokenRowIndex(token) - 1;
 		IL2CPP_ASSERT(methodIndex < (uint32_t)_methodDefines.size());
 		const Il2CppMethodDefinition* methodDef = &_methodDefines[methodIndex];
-		return hybridclr::interpreter::InterpreterModule::GetAdjustThunkMethodPointer(methodDef);
+		return IsInstanceMethod(methodDef) ? hybridclr::interpreter::InterpreterModule::GetAdjustThunkMethodPointer(methodDef) : nullptr;
 	}
 
 	Il2CppMethodPointer InterpreterImage::GetMethodPointer(uint32_t token)
