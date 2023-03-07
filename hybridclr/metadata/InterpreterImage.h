@@ -417,13 +417,16 @@ namespace metadata
 			return std::make_tuple<void*, void*>((void*)_rawImage.GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage.GetBlobReaderByRawIndex(nextCa.value).GetData());
 		}
 
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)
 		{
 			CustomAttributeIndex index = (CustomAttributeIndex)(typeRange - (const Il2CppCustomAttributeTypeRange*)&_customAttributeHandles[0]);
 			IL2CPP_ASSERT(index >= 0 && index < (CustomAttributeIndex)_customAttributeHandles.size());
 			return GenerateCustomAttributesCacheInternal(index);
 		}
+#endif
 
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		bool HasAttribute(CustomAttributeIndex index, Il2CppClass* attribute)
 		{
 			const Il2CppCustomAttributeTypeRange* typeRange = &_customAttributeHandles[DecodeMetadataIndex(index)];
@@ -461,6 +464,7 @@ namespace metadata
 		}
 		
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
+#endif
 
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 		Il2CppArray* GetCustomAttributesDataInternal(uint32_t token);
@@ -570,7 +574,9 @@ namespace metadata
 
 		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
 		std::vector<Il2CppCustomAttributeTypeRange> _customAttributeHandles;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		std::vector<CustomAttributesCache*> _customAttribtesCaches;
+#endif
 		std::vector<CustomAttribute> _customAttribues;
 
 		std::vector<PropertyDetail> _propeties;

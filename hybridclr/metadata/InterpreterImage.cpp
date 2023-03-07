@@ -594,9 +594,12 @@ namespace metadata
 		// add extra Il2CppCustomAttributeTypeRange for compute count
 		_customAttributeHandles.push_back({ 0, EncodeWithIndex((int32_t)_customAttribues.size()) });
 #endif
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		_customAttribtesCaches.resize(_tokenCustomAttributes.size());
+#endif
 	}
 
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 	CustomAttributesCache* InterpreterImage::GenerateCustomAttributesCacheInternal(CustomAttributeIndex index)
 	{
 		IL2CPP_ASSERT(index != kCustomAttributeIndexInvalid);
@@ -660,6 +663,7 @@ namespace metadata
 		_customAttribtesCaches[index] = cache;
 		return cache;
 	}
+#endif
 
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 	Il2CppArray* InterpreterImage::GetCustomAttributesDataInternal(uint32_t token)
