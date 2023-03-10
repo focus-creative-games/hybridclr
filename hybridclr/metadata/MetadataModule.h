@@ -230,12 +230,12 @@ namespace metadata
 		{
 			return GetImage(image)->HasAttributeByToken(token, attribute);
 		}
-#endif
 
 		static std::tuple<void*, void*> GetCustomAttributeDataRange(const Il2CppImage* image, uint32_t token)
 		{
 			return GetImage(image)->GetCustomAttributeDataRange(token);
 		}
+#endif
 
 		static bool IsImplementedByInterpreter(MethodInfo* method)
 		{

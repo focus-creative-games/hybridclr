@@ -31,6 +31,11 @@ namespace metadata
             return _readPos;
         }
 
+        const byte* GetDataOfReadPosition() const
+        {
+            return _buf + _readPos;
+        }
+
         bool IsEmpty() const
         {
             return _readPos >= _length;
@@ -171,12 +176,11 @@ namespace metadata
             ++_readPos;
         }
 
-        const byte* GetAndSkipCurBytes(uint32_t len)
+        void SkipBytes(uint32_t len)
         {
             IL2CPP_ASSERT(_readPos + len <= _length);
             const byte* data = _buf + _readPos;
             _readPos += len;
-            return data;
         }
 
     private:

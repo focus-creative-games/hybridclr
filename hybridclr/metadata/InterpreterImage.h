@@ -1,5 +1,6 @@
 #pragma once
 #include "Image.h"
+#include "CustomAttributeDataWriter.h"
 
 namespace hybridclr
 {
@@ -46,10 +47,8 @@ namespace metadata
 		uint32_t signatureBlobIndex;
 		uint32_t getterMethodIndex; // start from 1;
 		uint32_t setterMethodIndex;
-#if HYBRIDCLR_UNITY_2019
 		Il2CppTypeDefinition* declaringType;
 		Il2CppPropertyDefinition il2cppDefinition;
-#endif
 	};
 
 	struct EventDetail
@@ -75,6 +74,10 @@ namespace metadata
 	struct CustomAtttributesInfo
 	{
 		int32_t typeRangeIndex;
+#if HYBRIDCLR_UNITY_2022_OR_NEW
+		int32_t dataStartOffset;
+		int32_t dataEndOffset;
+#endif
 	};
 
 	class InterpreterImage : public Image
@@ -101,7 +104,8 @@ namespace metadata
 
 	public:
 
-		InterpreterImage(uint32_t imageIndex) : _index(imageIndex), _inited(false), _il2cppImage(nullptr)
+		InterpreterImage(uint32_t imageIndex) : _index(imageIndex), _inited(false), _il2cppImage(nullptr),
+			_il2cppFormatCustomDataBlob(10240), _tempCtorArgBlob(1024), _tempFieldBlob(1024), _tempPropertyBlob(1024)
 		{
 
 		}
@@ -220,6 +224,11 @@ namespace metadata
 		{
 			IL2CPP_ASSERT((size_t)index < _methodDefines.size());
 			return &_methodDefines[index];
+		}
+
+		MethodIndex GetMethodIndexFromDefinition(const Il2CppMethodDefinition* methodDefine)
+		{
+			return EncodeWithIndex(methodDefine - &_methodDefines[0]);
 		}
 
 		const Il2CppGenericParameter* GetGenericParameterByGlobalIndex(uint32_t index)
@@ -350,14 +359,12 @@ namespace metadata
 			return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(index);
 		}
 
-#ifdef HYBRIDCLR_UNITY_2019
 		Il2CppPropertyDefinition* GetPropertyDefinitionFromIndex(PropertyIndex index)
 		{
 			IL2CPP_ASSERT(index > 0 && index <= (int32_t)_propeties.size());
 			PropertyDetail& pd = _propeties[(uint32_t)index - 1];
 			return &pd.il2cppDefinition;
 		}
-#endif
 
 		Il2CppMetadataPropertyInfo GetPropertyInfo(const Il2CppClass* klass, TypePropertyIndex index)
 		{
@@ -407,6 +414,26 @@ namespace metadata
 			return it != _tokenCustomAttributes.end() ? it->second.typeRangeIndex : kCustomAttributeIndexInvalid;
 		}
 
+#if HYBRIDCLR_UNITY_2022_OR_NEW
+		il2cpp::metadata::CustomAttributeDataReader CreateCustomAttributeDataReader(Il2CppMetadataCustomAttributeHandle handle)
+		{
+			const Il2CppCustomAttributeTypeRange* dataRange = (const Il2CppCustomAttributeTypeRange*)handle;
+			IL2CPP_ASSERT(_tokenCustomAttributes.find(dataRange->token) != _tokenCustomAttributes.end());
+			CustomAtttributesInfo& cai = _tokenCustomAttributes[dataRange->token];
+			const char* dataBlob = (const char*)_il2cppFormatCustomDataBlob.Data();
+			return il2cpp::metadata::CustomAttributeDataReader(_il2cppImage, dataBlob + cai.dataStartOffset, dataBlob + cai.dataEndOffset);
+		}
+
+		void BuildCustomAttributeDataReaders();
+		void BuildCustomAttributesData(CustomAtttributesInfo& cai, const Il2CppCustomAttributeTypeRange& typeRange);
+		void ConvertILCustomAttributeData2Il2CppFormat(const MethodInfo* ctorMethod, BlobReader& reader);
+		void ConvertFixedArg(CustomAttributeDataWriter& writer, BlobReader& reader, const Il2CppType* type, bool writeType);
+		void ConvertBoxedValue(CustomAttributeDataWriter& writer, BlobReader& reader, bool writeType);
+		void ConvertSystemType(CustomAttributeDataWriter& writer, BlobReader& reader, bool writeType);
+		void WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type);
+		void GetFieldDeclaringTypeIndexAndFieldIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex);
+		void GetPropertyDeclaringTypeIndexAndPropertyIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex);
+#else
 		std::tuple<void*, void*> GetCustomAttributeDataRange(uint32_t token)
 		{
 			const Il2CppCustomAttributeTypeRange* dataRangeCur = (const Il2CppCustomAttributeTypeRange*)GetCustomAttributeTypeToken(token);
@@ -417,16 +444,13 @@ namespace metadata
 			return std::make_tuple<void*, void*>((void*)_rawImage.GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage.GetBlobReaderByRawIndex(nextCa.value).GetData());
 		}
 
-#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)
 		{
 			CustomAttributeIndex index = (CustomAttributeIndex)(typeRange - (const Il2CppCustomAttributeTypeRange*)&_customAttributeHandles[0]);
 			IL2CPP_ASSERT(index >= 0 && index < (CustomAttributeIndex)_customAttributeHandles.size());
 			return GenerateCustomAttributesCacheInternal(index);
 		}
-#endif
 
-#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		bool HasAttribute(CustomAttributeIndex index, Il2CppClass* attribute)
 		{
 			const Il2CppCustomAttributeTypeRange* typeRange = &_customAttributeHandles[DecodeMetadataIndex(index)];
@@ -464,11 +488,13 @@ namespace metadata
 		}
 		
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
-#endif
 
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 		Il2CppArray* GetCustomAttributesDataInternal(uint32_t token);
 #endif
+
+#endif
+
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
 
@@ -478,7 +504,7 @@ namespace metadata
 
 		Il2CppInterfaceOffsetInfo GetInterfaceOffsetInfo(const Il2CppTypeDefinition* typeDefine, TypeInterfaceOffsetIndex index);
 
-		uint32_t AddIl2CppTypeCache(Il2CppType& type);
+		uint32_t AddIl2CppTypeCache(const Il2CppType& type);
 
 		uint32_t AddIl2CppGenericContainers(Il2CppGenericContainer& geneContainer);
 
@@ -529,6 +555,7 @@ namespace metadata
 		}
 
 		Il2CppString* ReadSerString(BlobReader& reader);
+		bool ReadUTF8SerString(BlobReader& reader, std::string& s);
 		Il2CppReflectionType* ReadSystemType(BlobReader& reader);
 		Il2CppObject* ReadBoxedValue(BlobReader& reader);
 		void ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data);
@@ -574,7 +601,12 @@ namespace metadata
 
 		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
 		std::vector<Il2CppCustomAttributeTypeRange> _customAttributeHandles;
-#if !HYBRIDCLR_UNITY_2022_OR_NEW
+#if HYBRIDCLR_UNITY_2022_OR_NEW
+		CustomAttributeDataWriter _il2cppFormatCustomDataBlob;
+		CustomAttributeDataWriter _tempCtorArgBlob;
+		CustomAttributeDataWriter _tempFieldBlob;
+		CustomAttributeDataWriter _tempPropertyBlob;
+#else
 		std::vector<CustomAttributesCache*> _customAttribtesCaches;
 #endif
 		std::vector<CustomAttribute> _customAttribues;
