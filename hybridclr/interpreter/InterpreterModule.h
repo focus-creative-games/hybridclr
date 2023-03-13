@@ -35,9 +35,14 @@ namespace interpreter
 
 		static bool IsImplementsByInterpreter(const MethodInfo* method);
 
-		static bool HasImplementNative2Managed(const MethodInfo* method)
+		static bool HasImplementCallNative2Managed(const MethodInfo* method)
 		{
 			return method->methodPointerCallByInterp != (Il2CppMethodPointer)NotSupportNative2Managed;
+		}
+
+		static bool HasImplementCallVirtualNative2Managed(const MethodInfo* method)
+		{
+			return method->virtualMethodPointerCallByInterp != (Il2CppMethodPointer)NotSupportAdjustorThunk;
 		}
 
 		static void Managed2NativeCallByReflectionInvoke(const MethodInfo* method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
