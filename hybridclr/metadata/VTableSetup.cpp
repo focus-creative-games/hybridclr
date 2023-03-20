@@ -215,6 +215,13 @@ namespace metadata
 			{
 				return cur->_type;
 			}
+			for (VTableSetUp* itf : cur->_interfaces)
+			{
+				if (declarType == itf->_typeDef)
+				{
+					return itf->_type;
+				}
+			}
 		}
 		RaiseExecutionEngineException("");
 		return nullptr;
