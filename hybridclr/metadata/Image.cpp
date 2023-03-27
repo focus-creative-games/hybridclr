@@ -664,7 +664,7 @@ namespace metadata
         IL2CPP_ASSERT(rmr.parent.parentType == TableType::TYPEDEF || rmr.parent.parentType == TableType::TYPEREF || rmr.parent.parentType == TableType::TYPESPEC);
         IL2CPP_ASSERT(rmr.signature.memberType == TableType::FIELD_POINTER);
         ret.containerType = rmr.parent.type;
-        ResolveField(&rmr.parent.type, rmr.name, &rmr.signature.field.type, ret.field);
+        ResolveFieldThrow(&rmr.parent.type, rmr.name, &rmr.signature.field.type, ret.field);
     }
 
     void Image::ReadLocalVarSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppType*& vars, uint32_t& varCount)
@@ -1018,7 +1018,7 @@ namespace metadata
         if (rmr.signature.memberType == TableType::FIELD_POINTER)
         {
             const Il2CppFieldDefinition* fieldDef = nullptr;
-            ResolveField(&rmr.parent.type, rmr.name, &rmr.signature.field.type, fieldDef);
+            ResolveFieldThrow(&rmr.parent.type, rmr.name, &rmr.signature.field.type, fieldDef);
             const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(rmr.parent.type, fieldDef);
             return fieldInfo;
         }

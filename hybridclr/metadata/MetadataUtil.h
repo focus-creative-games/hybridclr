@@ -301,6 +301,14 @@ namespace metadata
 
     bool ResolveField(const Il2CppType* type, const char* resolveFieldName, Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef);
 
+    inline void ResolveFieldThrow(const Il2CppType* type, const char* resolveFieldName, Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef)
+    {
+        if (!ResolveField(type, resolveFieldName, resolveFieldType, retFieldDef))
+        {
+            RaiseMissingFieldException(type, resolveFieldName);
+        }
+    }
+
     const Il2CppGenericContainer* GetGenericContainerFromIl2CppType(const Il2CppType* type);
 
     bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
