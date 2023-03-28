@@ -711,11 +711,11 @@ namespace metadata
         }
     }
 
-    static Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr)
+    Il2CppClass* Image::FindNetStandardExportedType(const char* namespaceStr, const char* nameStr)
     {
         for (const char** ptrAssName = s_netstandardRefs; *ptrAssName; ptrAssName++)
         {
-            const Il2CppAssembly* refAss = il2cpp::vm::Assembly::GetLoadedAssembly(*ptrAssName);
+            const Il2CppAssembly* refAss = GetLoadedAssembly(*ptrAssName);
             if (refAss)
             {
                 const Il2CppImage* image2 = il2cpp::vm::Assembly::GetImage(refAss);
@@ -735,7 +735,7 @@ namespace metadata
         const char* assName = _rawImage.GetStringFromRawIndex(data.name);
         const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
         const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
-        const Il2CppAssembly* refAss = il2cpp::vm::Assembly::GetLoadedAssembly(assName);
+        const Il2CppAssembly* refAss = GetLoadedAssembly(assName);
         Il2CppClass* klass = nullptr;
         if (refAss)
         {

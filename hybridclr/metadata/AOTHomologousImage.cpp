@@ -49,7 +49,7 @@ namespace metadata
 
 		TbAssembly data = _rawImage.ReadAssembly(1);
 		const char* assName = _rawImage.GetStringFromRawIndex(data.name);
-		const Il2CppAssembly* aotAss = il2cpp::vm::Assembly::GetLoadedAssembly(assName);
+		const Il2CppAssembly* aotAss = GetLoadedAssembly(assName);
 		// FIXME. not free memory.
 		if (!aotAss)
 		{

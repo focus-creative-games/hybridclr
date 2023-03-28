@@ -8,6 +8,7 @@
 #include "gc/GarbageCollector.h"
 #include "gc/Allocator.h"
 #include "gc/AppendOnlyGCHashMap.h"
+#include "utils/Il2CppHashMap.h"
 
 #include "RawImage.h"
 #include "VTableSetup.h"
@@ -105,7 +106,24 @@ namespace metadata
 		virtual void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) = 0;
 		virtual void InitRuntimeMetadatas() = 0;
 	protected:
+		Image()
+		{
+			for (auto ass : *il2cpp::vm::Assembly::GetAllAssemblies())
+			{
+				_nameToAssemblies[ass->image->nameNoExt] = ass;
+			}
+		}
+
+		const Il2CppAssembly* GetLoadedAssembly(const char* assemblyName) const
+		{
+			auto it = _nameToAssemblies.find(assemblyName);
+			return it != _nameToAssemblies.end() ? it->second : nullptr;
+		}
+
+		Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr);
+
 		RawImage _rawImage;
+		Il2CppHashMap<const char*, const Il2CppAssembly*, CStringHash, CStringEqualTo> _nameToAssemblies;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, std::hash<uint32_t>> _il2cppStringCache;
 
 		std::unordered_map<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> _token2ResolvedDataCache;
