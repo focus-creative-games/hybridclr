@@ -6,13 +6,6 @@
 
 namespace hybridclr
 {
-	const char* g_placeHolderAssemblies[] =
-	{
-		//!!!{{PLACE_HOLDER
-		//!!!}}PLACE_HOLDER
-		nullptr,
-	};
-
 	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method)
 	{
 		IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
