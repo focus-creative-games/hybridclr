@@ -225,18 +225,6 @@ namespace metadata
 			return GetImage(DecodeImageIndex(index))->GetFieldOrParameterDefalutValueByRawIndex(DecodeMetadataIndex(index));
 		}
 
-#if !HYBRIDCLR_UNITY_2022_OR_NEW
-		static bool HasAttribute(const Il2CppImage* image, uint32_t token, Il2CppClass* attribute)
-		{
-			return GetImage(image)->HasAttributeByToken(token, attribute);
-		}
-
-		static std::tuple<void*, void*> GetCustomAttributeDataRange(const Il2CppImage* image, uint32_t token)
-		{
-			return GetImage(image)->GetCustomAttributeDataRange(token);
-		}
-#endif
-
 		static bool IsImplementedByInterpreter(MethodInfo* method)
 		{
 			Il2CppClass* klass = method->klass;

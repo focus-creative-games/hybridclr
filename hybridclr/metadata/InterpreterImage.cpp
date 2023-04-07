@@ -19,6 +19,7 @@
 #include "metadata/FieldLayout.h"
 #include "metadata/Il2CppTypeCompare.h"
 #include "metadata/GenericMetadata.h"
+#include "metadata/CustomAttributeCreator.h"
 #include "os/Atomic.h"
 #include "icalls/mscorlib/System/MonoCustomAttrs.h"
 
@@ -554,11 +555,7 @@ namespace metadata
 				IL2CPP_ASSERT(_tokenCustomAttributes.find(token) == _tokenCustomAttributes.end());
 				int32_t attributeStartIndex = EncodeWithIndex((int32_t)_customAttribues.size());
 				int32_t handleIndex = (int32_t)_customAttributeHandles.size();
-#ifdef HYBRIDCLR_UNITY_2022_OR_NEW
 				_tokenCustomAttributes[token] = { (int32_t)EncodeWithIndex(handleIndex), 0, 0 };
-#else
-				_tokenCustomAttributes[token] = { (int32_t)EncodeWithIndex(handleIndex) };
-#endif
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 				_customAttributeHandles.push_back({ token, (uint32_t)attributeStartIndex });
 #else
@@ -601,9 +598,7 @@ namespace metadata
 		// add extra Il2CppCustomAttributeTypeRange for compute count
 		_customAttributeHandles.push_back({ 0, EncodeWithIndex((int32_t)_customAttribues.size()) });
 #endif
-#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		_customAttribtesCaches.resize(_tokenCustomAttributes.size());
-#endif
 	}
 
 	void InterpreterImage::BuildCustomAttributeDataReaders()
@@ -619,7 +614,6 @@ namespace metadata
 		}
 	}
 
-#if HYBRIDCLR_UNITY_2022_OR_NEW
 	void InterpreterImage::BuildCustomAttributesData(CustomAtttributesInfo& cai, const Il2CppCustomAttributeTypeRange& curTypeRange)
 	{
 		cai.dataStartOffset = _il2cppFormatCustomDataBlob.Size();
@@ -654,15 +648,6 @@ namespace metadata
 		}
 		cai.dataEndOffset = _il2cppFormatCustomDataBlob.Size();
 	}
-
-	//void WriteEncodedTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type)
-	//{
-	//	writer.WriteByte((uint8_t)type->type);
-	//	if (type->type == IL2CPP_TYPE_ENUM)
-	//	{
-	//		//writer.WriteCompressedInt32(il2cpp::vm::GlobalMetadata::gettype)
-	//	}
-	//}
 
 	void InterpreterImage::WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type)
 	{
@@ -979,9 +964,7 @@ namespace metadata
 		_il2cppFormatCustomDataBlob.Write(_tempPropertyBlob);
 	}
 
-#endif
 
-#if !HYBRIDCLR_UNITY_2022_OR_NEW
 	CustomAttributesCache* InterpreterImage::GenerateCustomAttributesCacheInternal(CustomAttributeIndex index)
 	{
 		IL2CPP_ASSERT(index != kCustomAttributeIndexInvalid);
@@ -994,7 +977,6 @@ namespace metadata
 
 		Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[index];
 
-		il2cpp::os::FastAutoLock metaLock(&il2cpp::vm::g_MetadataLock);
 		cache = _customAttribtesCaches[index];
 		if (cache)
 		{
@@ -1003,87 +985,51 @@ namespace metadata
 
 		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
 
+		void* start;
+		void* end;
+		std::tie(start, end) = CreateCustomAttributeDataTuple(&typeRange);
+		IL2CPP_ASSERT(start && end);
+
+		il2cpp::metadata::CustomAttributeDataReader reader(start, end);
+
 		cache = (CustomAttributesCache*)IL2CPP_CALLOC(1, sizeof(CustomAttributesCache));
-		int32_t count;
-#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-		count = (int32_t)(_customAttributeHandles[index + 1].startOffset - typeRange.startOffset);
-#else
-		count = (int32_t)typeRange.count;
-#endif
-		cache->count = count;
-		cache->attributes = (Il2CppObject**)il2cpp::gc::GarbageCollector::AllocateFixed(sizeof(Il2CppObject*) * count, 0);
+		cache->count = (int)reader.GetCount();
+		cache->attributes = (Il2CppObject**)il2cpp::gc::GarbageCollector::AllocateFixed(sizeof(Il2CppObject*) * cache->count, 0);
 
-		int32_t start = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(typeRange));
-		for (int32_t i = 0; i < count; i++)
+		il2cpp::metadata::CustomAttributeDataIterator iter = reader.GetDataIterator();
+		for (int i = 0; i < cache->count; i++)
 		{
-			int32_t attrIndex = start + i;
-			IL2CPP_ASSERT(attrIndex >= 0 && attrIndex < (int32_t)_customAttribues.size());
-			CustomAttribute& ca = _customAttribues[attrIndex];
-			MethodRefInfo mri = {};
-			ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(ca.ctorMethodToken), DecodeTokenRowIndex(ca.ctorMethodToken), mri);
-			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(&mri.containerType, mri.methodDef);
-			IL2CPP_ASSERT(ctorMethod);
-			Il2CppClass* klass = ctorMethod->klass;
-			Il2CppObject* attr = il2cpp::vm::Object::New(klass);
-			Il2CppArray* paramArr = nullptr;
-			if (ca.value != 0)
+			Il2CppException* exc = NULL;
+			il2cpp::metadata::CustomAttributeCreator creator;
+			if (reader.VisitCustomAttributeData(_il2cppImage, &iter, &creator, &exc))
 			{
-				BlobReader reader = _rawImage.GetBlobReaderByRawIndex(ca.value);
-				ConstructCustomAttribute(reader, attr, ctorMethod);
-			}
-			else
-			{
-				IL2CPP_ASSERT(ctorMethod->parameters_count == 0);
-				il2cpp::vm::Runtime::Invoke(ctorMethod, attr, nullptr, nullptr);
+				cache->attributes[i] = creator.GetAttribute(&exc);
+				il2cpp::gc::GarbageCollector::SetWriteBarrier((void**)&cache->attributes[i]);
 			}
 
-			cache->attributes[i] = attr;
-			il2cpp::gc::GarbageCollector::SetWriteBarrier((void**)cache->attributes + i);
+			if (exc != NULL)
+			{
+				il2cpp::gc::GarbageCollector::FreeFixed(cache->attributes);
+				IL2CPP_FREE(cache);
+				il2cpp::vm::Exception::Raise(exc);
+			}
 		}
 
+
+		il2cpp::os::FastAutoLock metaLock(&il2cpp::vm::g_MetadataLock);
+		CustomAttributesCache* original = _customAttribtesCaches[index];
+		if (original)
+		{
+			// A non-NULL return value indicates some other thread already generated this cache.
+			// We need to cleanup the resources we allocated
+			il2cpp::gc::GarbageCollector::FreeFixed(cache->attributes);
+			IL2CPP_FREE(cache);
+			return original;
+		}
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		_customAttribtesCaches[index] = cache;
 		return cache;
 	}
-#endif
-
-#ifdef HYBRIDCLR_UNITY_2021
-	Il2CppArray* InterpreterImage::GetCustomAttributesDataInternal(uint32_t token)
-	{
-		CustomAttributeIndex index = DecodeMetadataIndex(GetCustomAttributeIndex(token));
-		if (index == kCustomAttributeIndexInvalid)
-		{
-			return il2cpp::vm::Array::New(il2cpp_defaults.customattribute_data_class, 0);
-		}
-
-		IL2CPP_ASSERT(index < (CustomAttributeIndex)_customAttributeHandles.size());
-
-		Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[index];
-
-		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
-
-		int32_t count = (int32_t)(_customAttributeHandles[index + 1].startOffset - typeRange.startOffset);
-		Il2CppArray* result = il2cpp::vm::Array::New(il2cpp_defaults.customattribute_data_class, count);
-
-		int32_t start = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(typeRange));
-		for (int32_t i = 0; i < count; i++)
-		{
-			int32_t attrIndex = start + i;
-			IL2CPP_ASSERT(attrIndex >= 0 && attrIndex < (int32_t)_customAttribues.size());
-			CustomAttribute& ca = _customAttribues[attrIndex];
-			MethodRefInfo mri = {};
-			ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(ca.ctorMethodToken), DecodeTokenRowIndex(ca.ctorMethodToken), mri);
-			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(&mri.containerType, mri.methodDef);
-			IL2CPP_ASSERT(ctorMethod);
-			Il2CppClass* klass = ctorMethod->klass;
-			BlobReader reader = ca.value != 0 ? _rawImage.GetBlobReaderByRawIndex(ca.value) : BlobReader(nullptr, 0);
-			il2cpp::metadata::LazyCustomAttributeData data = {ctorMethod, reader.GetData(), reader.GetLength()};
-			Il2CppObject* attributeData = il2cpp::icalls::mscorlib::System::MonoCustomAttrs::CreateCustomAttributeData(il2cpp_defaults.corlib->assembly, data);
-			il2cpp_array_setref(result, i, attributeData);
-		}
-		return result;
-	}
-#endif
 
 	void InterpreterImage::InitMethodDefs0()
 	{

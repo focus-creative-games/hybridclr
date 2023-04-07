@@ -67,8 +67,6 @@ namespace metadata
         InitReversePInvokeInfo();
         InterpreterImage::Initialize();
         Assembly::InitializePlaceHolderAssemblies();
-        CustomAttributeDataWriter writer(1024);
-        writer.Test();
     }
 
     Il2CppMethodPointer MetadataModule::GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method)
