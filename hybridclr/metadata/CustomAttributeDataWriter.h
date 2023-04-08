@@ -23,11 +23,19 @@ namespace metadata
 			_data = (uint8_t*)IL2CPP_MALLOC_ZERO(_capacity);
 		}
 
+		~CustomAttributeDataWriter()
+		{
+			IL2CPP_FREE(_data);
+			_data = nullptr;
+		}
+
 		uint32_t Size() const { return _size; }
 
 		bool Empty() const { return _size == 0; }
 
 		const uint8_t* Data() const { return _data; }
+
+		const uint8_t* DataAt(uint32_t offset) { return _data + offset; }
 
 		void Reset()
 		{

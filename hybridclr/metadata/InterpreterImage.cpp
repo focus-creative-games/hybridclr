@@ -387,7 +387,7 @@ namespace metadata
 			uint32_t dataImageOffset = (uint32_t)-1;
 			bool ret = _rawImage.TranslateRVAToImageOffset(data.rva, dataImageOffset);
 			IL2CPP_ASSERT(ret);
-			fdv.dataIndex = (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
+			fdv.dataIndex = (DefaultValueDataIndex)EncodeWithIndex(EncodeWithBlobSource(dataImageOffset, BlobSource::RAW_IMAGE));
 			_fieldDefaultValues.push_back(fdv);
 		}
 	}
@@ -480,6 +480,71 @@ namespace metadata
 		}
 	}
 
+	DefaultValueDataIndex InterpreterImage::ConvertConstValue(CustomAttributeDataWriter& writer, uint32_t blobIndex, const Il2CppType* type)
+	{
+		Il2CppTypeEnum ttype = type->type;
+		if (ttype == IL2CPP_TYPE_CLASS)
+		{
+			return kDefaultValueIndexNull;
+		}
+
+		DefaultValueIndex retIndex = EncodeWithIndex(EncodeWithBlobSource((DefaultValueIndex)writer.Size(), BlobSource::CONVERTED_IL2CPP_FORMAT));
+
+		BlobReader reader = _rawImage.GetBlobReaderByRawIndex(blobIndex);
+		switch (type->type)
+		{
+		case IL2CPP_TYPE_BOOLEAN:
+		case IL2CPP_TYPE_I1:
+		case IL2CPP_TYPE_U1:
+		{
+			writer.Write(reader, 1);
+			break;
+		}
+		case IL2CPP_TYPE_CHAR:
+		case IL2CPP_TYPE_I2:
+		case IL2CPP_TYPE_U2:
+		{
+			writer.Write(reader, 2);
+			break;
+		}
+		case IL2CPP_TYPE_I4:
+		{
+			writer.WriteCompressedInt32((int32_t)reader.Read32());
+			break;
+		}
+		case IL2CPP_TYPE_U4:
+		{
+			writer.WriteCompressedUint32(reader.Read32());
+			break;
+		}
+		case IL2CPP_TYPE_R4:
+		{
+			writer.Write(reader, 4);
+			break;
+		}
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		case IL2CPP_TYPE_R8:
+		{
+			writer.Write(reader, 8);
+			break;
+		}
+		case IL2CPP_TYPE_STRING:
+		{
+			std::string str = il2cpp::utils::StringUtils::Utf16ToUtf8((const Il2CppChar*)reader.GetData(), reader.GetLength() / 2);
+			writer.WriteCompressedInt32(str.length());
+			writer.WriteBytes((const uint8_t*)str.c_str(), str.length());
+			break;
+		}
+		default:
+		{
+			RaiseExecutionEngineException("not supported const type");
+		}
+		}
+		
+		return retIndex;
+	}
+
 	void InterpreterImage::InitConsts()
 	{
 		const Table& tb = _rawImage.GetTable(TableType::CONSTANT);
@@ -492,7 +557,6 @@ namespace metadata
 			Il2CppType type = {};
 			type.type = (Il2CppTypeEnum)data.type;
 			TypeIndex dataTypeIndex = AddIl2CppTypeCache(type);
-			bool isNullValue = type.type == IL2CPP_TYPE_CLASS;
 			switch (parentType)
 			{
 			case TableType::FIELD:
@@ -503,8 +567,7 @@ namespace metadata
 				Il2CppFieldDefaultValue fdv = {};
 				fdv.fieldIndex = rowIndex - 1;
 				fdv.typeIndex = dataTypeIndex;
-				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(type.type, data.value);
-				fdv.dataIndex = isNullValue ? kDefaultValueIndexNull : (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
+				fdv.dataIndex = ConvertConstValue(_constValues, data.value, &type);
 				_fieldDefaultValues.push_back(fdv);
 				break;
 			}
@@ -517,8 +580,7 @@ namespace metadata
 				Il2CppParameterDefaultValue pdv = {};
 				pdv.typeIndex = dataTypeIndex;
 				pdv.parameterIndex = fd.parameterIndex;
-				uint32_t dataImageOffset = _rawImage.GetImageOffsetOfBlob(type.type, data.value);
-				pdv.dataIndex = isNullValue ? kDefaultValueIndexNull : (DefaultValueDataIndex)EncodeWithIndex(dataImageOffset);
+				pdv.dataIndex = ConvertConstValue(_constValues, data.value, &type);
 				_paramDefaultValues.push_back(pdv);
 				break;
 			}
@@ -724,7 +786,15 @@ namespace metadata
 			break;
 		}
 		case IL2CPP_TYPE_I4:
+		{
+			writer.WriteCompressedInt32((int32_t)reader.Read32());
+			break;
+		}
 		case IL2CPP_TYPE_U4:
+		{
+			writer.WriteCompressedUint32(reader.Read32());
+			break;
+		}
 		case IL2CPP_TYPE_R4:
 		{
 			writer.Write(reader, 4);
@@ -772,21 +842,23 @@ namespace metadata
 		case IL2CPP_TYPE_STRING:
 		{
 			byte b = reader.PeekByte();
-			if (b == 0xFF || b == 0)
+			if (b == 0xFF)
 			{
 				reader.SkipByte();
-				writer.WriteByte(b);
+				writer.WriteCompressedInt32(-1);
+			}
+			else if (b == 0)
+			{
+				reader.SkipByte();
+				writer.WriteCompressedInt32(0);
 			}
 			else
 			{
 				const byte* beginDataPtr = reader.GetDataOfReadPosition();
 				uint32_t len = reader.ReadCompressedUint32();
-
-				UTF16String utf16Str = il2cpp::utils::StringUtils::Utf8ToUtf16((char*)reader.GetDataOfReadPosition(), len);
+				writer.WriteCompressedInt32((int32_t)len);
+				writer.WriteBytes(reader.GetDataOfReadPosition(), len);
 				reader.SkipBytes(len);
-				uint32_t size = (uint32_t)utf16Str.size() * 2;
-				writer.WriteCompressedUint32(size);
-				writer.WriteBytes((byte*)utf16Str.c_str(), size);
 			}
 			break;
 		}
@@ -2130,85 +2202,6 @@ namespace metadata
 			TEMP_FORMAT(errMsg, "ReadCustomAttributeFieldOrPropType. image:%s unknown type:%d", GetIl2CppImage()->name, (int)type.type);
 			RaiseBadImageException(errMsg);
 		}
-		}
-	}
-
-	void InterpreterImage::ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod)
-	{
-		uint16_t prolog = reader.Read16();
-		IL2CPP_ASSERT(prolog == 0x0001);
-		if (ctorMethod->parameters_count == 0)
-		{
-			il2cpp::vm::Runtime::Invoke(ctorMethod, obj, nullptr, nullptr);
-		}
-		else
-		{
-			int32_t argSize = sizeof(uint64_t) * ctorMethod->parameters_count;
-			uint64_t* argDatas = (uint64_t*)alloca(argSize);
-			std::memset(argDatas, 0, argSize);
-			void** argPtrs = (void**)alloca(sizeof(void*) * ctorMethod->parameters_count); // same with argDatas
-			for (uint8_t i = 0; i < ctorMethod->parameters_count; i++)
-			{
-				argPtrs[i] = argDatas + i;
-				const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(ctorMethod->parameters[i]);
-				ReadFixedArg(reader, paramType, argDatas + i);
-				Il2CppClass* paramKlass = il2cpp::vm::Class::FromIl2CppType(paramType);
-				if (!IS_CLASS_VALUE_TYPE(paramKlass))
-				{
-					argPtrs[i] = (void*)argDatas[i];
-				}
-			}
-			il2cpp::vm::Runtime::Invoke(ctorMethod, obj, argPtrs, nullptr);
-			// clear ref. may not need. gc memory barrier
-			std::memset(argDatas, 0, argSize);
-		}
-		uint16_t numNamed = reader.Read16();
-		Il2CppClass* klass = obj->klass;
-		for (uint16_t idx = 0; idx < numNamed; idx++)
-		{
-			byte fieldOrPropTypeTag = reader.ReadByte();
-			IL2CPP_ASSERT(fieldOrPropTypeTag == 0x53 || fieldOrPropTypeTag == 0x54);
-			Il2CppType fieldOrPropType = {};
-			ReadCustomAttributeFieldOrPropType(reader, fieldOrPropType);
-			Il2CppString* fieldOrPropName = ReadSerString(reader);
-			std::string stdStrName = il2cpp::utils::StringUtils::Utf16ToUtf8(fieldOrPropName->chars);
-			const char* cstrName = stdStrName.c_str();
-			uint64_t value = 0;
-			ReadFixedArg(reader, &fieldOrPropType, &value);
-			if (fieldOrPropTypeTag == 0x53)
-			{
-				FieldInfo* field = il2cpp::vm::Class::GetFieldFromName(klass, cstrName);
-				if (!field)
-				{
-					TEMP_FORMAT(errMsg, "CustomAttribute field missing. klass:%s.%s field:%s", klass->namespaze, klass->name, cstrName);
-					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeInitializationException(errMsg, nullptr));
-				}
-				Il2CppReflectionField* refField = il2cpp::vm::Reflection::GetFieldObject(klass, field);
-				IL2CPP_ASSERT(IsTypeEqual(&fieldOrPropType, field->type));
-				uint32_t fieldSize = GetTypeValueSize(&fieldOrPropType);
-				std::memcpy((byte*)obj + field->offset, &value, fieldSize);
-				//fixme MEMORY BARRIER
-				IL2CPP_ASSERT(refField);
-			}
-			else
-			{
-				const PropertyInfo* prop = il2cpp::vm::Class::GetPropertyFromName(klass, cstrName);
-				if (!prop)
-				{
-					TEMP_FORMAT(errMsg, "CustomAttribute property missing. klass:%s property:%s", klass->name, cstrName);
-					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeInitializationException(errMsg, nullptr));
-				}
-				IL2CPP_ASSERT(IsTypeEqual(&fieldOrPropType, GET_METHOD_PARAMETER_TYPE(prop->set->parameters[0])));
-				Il2CppException* ex = nullptr;
-				Il2CppClass* propKlass = il2cpp::vm::Class::FromIl2CppType(&fieldOrPropType);
-				IL2CPP_ASSERT(propKlass);
-				void* args[] = { (IS_CLASS_VALUE_TYPE(propKlass) ? &value : (void*)value) };
-				il2cpp::vm::Runtime::Invoke(prop->set, obj, args, &ex);
-				if (ex)
-				{
-					il2cpp::vm::Exception::Raise(ex);
-				}
-			}
 		}
 	}
 

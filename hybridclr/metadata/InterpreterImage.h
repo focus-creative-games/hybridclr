@@ -79,6 +79,12 @@ namespace metadata
 		int32_t dataEndOffset;
 	};
 
+	enum class BlobSource
+	{
+		RAW_IMAGE = 0,
+		CONVERTED_IL2CPP_FORMAT = 1,
+	};
+
 	class InterpreterImage : public Image
 	{
 	public:
@@ -104,7 +110,7 @@ namespace metadata
 	public:
 
 		InterpreterImage(uint32_t imageIndex) : _index(imageIndex), _inited(false), _il2cppImage(nullptr),
-			_il2cppFormatCustomDataBlob(10240), _tempCtorArgBlob(1024), _tempFieldBlob(1024), _tempPropertyBlob(1024)
+			_constValues(1024), _il2cppFormatCustomDataBlob(10240), _tempCtorArgBlob(1024), _tempFieldBlob(1024), _tempPropertyBlob(1024)
 		{
 
 		}
@@ -353,10 +359,26 @@ namespace metadata
 			return &_fieldDefaultValues[fdvIndex];
 		}
 
+		uint32_t EncodeWithBlobSource(uint32_t index, BlobSource source)
+		{
+			return (index << 1) | (uint32_t)source;
+		}
+
 		const uint8_t* GetFieldOrParameterDefalutValueByRawIndex(uint32_t index)
 		{
-			return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(index);
+			BlobSource source = (BlobSource)(index & 0x1);
+			uint32_t offset = index >> 1;
+			if (source == BlobSource::RAW_IMAGE)
+			{
+				return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(offset);
+			}
+			else
+			{
+				return _constValues.DataAt(offset);
+			}
 		}
+
+		DefaultValueDataIndex ConvertConstValue(CustomAttributeDataWriter& writer, uint32_t blobIndex, const Il2CppType* type);
 
 		Il2CppPropertyDefinition* GetPropertyDefinitionFromIndex(PropertyIndex index)
 		{
@@ -520,7 +542,6 @@ namespace metadata
 		Il2CppObject* ReadBoxedValue(BlobReader& reader);
 		void ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data);
 		void ReadCustomAttributeFieldOrPropType(BlobReader& reader, Il2CppType& type);
-		void ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod);
 
 
 		bool _inited;
@@ -557,6 +578,7 @@ namespace metadata
 		// runtime data 
 		std::vector<Il2CppClass*> _classList;
 		Il2CppType2TypeDeclaringTreeMap _cacheTrees;
+		CustomAttributeDataWriter _constValues;
 
 
 		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
