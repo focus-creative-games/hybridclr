@@ -10986,7 +10986,7 @@ else \
 					uint16_t __obj = *(uint16_t*)(ip + 2);
 					uint16_t __x = *(uint16_t*)(ip + 4);
 					uint16_t __y = *(uint16_t*)(ip + 6);
-				    *(HtVector2f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y))};
+				    *(HtVector2f*)(void*)(localVarBase + __obj) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y))};
 				    ip += 8;
 				    continue;
 				}
@@ -10995,7 +10995,7 @@ else \
 					uint16_t __obj = *(uint16_t*)(ip + 2);
 					uint16_t __x = *(uint16_t*)(ip + 4);
 					uint16_t __y = *(uint16_t*)(ip + 6);
-				    *(HtVector3f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), 0};
+				    *(HtVector3f*)(void*)(localVarBase + __obj) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), 0};
 				    ip += 8;
 				    continue;
 				}
@@ -11005,7 +11005,7 @@ else \
 					uint16_t __x = *(uint16_t*)(ip + 4);
 					uint16_t __y = *(uint16_t*)(ip + 6);
 					uint16_t __z = *(uint16_t*)(ip + 8);
-				    *(HtVector3f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z))};
+				    *(HtVector3f*)(void*)(localVarBase + __obj) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z))};
 				    ip += 16;
 				    continue;
 				}
@@ -11014,7 +11014,7 @@ else \
 					uint16_t __obj = *(uint16_t*)(ip + 2);
 					uint16_t __x = *(uint16_t*)(ip + 4);
 					uint16_t __y = *(uint16_t*)(ip + 6);
-				    *(HtVector4f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), 0, 0};
+				    *(HtVector4f*)(void*)(localVarBase + __obj) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), 0, 0};
 				    ip += 8;
 				    continue;
 				}
@@ -11024,11 +11024,69 @@ else \
 					uint16_t __x = *(uint16_t*)(ip + 4);
 					uint16_t __y = *(uint16_t*)(ip + 6);
 					uint16_t __z = *(uint16_t*)(ip + 8);
-				    *(HtVector4f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z)), 0};
+				    *(HtVector4f*)(void*)(localVarBase + __obj) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z)), 0};
 				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::NewVector4_4:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __x = *(uint16_t*)(ip + 4);
+					uint16_t __y = *(uint16_t*)(ip + 6);
+					uint16_t __z = *(uint16_t*)(ip + 8);
+					uint16_t __w = *(uint16_t*)(ip + 10);
+				    *(HtVector4f*)(void*)(localVarBase + __obj) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z)), (*(float*)(localVarBase + __w))};
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorVector2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __x = *(uint16_t*)(ip + 4);
+					uint16_t __y = *(uint16_t*)(ip + 6);
+				    *(HtVector2f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y))};
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorVector3_2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __x = *(uint16_t*)(ip + 4);
+					uint16_t __y = *(uint16_t*)(ip + 6);
+				    *(HtVector3f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), 0};
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorVector3_3:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __x = *(uint16_t*)(ip + 4);
+					uint16_t __y = *(uint16_t*)(ip + 6);
+					uint16_t __z = *(uint16_t*)(ip + 8);
+				    *(HtVector3f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z))};
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorVector4_2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __x = *(uint16_t*)(ip + 4);
+					uint16_t __y = *(uint16_t*)(ip + 6);
+				    *(HtVector4f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), 0, 0};
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorVector4_3:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __x = *(uint16_t*)(ip + 4);
+					uint16_t __y = *(uint16_t*)(ip + 6);
+					uint16_t __z = *(uint16_t*)(ip + 8);
+				    *(HtVector4f*)(*(void**)(localVarBase + __obj)) = {(*(float*)(localVarBase + __x)), (*(float*)(localVarBase + __y)), (*(float*)(localVarBase + __z)), 0};
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CtorVector4_4:
 				{
 					uint16_t __obj = *(uint16_t*)(ip + 2);
 					uint16_t __x = *(uint16_t*)(ip + 4);

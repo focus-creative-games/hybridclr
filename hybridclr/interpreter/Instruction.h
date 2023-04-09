@@ -830,6 +830,12 @@ namespace interpreter
 		NewVector4_2,
 		NewVector4_3,
 		NewVector4_4,
+		CtorVector2,
+		CtorVector3_2,
+		CtorVector3_3,
+		CtorVector4_2,
+		CtorVector4_3,
+		CtorVector4_4,
 		ArrayGetGenericValueImpl,
 		ArraySetGenericValueImpl,
 		NewString,
@@ -9404,6 +9410,74 @@ namespace interpreter
 
 
 	struct IRNewVector4_4 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t x;
+		uint16_t y;
+		uint16_t z;
+		uint16_t w;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCtorVector2 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t x;
+		uint16_t y;
+	};
+
+
+	struct IRCtorVector3_2 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t x;
+		uint16_t y;
+	};
+
+
+	struct IRCtorVector3_3 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t x;
+		uint16_t y;
+		uint16_t z;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCtorVector4_2 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t x;
+		uint16_t y;
+	};
+
+
+	struct IRCtorVector4_3 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t x;
+		uint16_t y;
+		uint16_t z;
+		uint8_t __pad10;
+		uint8_t __pad11;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
+	};
+
+
+	struct IRCtorVector4_4 : IRCommon
 	{
 		uint16_t obj;
 		uint16_t x;

@@ -10,7 +10,7 @@
 
 #include "interpreter/InterpreterModule.h"
 #include "metadata/MetadataModule.h"
-#include "transform/Transform.h"
+#include "transform/TransformModule.h"
 
 
 namespace hybridclr
@@ -20,5 +20,6 @@ namespace hybridclr
 	{
 		metadata::MetadataModule::Initialize();
 		interpreter::InterpreterModule::Initialize();
+		transform::TransformModule::Initialize();
 	}
 }

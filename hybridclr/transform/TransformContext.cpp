@@ -86,23 +86,6 @@ namespace transform
 		}
 	}
 
-	uint32_t GetOrAddResolveDataIndex(std::unordered_map<const void*, uint32_t>& ptr2Index, std::vector<uint64_t>& resolvedDatas, const void* ptr)
-	{
-		auto it = ptr2Index.find(ptr);
-		if (it != ptr2Index.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			uint32_t newIndex = (uint32_t)resolvedDatas.size();
-			resolvedDatas.push_back((uint64_t)ptr);
-			ptr2Index.insert({ ptr, newIndex });
-			return newIndex;
-		}
-	}
-
-
 	LocationDescInfo ComputValueTypeDescInfo(int32_t size)
 	{
 		switch (size)

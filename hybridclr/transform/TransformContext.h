@@ -107,7 +107,6 @@ namespace transform
 	const int32_t MAX_STACK_SIZE = (2 << 16) - 1;
 	const int32_t MAX_VALUE_TYPE_SIZE = (2 << 16) - 1;
 
-	uint32_t GetOrAddResolveDataIndex(std::unordered_map<const void*, uint32_t>& ptr2Index, std::vector<uint64_t>& resolvedDatas, const void* ptr);
 	EvalStackReduceDataType GetEvalStackReduceDataType(const Il2CppType* type);
 	int32_t GetSizeByReduceType(EvalStackReduceDataType type);
 
@@ -192,6 +191,24 @@ namespace transform
 		int32_t& brOffset;
 
 		const MethodInfo*& shareMethod;
+
+		static void InitializeInstinctHandlers();
+
+		uint32_t GetOrAddResolveDataIndex(const void* ptr)
+		{
+			auto it = ptr2DataIdxs.find(ptr);
+			if (it != ptr2DataIdxs.end())
+			{
+				return it->second;
+			}
+			else
+			{
+				uint32_t newIndex = (uint32_t)resolveDatas.size();
+				resolveDatas.push_back((uint64_t)ptr);
+				ptr2DataIdxs.insert({ ptr, newIndex });
+				return newIndex;
+			}
+		}
 
 		int32_t GetArgOffset(int32_t idx)
 		{
@@ -1171,6 +1188,8 @@ namespace transform
 
 		bool TryAddInstinctInstrumentsByName(const MethodInfo* method);
 		bool TryAddArrayInstinctInstruments(const MethodInfo* method);
+
+		bool TryAddInstinctCtorInstruments(const MethodInfo* method);
 
 		bool TryAddCallCommonInstruments(const MethodInfo* method, uint32_t methodDataIndex)
 		{

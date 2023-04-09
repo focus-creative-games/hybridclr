@@ -120,6 +120,33 @@ else \
 #define CI_ldele(eleType, resultType) ctx.Add_ldelem(EvalStackReduceDataType::resultType, HiOpcodeEnum::GetArrayElementVarVar_##eleType##_4, HiOpcodeEnum::GetArrayElementVarVar_##eleType##_8);
 #define CI_stele(eleType) ctx.Add_stelem(HiOpcodeEnum::SetArrayElementVarVar_##eleType##_4, HiOpcodeEnum::SetArrayElementVarVar_##eleType##_8);
 
+	static const MethodInfo* FindRedirectCreateString(const MethodInfo* shareMethod)
+	{
+		int32_t paramCount = shareMethod->parameters_count;
+		void* iter = nullptr;
+		for (const MethodInfo* searchMethod; (searchMethod = il2cpp::vm::Class::GetMethods(il2cpp_defaults.string_class, &iter)) != nullptr;)
+		{
+			if (searchMethod->parameters_count != paramCount || std::strcmp(searchMethod->name, "CreateString"))
+			{
+				continue;
+			}
+			bool sigMatch = true;
+			for (uint8_t i = 0; i < paramCount; i++)
+			{
+				if (!IsTypeEqual(GET_METHOD_PARAMETER_TYPE(searchMethod->parameters[i]), GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
+				{
+					sigMatch = false;
+					break;
+				}
+			}
+			if (sigMatch)
+			{
+				return searchMethod;
+			}
+		}
+		return nullptr;
+	}
+	
 	void HiTransform::Transform(metadata::Image* image, const MethodInfo* methodInfo, metadata::MethodBody& body, interpreter::InterpMethodInfo& result)
 	{
 #pragma region header
@@ -681,7 +708,7 @@ else \
 				int32_t resolvedTotalArgNum = shareMethod->parameters_count + resolvedIsInstanceMethod;
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgNum;
-				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
+				uint32_t methodDataIndex = ctx.GetOrAddResolveDataIndex(shareMethod);
 
 				if (hybridclr::metadata::IsInterpreterImplement(shareMethod))
 				{
@@ -718,7 +745,7 @@ else \
 
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT(managed2NativeMethod);
-				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
+				uint32_t managed2NativeMethodDataIdx = ctx.GetOrAddResolveDataIndex((void*)managed2NativeMethod);
 
 				int32_t argIdxDataIndex;
 				uint16_t* __argIdxs;
@@ -788,7 +815,7 @@ else \
 
 				int32_t resolvedTotalArgNum = shareMethod->parameters_count + 1;
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgNum;
-				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
+				uint32_t methodDataIndex = ctx.GetOrAddResolveDataIndex(shareMethod);
 
 				bool isMultiDelegate = IsChildTypeOfMulticastDelegate(shareMethod->klass);
 				if (!isMultiDelegate && IsInterpreterMethod(shareMethod))
@@ -815,7 +842,7 @@ else \
 
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT(managed2NativeMethod);
-				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
+				uint32_t managed2NativeMethodDataIdx = ctx.GetOrAddResolveDataIndex((void*)managed2NativeMethod);
 
 
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
@@ -850,7 +877,7 @@ else \
 					{
 						Managed2NativeCallMethod staticManaged2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, true);
 						IL2CPP_ASSERT(staticManaged2NativeMethod);
-						uint32_t staticManaged2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)staticManaged2NativeMethod);
+						uint32_t staticManaged2NativeMethodDataIdx = ctx.GetOrAddResolveDataIndex((void*)staticManaged2NativeMethod);
 						if (retIdx < 0)
 						{
 							CreateAddIR(ir, CallDelegateInvoke_void);
@@ -968,10 +995,10 @@ else \
 				}
 
 				int32_t methodIdx = ctx.GetEvalStackTopOffset();
-				//uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
+				//uint32_t methodDataIndex = ctx.GetOrAddResolveDataIndex(shareMethod);
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(methodSig);
 				IL2CPP_ASSERT(managed2NativeMethod);
-				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
+				uint32_t managed2NativeMethodDataIdx = ctx.GetOrAddResolveDataIndex((void*)managed2NativeMethod);
 				bool hasThis = metadata::IsPrologHasThis(methodSig.flags);
 
 				int32_t resolvedTotalArgNum = methodSig.paramCount + hasThis;
@@ -1781,7 +1808,7 @@ else \
 			{
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppString* str = image->GetIl2CppUserStringFromRawIndex(DecodeTokenRowIndex(token));
-				uint32_t dataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, str);
+				uint32_t dataIdx = ctx.GetOrAddResolveDataIndex(str);
 
 				CreateAddIR(ir, LdstrVar);
 				ir->dst = ctx.GetEvalStackNewTopOffset();
@@ -1798,176 +1825,32 @@ else \
 				// TODO token cache optimistic
 				shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(shareMethod);
-				Il2CppClass* klass = shareMethod->klass;
-				uint8_t paramCount = shareMethod->parameters_count;
-
+				IL2CPP_ASSERT(!std::strcmp(shareMethod->name, ".ctor"));
 				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(shareMethod));
-				if (strcmp(klass->namespaze, "System") == 0)
+				if (ctx.TryAddInstinctCtorInstruments(shareMethod))
 				{
-					if (klass == il2cpp_defaults.object_class)
-					{
-						IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(klass));
-						CreateAddIR(ir, NewSystemObjectVar);
-						ir->obj = ctx.GetEvalStackNewTopOffset();
-						ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
-						continue;
-					}
-					else if (klass == il2cpp_defaults.string_class)
-					{
-						if (paramCount == 1)
-						{
-							const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
-							if (paramType->type == IL2CPP_TYPE_SZARRAY && paramType->data.type->type == IL2CPP_TYPE_CHAR)
-							{
-								// new string(char[])
-								CreateAddIR(ir, NewString);
-								ir->str = ctx.GetEvalStackTopOffset();
-								ir->chars = ctx.GetEvalStackTopOffset();
-								continue;
-							}
-						}
-						else if (paramCount == 2)
-						{
-							// new string(char c, int count)
-							const Il2CppType* paramType1 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
-							const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
-							if (paramType1->type == IL2CPP_TYPE_CHAR && paramType2->type == IL2CPP_TYPE_I4)
-							{
-								CreateAddIR(ir, NewString_3);
-								ir->str = ctx.GetEvalStackOffset_2();
-								ir->c = ctx.GetEvalStackOffset_2();
-								ir->count = ctx.GetEvalStackOffset_1();
-								ctx.PopStack();
-								continue;
-							}
-						}
-						else if (paramCount == 3)
-						{
-							// new string(char[] chars, int startIndex, int length)
-							const Il2CppType* paramType1 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[0]);
-							const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[1]);
-							const Il2CppType* paramType3 = GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[2]);
-							if (paramType1->type == IL2CPP_TYPE_SZARRAY && paramType1->data.type->type == IL2CPP_TYPE_CHAR
-								&& paramType2->type == IL2CPP_TYPE_I4 && paramType3->type == IL2CPP_TYPE_I4)
-							{
-								CreateAddIR(ir, NewString_2);
-								ir->str = ctx.GetEvalStackOffset_3();
-								ir->chars = ctx.GetEvalStackOffset_3();
-								ir->startIndex = ctx.GetEvalStackOffset_2();
-								ir->length = ctx.GetEvalStackOffset_1();
-								ctx.PopStackN(2);
-								continue;
-							}
-						}
-						void* iter = nullptr;
-						for (const MethodInfo* searchMethod; (searchMethod = il2cpp::vm::Class::GetMethods(il2cpp_defaults.string_class, &iter)) != nullptr;)
-						{
-							if (searchMethod->parameters_count != paramCount || std::strcmp(searchMethod->name, "CreateString"))
-							{
-								continue;
-							}
-							bool sigMatch = true;
-							for (uint8_t i = 0; i < paramCount; i++)
-							{
-								if (!IsTypeEqual(GET_METHOD_PARAMETER_TYPE(searchMethod->parameters[i]), GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
-								{
-									sigMatch = false;
-									break;
-								}
-							}
-							if (!sigMatch)
-							{
-								continue;
-							}
-							// insert nullptr to eval stack
-							int32_t thisIdx = evalStackTop - paramCount;
-							for (int32_t i = evalStackTop ; i > thisIdx; i--)
-							{
-								evalStack[i] = evalStack[i - 1];
-							}
-							// locOffset of this is not important. You only need make sure the value is not equal to nullptr.
-							evalStack[thisIdx] = { NATIVE_INT_REDUCE_TYPE, PTR_SIZE, ctx.GetEvalStackOffset(thisIdx) };
-							++evalStackTop;
-							shareMethod = searchMethod;
-							goto LabelCall;
-						}
-					}
-					else if (strcmp(klass->name, "Nullable`1") == 0)
-					{
-						IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-						IL2CPP_ASSERT(evalStackTop > 0);
-						il2cpp::vm::Class::SetupFields(klass);
-						CreateAddIR(ir, NullableNewVarVar);
-						ir->dst = ir->data = ctx.GetEvalStackTopOffset();
-						ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
-						ctx.PopStack();
-						ctx.PushStackByType(&klass->byval_arg);
-						continue;
-					}
-				}
-
-				if (klass->byval_arg.type == IL2CPP_TYPE_ARRAY)
-				{
-					const char* methodName = shareMethod->name;
-					if (strcmp(methodName, ".ctor") == 0)
-					{
-						if (klass->rank == paramCount)
-						{
-							CreateAddIR(ir, NewMdArrVarVar_length);
-							ir->lengthIdxs = ctx.GetEvalStackOffset(evalStackTop - paramCount);
-							ctx.PopStackN(paramCount);
-							ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
-							ir->arr = ctx.GetEvalStackTopOffset();
-							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
-						}
-						else if (klass->rank * 2 == paramCount)
-						{
-							CreateAddIR(ir, NewMdArrVarVar_length_bound);
-							ir->lengthIdxs = ctx.GetEvalStackOffset(evalStackTop - paramCount);
-							ir->lowerBoundIdxs = ctx.GetEvalStackOffset(evalStackTop - klass->rank);
-							ctx.PopStackN(paramCount);
-							ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
-							ir->arr = ctx.GetEvalStackTopOffset();
-							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
-						}
-						else
-						{
-							RaiseExecutionEngineException("not support array ctor");
-						}
-						continue;
-					}
-				}
-
-				if (IsChildTypeOfMulticastDelegate(shareMethod->klass))
-				{
-					IL2CPP_ASSERT(evalStackTop >= 2);
-#if HYBRIDCLR_UNITY_2021_OR_NEW
-					const MethodInfo* ctor = il2cpp::vm::Class::GetMethodFromName(shareMethod->klass, ".ctor", 2);
-					if (ctor && ctor->methodPointer && !ctor->isInterpterImpl)
-					{
-						CreateAddIR(ir, CtorDelegate);
-						ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
-						ir->ctor = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, ctor);
-						ir->method = ctx.GetEvalStackOffset_1();
-					}
-					else
-					{
-						CreateAddIR(ir, NewDelegate);
-						ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
-						ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
-						ir->method = ctx.GetEvalStackOffset_1();
-					}
-#else
-					CreateAddIR(ir, NewDelegate);
-					ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
-					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, klass);
-					ir->method = ctx.GetEvalStackOffset_1();
-#endif
-					ctx.PopStackN(2);
-					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 					continue;
 				}
-
+				Il2CppClass* klass = shareMethod->klass;
+				uint8_t paramCount = shareMethod->parameters_count;
+				if (klass == il2cpp_defaults.string_class)
+				{
+					const MethodInfo* searchMethod = FindRedirectCreateString(shareMethod);
+					if (searchMethod)
+					{
+						// insert nullptr to eval stack
+						int32_t thisIdx = evalStackTop - paramCount;
+						for (int32_t i = evalStackTop ; i > thisIdx; i--)
+						{
+							evalStack[i] = evalStack[i - 1];
+						}
+						// locOffset of this is not important. You only need make sure the value is not equal to nullptr.
+						evalStack[thisIdx] = { NATIVE_INT_REDUCE_TYPE, PTR_SIZE, ctx.GetEvalStackOffset(thisIdx) };
+						++evalStackTop;
+						shareMethod = searchMethod;
+						goto LabelCall;
+					}
+				}
 				if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
 				{
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
@@ -1978,7 +1861,7 @@ else \
 
 				int32_t resolvedTotalArgNum = shareMethod->parameters_count + 1;
 
-				uint32_t methodDataIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, shareMethod);
+				uint32_t methodDataIndex = ctx.GetOrAddResolveDataIndex(shareMethod);
 
 				if (IsInterpreterImplement(shareMethod))
 				{
@@ -2037,7 +1920,7 @@ else \
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT((void*)managed2NativeMethod);
-				//uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, managed2NativeMethod);
+				//uint32_t managed2NativeMethodDataIdx = ctx.GetOrAddResolveDataIndex(managed2NativeMethod);
 
 
 
@@ -2060,7 +1943,7 @@ else \
 				ctx.PushStackByType(&klass->byval_arg);
 				CreateAddIR(ir, NewClassVar);
 				ir->type = IS_CLASS_VALUE_TYPE(shareMethod->klass) ? HiOpcodeEnum::NewValueTypeVar : HiOpcodeEnum::NewClassVar;
-				ir->managed2NativeMethod = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)managed2NativeMethod);
+				ir->managed2NativeMethod = ctx.GetOrAddResolveDataIndex((void*)managed2NativeMethod);
 				ir->method = methodDataIndex;
 				ir->argIdxs = argIdxDataIndex;
 				ir->obj = objIdx;
@@ -2078,7 +1961,7 @@ else \
 				{
 					objKlass = il2cpp::vm::Class::GetNullableArgument(objKlass);
 				}
-				uint32_t klassDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+				uint32_t klassDataIdx = ctx.GetOrAddResolveDataIndex(objKlass);
 
 				CreateAddIR(ir, CastclassVar);
 				ir->obj = ctx.GetEvalStackTopOffset();
@@ -2097,7 +1980,7 @@ else \
 				{
 					objKlass = il2cpp::vm::Class::GetNullableArgument(objKlass);
 				}
-				uint32_t klassDataIdx = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+				uint32_t klassDataIdx = ctx.GetOrAddResolveDataIndex(objKlass);
 
 				CreateAddIR(ir, IsInstVar);
 				ir->obj = ctx.GetEvalStackTopOffset();
@@ -2145,7 +2028,7 @@ else \
 				//}
 				CreateAddIR(ir, UnBoxVarVar);
 				ir->addr = ir->obj = ctx.GetEvalStackTopOffset();
-				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+				ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
 
 				ctx.PopStack();
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -2222,7 +2105,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
-				uint32_t parentIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
+				uint32_t parentIndex = ctx.GetOrAddResolveDataIndex(fieldInfo->parent);
 				uint16_t dstIdx = ctx.GetEvalStackNewTopOffset();
 				IRCommon* ir = fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET ?
 					CreateLdsfld(pool, dstIdx, fieldInfo, parentIndex)
@@ -2255,14 +2138,14 @@ else \
 							ldfldFromFieldData = true;
 							CreateAddIR(ir, LdsfldaFromFieldDataVarVar);
 							ir->dst = dstIdx;
-							ir->src = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)il2cpp::vm::Field::GetData(fieldInfo));
+							ir->src = ctx.GetOrAddResolveDataIndex(il2cpp::vm::Field::GetData(fieldInfo));
 						}
 					}
 					if (!ldfldFromFieldData)
 					{
 						CreateAddIR(ir, LdsfldaVarVar);
 						ir->dst = dstIdx;
-						ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
+						ir->klass = ctx.GetOrAddResolveDataIndex(fieldInfo->parent);
 						ir->offset = fieldInfo->offset;
 					}
 				}
@@ -2270,7 +2153,7 @@ else \
 				{
 					CreateAddIR(ir, LdthreadlocalaVarVar);
 					ir->dst = dstIdx;
-					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
+					ir->klass = ctx.GetOrAddResolveDataIndex(fieldInfo->parent);
 					ir->offset = GetThreadStaticFieldOffset(fieldInfo);
 				}
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -2287,7 +2170,7 @@ else \
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 
-				uint32_t klassIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, fieldInfo->parent);
+				uint32_t klassIndex = ctx.GetOrAddResolveDataIndex(fieldInfo->parent);
 				uint16_t dataIdx = ctx.GetEvalStackTopOffset();
 				IRCommon* ir = fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET ?
 					CreateStsfld(pool, fieldInfo, klassIndex, dataIdx)
@@ -2445,7 +2328,7 @@ else \
 				{
 					CreateAddIR(ir, BoxVarVar);
 					ir->dst = ir->data = ctx.GetEvalStackTopOffset();
-					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+					ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
 				}
 				else
 				{
@@ -2463,7 +2346,7 @@ else \
 				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(eleKlass);
 				Il2CppClass* arrKlass = il2cpp::vm::Class::GetArrayClass(eleKlass, 1);
-				uint32_t arrKlassIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, arrKlass);
+				uint32_t arrKlassIndex = ctx.GetOrAddResolveDataIndex(arrKlass);
 				switch (varSize.reduceType)
 				{
 				case EvalStackReduceDataType::I4:
@@ -2511,7 +2394,7 @@ else \
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
-				uint32_t eleKlassIndex = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, eleKlass);
+				uint32_t eleKlassIndex = ctx.GetOrAddResolveDataIndex(eleKlass);
 				switch (index.reduceType)
 				{
 				case EvalStackReduceDataType::I4:
@@ -2812,7 +2695,7 @@ ir->ele = ele.locOffset;
 				{
 					CreateAddIR(ir, UnBoxAnyVarVar);
 					ir->dst = ir->obj = ctx.GetEvalStackTopOffset();
-					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+					ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
 
 					ctx.PopStack();
 					ctx.PushStackByType(&objKlass->byval_arg);
@@ -2821,7 +2704,7 @@ ir->ele = ele.locOffset;
 				{
 					CreateAddIR(ir, CastclassVar);
 					ir->obj = ctx.GetEvalStackTopOffset();
-					ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+					ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
 				}
 
 				ip += 5;
@@ -2874,7 +2757,7 @@ ir->ele = ele.locOffset;
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				CreateAddIR(ir, RefAnyValueVarVar);
 				ir->addr = ir->typedRef = ctx.GetEvalStackTopOffset();
-				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+				ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
 				ctx.PopStack();
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
@@ -2916,7 +2799,7 @@ ir->ele = ele.locOffset;
 				IL2CPP_ASSERT(objKlass);
 				CreateAddIR(ir, MakeRefVarVar);
 				ir->dst = ir->data = ctx.GetEvalStackTopOffset();
-				ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, objKlass);
+				ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
 				ctx.PopStack();
 
 				Il2CppType typedRef = {};
@@ -2933,7 +2816,7 @@ ir->ele = ele.locOffset;
 
 				CreateAddIR(ir, LdtokenVar);
 				ir->runtimeHandle = ctx.GetEvalStackNewTopOffset();
-				ir->token = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, runtimeHandle);
+				ir->token = ctx.GetOrAddResolveDataIndex(runtimeHandle);
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
 				continue;
@@ -3159,7 +3042,7 @@ ir->ele = ele.locOffset;
 						{
 							CreateAddIR(ir, BoxRefVarVar);
 							ir->dst = ir->src = self.locOffset;
-							ir->klass = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, conKlass);
+							ir->klass = ctx.GetOrAddResolveDataIndex(conKlass);
 
 							self.reduceType = NATIVE_INT_REDUCE_TYPE;
 							self.byteSize = GetSizeByReduceType(self.reduceType);
@@ -3250,7 +3133,7 @@ ir->ele = ele.locOffset;
 
 					CreateAddIR(ir, LdvirftnVarVar);
 					ir->resultMethod = ir->obj = ctx.GetEvalStackTopOffset();
-					ir->virtualMethod = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, methodInfo);
+					ir->virtualMethod = ctx.GetOrAddResolveDataIndex(methodInfo);
 
 					ctx.PopStack();
 					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
