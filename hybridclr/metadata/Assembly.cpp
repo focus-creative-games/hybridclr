@@ -89,6 +89,16 @@ namespace metadata
         return Create((const byte*)assemblyData, length, copyData);
     }
 
+    static void RunModuleInitializer(InterpreterImage* image)
+    {
+        Il2CppClass* moduleKlass = il2cpp::vm::Image::ClassFromName(image->GetIl2CppImage(), "", "<Module>");
+        if (!moduleKlass)
+        {
+            return;
+        }
+        il2cpp::vm::Runtime::ClassInit(moduleKlass);
+    }
+
     Il2CppAssembly* Assembly::Create(const byte* assemblyData, uint64_t length, bool copyData)
     {
         il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
@@ -153,7 +163,7 @@ namespace metadata
         image2->assembly = ass;
 
         image->InitRuntimeMetadatas();
-
+        RunModuleInitializer(image);
         return ass;
     }
 }
