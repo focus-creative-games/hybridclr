@@ -1428,7 +1428,8 @@ namespace metadata
 			e.second->~VTableSetUp();
 			IL2CPP_FREE(e.second);
 		}
-		_cacheTrees.clear();
+		Il2CppType2TypeDeclaringTreeMap temp;
+		_cacheTrees.swap(temp);
 	}
 
 	// index => MethodDefinition -> DeclaringClass -> index - klass->methodStart -> MethodInfo*
