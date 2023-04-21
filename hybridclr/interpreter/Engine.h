@@ -40,25 +40,33 @@ namespace interpreter
 		MachineState()
 		{
 			Config& hc = Config::GetIns();
-			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
-			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
-			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
+			_stackSize = 0;
+			_stackBase = nullptr;
 			_stackTopIdx = 0;
 
-			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
-			_frameCount = (int32_t)hc.GetInterpreterThreadFrameStackSize();
+			_frameBase = nullptr;
+			_frameCount = 0;
 			_frameTopIdx = 0;
 
-			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(hc.GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
-			_exceptionFlowCount = (int32_t)hc.GetInterpreterThreadExceptionFlowSize();
+			_exceptionFlowBase = nullptr;
+			_exceptionFlowCount = 0;
 			_exceptionFlowTopIdx = 0;
 		}
 
 		~MachineState()
 		{
-			il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
-			IL2CPP_FREE(_frameBase);
-			IL2CPP_FREE(_exceptionFlowBase);
+			if (_stackBase)
+			{
+				il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
+			}
+			if (_frameBase)
+			{
+				IL2CPP_FREE(_frameBase);
+			}
+			if (_exceptionFlowBase)
+			{
+				IL2CPP_FREE(_exceptionFlowBase);
+			}
 		}
 
 		StackObject* AllocArgments(int32_t argCount)
@@ -80,7 +88,14 @@ namespace interpreter
 		{
 			if (_stackTopIdx + slotNum > _stackSize)
 			{
-				il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocStackSlot"));
+				if (!_stackBase)
+				{
+					InitEvalStack();
+				}
+				if (_stackTopIdx + slotNum > _stackSize)
+				{
+					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocStackSlot"));
+				}
 			}
 			StackObject* dataPtr = _stackBase + _stackTopIdx;
 			_stackTopIdx += slotNum;
@@ -104,7 +119,14 @@ namespace interpreter
 		{
 			if (_frameTopIdx >= _frameCount)
 			{
-				il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocFrame"));
+				if (!_frameBase)
+				{
+					InitFrames();
+				}
+				else
+				{
+					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocFrame"));
+				}
 			}
 			return _frameBase + _frameTopIdx++;
 		}
@@ -135,14 +157,20 @@ namespace interpreter
 
 		ExceptionFlowInfo* AllocExceptionFlow(int32_t count)
 		{
-			if (_exceptionFlowTopIdx + count < _exceptionFlowCount)
+			if (_exceptionFlowTopIdx + count >= _exceptionFlowCount)
 			{
-				ExceptionFlowInfo* efi = _exceptionFlowBase + _exceptionFlowTopIdx;
-				_exceptionFlowTopIdx += count;
-				return efi;
+				if (!_exceptionFlowBase)
+				{
+					InitExceptionFlows();
+				}
+				if (_exceptionFlowTopIdx + count >= _exceptionFlowCount)
+				{
+					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("AllocExceptionFlowZero"));
+				}
 			}
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("AllocExceptionFlowZero"));
-			return nullptr;
+			ExceptionFlowInfo* efi = _exceptionFlowBase + _exceptionFlowTopIdx;
+			_exceptionFlowTopIdx += count;
+			return efi;
 		}
 
 		uint32_t GetExceptionFlowTopIdx() const
@@ -200,6 +228,32 @@ namespace interpreter
 		}
 
 	private:
+
+
+		void InitEvalStack()
+		{
+			Config& hc = Config::GetIns();
+			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
+			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
+			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
+			_stackTopIdx = 0;
+		}
+
+		void InitFrames()
+		{
+			Config& hc = Config::GetIns();
+			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
+			_frameCount = (int32_t)hc.GetInterpreterThreadFrameStackSize();
+			_frameTopIdx = 0;
+		}
+
+		void InitExceptionFlows()
+		{
+			Config& hc = Config::GetIns();
+			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(hc.GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
+			_exceptionFlowCount = (int32_t)hc.GetInterpreterThreadExceptionFlowSize();
+			_exceptionFlowTopIdx = 0;
+		}
 
 		StackObject* _stackBase;
 		int32_t _stackSize;
