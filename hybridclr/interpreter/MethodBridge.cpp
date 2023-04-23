@@ -38,6 +38,12 @@ namespace hybridclr
 					++dstOffset;
 					break;
 				}
+				case LocationDataType::SR:
+				{
+					CopyStackObject(dst, src->ptr, arg.stackObjectSize);
+					dstOffset += arg.stackObjectSize;
+					break;
+				}
 				case LocationDataType::S_16:
 				{
 					// when size > 8, arg is ref to struct
@@ -58,12 +64,6 @@ namespace hybridclr
 					break;
 				}
 				case LocationDataType::S_N:
-				{
-					CopyStackObject(dst, src->ptr, arg.stackObjectSize);
-					dstOffset += arg.stackObjectSize;
-					break;
-				}
-				case LocationDataType::SR:
 				{
 					CopyStackObject(dst, src->ptr, arg.stackObjectSize);
 					dstOffset += arg.stackObjectSize;
