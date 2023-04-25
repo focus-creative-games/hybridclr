@@ -89,7 +89,7 @@ In view of the stable performance of more than 2 months on several heavy online 
 
 - QQ group: 651188171 HybridCLR (wolong) technical exchange group **(official main group)**. You can report bugs, but **do not consult basic usage issues in the group**.
 - QQ group: 428404198 HybridCLR (wolong) novice group **(novice group)**. If you encounter any problems in the process of using it, you can consult in the group.
-- Email: hybridclr@focus-creative-games.com
+- Email: hybridclr@code-philosophy.com
 
 ## RoadMap
 

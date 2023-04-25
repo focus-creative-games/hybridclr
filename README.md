@@ -21,7 +21,6 @@ HybridCLR不仅支持传统的全解释执行模式，还开创性地实现了 `
 ## 文档
 
 - [官方文档](https://focus-creative-games.github.io/hybridclr/about/)
-- [技术论坛](https://forum.focus-creative-games.com/topics)
 - [快速上手](https://focus-creative-games.github.io/hybridclr/start_up/)
 - [示例项目](https://github.com/focus-creative-games/hybridclr_trial)
 - [知乎专栏](https://www.zhihu.com/column/c_1489549396035870720)
@@ -79,7 +78,7 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 - 新手1群：428404198（满）
 - 新手2群：**680274677（推荐）**
 - QQ悬赏互助群：762953653。悬赏提问，快速解决问题。
-- 商业合作邮箱: business@focus-creative-games.com
+- 商业合作邮箱: business@code-philosophy.com
 - [商业化支持](https://focus-creative-games.github.io/hybridclr/price/)
 
 ## 后续开发规划
