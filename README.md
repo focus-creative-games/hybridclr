@@ -8,7 +8,7 @@
 <br/>
 <br/>
 
-HybridCLR是 focus-creative-games（代码哲学） 公司的代表作品，我们希望通过我们的聪明才智深刻地改变整个行业，帮助游戏团队制作出更优秀的游戏。
+HybridCLR是 **Code Philosophy（代码哲学）** 公司的代表作品，我们希望通过我们的聪明才智深刻地改变整个行业，帮助游戏团队制作出更优秀的游戏。
 
 HybridCLR是一个**特性完整、零成本、高性能、低内存**的**近乎完美**的Unity全平台原生c#热更方案。
 
@@ -90,7 +90,7 @@ HybridCLR是原生的c#热更新方案。通俗地说，il2cpp相当于mono的ao
 
 ## 关于作者
 
-**walon** ：**focus-creative-games** 创始人
+**walon** ：**Code Philosophy（代码哲学）** 创始人
 
 毕业于清华大学物理系，2006年CMO金牌，奥数国家集训队成员，保送清华基科班。专注于游戏技术，擅长开发架构和基础技术设施。
 
