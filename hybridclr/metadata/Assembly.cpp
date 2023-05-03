@@ -84,19 +84,24 @@ namespace metadata
         }
     }
 
-    Il2CppAssembly* Assembly::LoadFromBytes(const void* assemblyData, uint64_t length, bool copyData)
+    static void RunModuleInitializer(Il2CppImage* image)
     {
-        return Create((const byte*)assemblyData, length, copyData);
-    }
-
-    static void RunModuleInitializer(InterpreterImage* image)
-    {
-        Il2CppClass* moduleKlass = il2cpp::vm::Image::ClassFromName(image->GetIl2CppImage(), "", "<Module>");
+        Il2CppClass* moduleKlass = il2cpp::vm::Image::ClassFromName(image, "", "<Module>");
         if (!moduleKlass)
         {
             return;
         }
         il2cpp::vm::Runtime::ClassInit(moduleKlass);
+    }
+
+    Il2CppAssembly* Assembly::LoadFromBytes(const void* assemblyData, uint64_t length, bool copyData)
+    {
+        Il2CppAssembly* ass = Create((const byte*)assemblyData, length, copyData);
+        if (ass)
+        {
+            RunModuleInitializer(ass->image);
+        }
+        return ass;
     }
 
     Il2CppAssembly* Assembly::Create(const byte* assemblyData, uint64_t length, bool copyData)
@@ -163,7 +168,6 @@ namespace metadata
         image2->assembly = ass;
 
         image->InitRuntimeMetadatas();
-        RunModuleInitializer(image);
         return ass;
     }
 }
