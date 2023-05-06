@@ -1891,11 +1891,11 @@ namespace metadata
 	bool InterpreterImage::GetModuleIl2CppType(Il2CppType& resultType, uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
 	{
 		IL2CPP_ASSERT(moduleRowIndex == 1);
-		const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
-		const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
+		uint32_t encodedNamespaceIndex = EncodeWithIndex(typeNamespace);
+		uint32_t encodedNameIndex = EncodeWithIndex(typeName);
 		for (TypeDefinitionDetail& type : _typeDetails)
 		{
-			if (type.typeDef->namespaceIndex == typeNamespace && type.typeDef->nameIndex == typeName)
+			if (type.typeDef->namespaceIndex == encodedNamespaceIndex && type.typeDef->nameIndex == encodedNameIndex)
 			{
 				GetIl2CppTypeFromTypeDefinition(type.typeDef, resultType);
 				return true;
@@ -1906,6 +1906,8 @@ namespace metadata
 		{
 			return false;
 		}
+		const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
+		const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(
 			CStringToStringView(typeNamespaceStr),
 			CStringToStringView(typeNameStr),
