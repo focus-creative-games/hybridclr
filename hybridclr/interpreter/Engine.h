@@ -40,16 +40,16 @@ namespace interpreter
 		MachineState()
 		{
 			Config& hc = Config::GetIns();
-			_stackSize = 0;
+			_stackSize = -1;
 			_stackBase = nullptr;
 			_stackTopIdx = 0;
 
 			_frameBase = nullptr;
-			_frameCount = 0;
+			_frameCount = -1;
 			_frameTopIdx = 0;
 
 			_exceptionFlowBase = nullptr;
-			_exceptionFlowCount = 0;
+			_exceptionFlowCount = -1;
 			_exceptionFlowTopIdx = 0;
 		}
 
