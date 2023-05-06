@@ -173,6 +173,7 @@ namespace hybridclr
 			int32_t size = metadata::GetTypeValueSize(klass);
 			switch (size)
 			{
+			case 4:
 			case 8:
 			case 12:
 			case 16:
@@ -182,7 +183,7 @@ namespace hybridclr
 			}
 			
 			bool isHFA = ComputeHFATypeInfo0(klass, typeInfo);
-			if (isHFA && typeInfo.count >= 2 && typeInfo.count <= 4)
+			if (isHFA && typeInfo.count >= 1 && typeInfo.count <= 4)
 			{
 				int32_t fieldSize = typeInfo.eleType->type == IL2CPP_TYPE_R4 ? 4 : 8;
 				return size == fieldSize * typeInfo.count;
@@ -417,7 +418,7 @@ namespace hybridclr
 		static void AppendValueTypeSignature(Il2CppClass* klass, bool returnType, char* sigBuf, size_t bufferSize, size_t& pos)
 		{
 			int32_t typeSize = il2cpp::vm::Class::GetValueSize(klass, nullptr);
-#if HYBRIDCLR_ABI_UNIVERSAL_64 || HYBRIDCLR_ABI_ARM_64
+#if HYBRIDCLR_ABI_ARM_64
 			HFATypeInfo typeInfo = {};
 			if (ComputeHFATypeInfo(klass, typeInfo))
 			{
@@ -425,6 +426,11 @@ namespace hybridclr
 				{
 					switch (typeInfo.count)
 					{
+					case 1:
+					{
+						AppendString(sigBuf, bufferSize, pos, "r4");
+						return;
+					}
 					case 2:
 					{
 						AppendString(sigBuf, bufferSize, pos, "vf2");
@@ -447,6 +453,11 @@ namespace hybridclr
 					IL2CPP_ASSERT(typeInfo.eleType->type == IL2CPP_TYPE_R8);
 					switch (typeInfo.count)
 					{
+					case 1:
+					{
+						AppendString(sigBuf, bufferSize, pos, "r8");
+						return;
+					}
 					case 2:
 					{
 						AppendString(sigBuf, bufferSize, pos, "vd2");
@@ -466,6 +477,9 @@ namespace hybridclr
 				}
 			}
 			// FIXME HSV
+			uint8_t actualAligment = 1;
+			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
+#elif HYBRIDCLR_ABI_UNIVERSAL_64
 			uint8_t actualAligment = 1;
 			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
 #elif HYBRIDCLR_ABI_UNIVERSAL_32
