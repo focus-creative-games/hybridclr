@@ -7,29 +7,35 @@
 <br/>
 <br/>
 
-HybridCLR (code-named wolong) is a **near-perfect** Unity full-platform native c# hot update solution with complete features, zero cost, high performance, and low memory.
+HybridCLR is the representative work of **Code Philosophy** company. We hope to profoundly change the entire industry through our ingenuity and help game teams make better games.
 
-HybridCLR expands the code of il2cpp, making it change from a pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to a 'AOT+Interpreter' hybrid runtime, which supports dynamic loading of assemblies natively , so that games packaged based on il2cpp backend can be efficiently executed in **AOT+interpreter** mixed mode not only on Android platform, but also on IOS, Consoles and other platforms that restrict JIT. Hot updates are fully supported from the bottom up.
+HybridCLR is a **almost perfect** full-platform native c# hot update solution for Unity with complete features, zero cost, high performance, and low memory**.
+
+HybridCLR expands the code of il2cpp, making it change from pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to 'AOT+Interpreter' hybrid runtime, and then natively supports dynamic loading of assembly , so that the games packaged based on il2cpp backend can be executed not only on the Android platform, but also on IOS, Consoles and other platforms that limit JIT efficiently in **AOT+interpreter** hybrid mode, completely supporting hot updates from the bottom layer.
+
+HybridCLR not only supports the traditional fully interpreted execution mode, but also pioneered [Differential Hybrid Execution](https://focus-creative-games.github.io/hybridclr-doc/#/advanced/differentialhybridexecution) Differential hybrid execution technique. That is, you can add, delete, or modify the AOT dll at will, and intelligently make the changed or newly added classes and functions run in interpreter mode, but the unchanged classes and functions run in AOT mode, so that the running performance of the hot-updated game logic basically reaches the original AOT level.
+
+Welcome to embrace modern native C# hot update technology! ! !
 
 ## Documentation
 
-- [Official Documentation](https://focus-creative-games.github.io/hybridclr/index/)
-- [Quick Start](https://focus-creative-games.github.io/hybridclr/start_up/)
-- [Sample Project](https://github.com/focus-creative-games/hybridclr_trial)
-- [Know the column] (https://www.zhihu.com/column/c_1489549396035870720)
+- [Official Documentation](https://focus-creative-games.github.io/hybridclr-doc)
+- [Quickstart](https://focus-creative-games.github.io/hybridclr-doc/#/beginner/quickstart)
 - [UWA Academy](https://edu.uwa4d.com/course-intro/0/432)
 
 ## Features
 
-- Features complete. Nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), except for the features below "Limitations and Notes" are supported.
-- Zero learning and usage costs. HybridCLR enhances the pure AOT runtime into a full runtime, making hot update code work seamlessly with AOT code. Script classes and AOT classes can write code such as inheritance, reflection, multi-threading (volatile, ThreadStatic, Task, async) at will in the same runtime. There is no need to write any special code, no code generation, and no special restrictions.
-- Execute efficiently. Implemented an extremely efficient register interpreter that outperformed other hot update schemes by a large margin by all metrics. [Performance test report](https://focus-creative-games.github.io/hybridclr/benchmark/#performance test report)
-- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary C# classes, which is far superior to other hot update solutions. [Memory usage report](https://focus-creative-games.github.io/hybridclr/benchmark/#Memory usage report)
-- Native support for hotfix to repair part of AOT code. Adds almost no development and runtime overhead.
+- Features complete. A nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), with only a very small number of [unsupported features](https://focus-creative-games.github.io/hybridclr-doc/#/basic/notsupportedfeatures).
+- Zero learning and use costs. HybridCLR enhances the pure AOT runtime into a complete runtime, making hot update code work seamlessly with AOT code. The script class and the AOT class are in the same runtime, and you can freely write codes such as inheritance, reflection, and multi-threading (volatile, ThreadStatic, Task, async). No need to write any special code, no code generation, almost unlimited.
+- Efficient execution. Implemented an extremely efficient register interpreter, all indicators are significantly better than other hot update schemes. [Performance Test Report](https://focus-creative-games.github.io/hybridclr-doc/#/basic/performance)
+- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary c# classes, which is far superior to other hot update solutions. [Memory and GC](https://focus-creative-games.github.io/hybridclr-doc/#/basic/memory)
+- Due to the perfect support for generics, libraries that are not compatible with il2cpp due to AOT generics issues can now run perfectly under il2cpp
+- Support some features not supported by il2cpp, such as __makeref, __reftype, __refvalue directives
+- [Differential Hybrid Execution](https://focus-creative-games.github.io/hybridclr-doc/#/advanced/differentialhybridexecution)
 
 ## working principle
 
-HybridCLR is inspired by mono's [hybrid mode execution](https://developpaper.com/new-net-interpreter-mono-has-arrived/) technology and provides additional interpreter modules for AOT runtimes such as unity's il2cpp , transform them from pure AOT runtime to "AOT + Interpreter" hybrid runtime.
+HybridCLR is inspired by mono's [mixed mode execution](https://www.mono-project.com/news/2017/11/13/mono-interpreter/) technology, and provides additional AOT runtimes such as unity's il2cpp The interpreter module is provided to transform them from pure AOT runtime to "AOT + Interpreter" hybrid operation mode.
 
 ![icon](docs/images/architecture.png)
 
@@ -37,85 +43,46 @@ More specifically, HybridCLR does the following:
 
 - Implemented an efficient metadata (dll) parsing library
 - Modified the metadata management module to realize the dynamic registration of metadata
-- Implemented a compiler from an IL instruction set to a custom register instruction set
+- Implemented a compiler from IL instruction set to custom register instruction set
 - Implemented an efficient register interpreter
-- Provide a large number of instinct functions additionally to improve the performance of the interpreter
-- Provide hotfix AOT support
+- Provide a large number of instinct functions to improve the performance of the interpreter
 
-## Differences from other popular c# hot update schemes
+## The difference from other popular c# hot update schemes
 
-### Essential comparison
+HybridCLR is a native c# hot update solution. In layman's terms, il2cpp is equivalent to the aot module of mono, and HybridCLR is equivalent to the interpreter module of mono, and the combination of the two becomes a complete mono. HybridCLR makes il2cpp a full-featured runtime, natively (that is, through System.Reflection.Assembly.Load) supports dynamic loading of dlls, thereby supporting hot updates of the ios platform.
 
-HybridCLR is a native c# hot update solution. In layman's terms, il2cpp is equivalent to the aot module of mono, and HybridCLR is equivalent to the interpreter module of mono. The two are combined into a complete mono. HybridCLR makes il2cpp a full-featured runtime that natively (ie, through System.Reflection.Assembly.Load) supports dynamic loading of dlls, thereby supporting hot updates of the ios platform.
+Just because HybridCLR is implemented at the native runtime level, the types of the hot update part and the AOT part of the main project are completely equivalent and seamlessly unified. You can call, inherit, reflect, and multi-thread at will, without generating code or writing adapters.
 
-Because HybridCLR is implemented at the native runtime level, the type of the hot update part is completely equivalent and seamlessly unified with the type of the AOT part of the main project. You can call, inherit, reflect, and multithread at will, without generating code or writing adapters.
-
-Other hot update schemes are independent vms, and the relationship with il2cpp is essentially equivalent to the relationship of embedding lua in mono. Therefore, the type system is not unified. In order to allow the hot update type to inherit some types of AOT, an adapter needs to be written, and the type in the interpreter cannot be recognized by the type system of the main project. Incomplete features, troublesome development, and inefficient operation.
-
-### Actual use experience or feature comparison
-
-- The cost of learning and use is almost zero. HybridCLR turns il2cpp into a full-featured runtime with almost zero learning and usage costs and almost zero intrusion. Other schemes have a lot of pits and rules that need to be avoided, learning and use costs, and need to make a lot of modifications to the original project.
-- Can use all c# features. Other schemes tend to have a lot of restrictions.
-- Can directly support the use and inheritance of types in the main project. Other solutions are to write adapters or generate code.
-- Hot update some metadata and AOT metadata are seamlessly unified. Like the reflection code can work properly, the AOT part can also create hot update objects through the standard Reflection interface. Other options can't do it.
-- Good support for multithreading. Features like multithreading, ThreadStatic, async, etc. are directly supported by HybridCLR, and other solutions are difficult to support except for the async feature.
-- Unity workflow is almost identical to native. The hot update MonoBehaviour in HybridCLR can be directly mounted on the hot update resource and work correctly. Other options do not work.
-- Very high compatibility. Various third-party libraries can work under HybridCLR as long as they work under il2cpp. Other solutions often require a lot of magic to modify the source code.
-- Extremely memory efficient. The hot update type in HybridCLR is completely equivalent to the AOT type of the main project, occupying the same amount of space. The equivalent types of other schemes are false types, which not only cannot be recognized by the runtime, but also occupy several times more space.
-- High execution efficiency. The interaction between the hot update part in HybridCLR and the AOT part of the main project belongs to the internal interaction of il2cpp, which is extremely efficient. The other solution is the efficiency between the independent virtual machine and il2cpp, which is not only troublesome but also inefficient.
-
+Other hot update solutions are independent vm, and the relationship with il2cpp is essentially equivalent to the relationship of embedding lua in mono. Therefore, the type system is not uniform. In order to allow the hot update type to inherit some AOT types, an adapter needs to be written, and the type in the interpreter cannot be recognized by the type system of the main project. Incomplete features, troublesome development, and low operating efficiency.
 
 ## Compatibility
 
 - Support 2019.4.x, 2020.3.x, 2021.3.x series LTS versions
-- Supports all il2cpp supported platforms. Currently, the test supports PC (Win32 and Win64), macOS (x86, x64, Arm64), Android (armv7, armv8), iOS (64bit), NS (64bit), WebGL (with a few bugs) platforms, and the remaining platforms are to be tested.
-- Tested a large number of common game libraries, and found no libraries that are natively compatible with il2cpp but incompatible with HybridCLR. Any library that works under the il2cpp backend will work fine under HybridCLR. Even those libraries that are incompatible with il2cpp due to AOT issues can now run normally because of HybridCLR's expanded capabilities for il2cpp.
+- Supports all platforms supported by il2cpp. At present, it has fully supported PC (Win32 and Win64), macOS (x86, x64, Arm64), Android (armv7, armv8), iOS (64bit), WebGL, **WeChat applet platform**, and the remaining platforms are yet to be tested.
+- Tested a large number of common game libraries, and did not find a library that is natively compatible with il2cpp but incompatible after using HybridCLR. As long as the library can work under the il2cpp backend, it can work normally under HybridCLR. Even those libraries that are incompatible with il2cpp due to AOT issues can now run normally because of HybridCLR's ability to expand il2cpp.
 
-## Stability status
+## Stability Status
 
-Currently PC (x86 and x64), macOS (x86, x64, Arm64), Android (arm v7 and v8), iOS (64bit) can be used stably. Dozens of large and medium-sized game projects have been integrated in a relatively complete manner, and some of them are being tested before going online.
+At present, **extremely stable** 1.x and 2.x official versions have been released, which are sufficient to meet the stability requirements of large and medium-sized commercial projects. Since the first game was launched on June 7, 2022, only one small bug occurred in the online project, and it was quickly fixed within a few hours.
 
-In view of the stable performance of more than 2 months on several heavy online (quasi-launch) projects, the official version is expected to be released in **August**.
+At present, at least thousands of commercial game projects have completed access, and hundreds of them have been launched on both ends. The online projects include games such as MMORPG, heavy card, and heavy tower defense.
 
-## Accessed commercial projects
-
-- 2022.6.7 Launch the first Android+iOS double-ended match-3 game
-- 2022.8.5 launch the second double-ended heavy RPG card
-- On August 8, 2022, the third dual-end heavy RPG tower defense game will be launched
-- In 2022.8, there are at least 3 more models: MMORPG (heavy), RPG tower defense (moderate), and match-3 (moderate) online
-- Others see some of the collection [full access to commercial projects list](https://focus-creative-games.github.io/hybridclr/ref_project/)
+Most leading companies such as Tencent, NetEase, funplus, Perfect, Stacked Paper, and Byte have already connected to multiple projects and will soon (or already) go online.
 
 ## Support and Contact
 
-- QQ group: 651188171 HybridCLR (wolong) technical exchange group **(official main group)**. You can report bugs, but **do not consult basic usage issues in the group**.
-- QQ group: 428404198 HybridCLR (wolong) novice group **(novice group)**. If you encounter any problems in the process of using it, you can consult in the group.
-- Email: hybridclr@code-philosophy.com
-
-## RoadMap
-
-Although HybridCLR is related to il2cpp, most of the core code is independent of il2cpp, and it is easy to transplant (expected one month) to other CLR platforms that do not support AOT+Interpreter. No matter how the version of Unity changes, even if il2cpp is abandoned and .net 6+ is used, HybridCLR will continue to follow up and stably provide cross-platform CLR hot update service until one day when .net officially supports AOT+Interpreter, then HybridCLR will complete its historical mission.
-
-- Support `Hybrid Dll` technology (2022.9)
-- Instruction optimization, the number of instructions after compilation is reduced to 1/4-1/2, and the performance of basic instructions and most object model instructions is improved by 100%-300%. (2022.10 -)
-- Support incremental GC (2022.10 -)
+- Official 1 group: 651188171 (full)
+- Novice group 1: 428404198 (full)
+- Novice group 2: **680274677 (recommended)**
+- QQ reward mutual aid group: 762953653. Offer a reward for asking questions and solving problems quickly.
+- Business cooperation email: business@code-philosophy.com
+- [Commercial support](https://focus-creative-games.github.io/hybridclr-doc/#/other/business)
 
 ## About the author
 
-**walon**: Founder of **focus-creative-games**
+**walon** : Founder of **Code Philosophy (code philosophy)**
 
-Graduated from the Department of Physics, Tsinghua University, CMO Gold Medal in 2006, member of the National Math Olympiad Training Team, recommended to Tsinghua Basic Course. Focus on game technology, good at developing architecture and infrastructure.
-
-## Sponsor
-
-We invested a lot of manpower and other resources in the development of HybridCLR, and your sponsorship will help us persevere and make it faster and better. Thank you for your generosity!
-
-**WeChat**
-
-![weixin](./docs/sponsor/weixin.JPG)
-
-**Alipay**
-
-![zhifubao](./docs/sponsor/zhifubao.JPG)
+Graduated from the Department of Physics of Tsinghua University, won the CMO gold medal in 2006, a member of the National Mathematical Olympiad Training Team, and was recommended to Tsinghua University for basic courses. Focus on game technology, good at developing architecture and basic technical facilities.
 
 ## license
 
