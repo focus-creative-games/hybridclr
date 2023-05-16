@@ -21,8 +21,10 @@
 #else
 #define PLATFORM_ARCH_64 0
 #endif
+#elif !defined(HYBRIDCLR_UNITY_VERSION)
+#error "please run 'HybridCLR/Generate/All' before building"
 #else
-#error "not suppport unity version"
+#error "unsupported unity version"
 #endif
 
 #if IL2CPP_BYTE_ORDER != IL2CPP_LITTLE_ENDIAN
@@ -259,7 +261,4 @@ namespace hybridclr
 	}
 
 }
-
-#else
-#error "not support unity version"
 #endif
