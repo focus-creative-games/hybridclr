@@ -323,11 +323,18 @@ namespace metadata
 			return GetFieldOffset(typeDef, fieldIndexInType);
 		}
 
-		int32_t GetPackingSize(const Il2CppTypeDefinition* typeDef)
+		int32_t GetPackingSize(const Il2CppTypeDefinition* typeDef) const
 		{
 			int32_t typeIndex = GetTypeRawIndex(typeDef);
 			auto it = _classLayouts.find(typeIndex);
 			return it != _classLayouts.end() ? it->second.packingSize : 0;
+		}
+
+		TbClassLayout GetClassLayout(const Il2CppTypeDefinition* typeDef) const
+		{
+			int32_t typeIndex = GetTypeRawIndex(typeDef);
+			auto it = _classLayouts.find(typeIndex);
+			return it != _classLayouts.end() ? it->second : TbClassLayout{};
 		}
 
 		const Il2CppFieldDefaultValue* GetFieldDefaultValueEntryByRawIndex(uint32_t index)

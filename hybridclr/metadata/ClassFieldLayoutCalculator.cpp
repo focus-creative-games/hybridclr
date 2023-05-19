@@ -259,8 +259,8 @@ namespace metadata
 		}
 
 
-
-        uint8_t packingSize = (uint8_t)_image->GetPackingSize(typeDef);
+        TbClassLayout classLayoutData = _image->GetClassLayout(typeDef);
+        uint8_t packingSize = (uint8_t)classLayoutData.packingSize;
 
         bool isExplictLayout = typeDef->flags & TYPE_ATTRIBUTE_EXPLICIT_LAYOUT;
         if (isExplictLayout)
@@ -331,6 +331,10 @@ namespace metadata
             if (!IsValueType(typeDef))
             {
                 layout.nativeSize = -1;
+            }
+            if (classLayoutData.classSize > 0)
+            {
+                layout.actualSize = layout.instanceSize = layout.instanceSize = classLayoutData.classSize + sizeof(Il2CppObject);
             }
         }
 	}
