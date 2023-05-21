@@ -90,12 +90,6 @@ namespace metadata
 		image2->exportedTypeCount = _rawImage.GetTableRowNum(TableType::EXPORTEDTYPE);
 		image2->customAttributeCount = _rawImage.GetTableRowNum(TableType::CUSTOMATTRIBUTE);
 
-#if HYBRIDCLR_UNITY_2019
-		image2->typeStart = EncodeWithIndex(0);
-		image2->customAttributeStart = EncodeWithIndex(0);
-		image2->entryPointIndex = EncodeWithIndexExcept0(_rawImage.GetEntryPointToken());
-		image2->exportedTypeStart = EncodeWithIndex(0);
-#else
 		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)IL2CPP_MALLOC_ZERO(sizeof(Il2CppImageGlobalMetadata));
 		metadataImage->typeStart = EncodeWithIndex(0);
 		metadataImage->customAttributeStart = EncodeWithIndex(0);
@@ -103,7 +97,6 @@ namespace metadata
 		metadataImage->exportedTypeStart = EncodeWithIndex(0);
 		metadataImage->image = image2;
 		image2->metadataHandle = reinterpret_cast<Il2CppMetadataImageHandle>(metadataImage);
-#endif
 
 		image2->nameToClassHashTable = nullptr;
 		image2->codeGenModule = nullptr;
@@ -176,11 +169,6 @@ namespace metadata
 			SET_IL2CPPTYPE_VALUE_TYPE(cppType, isValueType);
 			cppType.data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
-#if HYBRIDCLR_UNITY_2019
-			Il2CppType byRefType = cppType;
-			byRefType.byref = 1;
-			cur.byrefTypeIndex = AddIl2CppTypeCache(byRefType);
-#endif
 
 			if (IsInterface(cur.flags))
 			{
@@ -618,16 +606,9 @@ namespace metadata
 				int32_t attributeStartIndex = EncodeWithIndex((int32_t)_customAttribues.size());
 				int32_t handleIndex = (int32_t)_customAttributeHandles.size();
 				_tokenCustomAttributes[token] = { (int32_t)EncodeWithIndex(handleIndex), 0, 0 };
-#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 				_customAttributeHandles.push_back({ token, (uint32_t)attributeStartIndex });
-#else
-				_customAttributeHandles.push_back({ token, attributeStartIndex, 0 });
-#endif
 				curTypeRange = &_customAttributeHandles[handleIndex];
 			}
-#if !HYBRIDCLR_UNITY_2021_OR_NEW
-			++curTypeRange->count;
-#endif
 
 			TableType ctorMethodTableType = DecodeCustomAttributeTypeCodedIndexTableType(data.type);
 			uint32_t ctorMethodRowIndex = DecodeCustomAttributeTypeCodedIndexRowIndex(data.type);
@@ -656,10 +637,8 @@ namespace metadata
 
 		}
 		IL2CPP_ASSERT(_tokenCustomAttributes.size() == _customAttributeHandles.size());
-#if HYBRIDCLR_UNITY_2021_OR_NEW
 		// add extra Il2CppCustomAttributeTypeRange for compute count
 		_customAttributeHandles.push_back({ 0, EncodeWithIndex((int32_t)_customAttribues.size()) });
-#endif
 		_customAttribtesCaches.resize(_tokenCustomAttributes.size());
 	}
 
@@ -1277,19 +1256,6 @@ namespace metadata
 		{
 			last->property_count = propertyTb.rowNum - DecodeMetadataIndex(last->propertyStart) + 1;
 		}
-#if HYBRIDCLR_UNITY_2019
-		for (const TypeDefinitionDetail& tdd : _typeDetails)
-		{
-			if (tdd.typeDef->property_count == 0)
-			{
-				continue;
-			}
-			for (int32_t start = DecodeMetadataIndex(tdd.typeDef->propertyStart), i = 0; i < tdd.typeDef->property_count; i++)
-			{
-				_propeties[start + i - 1].declaringType = tdd.typeDef;
-			}
-		}
-#endif
 	}
 
 	void InterpreterImage::InitEvents()
@@ -1301,12 +1267,7 @@ namespace metadata
 		for (uint32_t rowIndex = 1; rowIndex <= eventTb.rowNum; rowIndex++)
 		{
 			TbEvent data = _rawImage.ReadEvent(rowIndex);
-			_events.push_back({ _rawImage.GetStringFromRawIndex(data.name), data.eventFlags, data.eventType, 0, 0, 0
-#if HYBRIDCLR_UNITY_2019
-				, nullptr
-				, { (StringIndex)EncodeWithIndex(data.name), kTypeIndexInvalid, kMethodIndexInvalid, kMethodIndexInvalid, kMethodIndexInvalid, EncodeToken(TableType::EVENT, rowIndex)}
-#endif
-				});
+			_events.push_back({ _rawImage.GetStringFromRawIndex(data.name), data.eventFlags, data.eventType, 0, 0, 0});
 		}
 
 		Il2CppTypeDefinition* last = nullptr;
@@ -1325,21 +1286,6 @@ namespace metadata
 		{
 			last->event_count = eventTb.rowNum - DecodeMetadataIndex(last->eventStart) + 1;
 		}
-#if HYBRIDCLR_UNITY_2019
-		for (const TypeDefinitionDetail& tdd : _typeDetails)
-		{
-			if (tdd.typeDef->event_count == 0)
-			{
-				continue;
-			}
-			for (int32_t start = DecodeMetadataIndex(tdd.typeDef->eventStart), i = 0; i < tdd.typeDef->event_count; i++)
-			{
-				EventDetail& ed = _events[start + i - 1];
-				ed.declaringType = tdd.typeDef;
-				ed.il2cppDefinition.typeIndex = tdd.typeDef->byvalTypeIndex;
-			}
-		}
-#endif
 	}
 
 
@@ -1357,45 +1303,30 @@ namespace metadata
 			{
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
-#if HYBRIDCLR_UNITY_2019
-				pd.il2cppDefinition.get = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
-#endif
 				pd.getterMethodIndex = method;
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::Setter)
 			{
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
-#if HYBRIDCLR_UNITY_2019
-				pd.il2cppDefinition.set = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
-#endif
 				pd.setterMethodIndex = method;
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::AddOn)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
-#if HYBRIDCLR_UNITY_2019
-				ed.il2cppDefinition.add = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
-#endif
 				ed.addMethodIndex = method;
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::RemoveOn)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
-#if HYBRIDCLR_UNITY_2019
-				ed.il2cppDefinition.remove = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
-#endif
 				ed.removeMethodIndex = method;
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::Fire)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
-#if HYBRIDCLR_UNITY_2019
-				ed.il2cppDefinition.raise = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
-#endif
 				ed.fireMethodIndex = method;
 			}
 		}

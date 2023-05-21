@@ -60,10 +60,6 @@ namespace metadata
 		uint32_t addMethodIndex; // start from 1
 		uint32_t removeMethodIndex; // start from 1
 		uint32_t fireMethodIndex; // start from 1;
-#if HYBRIDCLR_UNITY_2019
-		Il2CppTypeDefinition* declaringType;
-		Il2CppEventDefinition il2cppDefinition;
-#endif
 	};
 
 	struct CustomAttribute
@@ -398,15 +394,6 @@ namespace metadata
 			const MethodInfo* setter = pd.setterMethodIndex ? klass->methods[pd.setterMethodIndex - baseMethodIdx] : nullptr;
 			return { pd.name, getter, setter, pd.flags, EncodeToken(TableType::PROPERTY, rowIndex) };
 		}
-
-#ifdef HYBRIDCLR_UNITY_2019
-		const Il2CppEventDefinition* GetEventDefinitionFromIndex(EventIndex index)
-		{
-			IL2CPP_ASSERT(index > 0 && index <= (int32_t)_events.size());
-			EventDetail& pd = _events[index - 1];
-			return &pd.il2cppDefinition;
-		}
-#endif
 
 		Il2CppMetadataEventInfo GetEventInfo(const Il2CppClass* klass, TypeEventIndex index)
 		{
