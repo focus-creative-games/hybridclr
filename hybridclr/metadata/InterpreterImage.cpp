@@ -1068,8 +1068,16 @@ namespace metadata
 
 			auto& sizes = type.typeSizes;
 			sizes.native_size = layout->nativeSize;
-			sizes.static_fields_size = layout->staticFieldsSize;
-			sizes.thread_static_fields_size = layout->threadStaticFieldsSize;
+			if (typeDef->genericContainerIndex == kGenericContainerIndexInvalid)
+			{
+				sizes.static_fields_size = layout->staticFieldsSize;
+				sizes.thread_static_fields_size = layout->threadStaticFieldsSize;
+			}
+			else
+			{
+				sizes.static_fields_size = 0;
+				sizes.thread_static_fields_size = 0;
+			}
 			if (sizes.instance_size == 0)
 			{
 				sizes.instance_size = layout->instanceSize;
