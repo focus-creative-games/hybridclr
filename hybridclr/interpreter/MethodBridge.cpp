@@ -259,12 +259,79 @@ namespace hybridclr
 			return true;
 		}
 
-		static bool ComputSingletonStruct(Il2CppClass* klass, SingletonStruct& ss)
+		static bool TryComputSingletonStruct(Il2CppClass* klass, int32_t typeAligment, int32_t typeSize, Il2CppTypeEnum& wasmType)
 		{
-			ss = {};
+			if (typeAligment > 8 || typeSize > 8)
+			{
+				return false;
+			}
+			SingletonStruct ss = {};
 			if (ComputSingletonStruct0(klass, ss) && ss.type)
 			{
-				return true;
+				if (ss.type->byref)
+				{
+					wasmType = IL2CPP_TYPE_I4;
+					return true;
+				}
+				switch (ss.type->type)
+				{
+				case IL2CPP_TYPE_BOOLEAN:
+				case IL2CPP_TYPE_CHAR:
+				case IL2CPP_TYPE_I1:
+				case IL2CPP_TYPE_U1:
+				case IL2CPP_TYPE_I2:
+				case IL2CPP_TYPE_U2:
+				case IL2CPP_TYPE_I4:
+				case IL2CPP_TYPE_U4:
+				case IL2CPP_TYPE_I:
+				case IL2CPP_TYPE_U:
+				case IL2CPP_TYPE_STRING:
+				case IL2CPP_TYPE_PTR:
+				case IL2CPP_TYPE_CLASS:
+				case IL2CPP_TYPE_ARRAY:
+				case IL2CPP_TYPE_GENERICINST:
+				case IL2CPP_TYPE_FNPTR:
+				case IL2CPP_TYPE_OBJECT:
+				case IL2CPP_TYPE_SZARRAY:
+				{
+					if (typeAligment <= 4 && typeSize <= 4)
+					{
+						wasmType = IL2CPP_TYPE_I4;
+						return true;
+					}
+					break;
+				}
+				case IL2CPP_TYPE_I8:
+				case IL2CPP_TYPE_U8:
+				{
+					if (typeAligment <= 8 && typeSize <= 8)
+					{
+						wasmType = IL2CPP_TYPE_I8;
+						return true;
+					}
+					break;
+				}
+				case IL2CPP_TYPE_R4:
+				{
+					if (typeAligment <= 4 && typeSize <= 4)
+					{
+						wasmType = IL2CPP_TYPE_R4;
+						return true;
+					}
+					break;
+				}
+				case IL2CPP_TYPE_R8:
+				{
+					if (typeAligment <= 8 && typeSize <= 8)
+					{
+						wasmType = IL2CPP_TYPE_R8;
+						return true;
+					}
+					break;
+				}
+				default:
+					break;
+				}
 			}
 			return false;
 		}
@@ -280,17 +347,14 @@ namespace hybridclr
 				return true;
 			}
 			il2cpp::vm::Class::SetupFields(klass);
+			int32_t instanceFieldCount = 0;
 			for (uint16_t i = 0; i < klass->field_count; i++)
 			{
 				FieldInfo* field = klass->fields + i;
 				const Il2CppType* ftype = field->type;
-				if (!metadata::IsInstanceField(ftype))
-				{
-					continue;
-				}
-				return false;
+				instanceFieldCount += metadata::IsInstanceField(ftype);
 			}
-			return true;
+			return (instanceFieldCount == 0 || ((klass->flags & TYPE_ATTRIBUTE_EXPLICIT_LAYOUT) && instanceFieldCount > 1));
 		}
 
 		static void AppendString(char* sigBuf, size_t bufSize, size_t& pos, const char* str)
@@ -490,6 +554,14 @@ namespace hybridclr
 			if (IsWebGLSpecialValueType(klass))
 			{
 				AppendEmptyValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
+				return;
+			}
+			Il2CppTypeEnum wasmType;
+			if (TryComputSingletonStruct(klass, actualAligment, typeSize, wasmType))
+			{
+				Il2CppType tempType = {};
+				tempType.type = wasmType;
+				AppendSignature(&tempType, returnType, sigBuf, bufferSize, pos);
 			}
 			else
 			{
