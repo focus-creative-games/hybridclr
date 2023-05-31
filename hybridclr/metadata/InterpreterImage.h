@@ -1,7 +1,9 @@
 #pragma once
+
+#include "metadata/CustomAttributeDataReader.h"
+
 #include "Image.h"
 #include "CustomAttributeDataWriter.h"
-#include "metadata/CustomAttributeDataReader.h"
 
 namespace hybridclr
 {
@@ -229,7 +231,7 @@ namespace metadata
 
 		MethodIndex GetMethodIndexFromDefinition(const Il2CppMethodDefinition* methodDefine)
 		{
-			return EncodeWithIndex(methodDefine - &_methodDefines[0]);
+			return EncodeWithIndex((uint32_t)(methodDefine - &_methodDefines[0]));
 		}
 
 		const Il2CppGenericParameter* GetGenericParameterByGlobalIndex(uint32_t index)
@@ -428,7 +430,11 @@ namespace metadata
 			IL2CPP_ASSERT(_tokenCustomAttributes.find(dataRange->token) != _tokenCustomAttributes.end());
 			CustomAtttributesInfo& cai = _tokenCustomAttributes[dataRange->token];
 			const char* dataBlob = (const char*)_il2cppFormatCustomDataBlob.Data();
+#if HYBRIDCLR_UNITY_2022_OR_NEW
+			return il2cpp::metadata::CustomAttributeDataReader(_il2cppImage, dataBlob + cai.dataStartOffset, dataBlob + cai.dataEndOffset);
+#else
 			return il2cpp::metadata::CustomAttributeDataReader(dataBlob + cai.dataStartOffset, dataBlob + cai.dataEndOffset);
+#endif
 		}
 
 		std::tuple<void*, void*> CreateCustomAttributeDataTuple(const Il2CppCustomAttributeDataRange* dataRange)
@@ -445,6 +451,7 @@ namespace metadata
 			return dataRangeCur ? CreateCustomAttributeDataTuple(dataRangeCur) : std::tuple<void*, void*>(nullptr, nullptr);
 		}
 
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)
 		{
 			CustomAttributeIndex index = (CustomAttributeIndex)(typeRange - (const Il2CppCustomAttributeTypeRange*)&_customAttributeHandles[0]);
@@ -453,6 +460,7 @@ namespace metadata
 		}
 
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
+#endif
 
 		void BuildCustomAttributeDataReaders();
 		void BuildCustomAttributesData(CustomAtttributesInfo& cai, const Il2CppCustomAttributeTypeRange& typeRange);
@@ -570,7 +578,9 @@ namespace metadata
 
 		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
 		std::vector<Il2CppCustomAttributeTypeRange> _customAttributeHandles;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		std::vector<CustomAttributesCache*> _customAttribtesCaches;
+#endif
 
 		CustomAttributeDataWriter _il2cppFormatCustomDataBlob;
 		CustomAttributeDataWriter _tempCtorArgBlob;

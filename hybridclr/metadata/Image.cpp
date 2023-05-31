@@ -919,7 +919,11 @@ namespace metadata
                 UserStringEncoding charEncoding = (UserStringEncoding)str[stringLength - 1];
                 clrStr = il2cpp::vm::String::NewUtf16((const Il2CppChar*)str, (stringLength - 1) / 2);
             }
+#if HYBRIDCLR_UNITY_2022_OR_NEW
+            _il2cppStringCache.GetOrAdd(index, clrStr);
+#else
             _il2cppStringCache.Add(index, clrStr);
+#endif
             return clrStr;
         }
     }

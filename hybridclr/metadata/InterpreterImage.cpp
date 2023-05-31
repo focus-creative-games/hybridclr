@@ -26,7 +26,6 @@
 #include "MetadataModule.h"
 #include "MetadataUtil.h"
 #include "ClassFieldLayoutCalculator.h"
-#include "CustomAttributeDataWriter.h"
 
 #include "../interpreter/Engine.h"
 #include "../interpreter/InterpreterModule.h"
@@ -639,7 +638,9 @@ namespace metadata
 		IL2CPP_ASSERT(_tokenCustomAttributes.size() == _customAttributeHandles.size());
 		// add extra Il2CppCustomAttributeTypeRange for compute count
 		_customAttributeHandles.push_back({ 0, EncodeWithIndex((int32_t)_customAttribues.size()) });
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		_customAttribtesCaches.resize(_tokenCustomAttributes.size());
+#endif
 	}
 
 	void InterpreterImage::BuildCustomAttributeDataReaders()
@@ -1015,7 +1016,7 @@ namespace metadata
 		_il2cppFormatCustomDataBlob.Write(_tempPropertyBlob);
 	}
 
-
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 	CustomAttributesCache* InterpreterImage::GenerateCustomAttributesCacheInternal(CustomAttributeIndex index)
 	{
 		IL2CPP_ASSERT(index != kCustomAttributeIndexInvalid);
@@ -1081,6 +1082,7 @@ namespace metadata
 		_customAttribtesCaches[index] = cache;
 		return cache;
 	}
+#endif
 
 	void InterpreterImage::InitMethodDefs0()
 	{

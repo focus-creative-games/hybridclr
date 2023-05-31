@@ -90,7 +90,9 @@ namespace metadata
             sa.size = classLayout.instanceSize - sizeof(Il2CppObject);
             sa.nativeSize = classLayout.nativeSize;
             sa.alignment = classLayout.alignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
             sa.naturalAlignment = classLayout.naturalAlignment;
+#endif
             return sa;
         }
         case IL2CPP_TYPE_GENERICINST:
@@ -105,7 +107,9 @@ namespace metadata
                 sa.size = classLayout.instanceSize - sizeof(Il2CppObject);
                 sa.nativeSize = classLayout.nativeSize;
                 sa.alignment = classLayout.alignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
                 sa.naturalAlignment = classLayout.naturalAlignment;
+#endif
             }
             else
             {
@@ -227,7 +231,9 @@ namespace metadata
             layout.actualSize = klass->actualSize;
             layout.nativeSize = klass->native_size;
             layout.alignment = klass->minimumAlignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
             layout.naturalAlignment = klass->naturalAligment;
+#endif
             return;
         }
 
@@ -278,8 +284,9 @@ namespace metadata
                 instanceSize = std::max(instanceSize, field.offset + (int32_t)sa.size);
             }
             // TODO FIXME. not consider packingSize
-
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
             layout.naturalAlignment = layout.alignment = std::max(packingSize, (uint8_t)1);
+#endif
             layout.actualSize = layout.instanceSize = AlignTo(instanceSize, layout.alignment);
             layout.nativeSize = -1;
         }
@@ -323,7 +330,9 @@ namespace metadata
                 layoutData.classSize = layoutData.actualClassSize = layoutData.nativeSize = IL2CPP_SIZEOF_STRUCT_WITH_NO_INSTANCE_FIELDS + sizeof(Il2CppObject);;
             }
             layout.alignment = layoutData.minimumAlignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
             layout.naturalAlignment = layoutData.naturalAlignment;
+#endif
             layout.actualSize = layoutData.actualClassSize;
             layout.instanceSize = layoutData.classSize;
             layout.nativeSize = layoutData.nativeSize;

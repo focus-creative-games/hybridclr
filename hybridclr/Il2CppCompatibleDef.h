@@ -11,7 +11,7 @@
 
 #if HYBRIDCLR_UNITY_2020
 #include "icalls/mscorlib/System/MonoType.h"
-#elif HYBRIDCLR_UNITY_2021
+#elif HYBRIDCLR_UNITY_2021 || HYBRIDCLR_UNITY_2022
 #include "icalls/mscorlib/System/RuntimeType.h"
 #include "icalls/mscorlib/System/RuntimeTypeHandle.h"
 #elif HYBRIDCLR_UNITY_2019
@@ -184,7 +184,7 @@ namespace hybridclr
 		return il2cpp::icalls::mscorlib::System::MonoType::getFullName(refType, false, false);
 	}
 }
-#elif HYBRIDCLR_UNITY_2021
+#elif HYBRIDCLR_UNITY_2021 || HYBRIDCLR_UNITY_2022
 
 inline bool IS_CLASS_VALUE_TYPE(const Il2CppClass* klass)
 {
@@ -237,9 +237,13 @@ namespace hybridclr
 
 	inline const MethodInfo* GetGenericVirtualMethod(const MethodInfo* result, const MethodInfo* inflateMethod)
 	{
+#if HYBRIDCLR_UNITY_2021
 		VirtualInvokeData vid;
 		il2cpp::vm::Runtime::GetGenericVirtualMethod(result, inflateMethod, &vid);
 		return vid.method;
+#else
+		return il2cpp::metadata::GenericMethod::GetGenericVirtualMethod(result, inflateMethod);
+#endif
 	}
 
 	inline void* GetNulllableDataOffset(void* nullableObj, Il2CppClass* nullableClass)

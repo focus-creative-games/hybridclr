@@ -2211,7 +2211,11 @@ else \
 							ldfldFromFieldData = true;
 							CreateAddIR(ir, LdsfldaFromFieldDataVarVar);
 							ir->dst = dstIdx;
+#if HYBRIDCLR_UNITY_2022_OR_NEW
+							ir->src = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)il2cpp_codegen_get_static_field_data_pointer(fieldInfo));
+#else
 							ir->src = GetOrAddResolveDataIndex(ptr2DataIdxs, resolveDatas, (void*)il2cpp_codegen_get_field_data(fieldInfo));
+#endif
 						}
 					}
 					if (!ldfldFromFieldData)

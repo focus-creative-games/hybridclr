@@ -28,7 +28,9 @@ namespace metadata
 		uint32_t staticFieldsSize;
 		uint32_t threadStaticFieldsSize;
 		uint8_t alignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		uint8_t naturalAlignment;
+#endif
 	};
 
 	struct SizeAndAlignment
