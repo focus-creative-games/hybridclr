@@ -1,9 +1,11 @@
 #pragma once
 
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 #include "metadata/CustomAttributeDataReader.h"
+#include "CustomAttributeDataWriter.h"
+#endif
 
 #include "Image.h"
-#include "CustomAttributeDataWriter.h"
 
 namespace hybridclr
 {
@@ -77,11 +79,14 @@ namespace metadata
 		int32_t dataEndOffset;
 	};
 
+
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 	enum class BlobSource
 	{
 		RAW_IMAGE = 0,
 		CONVERTED_IL2CPP_FORMAT = 1,
 	};
+#endif
 
 	class InterpreterImage : public Image
 	{
@@ -107,8 +112,10 @@ namespace metadata
 
 	public:
 
-		InterpreterImage(uint32_t imageIndex) : _index(imageIndex), _inited(false), _il2cppImage(nullptr),
-			_constValues(1024), _il2cppFormatCustomDataBlob(10240), _tempCtorArgBlob(1024), _tempFieldBlob(1024), _tempPropertyBlob(1024)
+		InterpreterImage(uint32_t imageIndex) : _index(imageIndex), _inited(false), _il2cppImage(nullptr)
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+			, _constValues(1024), _il2cppFormatCustomDataBlob(10240), _tempCtorArgBlob(1024), _tempFieldBlob(1024), _tempPropertyBlob(1024)
+#endif
 		{
 
 		}
@@ -357,13 +364,18 @@ namespace metadata
 			return &_fieldDefaultValues[fdvIndex];
 		}
 
-		uint32_t EncodeWithBlobSource(uint32_t index, BlobSource source)
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+		static uint32_t EncodeWithBlobSource(uint32_t index, BlobSource source)
 		{
 			return (index << 1) | (uint32_t)source;
 		}
+#endif
 
 		const uint8_t* GetFieldOrParameterDefalutValueByRawIndex(uint32_t index)
 		{
+#if HYBRIDCLR_UNITY_2020
+			return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(index);
+#else
 			BlobSource source = (BlobSource)(index & 0x1);
 			uint32_t offset = index >> 1;
 			if (source == BlobSource::RAW_IMAGE)
@@ -374,9 +386,12 @@ namespace metadata
 			{
 				return _constValues.DataAt(offset);
 			}
+#endif
 		}
 
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 		DefaultValueDataIndex ConvertConstValue(CustomAttributeDataWriter& writer, uint32_t blobIndex, const Il2CppType* type);
+#endif
 
 		Il2CppPropertyDefinition* GetPropertyDefinitionFromIndex(PropertyIndex index)
 		{
@@ -424,6 +439,63 @@ namespace metadata
 			return it != _tokenCustomAttributes.end() ? it->second.typeRangeIndex : kCustomAttributeIndexInvalid;
 		}
 
+#if HYBRIDCLR_UNITY_2020
+		std::tuple<void*, void*> GetCustomAttributeDataRange(uint32_t token)
+		{
+			const Il2CppCustomAttributeTypeRange* dataRangeCur = (const Il2CppCustomAttributeTypeRange*)GetCustomAttributeTypeToken(token);
+			CustomAttributeIndex curIndex = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(*dataRangeCur));
+			CustomAttributeIndex nextIndex = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(*(dataRangeCur + 1)));
+			CustomAttribute& curCa = _customAttribues[curIndex];
+			CustomAttribute& nextCa = _customAttribues[nextIndex];
+			return std::make_tuple<void*, void*>((void*)_rawImage.GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage.GetBlobReaderByRawIndex(nextCa.value).GetData());
+		}
+
+		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)
+		{
+			CustomAttributeIndex index = (CustomAttributeIndex)(typeRange - (const Il2CppCustomAttributeTypeRange*)&_customAttributeHandles[0]);
+			IL2CPP_ASSERT(index >= 0 && index < (CustomAttributeIndex)_customAttributeHandles.size());
+			return GenerateCustomAttributesCacheInternal(index);
+		}
+
+		bool HasAttribute(CustomAttributeIndex index, Il2CppClass* attribute)
+		{
+			const Il2CppCustomAttributeTypeRange* typeRange = &_customAttributeHandles[DecodeMetadataIndex(index)];
+			return HasAttribute(typeRange, attribute);
+		}
+
+		bool HasAttribute(const Il2CppCustomAttributeTypeRange* typeRange, Il2CppClass* attribute)
+		{
+			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(typeRange);
+			return HasAttribute(attrCache, attribute);
+		}
+
+		bool HasAttributeByToken(uint32_t token, Il2CppClass* attribute)
+		{
+			CustomAttributeIndex index = GetCustomAttributeIndex(token);
+			if (index == kCustomAttributeIndexInvalid)
+			{
+				return false;
+			}
+			CustomAttributesCache* attrCache = GenerateCustomAttributesCacheInternal(DecodeMetadataIndex(index));
+			return HasAttribute(attrCache, attribute);
+		}
+
+		bool HasAttribute(CustomAttributesCache* attrCache, Il2CppClass* attribute)
+		{
+			for (int i = 0; i < attrCache->count; i++)
+			{
+				Il2CppObject* attrObj = attrCache->attributes[i];
+				if (il2cpp::vm::Class::IsAssignableFrom(attribute, attrObj->klass))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
+#else
+
 		il2cpp::metadata::CustomAttributeDataReader CreateCustomAttributeDataReader(Il2CppMetadataCustomAttributeHandle handle)
 		{
 			const Il2CppCustomAttributeTypeRange* dataRange = (const Il2CppCustomAttributeTypeRange*)handle;
@@ -461,7 +533,6 @@ namespace metadata
 
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
 #endif
-
 		void BuildCustomAttributeDataReaders();
 		void BuildCustomAttributesData(CustomAtttributesInfo& cai, const Il2CppCustomAttributeTypeRange& typeRange);
 		void ConvertILCustomAttributeData2Il2CppFormat(const MethodInfo* ctorMethod, BlobReader& reader);
@@ -471,6 +542,8 @@ namespace metadata
 		void WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type);
 		void GetFieldDeclaringTypeIndexAndFieldIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex);
 		void GetPropertyDeclaringTypeIndexAndPropertyIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex);
+#endif
+
 
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
@@ -532,11 +605,16 @@ namespace metadata
 		}
 
 		Il2CppString* ReadSerString(BlobReader& reader);
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 		bool ReadUTF8SerString(BlobReader& reader, std::string& s);
+#endif
 		Il2CppReflectionType* ReadSystemType(BlobReader& reader);
 		Il2CppObject* ReadBoxedValue(BlobReader& reader);
 		void ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data);
 		void ReadCustomAttributeFieldOrPropType(BlobReader& reader, Il2CppType& type);
+#if HYBRIDCLR_UNITY_2020
+		void ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod);
+#endif
 
 
 		bool _inited;
@@ -573,7 +651,9 @@ namespace metadata
 		// runtime data 
 		std::vector<Il2CppClass*> _classList;
 		Il2CppType2TypeDeclaringTreeMap _cacheTrees;
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 		CustomAttributeDataWriter _constValues;
+#endif
 
 
 		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
@@ -581,11 +661,12 @@ namespace metadata
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
 		std::vector<CustomAttributesCache*> _customAttribtesCaches;
 #endif
-
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 		CustomAttributeDataWriter _il2cppFormatCustomDataBlob;
 		CustomAttributeDataWriter _tempCtorArgBlob;
 		CustomAttributeDataWriter _tempFieldBlob;
 		CustomAttributeDataWriter _tempPropertyBlob;
+#endif
 		std::vector<CustomAttribute> _customAttribues;
 
 		std::vector<PropertyDetail> _propeties;

@@ -154,6 +154,7 @@ namespace metadata
 
 		void Test()
 		{
+#if HYBRIDCLR_UNITY_2021_OR_NEW
 			for (uint64_t i = 0; i < UINT32_MAX; i = (i * 5) / 4 + 1)
 			{
 				_size = 0;
@@ -198,6 +199,7 @@ namespace metadata
 				IL2CPP_ASSERT(v == (int32_t)i);
 				IL2CPP_ASSERT(p == (const char*)_data + _size);
 			}
+#endif
 		}
 
 		void PopByte()

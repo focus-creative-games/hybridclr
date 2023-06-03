@@ -76,17 +76,17 @@ namespace metadata
 			return DecodeBlob(buf);
 		}
 
-		//uint32_t GetImageOffsetOfBlob(Il2CppTypeEnum type, uint32_t index) const
-		//{
-		//	if (type != IL2CPP_TYPE_STRING)
-		//	{
-		//		return (uint32_t)(GetBlobReaderByRawIndex(index).GetData() - _ptrRawData);
-		//	}
-		//	else
-		//	{
-		//		return (uint32_t)(_streamBlobHeap.data + index - _ptrRawData);
-		//	}
-		//}
+		uint32_t GetImageOffsetOfBlob(Il2CppTypeEnum type, uint32_t index) const
+		{
+			if (type != IL2CPP_TYPE_STRING)
+			{
+				return (uint32_t)(GetBlobReaderByRawIndex(index).GetData() - _ptrRawData);
+			}
+			else
+			{
+				return (uint32_t)(_streamBlobHeap.data + index - _ptrRawData);
+			}
+		}
 
 		const byte* GetDataPtrByImageOffset(uint32_t imageOffset) const
 		{

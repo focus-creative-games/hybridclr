@@ -183,6 +183,14 @@ namespace metadata
             _readPos += len;
         }
 
+        const byte* GetAndSkipCurBytes(uint32_t len)
+        {
+            IL2CPP_ASSERT(_readPos + len <= _length);
+            const byte* data = _buf + _readPos;
+            _readPos += len;
+            return data;
+        }
+
     private:
         const byte* const _buf;
         const uint32_t _length;
