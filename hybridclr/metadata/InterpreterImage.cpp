@@ -728,11 +728,15 @@ namespace metadata
 
 	void InterpreterImage::WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type)
 	{
-		writer.WriteByte((uint8_t)type->type);
-		if (type->type == IL2CPP_TYPE_ENUM)
+		if (il2cpp::vm::Type::IsEnum(type) || type->type == IL2CPP_TYPE_ENUM)
 		{
+			writer.WriteByte((byte)IL2CPP_TYPE_ENUM);
 			int32_t typeIndex = type->type == IL2CPP_TYPE_CLASS || type->type == IL2CPP_TYPE_VALUETYPE ? ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex : AddIl2CppTypeCache(*type);
 			writer.WriteCompressedInt32(typeIndex);
+		}
+		else
+		{
+			writer.WriteByte((uint8_t)type->type);
 		}
 	}
 
@@ -916,12 +920,14 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
-			IL2CPP_ASSERT(writeType);
-			writer.ReplaceLastByte((byte)IL2CPP_TYPE_ENUM);
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(klass->enumtype);
-			int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(*type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
-			writer.WriteCompressedInt32(typeIndex);
+			if (writeType)
+			{
+				writer.ReplaceLastByte((byte)IL2CPP_TYPE_ENUM);
+				IL2CPP_ASSERT(klass->enumtype);
+				int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(*type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
+				writer.WriteCompressedInt32(typeIndex);
+			}
 			ConvertFixedArg(writer, reader, &klass->element_class->byval_arg, false);
 			break;
 		}
