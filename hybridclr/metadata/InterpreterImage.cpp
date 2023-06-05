@@ -1659,6 +1659,12 @@ namespace metadata
 		{
 			return klass;
 		}
+		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
+		klass = _classList[index];
+		if (klass)
+		{
+			return klass;
+		}
 		klass = il2cpp::vm::GlobalMetadata::FromTypeDefinition(EncodeWithIndex(index));
 		IL2CPP_ASSERT(klass->interfaces_count <= klass->interface_offsets_count || _typesDefines[index].interfaceOffsetsStart == 0);
 		il2cpp::os::Atomic::FullMemoryBarrier();
