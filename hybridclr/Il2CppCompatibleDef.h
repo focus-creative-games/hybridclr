@@ -74,6 +74,10 @@
 #define ENABLE_PLACEHOLDER_DLL 1
 #endif
 
+#if IL2CPP_ENABLE_WRITE_BARRIERS
+#error "not support incremental gc"
+#endif
+
 namespace hybridclr
 {
 
