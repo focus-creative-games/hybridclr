@@ -341,6 +341,7 @@ namespace hybridclr
 				{
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}
+				curTarget += (IS_CLASS_VALUE_TYPE(curMethod->klass));
 				curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args, __ret);
 				break;
 			}
