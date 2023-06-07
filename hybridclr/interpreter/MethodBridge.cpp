@@ -547,10 +547,10 @@ namespace hybridclr
 			uint8_t actualAligment = 1;
 			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
 #elif HYBRIDCLR_ABI_UNIVERSAL_32
-			uint8_t actualAligment = klass->naturalAligment <= 4 ? 1 : 8;
+			uint8_t actualAligment = klass->minimumAlignment <= 4 ? 1 : 8;
 			AppendValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, returnType, sigBuf, bufferSize, pos);
 #elif HYBRIDCLR_ABI_WEBGL32
-			uint8_t actualAligment = klass->naturalAligment;
+			uint8_t actualAligment = klass->minimumAlignment;
 			if (IsWebGLSpecialValueType(klass))
 			{
 				AppendEmptyValueTypeSignatureByAligmentAndSize(typeSize, actualAligment, sigBuf, bufferSize, pos);
