@@ -680,6 +680,7 @@ namespace metadata
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 	void InterpreterImage::BuildCustomAttributeDataReaders()
 	{
+		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), _il2cppImage);
 		for (size_t i = 1 ; i < _customAttributeHandles.size() ; i++)
 		{
 			// ignore last one ofr comput count
