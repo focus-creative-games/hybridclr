@@ -743,10 +743,6 @@ namespace metadata
 
 	void InterpreterImage::ConvertBoxedValue(CustomAttributeDataWriter& writer, BlobReader& reader, bool writeType)
 	{
-		if (writeType)
-		{
-			writer.WriteByte((byte)IL2CPP_TYPE_OBJECT);
-		}
 		uint64_t obj = 0;
 		Il2CppType kind = {};
 		ReadCustomAttributeFieldOrPropType(reader, kind);
@@ -785,16 +781,16 @@ namespace metadata
 
 	void InterpreterImage::ConvertFixedArg(CustomAttributeDataWriter& writer, BlobReader& reader, const Il2CppType* type, bool writeType)
 	{
-		if (writeType)
-		{
-			writer.WriteByte((uint8_t)type->type);
-		}
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_BOOLEAN:
 		case IL2CPP_TYPE_I1:
 		case IL2CPP_TYPE_U1:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			writer.Write(reader, 1);
 			break;
 		}
@@ -802,21 +798,37 @@ namespace metadata
 		case IL2CPP_TYPE_I2:
 		case IL2CPP_TYPE_U2:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			writer.Write(reader, 2);
 			break;
 		}
 		case IL2CPP_TYPE_I4:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			writer.WriteCompressedInt32((int32_t)reader.Read32());
 			break;
 		}
 		case IL2CPP_TYPE_U4:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			writer.WriteCompressedUint32(reader.Read32());
 			break;
 		}
 		case IL2CPP_TYPE_R4:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			writer.Write(reader, 4);
 			break;
 		}
@@ -824,11 +836,19 @@ namespace metadata
 		case IL2CPP_TYPE_U8:
 		case IL2CPP_TYPE_R8:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			writer.Write(reader, 8);
 			break;
 		}
 		case IL2CPP_TYPE_SZARRAY:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			int32_t numElem = (int32_t)reader.Read32();
 			writer.WriteCompressedInt32(numElem);
 			if (numElem != -1)
@@ -861,6 +881,10 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_STRING:
 		{
+			if (writeType)
+			{
+				writer.WriteByte((uint8_t)type->type);
+			}
 			byte b = reader.PeekByte();
 			if (b == 0xFF)
 			{
@@ -884,10 +908,6 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_OBJECT:
 		{
-			if (writeType)
-			{
-				writer.PopByte();
-			}
 			ConvertBoxedValue(writer, reader, writeType);
 			//*(Il2CppObject**)data = ReadBoxedValue(reader);
 			// FIXME memory barrier
@@ -895,10 +915,6 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_CLASS:
 		{
-			if (writeType)
-			{
-				writer.PopByte();
-			}
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (!klass)
 			{
@@ -924,7 +940,7 @@ namespace metadata
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			if (writeType)
 			{
-				writer.ReplaceLastByte((byte)IL2CPP_TYPE_ENUM);
+				writer.WriteByte((byte)IL2CPP_TYPE_ENUM);
 				IL2CPP_ASSERT(klass->enumtype);
 				int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(*type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
 				writer.WriteCompressedInt32(typeIndex);
@@ -934,10 +950,6 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_SYSTEM_TYPE:
 		{
-			if (writeType)
-			{
-				writer.PopByte();
-			}
 			ConvertSystemType(writer, reader, true);
 			break;
 		}
@@ -952,8 +964,11 @@ namespace metadata
 		{
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			IL2CPP_ASSERT(klass->enumtype);
-			int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(*type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
-			writer.WriteCompressedInt32(typeIndex);
+			if (writeType)
+			{
+				int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(*type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
+				writer.WriteCompressedInt32(typeIndex);
+			}
 			ConvertFixedArg(writer, reader, &klass->element_class->byval_arg, false);
 			break;
 		}
