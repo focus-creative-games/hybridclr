@@ -213,12 +213,6 @@ namespace hybridclr
 			{
 				thisPtr = localVarBase[argVarIndexs[0]].obj;
 				argVarIndexBase = argVarIndexs + 1;
-#if HYBRIDCLR_UNITY_2020
-				if (IS_CLASS_VALUE_TYPE(method->klass))
-				{
-					thisPtr = (Il2CppObject*)thisPtr - 1;
-				}
-#endif
 			}
 			else
 			{
@@ -240,9 +234,9 @@ namespace hybridclr
 				}
 			}
 #if HYBRIDCLR_UNITY_2021_OR_NEW
-			method->invoker_method(method->methodPointer, method, thisPtr, invokeParams, ret);
+			method->invoker_method(method->methodPointerCallByInterp, method, thisPtr, invokeParams, ret);
 #else
-			void* retObj = method->invoker_method(method->methodPointer, method, thisPtr, invokeParams);
+			void* retObj = method->invoker_method(method->methodPointerCallByInterp, method, thisPtr, invokeParams);
 			if (ret)
 			{
 				const Il2CppType* returnType = method->return_type;
@@ -268,7 +262,11 @@ namespace hybridclr
 
 		Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const MethodInfo* method, bool forceStatic)
 		{
-			if (method->methodPointerCallByInterp == NotSupportNative2Managed)
+			if (method->methodPointerCallByInterp == NotSupportNative2Managed 
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+				|| method->has_full_generic_sharing_signature
+#endif
+				)
 			{
 				return Managed2NativeCallByReflectionInvoke;
 			}
@@ -342,7 +340,7 @@ namespace hybridclr
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}
 				curTarget += (IS_CLASS_VALUE_TYPE(curMethod->klass));
-				curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args, __ret);
+				curMethod->invoker_method(curMethod->methodPointerCallByInterp, curMethod, curTarget, __args, __ret);
 				break;
 			}
 			case -1:
@@ -354,7 +352,7 @@ namespace hybridclr
 				{
 					newArgs[k + 1] = __args[k];
 				}
-				curMethod->invoker_method(curMethod->methodPointer, curMethod, nullptr, newArgs, __ret);
+				curMethod->invoker_method(curMethod->methodPointerCallByInterp, curMethod, nullptr, newArgs, __ret);
 				break;
 			}
 			case 1:
@@ -365,7 +363,7 @@ namespace hybridclr
 				{
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}
-				curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args + 1, __ret);
+				curMethod->invoker_method(curMethod->methodPointerCallByInterp, curMethod, curTarget, __args + 1, __ret);
 				break;
 			}
 			default:
@@ -434,7 +432,8 @@ namespace hybridclr
 				{
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}
-				ret = curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args);
+				curTarget += (IS_CLASS_VALUE_TYPE(curMethod->klass));
+				ret = curMethod->invoker_method(curMethod->methodPointerCallByInterp, curMethod, curTarget, __args);
 				break;
 			}
 			case -1:
@@ -446,7 +445,7 @@ namespace hybridclr
 				{
 					newArgs[k + 1] = __args[k];
 				}
-				ret = curMethod->invoker_method(curMethod->methodPointer, curMethod, nullptr, newArgs);
+				ret = curMethod->invoker_method(curMethod->methodPointerCallByInterp, curMethod, nullptr, newArgs);
 				break;
 			}
 			case 1:
@@ -457,8 +456,7 @@ namespace hybridclr
 				{
 					il2cpp::vm::Exception::RaiseNullReferenceException();
 				}
-				curTarget = curTarget - IS_CLASS_VALUE_TYPE(curMethod->klass);
-				ret = curMethod->invoker_method(curMethod->methodPointer, curMethod, curTarget, __args + 1);
+				ret = curMethod->invoker_method(curMethod->methodPointerCallByInterp, curMethod, curTarget, __args + 1);
 				break;
 			}
 			default:
