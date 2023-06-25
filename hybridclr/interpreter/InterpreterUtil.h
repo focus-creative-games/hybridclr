@@ -8,6 +8,12 @@ namespace hybridclr
 {
 namespace interpreter
 {
+	
+	struct TypeDesc
+	{
+		LocationDataType type;
+		uint32_t stackObjectSize; //
+	};
 
 	IL2CPP_FORCE_INLINE void RuntimeInitClassCCtor(Il2CppClass* klass)
 	{
@@ -41,7 +47,7 @@ namespace interpreter
 		return type < LocationDataType::U8;
 	}
 
-	ArgDesc GetTypeArgDesc(const Il2CppType* type);
+	TypeDesc GetTypeArgDesc(const Il2CppType* type);
 
 	inline LocationDataType GetLocationDataTypeByType(const Il2CppType* type)
 	{
@@ -91,13 +97,17 @@ namespace interpreter
 		}
 	}
 
-	ArgDesc GetValueTypeArgDescBySize(uint32_t size);
+	TypeDesc GetValueTypeArgDescBySize(uint32_t size);
 
 	inline bool IsSimpleStackObjectCopyArg(LocationDataType type)
 	{
 		return type <= LocationDataType::U8;
 	}
+
+	bool IsPassByValWhenInvoke(const Il2CppType* type, bool passByValWhenCall);
+	
 	Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value);
+
 
 }
 }

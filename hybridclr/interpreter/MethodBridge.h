@@ -116,9 +116,7 @@ namespace interpreter
 		uint64_t high;
 	};
 
-	void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize);
-
-	bool IsPassArgAsValue(const Il2CppType* type, LocationDataType* locType = nullptr);
+	void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize);
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, void** __args);
 
 	bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize);

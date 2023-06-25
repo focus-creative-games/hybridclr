@@ -181,12 +181,13 @@ namespace hybridclr
 				{
 					argBaseOffset = 0;
 				}
+				InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : GetInterpMethodInfo(method);
+				MethodArgDesc* argDescs = imi->args;
 				for (uint8_t i = 0; i < method->parameters_count; i++)
 				{
 					int32_t argOffset = argBaseOffset + i;
-					const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
 					StackObject* argValue = localVarBase + argVarIndexs[argOffset];
-					if (IsPassArgAsValue(argType))
+					if (argDescs[argOffset].passByValWhenCall)
 					{
 						newArgs[argOffset] = *argValue;
 					}
@@ -195,8 +196,7 @@ namespace hybridclr
 						newArgs[argOffset].ptr = argValue;
 					}
 				}
-
-				hybridclr::interpreter::Interpreter::Execute(method, newArgs, ret);
+				Interpreter::Execute(method, newArgs, ret);
 				return;
 			}
 			if (method->invoker_method == nullptr)

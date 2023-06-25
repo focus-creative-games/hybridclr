@@ -9,6 +9,7 @@
 #include "../metadata/MetadataUtil.h"
 
 #include "Interpreter.h"
+#include "InterpreterModule.h"
 #include "MemoryUtil.h"
 #include "InterpreterUtil.h"
 
@@ -18,12 +19,12 @@ namespace hybridclr
 	{
 
 
-		void CopyArgs(StackObject* dstBase, StackObject* argBase, ArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize)
+		void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize)
 		{
 			uint32_t dstOffset = 0;
 			for (uint32_t i = 0, n = paramCount; i < n; i++)
 			{
-				ArgDesc& arg = args[i];
+				MethodArgDesc& arg = args[i];
 				StackObject* dst = dstBase + dstOffset;
 				StackObject* src = argBase + i;
 				switch (arg.type)
@@ -78,51 +79,23 @@ namespace hybridclr
 			IL2CPP_ASSERT(dstOffset == totalParamStackObjectSize);
 		}
 
-		bool IsPassArgAsValue(const Il2CppType* type, LocationDataType* locType)
-		{
-			ArgDesc argDesc = interpreter::GetTypeArgDesc(type);
-			if (locType)
-			{
-				*locType = argDesc.type;
-			}
-			return argDesc.type <= LocationDataType::U8;
-		}
-
-		const uint32_t kMaxByValueSize = 8;
-
 		void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, void** __args)
 		{
+			InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
+			MethodArgDesc* argDescs = imi->args + hybridclr::metadata::IsInstanceMethod(method);
 			for (uint8_t i = 0; i < method->parameters_count; i++)
 			{
-				const Il2CppType* argType = GET_METHOD_PARAMETER_TYPE(method->parameters[i]);
 				StackObject* dst = resultArgs + i;
-
-				if (argType->byref)
+				if (argDescs[i].passbyValWhenInvoke)
 				{
-					dst->ptr = __args[i];
+					dst->i64 = *(uint64_t*)__args[i];
 				}
-				else if (hybridclr::metadata::IsValueType(argType))
-				{
-					if (IsPassArgAsValue(argType))
-					{
-						dst->i64 = *(uint64_t*)__args[i];
-					}
-					else
-					{
-						dst->ptr = __args[i];
-					}
-				}
-				//else if (argType->type == IL2CPP_TYPE_PTR)
-				//{
-				//    dst->ptr = __args[i];
-				//}
 				else
 				{
 					dst->ptr = __args[i];
 				}
 			}
 		}
-
 
 		static bool ComputeHFATypeInfo0(Il2CppClass* klass, HFATypeInfo& typeInfo)
 		{

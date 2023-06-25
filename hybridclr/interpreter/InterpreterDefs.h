@@ -97,16 +97,18 @@ namespace hybridclr
 			Il2CppClass* exKlass;
 		};
 
-		struct ArgDesc
+		struct MethodArgDesc
 		{
 			LocationDataType type;
-			uint32_t stackObjectSize; //
+			uint32_t stackObjectSize;
+			bool passByValWhenCall;
+			bool passbyValWhenInvoke;
 		};
 
 		struct InterpMethodInfo
 		{
 			const MethodInfo* method;
-			ArgDesc* args;
+			MethodArgDesc* args;
 			uint32_t argCount;
 			uint32_t argStackObjectSize;
 			byte* codes;

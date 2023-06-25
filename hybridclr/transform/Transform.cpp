@@ -849,7 +849,7 @@ else \
 						}
 						else
 						{
-							interpreter::ArgDesc retDesc = GetTypeArgDesc(returnType);
+							interpreter::TypeDesc retDesc = GetTypeArgDesc(returnType);
 							if (retDesc.stackObjectSize > kMaxRetValueTypeStackObjectSize)
 							{
 								std::string methodName = GetMethodNameWithSignature(shareMethod);
@@ -3375,15 +3375,20 @@ ir->ele = ele.locOffset;
 		}
 		IL2CPP_ASSERT(tranOffset == totalSize);
 
-		ArgDesc* argDescs;
+		MethodArgDesc* argDescs;
 		bool isSimpleArgs = true;
 		if (actualParamCount > 0)
 		{
-			argDescs = (ArgDesc*)IL2CPP_CALLOC(actualParamCount, sizeof(ArgDesc));
+			argDescs = (MethodArgDesc*)IL2CPP_CALLOC(actualParamCount, sizeof(MethodArgDesc));
 			for (int32_t i = 0; i < actualParamCount; i++)
 			{
-				argDescs[i] = GetTypeArgDesc(args[i].type);
-				isSimpleArgs = isSimpleArgs && IsSimpleStackObjectCopyArg(argDescs[i].type);
+				TypeDesc typeDesc = GetTypeArgDesc(args[i].type);
+				MethodArgDesc& argDesc = argDescs[i];
+				argDesc.type = typeDesc.type;
+				argDesc.stackObjectSize = typeDesc.stackObjectSize;
+				argDesc.passByValWhenCall = IsSimpleStackObjectCopyArg(argDescs[i].type);
+				argDesc.passbyValWhenInvoke = IsPassByValWhenInvoke(args[i].type, argDesc.passByValWhenCall);
+				isSimpleArgs = isSimpleArgs && argDesc.passByValWhenCall;
 			}
 		}
 		else
