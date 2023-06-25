@@ -343,7 +343,7 @@ namespace interpreter
 				}
 				else
 				{
-					CopyArgs(stackBasePtr, argBase, imi->args, imi->argCount, imi->argStackObjectSize);
+					CopyArgs(stackBasePtr, argBase, imi->args, imi->argCount);
 				}
 			}
 			PUSH_STACK_FRAME(imi->method);

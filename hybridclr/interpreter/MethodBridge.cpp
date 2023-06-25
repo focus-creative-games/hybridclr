@@ -16,7 +16,7 @@ namespace hybridclr
 namespace interpreter
 {
 	
-	void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount, uint32_t totalParamStackObjectSize)
+	void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount)
 	{
 		uint32_t dstOffset = 0;
 		for (uint32_t i = 0, n = paramCount; i < n; i++)
@@ -73,23 +73,20 @@ namespace interpreter
 			}
 			}
 		}
-		IL2CPP_ASSERT(dstOffset == totalParamStackObjectSize);
 	}
 
-	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, void** __args)
+	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args)
 	{
-		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
-		MethodArgDesc* argDescs = imi->args + hybridclr::metadata::IsInstanceMethod(method);
 		for (uint8_t i = 0; i < method->parameters_count; i++)
 		{
 			StackObject* dst = resultArgs + i;
 			if (argDescs[i].passbyValWhenInvoke)
 			{
-				dst->i64 = *(uint64_t*)__args[i];
+				dst->i64 = *(uint64_t*)args[i];
 			}
 			else
 			{
-				dst->ptr = __args[i];
+				dst->ptr = args[i];
 			}
 		}
 	}

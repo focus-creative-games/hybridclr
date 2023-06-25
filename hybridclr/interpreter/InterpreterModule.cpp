@@ -293,6 +293,7 @@ namespace interpreter
 	}
 
 	#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
+	
 	static void InterpterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
 	{
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
@@ -302,7 +303,10 @@ namespace interpreter
 			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
 			args[0].ptr = __this;
 		}
-		ConvertInvokeArgs(args + isInstanceMethod, method, __args);
+		
+		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
+		MethodArgDesc* argDescs = imi->args + isInstanceMethod;
+		ConvertInvokeArgs(args + isInstanceMethod, method, argDescs, __args);
 		Interpreter::Execute(method, args, __ret);
 	}
 
@@ -384,7 +388,9 @@ namespace interpreter
 			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
 			args[0].ptr = __this;
 		}
-		ConvertInvokeArgs(args + isInstanceMethod, method, __args);
+		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
+		MethodArgDesc* argDescs = imi->args + isInstanceMethod;
+		ConvertInvokeArgs(args + isInstanceMethod, method, argDescs, __args);
 		if (method->return_type->type == IL2CPP_TYPE_VOID)
 		{
 			Interpreter::Execute(method, args, nullptr);
