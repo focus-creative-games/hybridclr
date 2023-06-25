@@ -57,7 +57,9 @@ namespace interpreter
 		{
 			if (_stackBase)
 			{
-				il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
+				//il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
+				il2cpp::gc::GarbageCollector::UnregisterDynamicRoot(this);
+				IL2CPP_FREE(_stackBase);
 			}
 			if (_frameBase)
 			{
@@ -66,6 +68,19 @@ namespace interpreter
 			if (_exceptionFlowBase)
 			{
 				IL2CPP_FREE(_exceptionFlowBase);
+			}
+		}
+
+		static std::pair<char*, size_t> GetGCRootData(void* root)
+		{
+			MachineState* machineState = (MachineState*)root;
+			if (machineState->_stackBase && machineState->_stackTopIdx > 0)
+			{
+				return std::make_pair((char*)machineState->_stackBase, machineState->_stackTopIdx * sizeof(StackObject));
+			}
+			else
+			{
+				return std::make_pair(nullptr, 0);
 			}
 		}
 
@@ -234,9 +249,11 @@ namespace interpreter
 		{
 			Config& hc = Config::GetIns();
 			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
-			_stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
+			// _stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
+			_stackBase = (StackObject*)IL2CPP_MALLOC_ZERO(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
 			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
 			_stackTopIdx = 0;
+			il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
 		}
 
 		void InitFrames()
