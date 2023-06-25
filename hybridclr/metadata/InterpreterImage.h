@@ -6,6 +6,7 @@
 #endif
 
 #include "Image.h"
+#include "CustomAttributeDataWriter.h"
 
 namespace hybridclr
 {

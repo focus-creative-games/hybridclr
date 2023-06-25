@@ -86,8 +86,14 @@ namespace transform
 		}
 	}
 
-	LocationDescInfo ComputValueTypeDescInfo(int32_t size)
+	LocationDescInfo ComputValueTypeDescInfo(int32_t size, bool hasReference)
 	{
+#if HYBRIDCLR_ENABLE_WRITE_BARRIERS
+		if (hasReference)
+		{
+			return { LocationDescType::StructContainsRef, size };
+		}
+#endif
 		switch (size)
 		{
 		case 1: return { LocationDescType::U1, 0 };
@@ -129,12 +135,13 @@ namespace transform
 		case IL2CPP_TYPE_FNPTR:
 		case IL2CPP_TYPE_PTR:
 		case IL2CPP_TYPE_BYREF:
+			return{ NATIVE_INT_DESC_TYPE, 0 };
 		case IL2CPP_TYPE_STRING:
 		case IL2CPP_TYPE_ARRAY:
 		case IL2CPP_TYPE_SZARRAY:
 		case IL2CPP_TYPE_OBJECT:
 		case IL2CPP_TYPE_CLASS:
-			return{ NATIVE_INT_DESC_TYPE, 0 };
+			return{ LocationDescType::Ref, 0 };
 		case IL2CPP_TYPE_TYPEDBYREF:
 			return { LocationDescType::S, sizeof(Il2CppTypedRef) };
 		case IL2CPP_TYPE_VALUETYPE:
@@ -145,7 +152,7 @@ namespace transform
 			{
 				return ComputLocationDescInfo(&klass->castClass->byval_arg);
 			}
-			return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr));
+			return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr), klass->has_references);
 		}
 		case IL2CPP_TYPE_GENERICINST:
 		{
@@ -153,7 +160,7 @@ namespace transform
 			if (genericClass->type->type == IL2CPP_TYPE_CLASS)
 			{
 				IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
-				return{ NATIVE_INT_DESC_TYPE, 0 };
+				return{ LocationDescType::Ref, 0 };
 			}
 			else
 			{
@@ -163,7 +170,7 @@ namespace transform
 				{
 					return ComputLocationDescInfo(&klass->castClass->byval_arg);
 				}
-				return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr));
+				return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr), klass->has_references);
 			}
 		}
 		default:
@@ -307,7 +314,13 @@ namespace transform
 			ir->type = HiOpcodeEnum::LdfldVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::LdfldVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
 		{
 			switch (desc.size)
 			{
@@ -319,6 +332,26 @@ namespace transform
 			case 16:
 			{
 				ir->type = HiOpcodeEnum::LdfldVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::LdfldVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::LdfldVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::LdfldVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::LdfldVarVar_size_32;
 				return ir;
 			}
 			default:
@@ -383,7 +416,13 @@ namespace transform
 			ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
 		{
 			switch (desc.size)
 			{
@@ -395,6 +434,26 @@ namespace transform
 			case 16:
 			{
 				ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_size_32;
 				return ir;
 			}
 			default:
@@ -459,6 +518,11 @@ namespace transform
 			ir->type = HiOpcodeEnum::StfldVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::StfldVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
 		{
 			switch (desc.size)
@@ -473,6 +537,26 @@ namespace transform
 				ir->type = HiOpcodeEnum::StfldVarVar_size_16;
 				return ir;
 			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::StfldVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::StfldVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::StfldVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::StfldVarVar_size_32;
+				return ir;
+			}
 			default:
 			{
 				CreateIR(irn, StfldVarVar_n_4);
@@ -483,6 +567,15 @@ namespace transform
 				return irn;
 			}
 			}
+		}
+		case LocationDescType::StructContainsRef:
+		{
+			CreateIR(irn, StfldVarVar_WriteBarrier_n_4);
+			irn->data = dataIdx;
+			irn->obj = objIdx;
+			irn->offset = offset;
+			irn->size = desc.size;
+			return irn;
 		}
 		default:
 		{
@@ -536,7 +629,13 @@ namespace transform
 			ir->type = HiOpcodeEnum::LdsfldVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::LdsfldVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
 		{
 			switch (desc.size)
 			{
@@ -548,6 +647,26 @@ namespace transform
 			case 16:
 			{
 				ir->type = HiOpcodeEnum::LdsfldVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::LdsfldVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::LdsfldVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::LdsfldVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::LdsfldVarVar_size_32;
 				return ir;
 			}
 			default:
@@ -614,6 +733,11 @@ namespace transform
 			ir->type = HiOpcodeEnum::StsfldVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::StsfldVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
 		{
 			switch (desc.size)
@@ -628,6 +752,26 @@ namespace transform
 				ir->type = HiOpcodeEnum::StsfldVarVar_size_16;
 				return ir;
 			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::StsfldVarVar_size_20;
+				return ir;
+			}
+			case 24: 
+			{
+				ir->type = HiOpcodeEnum::StsfldVarVar_size_24;
+				return ir;
+			}
+			case 28: 
+			{
+				ir->type = HiOpcodeEnum::StsfldVarVar_size_28;
+				return ir;
+			}
+			case 32: 
+			{
+				ir->type = HiOpcodeEnum::StsfldVarVar_size_32;
+				return ir;
+			}
 			default:
 			{
 				CreateIR(irn, StsfldVarVar_n_4);
@@ -638,6 +782,15 @@ namespace transform
 				return irn;
 			}
 			}
+		}
+		case LocationDescType::StructContainsRef:
+		{
+			CreateIR(irn, StsfldVarVar_WriteBarrier_n_4);
+			irn->klass = parent;
+			irn->offset = offset;
+			irn->data = dataIdx;
+			irn->size = desc.size;
+			return irn;
 		}
 		default:
 		{
@@ -692,7 +845,13 @@ namespace transform
 			ir->type = HiOpcodeEnum::LdthreadlocalVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::LdthreadlocalVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
 		{
 			switch (desc.size)
 			{
@@ -704,6 +863,26 @@ namespace transform
 			case 16:
 			{
 				ir->type = HiOpcodeEnum::LdthreadlocalVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::LdthreadlocalVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::LdthreadlocalVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::LdthreadlocalVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::LdthreadlocalVarVar_size_32;
 				return ir;
 			}
 			default:
@@ -770,6 +949,11 @@ namespace transform
 			ir->type = HiOpcodeEnum::StthreadlocalVarVar_i8;
 			return ir;
 		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::StthreadlocalVarVar_ref;
+			return ir;
+		}
 		case LocationDescType::S:
 		{
 			switch (desc.size)
@@ -784,6 +968,26 @@ namespace transform
 				ir->type = HiOpcodeEnum::StthreadlocalVarVar_size_16;
 				return ir;
 			}
+			case 20: 
+			{
+				ir->type = HiOpcodeEnum::StthreadlocalVarVar_size_20;
+				return ir;
+			}
+			case 24: 
+			{
+				ir->type = HiOpcodeEnum::StthreadlocalVarVar_size_24;
+				return ir;
+			}
+			case 28: 
+			{
+				ir->type = HiOpcodeEnum::StthreadlocalVarVar_size_28;
+				return ir;
+			}
+			case 32: 
+			{
+				ir->type = HiOpcodeEnum::StthreadlocalVarVar_size_32;
+				return ir;
+			}
 			default:
 			{
 				CreateIR(irn, StthreadlocalVarVar_n_4);
@@ -794,6 +998,15 @@ namespace transform
 				return irn;
 			}
 			}
+		}
+		case LocationDescType::StructContainsRef:
+		{
+			CreateIR(irn, StthreadlocalVarVar_WriteBarrier_n_4);
+			irn->klass = parent;
+			irn->offset = offset;
+			irn->data = dataIdx;
+			irn->size = desc.size;
+			return irn;
 		}
 		default:
 		{
@@ -814,7 +1027,9 @@ namespace transform
 		case LocationDescType::U2: return HiOpcodeEnum::GetMdArrElementVarVar_u2;
 		case LocationDescType::I4: return HiOpcodeEnum::GetMdArrElementVarVar_i4;
 		case LocationDescType::I8: return HiOpcodeEnum::GetMdArrElementVarVar_i8;
-		case LocationDescType::S: return HiOpcodeEnum::GetMdArrElementVarVar_size;
+		case LocationDescType::Ref: return HiOpcodeEnum::GetMdArrElementVarVar_ref;
+		case LocationDescType::S:
+		case LocationDescType::StructContainsRef: return HiOpcodeEnum::GetMdArrElementVarVar_size;
 		default:
 		{
 			RaiseExecutionEngineException("CalcGetMdArrElementVarVarOpcode");

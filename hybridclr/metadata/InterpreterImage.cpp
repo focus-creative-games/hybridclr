@@ -1236,7 +1236,7 @@ namespace metadata
 			}
 
 			cache->attributes[i] = attr;
-			il2cpp::gc::GarbageCollector::SetWriteBarrier((void**)cache->attributes + i);
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)cache->attributes + i);
 		}
 
 		il2cpp::os::Atomic::FullMemoryBarrier();
@@ -1283,7 +1283,7 @@ namespace metadata
 			if (reader.VisitCustomAttributeData(_il2cppImage, &iter, &creator, &exc))
 			{
 				cache->attributes[i] = creator.GetAttribute(&exc);
-				il2cpp::gc::GarbageCollector::SetWriteBarrier((void**)&cache->attributes[i]);
+				HYBRIDCLR_SET_WRITE_BARRIER((void**)&cache->attributes[i]);
 			}
 
 			if (exc != NULL)
@@ -2254,18 +2254,19 @@ namespace metadata
 			{
 				*(void**)data = nullptr;
 			}
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)data);
 			break;
 		}
 		case IL2CPP_TYPE_STRING:
 		{
 			*(Il2CppString**)data = ReadSerString(reader);
-			// FIXME memory barrier
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)data);
 			break;
 		}
 		case IL2CPP_TYPE_OBJECT:
 		{
 			*(Il2CppObject**)data = ReadBoxedValue(reader);
-			// FIXME memory barrier
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)data);
 			break;
 		}
 		case IL2CPP_TYPE_CLASS:
@@ -2288,6 +2289,7 @@ namespace metadata
 				TEMP_FORMAT(errMsg, "fixed arg type:%s.%s not support", klass->namespaze, klass->name);
 				RaiseNotSupportedException(errMsg);
 			}
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)data);
 			break;
 		}
 		case IL2CPP_TYPE_VALUETYPE:
@@ -2300,6 +2302,7 @@ namespace metadata
 		case IL2CPP_TYPE_SYSTEM_TYPE:
 		{
 			*(Il2CppReflectionType**)data = ReadSystemType(reader);
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)data);
 			break;
 		}
 		case IL2CPP_TYPE_BOXED_OBJECT:
@@ -2307,6 +2310,7 @@ namespace metadata
 			uint8_t fieldOrPropType = reader.ReadByte();
 			IL2CPP_ASSERT(fieldOrPropType == 0x51);
 			*(Il2CppObject**)data = ReadBoxedValue(reader);
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)data);
 			break;
 		}
 		case IL2CPP_TYPE_ENUM:

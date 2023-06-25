@@ -75,7 +75,9 @@
 #endif
 
 #if IL2CPP_ENABLE_WRITE_BARRIERS
-#error "not support incremental gc"
+#define HYBRIDCLR_ENABLE_WRITE_BARRIERS 1
+#else
+#define HYBRIDCLR_ENABLE_WRITE_BARRIERS 0
 #endif
 
 namespace hybridclr
@@ -112,6 +114,20 @@ namespace hybridclr
 		}
 		InitAndGetInterpreterDirectlyCallMethodPointerSlow(const_cast<MethodInfo*>(method));
 		return method->virtualMethodPointerCallByInterp;
+	}
+
+	inline void HYBRIDCLR_SET_WRITE_BARRIER(void** ptr)
+	{
+#if HYBRIDCLR_ENABLE_WRITE_BARRIERS
+		il2cpp::gc::GarbageCollector::SetWriteBarrier(ptr);
+#endif
+	}
+
+	inline void HYBRIDCLR_SET_WRITE_BARRIER(void** ptr, size_t size)
+	{
+#if HYBRIDCLR_ENABLE_WRITE_BARRIERS
+		il2cpp::gc::GarbageCollector::SetWriteBarrier(ptr, size);
+#endif
 	}
 }
 

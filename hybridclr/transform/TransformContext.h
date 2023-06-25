@@ -80,7 +80,9 @@ namespace transform
 		U2,
 		I4,
 		I8,
+		Ref,
 		S,
+		StructContainsRef,
 	};
 
 #if HYBRIDCLR_ARCH_64

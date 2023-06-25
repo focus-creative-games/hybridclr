@@ -1464,11 +1464,7 @@ else \
 			}
 			case OpcodeValue::STIND_REF:
 			{
-#if HYBRIDCLR_ARCH_64
-				ctx.Add_stind(HiOpcodeEnum::StindVarVar_i8);
-#else
-				ctx.Add_stind(HiOpcodeEnum::StindVarVar_i4);
-#endif
+				ctx.Add_stind(HiOpcodeEnum::StindVarVar_ref);
 				continue;
 			}
 			case OpcodeValue::STIND_I1:
@@ -1681,61 +1677,79 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
+				if (IS_CLASS_VALUE_TYPE(objKlass))
+				{
+					uint32_t size = GetTypeValueSize(objKlass);
+					if (!HYBRIDCLR_ENABLE_WRITE_BARRIERS || !objKlass->has_references)
+					{
+						switch (size)
+						{
+						case 1:
+						{
+							CreateAddIR(ir, CpobjVarVar_1);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 2:
+						{
+							CreateAddIR(ir, CpobjVarVar_2);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 4:
+						{
+							CreateAddIR(ir, CpobjVarVar_4);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 8:
+						{
+							CreateAddIR(ir, CpobjVarVar_8);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 12:
+						{
+							CreateAddIR(ir, CpobjVarVar_12);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 16:
+						{
+							CreateAddIR(ir, CpobjVarVar_16);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						default:
+						{
+							CreateAddIR(ir, CpobjVarVar_n_4);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							ir->size = size;
+							break;
+						}
+						}
+					}
+					else
+					{
+						CreateAddIR(ir, CpobjVarVar_WriteBarrier_n_4);
+						ir->dst = dst.locOffset;
+						ir->src = src.locOffset;
+					}
+				}
+				else
+				{
+					CreateAddIR(ir, CpobjVarVar_ref);
+					ir->dst = dst.locOffset;
+					ir->src = src.locOffset;
+				}
 
-				uint32_t size = GetTypeValueSize(objKlass);
-				switch (size)
-				{
-				case 1:
-				{
-					CreateAddIR(ir, CpobjVarVar_1);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 2:
-				{
-					CreateAddIR(ir, CpobjVarVar_2);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 4:
-				{
-					CreateAddIR(ir, CpobjVarVar_4);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 8:
-				{
-					CreateAddIR(ir, CpobjVarVar_8);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 12:
-				{
-					CreateAddIR(ir, CpobjVarVar_12);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 16:
-				{
-					CreateAddIR(ir, CpobjVarVar_16);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				default:
-				{
-					CreateAddIR(ir, CpobjVarVar_n_4);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					ir->size = size;
-					break;
-				}
-				}
 				ctx.PopStackN(2);
 				ip += 5;
 				continue;
@@ -1748,57 +1762,63 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
-
-				uint32_t size = GetTypeValueSize(objKlass);
-				switch (size)
+				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
-				case 1:
-				{
-					CreateAddIR(ir, LdobjVarVar_1);
-					ir->dst = ir->src = top.locOffset;
-					break;
+					uint32_t size = GetTypeValueSize(objKlass);
+					switch (size)
+					{
+					case 1:
+					{
+						CreateAddIR(ir, LdobjVarVar_1);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 2:
+					{
+						CreateAddIR(ir, LdobjVarVar_2);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 4:
+					{
+						CreateAddIR(ir, LdobjVarVar_4);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 8:
+					{
+						CreateAddIR(ir, LdobjVarVar_8);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 12:
+					{
+						CreateAddIR(ir, LdobjVarVar_12);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 16:
+					{
+						CreateAddIR(ir, LdobjVarVar_16);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					default:
+					{
+						CreateAddIR(ir, LdobjVarVar_n_4);
+						ir->dst = ir->src = top.locOffset;
+						ir->size = size;
+						break;
+					}
+					}
 				}
-				case 2:
+				else
 				{
-					CreateAddIR(ir, LdobjVarVar_2);
+					CreateAddIR(ir, LdobjVarVar_ref);
 					ir->dst = ir->src = top.locOffset;
-					break;
-				}
-				case 4:
-				{
-					CreateAddIR(ir, LdobjVarVar_4);
-					ir->dst = ir->src = top.locOffset;
-					break;
-				}
-				case 8:
-				{
-					CreateAddIR(ir, LdobjVarVar_8);
-					ir->dst = ir->src = top.locOffset;
-					break;
-				}
-				case 12:
-				{
-					CreateAddIR(ir, LdobjVarVar_12);
-					ir->dst = ir->src = top.locOffset;
-					break;
-				}
-				case 16:
-				{
-					CreateAddIR(ir, LdobjVarVar_16);
-					ir->dst = ir->src = top.locOffset;
-					break;
-				}
-				default:
-				{
-					CreateAddIR(ir, LdobjVarVar_n_4);
-					ir->dst = ir->src = top.locOffset;
-					ir->size = size;
-					break;
-				}
 				}
 				ctx.PopStack();
 				ctx.PushStackByType(&objKlass->byval_arg);
-				IL2CPP_ASSERT(size == GetTypeValueSize(&objKlass->byval_arg));
 				ctx.InsertMemoryBarrier();
 				ctx.ResetPrefixFlags();
 				ip += 5;
@@ -2195,63 +2215,81 @@ else \
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 
 				IL2CPP_ASSERT(objKlass);
-
-				uint32_t size = GetTypeValueSize(objKlass);
-				switch (size)
+				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
-				case 1:
+					uint32_t size = GetTypeValueSize(objKlass);
+					if (!HYBRIDCLR_ENABLE_WRITE_BARRIERS || objKlass->has_references)
+					{
+						switch (size)
+						{
+						case 1:
+						{
+							CreateAddIR(ir, StobjVarVar_1);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 2:
+						{
+							CreateAddIR(ir, StobjVarVar_2);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 4:
+						{
+							CreateAddIR(ir, StobjVarVar_4);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 8:
+						{
+							CreateAddIR(ir, StobjVarVar_8);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 12:
+						{
+							CreateAddIR(ir, StobjVarVar_12);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						case 16:
+						{
+							CreateAddIR(ir, StobjVarVar_16);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							break;
+						}
+						default:
+						{
+							CreateAddIR(ir, StobjVarVar_n_4);
+							ir->dst = dst.locOffset;
+							ir->src = src.locOffset;
+							ir->size = size;
+							break;
+						}
+						}
+					}
+					else
+					{
+						CreateAddIR(ir, StobjVarVar_WriteBarrier_n_4);
+						ir->dst = dst.locOffset;
+						ir->src = src.locOffset;
+						ir->size = size;
+					}
+				}
+				else
 				{
-					CreateAddIR(ir, StobjVarVar_1);
+					CreateAddIR(ir, StobjVarVar_ref);
 					ir->dst = dst.locOffset;
 					ir->src = src.locOffset;
-					break;
 				}
-				case 2:
-				{
-					CreateAddIR(ir, StobjVarVar_2);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 4:
-				{
-					CreateAddIR(ir, StobjVarVar_4);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 8:
-				{
-					CreateAddIR(ir, StobjVarVar_8);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 12:
-				{
-					CreateAddIR(ir, StobjVarVar_12);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				case 16:
-				{
-					CreateAddIR(ir, StobjVarVar_16);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					break;
-				}
-				default:
-				{
-					CreateAddIR(ir, StobjVarVar_n_4);
-					ir->dst = dst.locOffset;
-					ir->src = src.locOffset;
-					ir->size = size;
-					break;
-				}
-				}
+				
 				ctx.PopStackN(2);
-				IL2CPP_ASSERT(size == GetTypeValueSize(&objKlass->byval_arg));
 				ip += 5;
 				continue;
 			}
@@ -2533,7 +2571,7 @@ else \
 				continue;
 			}
 
-#define CI_ldele0(eleType, reduceType2) \
+#define CI_ldele0(eleType) \
 CreateAddIR(ir,  GetArrayElementVarVar_##eleType##_4); \
 ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_##eleType##_4 : HiOpcodeEnum::GetArrayElementVarVar_##eleType##_8; \
 ir->arr = arr.locOffset; \
@@ -2556,13 +2594,15 @@ ir->dst = arr.locOffset;
 				LocationDescInfo desc = ComputLocationDescInfo(eleType);
 				switch (desc.type)
 				{
-				case LocationDescType::I1: { CI_ldele0(i1, I4); break; }
-				case LocationDescType::U1: { CI_ldele0(u1, I4); break; }
-				case LocationDescType::I2: { CI_ldele0(i2, I4); break; }
-				case LocationDescType::U2: { CI_ldele0(u2, I4); break; }
-				case LocationDescType::I4: { CI_ldele0(i4, I4); break; }
-				case LocationDescType::I8: { CI_ldele0(i8, I8); break; }
+				case LocationDescType::I1: { CI_ldele0(i1); break; }
+				case LocationDescType::U1: { CI_ldele0(u1); break; }
+				case LocationDescType::I2: { CI_ldele0(i2); break; }
+				case LocationDescType::U2: { CI_ldele0(u2); break; }
+				case LocationDescType::I4: { CI_ldele0(i4); break; }
+				case LocationDescType::I8: { CI_ldele0(i8); break; }
+				case LocationDescType::Ref: { CI_ldele0(ref); break; }
 				case LocationDescType::S:
+				case LocationDescType::StructContainsRef:
 				{
 					uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
 					switch (size)
@@ -2639,6 +2679,7 @@ ir->ele = ele.locOffset;
 				case LocationDescType::U2: { CI_stele0(u2); break; }
 				case LocationDescType::I4: { CI_stele0(i4); break; }
 				case LocationDescType::I8: { CI_stele0(i8); break; }
+				case LocationDescType::Ref: { CI_stele0(ref); break;}
 				case LocationDescType::S:
 				{
 					uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
@@ -2674,6 +2715,16 @@ ir->ele = ele.locOffset;
 					}
 					break;
 				}
+				case LocationDescType::StructContainsRef:
+					{
+						uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
+						CreateAddIR(ir, SetArrayElementVarVar_n_8);
+						ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_n_4 : HiOpcodeEnum::SetArrayElementVarVar_n_8;
+						ir->arr = arr.locOffset;
+						ir->index = index.locOffset;
+						ir->ele = ele.locOffset;
+						break;
+					}
 				default:
 				{
 					RaiseExecutionEngineException("stelem not support type");
@@ -3090,9 +3141,23 @@ ir->ele = ele.locOffset;
 					IL2CPP_ASSERT(evalStackTop > 0);
 					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
 					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
-					CreateAddIR(ir, InitobjVar_n_4);
-					ir->obj = ctx.GetEvalStackTopOffset();
-					ir->size = GetTypeValueSize(objKlass);
+					if (IS_CLASS_VALUE_TYPE(objKlass))
+					{
+						CreateAddIR(ir, InitobjVar_n_4);
+#if HYBRIDCLR_ENABLE_WRITE_BARRIERS
+						if (objKlass->has_references)
+						{
+							ir->type = HiOpcodeEnum::InitobjVar_WriteBarrier_n_4;
+						}
+#endif
+						ir->obj = ctx.GetEvalStackTopOffset();
+						ir->size = GetTypeValueSize(objKlass);
+					}
+					else
+					{
+						CreateAddIR(ir, InitobjVar_ref);
+						ir->obj = ctx.GetEvalStackTopOffset();
+					}
 					ctx.PopStack();
 
 					ip += 6;
