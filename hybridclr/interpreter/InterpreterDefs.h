@@ -75,6 +75,8 @@ namespace hybridclr
 			int32_t exFlowCount;
 			int32_t exFlowCapaticy;
 
+			int32_t oldLocalPoolBottomIdx;
+
 			ExceptionFlowInfo* GetCurExFlow() const
 			{
 				return exFlowCount > 0 ? exFlowBase + exFlowCount - 1 : nullptr;
@@ -119,7 +121,8 @@ namespace hybridclr
 			uint32_t localStackSize; // args + locals StackObject size
 			std::vector<uint64_t> resolveDatas;
 			std::vector<InterpExceptionClause*> exClauses;
-			uint32_t isTrivialCopyArgs : 1;
+			bool isTrivialCopyArgs;
+			bool initLocals;
 		};
 	}
 }

@@ -280,9 +280,9 @@ else \
 			shareMethod,
 		};
 
-
+		bool initLocals = (body.flags & (uint32_t)CorILMethodFormat::InitLocals) != 0;
 		// init local vars
-		if ((body.flags & (uint32_t)CorILMethodFormat::InitLocals) && totalLocalSize > 0)
+		if (initLocals && totalLocalSize > 0)
 		{
 			ctx.AddInst(CreateInitLocals(pool, totalLocalSize * sizeof(StackObject)));
 		}
@@ -3407,6 +3407,7 @@ ir->ele = ele.locOffset;
 		result.localStackSize = totalArgLocalSize;
 		result.maxStackSize = maxStackSize;
 		result.isTrivialCopyArgs = isSimpleArgs;
+		result.initLocals = initLocals;
 	}
 }
 

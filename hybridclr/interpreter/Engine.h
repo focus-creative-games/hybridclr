@@ -43,6 +43,7 @@ namespace interpreter
 			_stackSize = -1;
 			_stackBase = nullptr;
 			_stackTopIdx = 0;
+			_localPoolBottomIdx = -1;
 
 			_frameBase = nullptr;
 			_frameCount = -1;
@@ -101,13 +102,13 @@ namespace interpreter
 
 		StackObject* AllocStackSlot(int32_t slotNum)
 		{
-			if (_stackTopIdx + slotNum > _stackSize)
+			if (_stackTopIdx + slotNum > _localPoolBottomIdx)
 			{
 				if (!_stackBase)
 				{
 					InitEvalStack();
 				}
-				if (_stackTopIdx + slotNum > _stackSize)
+				if (_stackTopIdx + slotNum > _localPoolBottomIdx)
 				{
 					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocStackSlot"));
 				}
@@ -120,6 +121,26 @@ namespace interpreter
 			return dataPtr;
 		}
 
+		void* AllocLocalloc(size_t size)
+		{
+			IL2CPP_ASSERT(size % 8 == 0);
+			int32_t slotNum = (int32_t)(size / 8);
+			IL2CPP_ASSERT(slotNum > 0);
+			if (_stackTopIdx + slotNum > _localPoolBottomIdx)
+			{
+				if (!_stackBase)
+				{
+					InitEvalStack();
+				}
+				if (_stackTopIdx + slotNum > _localPoolBottomIdx)
+				{
+					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocLocalloc"));
+				}
+			}
+			_localPoolBottomIdx -= slotNum;
+			return _stackBase + _localPoolBottomIdx;
+		}
+
 		void SetStackTop(int32_t oldTop)
 		{
 			_stackTopIdx = oldTop;
@@ -128,6 +149,16 @@ namespace interpreter
 		uint32_t GetFrameTopIdx() const
 		{
 			return _frameTopIdx;
+		}
+
+		int32_t GetLocalPoolBottomIdx() const
+		{
+			return _localPoolBottomIdx;
+		}
+
+		void SetLocalPoolBottomIdx(int32_t idx)
+		{
+			_localPoolBottomIdx = idx;
 		}
 
 		InterpFrame* PushFrame()
@@ -253,6 +284,7 @@ namespace interpreter
 			_stackBase = (StackObject*)IL2CPP_MALLOC_ZERO(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
 			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
 			_stackTopIdx = 0;
+			_localPoolBottomIdx = _stackSize;
 			il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
 		}
 
@@ -275,6 +307,7 @@ namespace interpreter
 		StackObject* _stackBase;
 		int32_t _stackSize;
 		int32_t _stackTopIdx;
+		int32_t _localPoolBottomIdx;
 
 		InterpFrame* _frameBase;
 		int32_t _frameTopIdx;
@@ -334,7 +367,7 @@ namespace interpreter
 			int32_t oldStackTop = _machineState.GetStackTop();
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 			InterpFrame* newFrame = _machineState.PushFrame();
-			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
+			*newFrame = { imi, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0, _machineState.GetLocalPoolBottomIdx() };
 			PUSH_STACK_FRAME(imi->method);
 			return newFrame;
 		}
@@ -348,7 +381,7 @@ namespace interpreter
 			int32_t oldStackTop = _machineState.GetStackTop();
 			StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize);
 			InterpFrame* newFrame = _machineState.PushFrame();
-			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, 0, 0 };
+			*newFrame = { imi, stackBasePtr, oldStackTop, nullptr, nullptr, nullptr, 0, 0, _machineState.GetLocalPoolBottomIdx() };
 
 			// if not prepare arg stack. copy from args
 			if (imi->args)
@@ -381,15 +414,22 @@ namespace interpreter
 			}
 			_machineState.PopFrame();
 			_machineState.SetStackTop(frame->oldStackTop);
+			_machineState.SetLocalPoolBottomIdx(frame->oldLocalPoolBottomIdx);
 			return _machineState.GetFrameTopIdx() > _frameBaseIdx ? _machineState.GetTopFrame() : nullptr;
 		}
 
-		void* AllocLoc(size_t size)
+		void* AllocLoc(size_t originSize, bool fillZero)
 		{
-			uint32_t soNum = (uint32_t)((size + sizeof(StackObject) - 1) / sizeof(StackObject));
-			//void* data = _machineState.AllocStackSlot(soNum);
-			//std::memset(data, 0, soNum * 8);
-			void* data = IL2CPP_MALLOC_ZERO(size);
+			if (originSize == 0)
+			{
+				return nullptr;
+			}
+			size_t size = (originSize + 7) & ~(size_t)7;
+			void* data = _machineState.AllocLocalloc(size);
+			if (fillZero)
+			{
+				std::memset(data, 0, size);
+			}
 			return data;
  		}
 

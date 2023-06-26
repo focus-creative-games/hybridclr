@@ -40,7 +40,7 @@ namespace interpreter
 
 #pragma region memory
 
-#define LOCAL_ALLOC(size) interpFrameGroup.AllocLoc(size)
+#define LOCAL_ALLOC(size) interpFrameGroup.AllocLoc(size, imi->initLocals)
 
 #pragma endregion
 
