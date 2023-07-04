@@ -280,9 +280,7 @@ namespace interpreter
 		{
 			Config& hc = Config::GetIns();
 			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
-			// _stackBase = (StackObject*)il2cpp::gc::GarbageCollector::AllocateFixed(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject), nullptr);
 			_stackBase = (StackObject*)IL2CPP_MALLOC_ZERO(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
-			std::memset(_stackBase, 0, _stackSize * sizeof(StackObject));
 			_stackTopIdx = 0;
 			_localPoolBottomIdx = _stackSize;
 			il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
