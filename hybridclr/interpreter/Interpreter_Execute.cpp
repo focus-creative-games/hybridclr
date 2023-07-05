@@ -1510,7 +1510,6 @@ while (true) \
 #define THROW_EX(_ex_, _firstHandlerIndex_) { \
 	Il2CppException* ex = _ex_; \
 	CHECK_NOT_NULL_THROW(ex); \
-	il2cpp::vm::Exception::Raise(ex, const_cast<MethodInfo*>(imi->method)); \
 	PREPARE_EXCEPTION(ex, _firstHandlerIndex_); \
 	FIND_NEXT_EX_HANDLER_OR_UNWIND(); \
 }
@@ -1518,20 +1517,6 @@ while (true) \
 	ExceptionFlowInfo* curExFlow = frame->GetCurExFlow(); \
 	IL2CPP_ASSERT(curExFlow->exFlowType == ExceptionFlowType::Catch); \
 	il2cpp::vm::Exception::Raise(curExFlow->ex, const_cast<MethodInfo*>(imi->method)); \
-}
-
-#define POP_CATCH_HANDLERS(leaveTarget)\
-{ \
-	for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && prevExFlow->exFlowType == ExceptionFlowType::Catch ;) { \
-			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
-			if (!(prevIec->handlerBeginOffset <= leaveTarget && leaveTarget < prevIec->handlerEndOffset)) {	\
-					PopPrevExceptionFlowInfo(frame, nullptr); \
-			} \
-			else \
-			{ \
-				break; \
-			} \
-	}\
 }
 
 #define CONTINUE_NEXT_FINALLY() { \
@@ -1571,15 +1556,43 @@ ip = ipBase + efi->leaveTarget; \
 PopCurExceptionFlowInfo(frame); \
 }
 
+#define POP_PREV_CATCH_HANDLERS(leaveTarget)\
+{ \
+	for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && prevExFlow->exFlowType == ExceptionFlowType::Catch ;) { \
+			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
+			if (!(prevIec->handlerBeginOffset <= leaveTarget && leaveTarget < prevIec->handlerEndOffset)) {	\
+					PopPrevExceptionFlowInfo(frame, nullptr); \
+			} \
+			else \
+			{ \
+				break; \
+			} \
+	}\
+}
+
 #define LEAVE_EX(target, firstHandlerIndex)  { \
 	PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Leave, (int32_t)(ip - ipBase), nullptr, firstHandlerIndex + 1, target}); \
 	InterpExceptionClause* iec = imi->exClauses[firstHandlerIndex]; \
-	POP_CATCH_HANDLERS(target); \
+	POP_PREV_CATCH_HANDLERS(target); \
 	ip = ipBase + iec->handlerBeginOffset; \
 }
 
+#define POP_CUR_CATCH_HANDLERS(leaveTarget)\
+{ \
+	for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetCurExFlow()) && prevExFlow->exFlowType == ExceptionFlowType::Catch ;) { \
+			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
+			if (!(prevIec->handlerBeginOffset <= leaveTarget && leaveTarget < prevIec->handlerEndOffset)) {	\
+					PopCurExceptionFlowInfo(frame); \
+			} \
+			else \
+			{ \
+				break; \
+			} \
+	}\
+}
+
 #define LEAVE_EX_DIRECTLY(target)  { \
-	POP_CATCH_HANDLERS(target); \
+	POP_CUR_CATCH_HANDLERS(target); \
 	ip = ipBase + target; \
 }
 

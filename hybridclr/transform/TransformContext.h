@@ -1154,7 +1154,7 @@ namespace transform
 			uint16_t index = 0;
 			for (const ExceptionClause& ec : exceptionClauses)
 			{
-				if (ec.flags == CorILExceptionClauseType::Finally)
+				if (ec.flags == CorILExceptionClauseType::Finally || ec.flags == CorILExceptionClauseType::Exception || ec.flags == CorILExceptionClauseType::Filter)
 				{
 					if (ec.tryOffset <= throwOffset && throwOffset < ec.tryOffset + ec.tryLength)
 						return index;
