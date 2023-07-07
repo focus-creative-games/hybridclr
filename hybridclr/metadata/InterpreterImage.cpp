@@ -729,11 +729,16 @@ namespace metadata
 
 	void InterpreterImage::WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type)
 	{
-		if (il2cpp::vm::Type::IsEnum(type) || type->type == IL2CPP_TYPE_ENUM)
+		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+		if (type->type == IL2CPP_TYPE_ENUM || klass->enumtype)
 		{
 			writer.WriteByte((byte)IL2CPP_TYPE_ENUM);
 			int32_t typeIndex = type->type == IL2CPP_TYPE_CLASS || type->type == IL2CPP_TYPE_VALUETYPE ? ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex : AddIl2CppTypeCache(*type);
 			writer.WriteCompressedInt32(typeIndex);
+		}
+		else if (klass == il2cpp_defaults.systemtype_class)
+		{
+			writer.WriteByte((byte)IL2CPP_TYPE_IL2CPP_TYPE_INDEX);
 		}
 		else
 		{
@@ -926,7 +931,7 @@ namespace metadata
 			}
 			else if (klass == il2cpp_defaults.systemtype_class)
 			{
-				ConvertSystemType(writer, reader, true);
+				ConvertSystemType(writer, reader, writeType);
 			}
 			else
 			{
