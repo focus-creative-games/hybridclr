@@ -1847,6 +1847,29 @@ else \
 								continue;
 							}
 						}
+						void* iter = nullptr;
+						for (const MethodInfo* searchMethod; (searchMethod = il2cpp::vm::Class::GetMethods(il2cpp_defaults.string_class, &iter)) != nullptr;)
+						{
+							if (searchMethod->parameters_count != paramCount || IsInstanceMethod(searchMethod) || std::strncmp(searchMethod->name, "Ctor", 4))
+							{
+								continue;
+							}
+							bool sigMatch = true;
+							for (uint8_t i = 0; i < paramCount; i++)
+							{
+								if (!IsTypeEqual(GET_METHOD_PARAMETER_TYPE(searchMethod->parameters[i]), GET_METHOD_PARAMETER_TYPE(shareMethod->parameters[i])))
+								{
+									sigMatch = false;
+									break;
+								}
+							}
+							if (!sigMatch)
+							{
+								continue;
+							}
+							shareMethod = searchMethod;
+							goto LabelCall;
+						}
 					}
 					else if (strcmp(klass->name, "Nullable`1") == 0)
 					{
