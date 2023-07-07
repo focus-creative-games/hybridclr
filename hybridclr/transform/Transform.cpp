@@ -693,16 +693,22 @@ else \
 					}
 					continue;
 				}
-
-				if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+				if (!shareMethod->has_full_generic_sharing_signature)
+#endif
 				{
-					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
+					if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
+					{
+						RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
+					}
+
+					if (ctx.TryAddCallCommonInstruments(shareMethod, methodDataIndex))
+					{
+						continue;
+					}
 				}
 
-				if (ctx.TryAddCallCommonInstruments(shareMethod, methodDataIndex))
-				{
-					continue;
-				}
+
 
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(shareMethod, false);
 				IL2CPP_ASSERT(managed2NativeMethod);
