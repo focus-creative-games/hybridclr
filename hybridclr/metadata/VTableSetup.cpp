@@ -469,7 +469,7 @@ namespace metadata
 					VirtualMethodImpl& ivmi = _methodImpls[slot];
 					_explicitImplSlots.insert(slot);
 					explicitImplToken2Slots.insert({ implMethod->token, slot});
-					ivmi.type = _type;
+					ivmi.type = implType;
 					ivmi.method = implMethod;
 					ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
 					return;
@@ -483,7 +483,7 @@ namespace metadata
 			{
 				const GenericClassMethod& rvm = containerTs->_virtualMethods[idx];
 				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
-				if (std::strcmp(name1, name2))
+				if (std::strcmp(name1, name2) != 0)
 				{
 					continue;
 				}
@@ -492,7 +492,7 @@ namespace metadata
 					VirtualMethodImpl& ivmi = _methodImpls[rvm.method->slot];
 					_explicitImplSlots.insert(rvm.method->slot);
 					explicitImplToken2Slots.insert({ implMethod->token, rvm.method->slot });
-					ivmi.type = _type;
+					ivmi.type = implType;
 					ivmi.method = implMethod;
 					ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
 					return;
@@ -508,13 +508,46 @@ namespace metadata
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
+	void VTableSetUp::ApplyTypeExplicitImpls(const Il2CppType* type, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots)
+	{
+		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+		if (IsInterpreterType(typeDef))
+		{
+			const std::vector<MethodImpl>& explicitImpls = MetadataModule::GetImage(typeDef)->GetTypeMethodImplByTypeDefinition(typeDef);
+			if (type->type != IL2CPP_TYPE_GENERICINST)
+			{
+				for (const MethodImpl& mi : explicitImpls)
+				{
+					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, &mi.declaration.containerType,
+						mi.declaration.methodDef, &mi.body.containerType, mi.body.methodDef);
+				}
+			}
+			else
+			{
+				const Il2CppGenericClass* genericClass = type->data.generic_class;
+				for (const MethodImpl& mi : explicitImpls)
+				{
+					const Il2CppType* containerType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(&mi.declaration.containerType, &genericClass->context, true);
+					const Il2CppType* implType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(&mi.body.containerType, &genericClass->context, true);
+					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, containerType,
+						mi.declaration.methodDef, implType, mi.body.methodDef);
+				}
+			}
+		}
+		else
+		{
+			// FIXME: AOT class
+		}
+	}
+
 	void VTableSetUp::ComputeExplicitImpls(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots)
 	{
-		const std::vector<MethodImpl>& explicitImpls = MetadataModule::GetImage(_typeDef)->GetTypeMethodImplByTypeDefinition(_typeDef);
-		for (const MethodImpl& mi : explicitImpls)
+		ApplyTypeExplicitImpls(_type, implInterfaceOffsetIdxs, explicitImplToken2Slots);
+		
+		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 		{
-			ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, &mi.declaration.containerType,
-				mi.declaration.methodDef, &mi.body.containerType, mi.body.methodDef);
+			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
+			ApplyTypeExplicitImpls(rioi.type, implInterfaceOffsetIdxs, explicitImplToken2Slots);
 		}
 	}
 
