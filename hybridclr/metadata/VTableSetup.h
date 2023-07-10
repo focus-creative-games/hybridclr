@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "metadata/Il2CppTypeHash.h"
 #include "metadata/Il2CppTypeCompare.h"
@@ -51,12 +52,6 @@ namespace metadata
 		}
 
 		const VTableSetUp* GetParent() const { return _parent; }
-
-		void ComputVtables(Il2CppType2TypeDeclaringTreeMap& cache);
-		void ComputAotTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
-		void ComputInterpTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
-		void ComputInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache);
-
 		const Il2CppType* FindImplType(const Il2CppMethodDefinition* methodDef);
 		const VTableSetUp* FindAncestorTypeTree(const Il2CppType* implType);
 		const GenericClassMethod* FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, bool throwExceptionIfNotFind = true);
@@ -66,8 +61,23 @@ namespace metadata
 		uint32_t GetTypeIndex() const { return _typeDef->byvalTypeIndex; }
 		bool IsInterType() const { return hybridclr::metadata::IsInterpreterType(_typeDef); }
 	private:
-		void ApplyOverrideMethod(const GenericClassMethod* beOverrideParentMethod, const Il2CppMethodDefinition* overrideMethodDef, uint16_t checkOverrideMaxIdx, std::vector<uint16_t>& implInterfaceOffsetIdxs);
 
+		void ComputeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
+		void ComputAotTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
+		void InitInterfaceVTable(uint16_t& curOffset, std::vector<uint16_t>& implInterfaceOffsetIdxs);
+		void ComputeExplicitImpls(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots);
+		void ComputeOverrideParentVirtualMethod(uint16_t& curOffset, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots);
+		void ComputeInterfaceOverrideByParentVirtualMethod(const std::vector<uint16_t>& implInterfaceOffsetIdxs);
+		void ComputeInterpTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
+		void ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache) const;
+
+		bool isExplicitImplInterfaceSlot(uint16_t slot) const { return _explicitImplSlots.find(slot) != _explicitImplSlots.end(); }
+		uint16_t FindDefaultOverrideExplicitInterfaceSlot(GenericClassMethod& gcm, const std::unordered_set<uint16_t>& explicitImplSlots, const std::vector<uint16_t>& implInterfaceOffsetIdxs);
+		uint16_t FindExplicitOverrideInterfaceSlot(GenericClassMethod& gcm, const std::unordered_map<int32_t, uint16_t>& explicitImplSlots);
+		void ApplyOverrideMethod(const GenericClassMethod* beOverrideParentMethod, const Il2CppMethodDefinition* overrideMethodDef, uint16_t checkOverrideMaxIdx);
+		void ApplyExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots, const Il2CppType* declaringType,
+			const Il2CppMethodDefinition* decalringMethod, const Il2CppType* implType, const Il2CppMethodDefinition* implMethod);
+		
 		VTableSetUp* _parent;
 		std::vector<VTableSetUp*> _interfaces;
 		std::vector<RawInterfaceOffsetInfo> _interfaceOffsetInfos;
@@ -78,6 +88,8 @@ namespace metadata
 
 		std::vector<GenericClassMethod> _virtualMethods;
 		std::vector<VirtualMethodImpl> _methodImpls;
+
+		std::unordered_set<uint16_t> _explicitImplSlots;;
 	};
 }
 }

@@ -190,6 +190,11 @@ namespace metadata
         return (flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK) == METHOD_ATTRIBUTE_PRIVATE;
     }
 
+    inline bool IsPublicMethod(uint32_t flags)
+    {
+        return (flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK) == METHOD_ATTRIBUTE_PUBLIC;
+    }
+
     inline bool IsGenericIns(const Il2CppType* type)
     {
         return type->type == IL2CPP_TYPE_GENERICINST;
