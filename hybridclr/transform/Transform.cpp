@@ -1856,7 +1856,7 @@ else \
 						void* iter = nullptr;
 						for (const MethodInfo* searchMethod; (searchMethod = il2cpp::vm::Class::GetMethods(il2cpp_defaults.string_class, &iter)) != nullptr;)
 						{
-							if (searchMethod->parameters_count != paramCount || IsInstanceMethod(searchMethod) || std::strncmp(searchMethod->name, "Ctor", 4))
+							if (searchMethod->parameters_count != paramCount || std::strncmp(searchMethod->name, "CreateString", 10))
 							{
 								continue;
 							}
@@ -1873,6 +1873,15 @@ else \
 							{
 								continue;
 							}
+							// insert nullptr to eval stack
+							int32_t thisIdx = evalStackTop - paramCount;
+							for (int32_t i = evalStackTop ; i > thisIdx; i--)
+							{
+								evalStack[i] = evalStack[i - 1];
+							}
+							// locOffset of this is not important. You only need make sure the value is not equal to nullptr.
+							evalStack[thisIdx] = { NATIVE_INT_REDUCE_TYPE, PTR_SIZE, ctx.GetEvalStackOffset(thisIdx) };
+							++evalStackTop;
 							shareMethod = searchMethod;
 							goto LabelCall;
 						}
