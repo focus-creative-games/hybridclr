@@ -667,6 +667,16 @@ else \
 					continue;
 				}
 
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+				if (!shareMethod->has_full_generic_sharing_signature)
+#endif
+				{
+					if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
+					{
+						RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
+					}
+				}
+
 				bool resolvedIsInstanceMethod = IsInstanceMethod(shareMethod);
 				int32_t resolvedTotalArgNum = shareMethod->parameters_count + resolvedIsInstanceMethod;
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
@@ -698,11 +708,6 @@ else \
 				if (!shareMethod->has_full_generic_sharing_signature)
 #endif
 				{
-					if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
-					{
-						RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
-					}
-
 					if (ctx.TryAddCallCommonInstruments(shareMethod, methodDataIndex))
 					{
 						continue;
