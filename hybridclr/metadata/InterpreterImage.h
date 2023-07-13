@@ -72,11 +72,12 @@ namespace metadata
 		uint32_t value;
 	};
 
-	struct CustomAtttributesInfo
+	struct CustomAttributesInfo
 	{
 		int32_t typeRangeIndex;
-		int32_t dataStartOffset;
-		int32_t dataEndOffset;
+		bool inited;
+		void* dataStartPtr;
+		void* dataEndPtr;
 	};
 
 
@@ -114,7 +115,7 @@ namespace metadata
 
 		InterpreterImage(uint32_t imageIndex) : _index(imageIndex), _inited(false), _il2cppImage(nullptr)
 #if HYBRIDCLR_UNITY_2021_OR_NEW
-			, _constValues(1024), _il2cppFormatCustomDataBlob(10240), _tempCtorArgBlob(1024), _tempFieldBlob(1024), _tempPropertyBlob(1024)
+			, _constValues(1024), _il2cppFormatCustomDataBlob(256), _tempCtorArgBlob(256), _tempFieldBlob(256), _tempPropertyBlob(256)
 #endif
 		{
 
@@ -496,25 +497,33 @@ namespace metadata
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
 #else
 
+		void InitCustomAttributeData(CustomAttributesInfo& cai, const Il2CppCustomAttributeTypeRange& dataRange);
+			
 		il2cpp::metadata::CustomAttributeDataReader CreateCustomAttributeDataReader(Il2CppMetadataCustomAttributeHandle handle)
 		{
 			const Il2CppCustomAttributeTypeRange* dataRange = (const Il2CppCustomAttributeTypeRange*)handle;
 			IL2CPP_ASSERT(_tokenCustomAttributes.find(dataRange->token) != _tokenCustomAttributes.end());
-			CustomAtttributesInfo& cai = _tokenCustomAttributes[dataRange->token];
-			const char* dataBlob = (const char*)_il2cppFormatCustomDataBlob.Data();
+			CustomAttributesInfo& cai = _tokenCustomAttributes[dataRange->token];
+			if (!cai.inited)
+			{
+				InitCustomAttributeData(cai, *dataRange);
+			}
 #if HYBRIDCLR_UNITY_2022_OR_NEW
-			return il2cpp::metadata::CustomAttributeDataReader(_il2cppImage, dataBlob + cai.dataStartOffset, dataBlob + cai.dataEndOffset);
+			return il2cpp::metadata::CustomAttributeDataReader(_il2cppImage, cai.dataStartPtr, cai.dataEndPtr);
 #else
-			return il2cpp::metadata::CustomAttributeDataReader(dataBlob + cai.dataStartOffset, dataBlob + cai.dataEndOffset);
+			return il2cpp::metadata::CustomAttributeDataReader(cai.dataStartPtr, cai.dataEndPtr);
 #endif
 		}
 
 		std::tuple<void*, void*> CreateCustomAttributeDataTuple(const Il2CppCustomAttributeDataRange* dataRange)
 		{
 			IL2CPP_ASSERT(_tokenCustomAttributes.find(dataRange->token) != _tokenCustomAttributes.end());
-			CustomAtttributesInfo& cai = _tokenCustomAttributes[dataRange->token];
-			const char* dataBlob = (const char*)_il2cppFormatCustomDataBlob.Data();
-			return std::make_tuple<void*, void*>((void*)(dataBlob + cai.dataStartOffset), (void*)(dataBlob + cai.dataEndOffset));
+			CustomAttributesInfo& cai = _tokenCustomAttributes[dataRange->token];
+			if (!cai.inited)
+			{
+				InitCustomAttributeData(cai, *dataRange);
+			}
+			return {cai.dataStartPtr, cai.dataEndPtr};
 		}
 
 		std::tuple<void*, void*> CreateCustomAttributeDataTupleByToken(uint32_t token)
@@ -533,8 +542,8 @@ namespace metadata
 
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(CustomAttributeIndex index);
 #endif
-		void BuildCustomAttributeDataReaders();
-		void BuildCustomAttributesData(CustomAtttributesInfo& cai, const Il2CppCustomAttributeTypeRange& typeRange);
+
+		void BuildCustomAttributesData(CustomAttributesInfo& cai, const Il2CppCustomAttributeTypeRange& typeRange);
 		void ConvertILCustomAttributeData2Il2CppFormat(const MethodInfo* ctorMethod, BlobReader& reader);
 		void ConvertFixedArg(CustomAttributeDataWriter& writer, BlobReader& reader, const Il2CppType* type, bool writeType);
 		void ConvertBoxedValue(CustomAttributeDataWriter& writer, BlobReader& reader, bool writeType);
@@ -656,7 +665,7 @@ namespace metadata
 #endif
 
 
-		std::unordered_map<uint32_t, CustomAtttributesInfo> _tokenCustomAttributes;
+		std::unordered_map<uint32_t, CustomAttributesInfo> _tokenCustomAttributes;
 		std::vector<Il2CppCustomAttributeTypeRange> _customAttributeHandles;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
 		std::vector<CustomAttributesCache*> _customAttribtesCaches;

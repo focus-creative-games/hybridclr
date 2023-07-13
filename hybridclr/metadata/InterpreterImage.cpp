@@ -136,9 +136,6 @@ namespace metadata
 		InitInterfaces();
 		InitClass();
 		InitVTables();
-#if HYBRIDCLR_UNITY_2021_OR_NEW
-		BuildCustomAttributeDataReaders();
-#endif
 	}
 
 	void InterpreterImage::InitTypeDefs_0()
@@ -626,11 +623,7 @@ namespace metadata
 				IL2CPP_ASSERT(_tokenCustomAttributes.find(token) == _tokenCustomAttributes.end());
 				int32_t attributeStartIndex = EncodeWithIndex((int32_t)_customAttribues.size());
 				int32_t handleIndex = (int32_t)_customAttributeHandles.size();
-#if HYBRIDCLR_UNITY_2021_OR_NEW
-				_tokenCustomAttributes[token] = { (int32_t)EncodeWithIndex(handleIndex) };
-#else
-				_tokenCustomAttributes[token] = { (int32_t)EncodeWithIndex(handleIndex), 0, 0 };
-#endif
+				_tokenCustomAttributes[token] = { (int32_t)EncodeWithIndex(handleIndex), false, nullptr, nullptr };
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 				_customAttributeHandles.push_back({ token, (uint32_t)attributeStartIndex });
 #else
@@ -678,23 +671,23 @@ namespace metadata
 	}
 
 #ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-	void InterpreterImage::BuildCustomAttributeDataReaders()
+
+	void InterpreterImage::InitCustomAttributeData(CustomAttributesInfo& cai, const Il2CppCustomAttributeTypeRange& dataRange)
 	{
-		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), _il2cppImage);
-		for (size_t i = 1 ; i < _customAttributeHandles.size() ; i++)
+		il2cpp::os::FastAutoLock metaLock(&il2cpp::vm::g_MetadataLock);
+		if (cai.inited)
 		{
-			// ignore last one ofr comput count
-			const Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[i - 1];
-			uint32_t token = typeRange.token;
-			IL2CPP_ASSERT(_tokenCustomAttributes.find(token) != _tokenCustomAttributes.end());
-			CustomAtttributesInfo& cai = _tokenCustomAttributes[token];
-			BuildCustomAttributesData(cai, typeRange);
+			return;
 		}
+		BuildCustomAttributesData(cai, dataRange);
+		il2cpp::os::Atomic::FullMemoryBarrier();
+		cai.inited = true;
 	}
 
-	void InterpreterImage::BuildCustomAttributesData(CustomAtttributesInfo& cai, const Il2CppCustomAttributeTypeRange& curTypeRange)
+	void InterpreterImage::BuildCustomAttributesData(CustomAttributesInfo& cai, const Il2CppCustomAttributeTypeRange& curTypeRange)
 	{
-		cai.dataStartOffset = _il2cppFormatCustomDataBlob.Size();
+		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
+		_il2cppFormatCustomDataBlob.Reset();
 		const Il2CppCustomAttributeDataRange& nextTypeRange = *(&curTypeRange + 1);
 		uint32_t attrCount = nextTypeRange.startOffset - curTypeRange.startOffset;
 		IL2CPP_ASSERT(attrCount > 0 && attrCount < 1024);
@@ -724,7 +717,10 @@ namespace metadata
 				_il2cppFormatCustomDataBlob.WriteCompressedUint32(0);
 			}
 		}
-		cai.dataEndOffset = _il2cppFormatCustomDataBlob.Size();
+		void* resultData = IL2CPP_MALLOC(_il2cppFormatCustomDataBlob.Size());
+		std::memcpy(resultData, _il2cppFormatCustomDataBlob.Data(), _il2cppFormatCustomDataBlob.Size());
+		cai.dataStartPtr = resultData;
+		cai.dataEndPtr = (uint8_t*)resultData + _il2cppFormatCustomDataBlob.Size();
 	}
 
 	void InterpreterImage::WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type)
