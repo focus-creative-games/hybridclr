@@ -24,7 +24,11 @@ namespace hybridclr
 			{
 				method->virtualMethodPointerCallByInterp = method->methodPointerCallByInterp;
 			}
-			if (method->invoker_method == nullptr || method->invoker_method == il2cpp::vm::Runtime::GetMissingMethodInvoker())
+			if (method->invoker_method == nullptr
+#if HYBRIDCLR_UNITY_2021_OR_NEW
+				|| method->invoker_method == il2cpp::vm::Runtime::GetMissingMethodInvoker()
+#endif
+				)
 			{
 				method->invoker_method = hybridclr::interpreter::InterpreterModule::GetMethodInvoker(method);
 			}
