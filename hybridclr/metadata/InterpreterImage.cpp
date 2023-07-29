@@ -988,8 +988,20 @@ namespace metadata
 		{
 			RaiseExecutionEngineException("GetFieldDeclaringTypeIndexAndFieldIndexByName can't find field");
 		}
-		typeIndex = (field->parent == klass) ? kTypeDefinitionIndexInvalid : AddIl2CppTypeCache(klass->byval_arg);
-		fieldIndex = (int32_t)(field - field->parent->fields);
+		if (field->parent == klass)
+		{
+			typeIndex = kTypeDefinitionIndexInvalid;
+		}
+		else
+		{
+			klass = field->parent;
+			if (klass->generic_class)
+			{
+				RaiseExecutionEngineException("GetFieldDeclaringTypeIndexAndFieldIndexByName doesn't support field of generic CustomAttribute");
+			}
+			typeIndex = il2cpp::vm::GlobalMetadata::GetIndexForTypeDefinition(klass);
+		}
+		fieldIndex = (int32_t)(field - klass->fields);
 	}
 
 	void InterpreterImage::GetPropertyDeclaringTypeIndexAndPropertyIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex)
@@ -1000,8 +1012,20 @@ namespace metadata
 		{
 			RaiseExecutionEngineException("GetFieldDeclaringTypeIndexAndFieldIndexByName can't find field");
 		}
-		typeIndex = (propertyInfo->parent == klass) ? kTypeDefinitionIndexInvalid : AddIl2CppTypeCache(klass->byval_arg);
-		fieldIndex = (int32_t)(propertyInfo - propertyInfo->parent->properties);
+		if (propertyInfo->parent == klass)
+		{
+			typeIndex = kTypeDefinitionIndexInvalid;
+		}
+		else
+		{
+			klass = propertyInfo->parent;
+			if (klass->generic_class)
+			{
+				RaiseExecutionEngineException("GetPropertyDeclaringTypeIndexAndPropertyIndexByName doesn't support field of generic CustomAttribute");
+			}
+			typeIndex = il2cpp::vm::GlobalMetadata::GetIndexForTypeDefinition(klass);
+		}
+		fieldIndex = (int32_t)(propertyInfo - klass->properties);
 	}
 
 	void InterpreterImage::ConvertILCustomAttributeData2Il2CppFormat(const MethodInfo* ctorMethod, BlobReader& reader)
@@ -1047,7 +1071,7 @@ namespace metadata
 				else
 				{
 					_tempFieldBlob.WriteCompressedInt32(-fieldOrPropertyIndex - 1);
-					_tempFieldBlob.WriteCompressedInt32(fieldOrPropertyDeclaringTypeIndex);
+					_tempFieldBlob.WriteCompressedUint32(fieldOrPropertyDeclaringTypeIndex);
 				}
 			}
 			else
@@ -1062,7 +1086,7 @@ namespace metadata
 				else
 				{
 					_tempPropertyBlob.WriteCompressedInt32(-fieldOrPropertyIndex - 1);
-					_tempPropertyBlob.WriteCompressedInt32(fieldOrPropertyDeclaringTypeIndex);
+					_tempPropertyBlob.WriteCompressedUint32(fieldOrPropertyDeclaringTypeIndex);
 				}
 			}
 		}
