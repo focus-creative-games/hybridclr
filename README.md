@@ -6,7 +6,7 @@
 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE)
 
-![logo](./docs/images/logo.jpg)
+![logo](./en/docs/images/logo.jpg)
 
 <br/>
 <br/>
@@ -17,24 +17,24 @@ HybridCLR is a **almost perfect** full-platform native c# hot update solution fo
 
 HybridCLR expands the ability of il2cpp, making it change from pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to 'AOT+Interpreter' hybrid runtime, and then natively supports dynamic loading of assembly , so that the games packaged based on il2cpp backend can be executed not only on the Android platform, but also on IOS, Consoles and other platforms that limit JIT efficiently in **AOT+interpreter** hybrid mode, completely supporting hot updates from the bottom layer.
 
-HybridCLR not only supports the traditional fully interpreted execution mode, but also pioneered [Differential Hybrid Execution](https://hybridclr.doc.code-philosophy.com/docs/advanced/differentialhybridexecution) technique. That is, you can add, delete, or modify the AOT dll at will, and intelligently make the changed or newly added classes and functions run in interpreter mode, but the unchanged classes and functions run in AOT mode, so that the running performance of the hot-updated game logic basically reaches the original AOT level.
+HybridCLR not only supports the traditional fully interpreted execution mode, but also pioneered [Differential Hybrid Execution](https://hybridclr.doc.code-philosophy.com/en/docs/basic/differentialhybridexecution) technique. That is, you can add, delete, or modify the AOT dll at will, and intelligently make the changed or newly added classes and functions run in interpreter mode, but the unchanged classes and functions run in AOT mode, so that the running performance of the hot-updated game logic basically reaches the original AOT level.
 
 Welcome to embrace modern native C# hot update technology! ! !
 
 ## Documentation
 
-- [Official Documentation](https://hybridclr.focus-creative-games.github.io)
-- [Quickstart](https://hybridclr.doc.code-philosophy.com/docs/beginner/quickstart)
+- [Official Documentation](https://hybridclr.doc.code-philosophy.com/en/en/docs/intro)
+- [Quick Start](https://hybridclr.doc.code-philosophy.com/en/en/docs/beginner/quickstart)
 
 ## Features
 
-- Features complete. A nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), with only a very small number of [unsupported features](https://hybridclr.doc.code-philosophy.com/docs/basic/notsupportedfeatures).
+- Features complete. A nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), with only a very small number of [unsupported features](https://hybridclr.doc.code-philosophy.com/en/docs/basic/notsupportedfeatures).
 - Zero learning and use costs. HybridCLR enhances the pure AOT runtime into a complete runtime, making hot update code work seamlessly with AOT code. The script class and the AOT class are in the same runtime, and you can freely write codes such as inheritance, reflection, and multi-threading (volatile, ThreadStatic, Task, async). No need to write any special code, no code generation, almost unlimited.
-- Efficient execution. Implemented an extremely efficient register interpreter, all indicators are significantly better than other hot update schemes. [Performance Test Report](https://hybridclr.doc.code-philosophy.com/docs/basic/performance)
-- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary c# classes, which is far superior to other hot update solutions. [Memory and GC](https://hybridclr.doc.code-philosophy.com/docs/basic/memory)
+- Efficient execution. Implemented an extremely efficient register interpreter, all indicators are significantly better than other hot update schemes. [Performance Test Report](https://hybridclr.doc.code-philosophy.com/en/docs/basic/performance)
+- Memory efficient. The classes defined in the hot update script occupy the same memory space as ordinary c# classes, which is far superior to other hot update solutions. [Memory and GC](https://hybridclr.doc.code-philosophy.com/en/docs/basic/memory)
 - Due to the perfect support for generics, libraries that are not compatible with il2cpp due to AOT generics issues can now run perfectly under il2cpp
 - Support some features not supported by il2cpp, such as __makeref, __reftype, __refvalue directives
-- [Differential Hybrid Execution](https://hybridclr.doc.code-philosophy.com/docs/advanced/differentialhybridexecution)
+- [Differential Hybrid Execution](https://hybridclr.doc.code-philosophy.com/en/docs/basic/differentialhybridexecution)
 
 ## working principle
 
@@ -79,8 +79,8 @@ Most leading companies such as Tencent, NetEase, Baidu, funplus, Perfect, Stacke
 - Novice group 2: **680274677 (recommended)**
 - QQ reward mutual aid group: 762953653. Offer a reward for asking questions and solving problems quickly.
 - discord channel [https://discord.gg/BATfNfJnm2](https://discord.gg/BATfNfJnm2)
-- Business cooperation email: business@code-philosophy.com
-- [Commercial support](https://hybridclr.doc.code-philosophy.com/docs/other/business)
+- Business cooperation email: business#code-philosophy.com
+- [Commercial Support](https://hybridclr.doc.code-philosophy.com/en/docs/business/intro)
 
 ## About the author
 
