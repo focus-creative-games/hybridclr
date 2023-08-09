@@ -191,7 +191,7 @@ namespace metadata
 			return LoadImageErrorCode::BAD_IMAGE;
 		}
 		_4byteStringIndex = ptrTableHeader->heapSizes & 0x1;
-		_4byteGUIDIndex = ptrTableHeader->heapSizes & 0x20;
+		_4byteGUIDIndex = ptrTableHeader->heapSizes & 0x2;
 		_4byteBlobIndex = ptrTableHeader->heapSizes & 0x4;
 
 		uint64_t validMask = ((uint64_t)1 << TABLE_NUM) - 1;
