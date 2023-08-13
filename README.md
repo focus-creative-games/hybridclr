@@ -75,9 +75,8 @@ Most leading companies such as Tencent, NetEase, Baidu, funplus, Perfect, Stacke
 ## Support and Contact
 
 - Official 1 group: 651188171 (full)
-- Novice group 1: 428404198 (full)
-- Novice group 2: **680274677 (recommended)**
-- QQ reward mutual aid group: 762953653. Offer a reward for asking questions and solving problems quickly.
+- Novice QQ group 1: 428404198 (full)
+- Novice QQ group 2: **680274677 (recommended)**
 - discord channel [https://discord.gg/BATfNfJnm2](https://discord.gg/BATfNfJnm2)
 - Business cooperation email: business#code-philosophy.com
 - [Commercial Support](https://hybridclr.doc.code-philosophy.com/en/docs/business/intro)
