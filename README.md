@@ -6,7 +6,7 @@
 
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE)
 
-![logo](./en/docs/images/logo.jpg)
+![logo](./docs/images/logo.jpg)
 
 <br/>
 <br/>
