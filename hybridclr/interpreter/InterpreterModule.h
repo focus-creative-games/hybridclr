@@ -49,6 +49,8 @@ namespace interpreter
 
 		static void NotSupportNative2Managed();
 		static void NotSupportAdjustorThunk();
+
+		static const char* GetValueTypeSignature(const char* fullName);
 	private:
 
 		static il2cpp::os::ThreadLocalValue s_machineState;

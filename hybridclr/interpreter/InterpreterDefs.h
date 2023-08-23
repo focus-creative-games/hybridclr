@@ -15,10 +15,6 @@ namespace hybridclr
 			I2,
 			U2,
 			U8,
-			SR, // structure reference
-			S_16, // struct size <= 16
-			S_24, // struct size <= 24
-			S_32, // struct size <= 32
 			S_N,  // struct size = 3，5，6，7， > 8, size is described by stackObjectSize
 		};
 

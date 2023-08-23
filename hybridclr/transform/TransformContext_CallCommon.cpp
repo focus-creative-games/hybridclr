@@ -17,12 +17,9 @@ namespace transform
 		I8,
 		R4,
 		R8,
-		V2F,
-		V3F,
-		V4F,
-		//V2D,
-		//V3D,
-		//V4D,
+		I,
+		U,
+		STRUCT,
 		NOT_SUPPORT,
 	};
 
@@ -32,30 +29,12 @@ namespace transform
 #define NATIVE_INT_COMMON_TYPE ArgCommonType::I4
 #endif
 
-	static ArgCommonType ComputValueTypeArgCommonType(Il2CppClass* klass)
+
+	static ArgCommonType ComputValueTypeArgCommonType(const Il2CppClass* klass)
 	{
-		HFATypeInfo type;
-		if (ComputeHFATypeInfo(klass, type))
-		{
-			Il2CppTypeEnum eleType = type.eleType->type;
-			switch (type.count)
-			{
-			case 2:
-			{
-				return eleType == IL2CPP_TYPE_R4 ? ArgCommonType::V2F : ArgCommonType::NOT_SUPPORT;
-			}
-			case 3:
-			{
-				return eleType == IL2CPP_TYPE_R4 ? ArgCommonType::V3F : ArgCommonType::NOT_SUPPORT;
-			}
-			case 4:
-			{
-				return eleType == IL2CPP_TYPE_R4 ? ArgCommonType::V4F : ArgCommonType::NOT_SUPPORT;
-			}
-			}
-		}
-		return ArgCommonType::NOT_SUPPORT;
+		return ArgCommonType::STRUCT;
 	}
+
 
 	static ArgCommonType ComputArgCommonType(const Il2CppType* type)
 	{
@@ -166,7 +145,7 @@ namespace transform
 		uint16_t argBaseOffset = (uint16_t)GetEvalStackOffset(callArgEvalStackIdxBase);
 
 		ArgCommonType actRet = ComputArgCommonType(returnType);
-		if (actRet == ArgCommonType::NOT_SUPPORT)
+		if (actRet == ArgCommonType::NOT_SUPPORT || actRet == ArgCommonType::STRUCT)
 		{
 			return false;
 		}
@@ -225,21 +204,6 @@ namespace transform
 			case ArgCommonType::R8:
 			{
 				ir->type = HiOpcodeEnum::CallCommonNativeInstance_f8_0;
-				break;
-			}
-			case ArgCommonType::V2F:
-			{
-				ir->type = HiOpcodeEnum::CallCommonNativeInstance_v2f_0;
-				break;
-			}
-			case ArgCommonType::V3F:
-			{
-				ir->type = HiOpcodeEnum::CallCommonNativeInstance_v3f_0;
-				break;
-			}
-			case ArgCommonType::V4F:
-			{
-				ir->type = HiOpcodeEnum::CallCommonNativeInstance_v4f_0;
 				break;
 			}
 			default:
@@ -451,7 +415,7 @@ default:\
 		uint16_t argBaseOffset = (uint16_t)GetEvalStackOffset(callArgEvalStackIdxBase);
 
 		ArgCommonType actRet = ComputArgCommonType(returnType);
-		if (actRet == ArgCommonType::NOT_SUPPORT)
+		if (actRet == ArgCommonType::NOT_SUPPORT || actRet == ArgCommonType::STRUCT)
 		{
 			return false;
 		}
@@ -508,21 +472,6 @@ default:\
 			case ArgCommonType::R8:
 			{
 				ir->type = HiOpcodeEnum::CallCommonNativeStatic_f8_0;
-				break;
-			}
-			case ArgCommonType::V2F:
-			{
-				ir->type = HiOpcodeEnum::CallCommonNativeStatic_v2f_0;
-				break;
-			}
-			case ArgCommonType::V3F:
-			{
-				ir->type = HiOpcodeEnum::CallCommonNativeStatic_v3f_0;
-				break;
-			}
-			case ArgCommonType::V4F:
-			{
-				ir->type = HiOpcodeEnum::CallCommonNativeStatic_v4f_0;
 				break;
 			}
 			default:

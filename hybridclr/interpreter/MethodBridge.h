@@ -30,105 +30,34 @@ namespace interpreter
 		Il2CppMethodPointer method;
 	};
 
+	struct FullName2Signature
+	{
+		const char* fullName;
+		const char* signature;
+	};
+
 	extern Managed2NativeMethodInfo g_managed2nativeStub[];
 	extern Native2ManagedMethodInfo g_native2managedStub[];
 	extern NativeAdjustThunkMethodInfo g_adjustThunkStub[];
-
-
-	template<int N>
-	struct WebGLSpeicalValueType
-	{
-		union
-		{
-			struct
-			{
-			};
-			uint8_t __padding[N];
-		};
-	};
-
-	template<int N>
-	struct WebGLSpeicalValueTypeAlign2
-	{
-		union
-		{
-			struct
-			{
-			};
-			uint16_t __padding[N/2];
-		};
-	};
-
-	template<int N>
-	struct WebGLSpeicalValueTypeAlign4
-	{
-		union
-		{
-			struct
-			{
-			};
-			uint32_t __padding[N / 4];
-		};
-	};
-
-	template<int N>
-	struct WebGLSpeicalValueTypeAlign8
-	{
-		union
-		{
-			struct
-			{
-			};
-			uint64_t __padding[N / 8];
-		};
-	};
-
-	template<int N>
-	struct ValueTypeSize
-	{
-		uint8_t  __value[N];
-	};
-
-	template<int N>
-	struct ValueTypeSizeAlign2
-	{
-		static_assert(N % 2 == 0, "need align 2");
-		uint16_t  __value[N/2];
-	};
-
-	template<int N>
-	struct ValueTypeSizeAlign4
-	{
-		static_assert(N % 4 == 0, "need align 4");
-		uint32_t  __value[N/4];
-	};
-
-	template<int N>
-	struct ValueTypeSizeAlign8
-	{
-		static_assert(N % 8 == 0, "need align 8");
-		uint64_t  __value[N/8];
-	};
-
-	struct ValueTypeSize16
-	{
-		uint64_t low;
-		uint64_t high;
-	};
-
+	extern FullName2Signature g_fullName2SignatureStub[];
+	
 	void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount);
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args);
 
 	bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize);
 	bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize);
 	bool ComputeSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize);
-
-	struct HFATypeInfo
+	
+	template<typename T> uint64_t N2MAsUint64ValueOrAddress(T& value)
 	{
-		const Il2CppType* eleType;
-		int32_t count;
-	};
+		return sizeof(T) <= 8 ? *(uint64_t*)&value : (uint64_t)&value;
+	}
 
-	bool ComputeHFATypeInfo(Il2CppClass* klass, HFATypeInfo& typeInfo);
+	template<typename T> T& M2NFromValueOrAddress(void* value)
+	{
+		//return sizeof(T) <= 8 ? *(T*)value : **(T**)value;
+		return *(T*)value;
+	}
+	
 }
 }

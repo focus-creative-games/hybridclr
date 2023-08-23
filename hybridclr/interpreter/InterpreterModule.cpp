@@ -28,6 +28,7 @@ namespace interpreter
 	static std::unordered_map<const char*, Managed2NativeCallMethod, CStringHash, CStringEqualTo> g_managed2natives;
 	static std::unordered_map<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> g_native2manageds;
 	static std::unordered_map<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> g_adjustThunks;
+	static std::unordered_map<const char*, const char*, CStringHash, CStringEqualTo> g_fullName2signature;
 
 	MachineState& InterpreterModule::GetCurrentThreadMachineState()
 	{
@@ -82,6 +83,15 @@ namespace interpreter
 			}
 			g_adjustThunks.insert({ method.signature, method.method });
 		}
+		for (size_t i = 0 ; ; i++)
+		{
+			FullName2Signature& nameSig = g_fullName2SignatureStub[i];
+			if (!nameSig.fullName)
+			{
+				break;
+			}
+			g_fullName2signature.insert({ nameSig.fullName, nameSig.signature });
+		}
 	}
 
 	void InterpreterModule::NotSupportNative2Managed()
@@ -94,11 +104,17 @@ namespace interpreter
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportAdjustorThunk"));
 	}
 
+	const char* InterpreterModule::GetValueTypeSignature(const char* fullName)
+	{
+		auto it = g_fullName2signature.find(fullName);
+		return it != g_fullName2signature.end() ? it->second : "$";
+	}
+
 	static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
 	{
 		char sigName[1000];
 		ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
-		TEMP_FORMAT(errMsg, "Invoke method missing. ABI:%s sinature:%s %s.%s::%s", HYBRIDCLR_ABI_NAME, sigName, method->klass->namespaze, method->klass->name, method->name);
+		TEMP_FORMAT(errMsg, "Invoke method missing. sinature:%s %s.%s::%s", sigName, method->klass->namespaze, method->klass->name, method->name);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
 	}
@@ -204,7 +220,7 @@ namespace interpreter
 			char sigName[1000];
 			ComputeSignature(method, true, sigName, sizeof(sigName) - 1);
 
-			TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. ABI:%s sinature:%s not support.", HYBRIDCLR_ABI_NAME, sigName);
+			TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
 			RaiseMethodNotSupportException(method, errMsg);
 		}
 		void* thisPtr;
