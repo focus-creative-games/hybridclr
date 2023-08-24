@@ -185,34 +185,7 @@ namespace interpreter
 	{
 		if (hybridclr::metadata::IsInterpreterImplement(method))
 		{
-			IL2CPP_ASSERT(method->parameters_count <= 32);
-			StackObject newArgs[32];
-			int32_t argBaseOffset;
-			if (hybridclr::metadata::IsInstanceMethod(method))
-			{
-				newArgs[0] = localVarBase[argVarIndexs[0]];
-				argBaseOffset = 1;
-			}
-			else
-			{
-				argBaseOffset = 0;
-			}
-			InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : GetInterpMethodInfo(method);
-			MethodArgDesc* argDescs = imi->args;
-			for (uint8_t i = 0; i < method->parameters_count; i++)
-			{
-				int32_t argOffset = argBaseOffset + i;
-				StackObject* argValue = localVarBase + argVarIndexs[argOffset];
-				if (argDescs[argOffset].passByValWhenCall)
-				{
-					newArgs[argOffset] = *argValue;
-				}
-				else
-				{
-					newArgs[argOffset].ptr = argValue;
-				}
-			}
-			Interpreter::Execute(method, newArgs, ret);
+			Interpreter::Execute(method,  localVarBase + argVarIndexs[0], ret);
 			return;
 		}
 		if (method->invoker_method == nullptr)
@@ -312,15 +285,15 @@ namespace interpreter
 	
 	static void InterpterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
 	{
+		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
-		StackObject args[256];
+		StackObject args[1024];// = (StackObject*)alloca(imi->argStackObjectSize);
 		if (isInstanceMethod)
 		{
 			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
 			args[0].ptr = __this;
 		}
 		
-		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
 		MethodArgDesc* argDescs = imi->args + isInstanceMethod;
 		ConvertInvokeArgs(args + isInstanceMethod, method, argDescs, __args);
 		Interpreter::Execute(method, args, __ret);

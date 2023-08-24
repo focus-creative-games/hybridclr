@@ -3364,19 +3364,17 @@ ir->ele = ele.locOffset;
 		IL2CPP_ASSERT(tranOffset == totalSize);
 
 		MethodArgDesc* argDescs;
-		bool isSimpleArgs = true;
 		if (actualParamCount > 0)
 		{
 			argDescs = (MethodArgDesc*)IL2CPP_CALLOC(actualParamCount, sizeof(MethodArgDesc));
 			for (int32_t i = 0; i < actualParamCount; i++)
 			{
-				TypeDesc typeDesc = GetTypeArgDesc(args[i].type);
+				const Il2CppType* argType = args[i].type;
+				TypeDesc typeDesc = GetTypeArgDesc(argType);
 				MethodArgDesc& argDesc = argDescs[i];
 				argDesc.type = typeDesc.type;
 				argDesc.stackObjectSize = typeDesc.stackObjectSize;
-				argDesc.passByValWhenCall = IsSimpleStackObjectCopyArg(argDescs[i].type);
-				argDesc.passbyValWhenInvoke = IsPassByValWhenInvoke(args[i].type, argDesc.passByValWhenCall);
-				isSimpleArgs = isSimpleArgs && argDesc.passByValWhenCall;
+				argDesc.passbyValWhenInvoke = argType->byref || !IsValueType(argType);
 			}
 		}
 		else
@@ -3394,7 +3392,6 @@ ir->ele = ele.locOffset;
 		result.localVarBaseOffset = totalArgSize;
 		result.localStackSize = totalArgLocalSize;
 		result.maxStackSize = maxStackSize;
-		result.isTrivialCopyArgs = isSimpleArgs;
 		result.initLocals = initLocals;
 	}
 }

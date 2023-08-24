@@ -91,19 +91,6 @@ namespace interpreter
 		}
 	}
 
-	bool IsPassByValWhenInvoke(const Il2CppType* type, bool passByValWhenCall)
-	{
-		if (type->byref)
-		{
-			return false;
-		}
-		if (hybridclr::metadata::IsValueType(type))
-		{
-			return passByValWhenCall;
-		}
-		return false;
-	}
-
 	Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value)
 	{
 		if (type->byref)

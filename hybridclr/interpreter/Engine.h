@@ -386,14 +386,6 @@ namespace interpreter
 			{
 				IL2CPP_ASSERT(imi->argCount == metadata::GetActualArgumentNum(imi->method));
 				CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
-				// if (imi->isTrivialCopyArgs)
-				// {
-				// 	CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
-				// }
-				// else
-				// {
-				// 	CopyArgs(stackBasePtr, argBase, imi->args, imi->argCount);
-				// }
 			}
 			PUSH_STACK_FRAME(imi->method);
 			return newFrame;

@@ -99,7 +99,6 @@ namespace hybridclr
 		{
 			LocationDataType type;
 			uint32_t stackObjectSize;
-			bool passByValWhenCall;
 			bool passbyValWhenInvoke;
 		};
 
@@ -117,7 +116,6 @@ namespace hybridclr
 			uint32_t localStackSize; // args + locals StackObject size
 			std::vector<uint64_t> resolveDatas;
 			std::vector<InterpExceptionClause*> exClauses;
-			bool isTrivialCopyArgs;
 			bool initLocals;
 		};
 	}

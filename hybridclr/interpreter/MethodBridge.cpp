@@ -52,16 +52,20 @@ namespace interpreter
 
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args)
 	{
+		int32_t dstIdx = 0;
 		for (uint8_t i = 0; i < method->parameters_count; i++)
 		{
-			StackObject* dst = resultArgs + i;
-			if (argDescs[i].passbyValWhenInvoke)
+			StackObject* dst = resultArgs + dstIdx;
+			MethodArgDesc& argDesc = argDescs[i];
+			if (argDesc.passbyValWhenInvoke)
 			{
-				dst->i64 = *(int64_t*)args[i];
+				dst->ptr = args[i];
+				++dstIdx;
 			}
 			else
 			{
-				dst->ptr = args[i];
+				CopyStackObject(dst, args[i], argDesc.stackObjectSize);
+				dstIdx += argDesc.stackObjectSize;
 			}
 		}
 	}
