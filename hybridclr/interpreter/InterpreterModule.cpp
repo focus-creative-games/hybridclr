@@ -368,7 +368,7 @@ namespace interpreter
 		}
 	}
 	#else
-	static void* InterpterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args)
+	static void* InterpreterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args)
 	{
 		StackObject args[256];
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
