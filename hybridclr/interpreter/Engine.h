@@ -385,14 +385,15 @@ namespace interpreter
 			if (imi->args)
 			{
 				IL2CPP_ASSERT(imi->argCount == metadata::GetActualArgumentNum(imi->method));
-				if (imi->isTrivialCopyArgs)
-				{
-					CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
-				}
-				else
-				{
-					CopyArgs(stackBasePtr, argBase, imi->args, imi->argCount);
-				}
+				CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
+				// if (imi->isTrivialCopyArgs)
+				// {
+				// 	CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
+				// }
+				// else
+				// {
+				// 	CopyArgs(stackBasePtr, argBase, imi->args, imi->argCount);
+				// }
 			}
 			PUSH_STACK_FRAME(imi->method);
 			return newFrame;
