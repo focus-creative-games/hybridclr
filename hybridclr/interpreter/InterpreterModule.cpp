@@ -283,11 +283,11 @@ namespace interpreter
 
 	#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
 	
-	static void InterpterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
+	static void InterpreterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args, void* __ret)
 	{
 		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
-		StackObject args[1024];// = (StackObject*)alloca(imi->argStackObjectSize);
+		StackObject* args = (StackObject*)alloca(sizeof(StackObject) * imi->argStackObjectSize);
 		if (isInstanceMethod)
 		{
 			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
@@ -470,18 +470,18 @@ namespace interpreter
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
 		const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex);
 		// special for Delegate::DynamicInvoke
-		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(methodName, "Invoke") ? InterpterInvoke : InterpreterDelegateInvoke;
+		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(methodName, "Invoke") ? InterpreterInvoke : InterpreterDelegateInvoke;
 	}
 
 	InvokerMethod InterpreterModule::GetMethodInvoker(const MethodInfo* method)
 	{
 		Il2CppClass* klass = method->klass;
-		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(method->name, "Invoke") ? InterpterInvoke : InterpreterDelegateInvoke;
+		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(method->name, "Invoke") ? InterpreterInvoke : InterpreterDelegateInvoke;
 	}
 
 	bool InterpreterModule::IsImplementsByInterpreter(const MethodInfo* method)
 	{
-		return method->invoker_method == InterpreterDelegateInvoke || method->invoker_method == InterpterInvoke;
+		return method->invoker_method == InterpreterDelegateInvoke || method->invoker_method == InterpreterInvoke;
 	}
 
 	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(const MethodInfo* methodInfo)
