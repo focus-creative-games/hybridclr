@@ -41,7 +41,6 @@ namespace interpreter
 	extern NativeAdjustThunkMethodInfo g_adjustThunkStub[];
 	extern FullName2Signature g_fullName2SignatureStub[];
 	
-	void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount);
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args);
 
 	bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize);

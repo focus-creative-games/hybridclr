@@ -9,46 +9,11 @@
 #include "Interpreter.h"
 #include "InterpreterModule.h"
 #include "MemoryUtil.h"
-#include "InterpreterUtil.h"
 
 namespace hybridclr
 {
 namespace interpreter
 {
-	
-	void CopyArgs(StackObject* dstBase, StackObject* argBase, MethodArgDesc* args, uint32_t paramCount)
-	{
-		uint32_t dstOffset = 0;
-		for (uint32_t i = 0, n = paramCount; i < n; i++)
-		{
-			MethodArgDesc& arg = args[i];
-			StackObject* dst = dstBase + dstOffset;
-			StackObject* src = argBase + i;
-			switch (arg.type)
-			{
-			case LocationDataType::I1:
-			case LocationDataType::U1:
-			case LocationDataType::I2:
-			case LocationDataType::U2:
-			case LocationDataType::U8:
-			{
-				dst->i64 = *(int64_t*)src;
-				++dstOffset;
-				break;
-			}
-			case LocationDataType::S_N:
-			{
-				CopyStackObject(dst, src->ptr, arg.stackObjectSize);
-				dstOffset += arg.stackObjectSize;
-				break;
-			}
-			default:
-			{
-				RaiseExecutionEngineException("CopyArgs not support data type");
-			}
-			}
-		}
-	}
 
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args)
 	{
@@ -86,7 +51,7 @@ namespace interpreter
 
 	inline void AppendSignatureObjOrRefOrPointer(char* sigBuf, size_t bufSize, size_t& pos)
 	{
-		AppendString(sigBuf, bufSize, pos, "i");
+		AppendString(sigBuf, bufSize, pos, "u");
 	}
 
 	inline void AppendSignatureInterpreterValueType(char* sigBuf, size_t bufSize, size_t& pos)
@@ -176,6 +141,7 @@ namespace interpreter
 		case IL2CPP_TYPE_R8: AppendString(sigBuf, bufferSize, pos, "r8"); break;
 		case IL2CPP_TYPE_I8: AppendString(sigBuf, bufferSize, pos, "i8"); break;
 		case IL2CPP_TYPE_U8: AppendString(sigBuf, bufferSize, pos, "u8"); break;
+		case IL2CPP_TYPE_I: AppendString(sigBuf, bufferSize, pos, "i"); break;
 		case IL2CPP_TYPE_U: AppendString(sigBuf, bufferSize, pos, "u"); break;
 		case IL2CPP_TYPE_TYPEDBYREF:
 		{
