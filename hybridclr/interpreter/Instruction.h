@@ -353,9 +353,6 @@ namespace interpreter
 		CallCommonNativeInstance_i8_0,
 		CallCommonNativeInstance_f4_0,
 		CallCommonNativeInstance_f8_0,
-		CallCommonNativeInstance_v2f_0,
-		CallCommonNativeInstance_v3f_0,
-		CallCommonNativeInstance_v4f_0,
 		CallCommonNativeInstance_v_i4_1,
 		CallCommonNativeInstance_v_i4_2,
 		CallCommonNativeInstance_v_i4_3,
@@ -461,9 +458,6 @@ namespace interpreter
 		CallCommonNativeStatic_i8_0,
 		CallCommonNativeStatic_f4_0,
 		CallCommonNativeStatic_f8_0,
-		CallCommonNativeStatic_v2f_0,
-		CallCommonNativeStatic_v3f_0,
-		CallCommonNativeStatic_v4f_0,
 		CallCommonNativeStatic_v_i4_1,
 		CallCommonNativeStatic_v_i4_2,
 		CallCommonNativeStatic_v_i4_3,
@@ -4098,48 +4092,6 @@ namespace interpreter
 	};
 
 
-	struct IRCallCommonNativeInstance_v2f_0 : IRCommon
-	{
-		uint16_t self;
-		uint16_t ret;
-		uint8_t __pad6;
-		uint8_t __pad7;
-		uint32_t method;
-		uint8_t __pad12;
-		uint8_t __pad13;
-		uint8_t __pad14;
-		uint8_t __pad15;
-	};
-
-
-	struct IRCallCommonNativeInstance_v3f_0 : IRCommon
-	{
-		uint16_t self;
-		uint16_t ret;
-		uint8_t __pad6;
-		uint8_t __pad7;
-		uint32_t method;
-		uint8_t __pad12;
-		uint8_t __pad13;
-		uint8_t __pad14;
-		uint8_t __pad15;
-	};
-
-
-	struct IRCallCommonNativeInstance_v4f_0 : IRCommon
-	{
-		uint16_t self;
-		uint16_t ret;
-		uint8_t __pad6;
-		uint8_t __pad7;
-		uint32_t method;
-		uint8_t __pad12;
-		uint8_t __pad13;
-		uint8_t __pad14;
-		uint8_t __pad15;
-	};
-
-
 	struct IRCallCommonNativeInstance_v_i4_1 : IRCommon
 	{
 		uint16_t self;
@@ -5478,27 +5430,6 @@ namespace interpreter
 
 
 	struct IRCallCommonNativeStatic_f8_0 : IRCommon
-	{
-		uint16_t ret;
-		uint32_t method;
-	};
-
-
-	struct IRCallCommonNativeStatic_v2f_0 : IRCommon
-	{
-		uint16_t ret;
-		uint32_t method;
-	};
-
-
-	struct IRCallCommonNativeStatic_v3f_0 : IRCommon
-	{
-		uint16_t ret;
-		uint32_t method;
-	};
-
-
-	struct IRCallCommonNativeStatic_v4f_0 : IRCommon
 	{
 		uint16_t ret;
 		uint32_t method;
