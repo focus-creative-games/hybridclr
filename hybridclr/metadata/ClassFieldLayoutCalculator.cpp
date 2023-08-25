@@ -304,6 +304,7 @@ namespace metadata
                 else
                 {
                     const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
+                    parentType = TryInflateIfNeed(parentType, gc, true);
                     CalcClassNotStaticFields(parentType);
                     ClassLayoutInfo* parentLayout = GetClassLayoutInfo(parentType);
                     parentActualSize = parentLayout->actualSize;
