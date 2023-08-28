@@ -8,6 +8,7 @@
 #include "vm/Runtime.h"
 #include "vm/GlobalMetadataFileInternals.h"
 #include "icalls/mscorlib/System/Type.h"
+#include "gc/GarbageCollector.h"
 
 #if HYBRIDCLR_UNITY_2020
 #include "icalls/mscorlib/System/MonoType.h"
