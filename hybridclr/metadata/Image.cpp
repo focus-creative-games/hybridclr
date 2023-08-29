@@ -1023,6 +1023,10 @@ namespace metadata
         {
             const Il2CppFieldDefinition* fieldDef = nullptr;
             ResolveFieldThrow(&rmr.parent.type, rmr.name, &rmr.signature.field.type, fieldDef);
+            if (!fieldDef)
+            {
+                RaiseMissingFieldException(&rmr.parent.type, rmr.name);
+            }
             const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(rmr.parent.type, fieldDef);
             return fieldInfo;
         }
@@ -1097,6 +1101,11 @@ namespace metadata
 
         FieldRefInfo fri;
         ReadFieldRefInfoFromToken(klassGenericContainer, methodGenericContainer, DecodeTokenTableType(token), DecodeTokenRowIndex(token), fri);
+        if (!fri.field)
+        {
+            TEMP_FORMAT(errMsg, "token:%d", token);
+            RaiseMissingFieldException(&fri.containerType, errMsg);
+        }
         const Il2CppType* resultType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(&fri.containerType, genericContext, true) : &fri.containerType;
         const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(*resultType, fri.field);
         il2cpp::vm::Class::Init(fieldInfo->parent);
