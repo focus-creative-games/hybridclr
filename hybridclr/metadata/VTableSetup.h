@@ -66,11 +66,11 @@ namespace metadata
 		void ComputAotTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
 		void InitInterfaceVTable(uint16_t& curOffset, std::vector<uint16_t>& implInterfaceOffsetIdxs);
 		void ComputeExplicitImpls(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots);
-		void ApplyTypeExplicitImpls(const Il2CppType* type, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots);
+		void ApplyTypeExplicitImpls(const Il2CppType* type, const VTableSetUp* tree, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots);
 		void ComputeOverrideParentVirtualMethod(uint16_t& curOffset, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots);
 		void ComputeInterfaceOverrideByParentVirtualMethod(const std::vector<uint16_t>& implInterfaceOffsetIdxs);
 		void ComputeInterpTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache);
-		void ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache) const;
+		void ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache);
 
 		bool isExplicitImplInterfaceSlot(uint16_t slot) const { return _explicitImplSlots.find(slot) != _explicitImplSlots.end(); }
 		uint16_t FindDefaultOverrideExplicitInterfaceSlot(GenericClassMethod& gcm, const std::unordered_set<uint16_t>& explicitImplSlots, const std::vector<uint16_t>& implInterfaceOffsetIdxs);
@@ -78,6 +78,8 @@ namespace metadata
 		void ApplyOverrideMethod(const GenericClassMethod* beOverrideParentMethod, const Il2CppMethodDefinition* overrideMethodDef, uint16_t checkOverrideMaxIdx);
 		void ApplyExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots, const Il2CppType* declaringType,
 			const Il2CppMethodDefinition* decalringMethod, const Il2CppType* implType, const Il2CppMethodDefinition* implMethod);
+		void ApplyAOTInterfaceExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots, const Il2CppType* intfType,
+			const Il2CppType* implType, const Il2CppMethodDefinition* implMethod);
 		
 		VTableSetUp* _parent;
 		std::vector<VTableSetUp*> _interfaces;

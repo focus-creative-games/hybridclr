@@ -205,6 +205,11 @@ namespace metadata
         return flags & METHOD_ATTRIBUTE_VIRTUAL;
     }
 
+    inline bool IsAbstractMethod(uint32_t flags)
+    {
+        return flags & METHOD_ATTRIBUTE_ABSTRACT;
+    }
+
     inline bool IsNewSlot(uint32_t flags)
     {
         return flags & METHOD_ATTRIBUTE_NEW_SLOT;
