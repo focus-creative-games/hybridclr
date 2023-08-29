@@ -108,10 +108,7 @@ namespace metadata
 		}
 		if (hybridclr::metadata::IsInterface(typeDef->flags))
 		{
-			if (tdt->IsInterType())
-			{
-				tdt->ComputeInterfaceVtables(cache);
-			}
+			tdt->ComputeInterfaceVtables(cache);
 		}
 		else
 		{
@@ -175,15 +172,19 @@ namespace metadata
 		return false;
 	}
 
-	void VTableSetUp::ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache) const
+	void VTableSetUp::ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
 		IL2CPP_ASSERT(hybridclr::metadata::IsInterface(_typeDef->flags));
-		uint16_t slotIdx = 0;
-		for (auto& vm : _virtualMethods)
+
+		if (IsInterType())
 		{
-			Il2CppMethodDefinition* methodDef = const_cast<Il2CppMethodDefinition*>(vm.method);
-			IL2CPP_ASSERT(methodDef->slot == slotIdx);
-			slotIdx++;
+			uint16_t slotIdx = 0;
+			for (auto& vm : _virtualMethods)
+			{
+				Il2CppMethodDefinition* methodDef = const_cast<Il2CppMethodDefinition*>(vm.method);
+				IL2CPP_ASSERT(methodDef->slot == slotIdx);
+				slotIdx++;
+			}
 		}
 	}
 
@@ -443,6 +444,80 @@ namespace metadata
 		}
 	}
 
+	static bool IsExpliciteMethodNameMatch(const char* implMethodName, const Il2CppType* targetDeclaringType, const char* targetMethodName)
+	{
+		// end with .<methodName>
+		std::string fullName;
+		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(targetDeclaringType);
+		if (typeDef->namespaceIndex != kStringLiteralIndexInvalid)
+		{
+			fullName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->namespaceIndex);
+			fullName += ".";
+		}
+		const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
+		const char* genericQualifier = strchr(typeName, '`');
+		if (genericQualifier)
+		{
+			fullName.append(typeName, genericQualifier);
+		}
+		else
+		{
+			fullName += typeName;
+		}
+
+		if (!std::strstr(implMethodName, fullName.c_str()))
+		{
+			return false;
+		}
+		
+		size_t len1 = std::strlen(implMethodName);
+		size_t len2 = std::strlen(targetMethodName);
+		if (len1 < len2 + 1)
+		{
+			return false;
+		}
+		if (implMethodName[len1 - len2 - 1] != '.')
+		{
+			return false;
+		}
+		return strcmp(implMethodName + len1 - len2, targetMethodName) == 0;
+	}
+
+	void VTableSetUp::ApplyAOTInterfaceExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots,
+		const Il2CppType* intfType, const Il2CppType* implType, const Il2CppMethodDefinition* implMethod)
+	{
+		const char* name1 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
+		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
+		{
+			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
+			if (!il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(rioi.type, intfType))
+			{
+				continue;
+			}
+
+			for (uint16_t idx = 0, end = (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
+			{
+				GenericClassMethod& rvm = rioi.tree->_virtualMethods[idx];
+				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
+				if (!IsExpliciteMethodNameMatch(name1, intfType, name2))
+				{
+					continue;
+				}
+				if (IsOverrideMethodIgnoreName(implType, implMethod, rvm.type, rvm.method))
+				{
+					uint16_t slot = (uint16_t)(idx + rioi.offset);
+					VirtualMethodImpl& ivmi = _methodImpls[slot];
+					_explicitImplSlots.insert(slot);
+					explicitImplToken2Slots.insert({ implMethod->token, slot });
+					ivmi.type = implType;
+					ivmi.method = implMethod;
+					ivmi.name = name1;
+					return;
+				}
+			}
+		}
+	}
+
 	void VTableSetUp::ApplyExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots,
 		const Il2CppType* declaringType, const Il2CppMethodDefinition* decalringMethod, const Il2CppType* implType, const Il2CppMethodDefinition* implMethod)
 	{
@@ -508,7 +583,7 @@ namespace metadata
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
-	void VTableSetUp::ApplyTypeExplicitImpls(const Il2CppType* type, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots)
+	void VTableSetUp::ApplyTypeExplicitImpls(const Il2CppType* type, const VTableSetUp* tree, const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots)
 	{
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
 		if (IsInterpreterType(typeDef))
@@ -528,26 +603,41 @@ namespace metadata
 				for (const MethodImpl& mi : explicitImpls)
 				{
 					const Il2CppType* containerType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(&mi.declaration.containerType, &genericClass->context, true);
-					const Il2CppType* implType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(&mi.body.containerType, &genericClass->context, true);
+					const Il2CppType* implType = TryInflateIfNeed(type, type->data.generic_class->type, &mi.body.containerType);
 					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, containerType,
 						mi.declaration.methodDef, implType, mi.body.methodDef);
 				}
 			}
 		}
-		else
+		else if (IsInterface(typeDef->flags))
 		{
-			// FIXME: AOT class
+			// we only need process explicit impls in interface.
+			// il2cpp doesn't provider any ways to get explicit impls in class.
+			// so we can only try to find explicit impls by name matching.
+			for (const GenericClassMethod& gcm : tree->_virtualMethods)
+			{
+				// only try to find explicit impls in private methods
+				uint32_t flags = gcm.method->flags;
+				if (!IsPrivateMethod(flags) || IsAbstractMethod(flags))
+				{
+					continue;
+				}
+				for (VTableSetUp* subIntf : tree->_interfaces)
+				{
+					ApplyAOTInterfaceExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, subIntf->_type,	tree->_type, gcm.method);
+				}
+			}
 		}
 	}
 
 	void VTableSetUp::ComputeExplicitImpls(const std::vector<uint16_t>& implInterfaceOffsetIdxs, std::unordered_map<int32_t, uint16_t>& explicitImplToken2Slots)
 	{
-		ApplyTypeExplicitImpls(_type, implInterfaceOffsetIdxs, explicitImplToken2Slots);
+		ApplyTypeExplicitImpls(_type, this, implInterfaceOffsetIdxs, explicitImplToken2Slots);
 		
 		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 		{
 			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
-			ApplyTypeExplicitImpls(rioi.type, implInterfaceOffsetIdxs, explicitImplToken2Slots);
+			ApplyTypeExplicitImpls(rioi.type, rioi.tree, implInterfaceOffsetIdxs, explicitImplToken2Slots);
 		}
 	}
 
