@@ -8568,7 +8568,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					*(void**)(void*)(localVarBase + __dst) = (*(void**)(localVarBase + __src));
+					*(void**)(void*)(localVarBase + __dst) = (*(void**)*(void**)(localVarBase + __src));
 				    ip += 8;
 				    continue;
 				}
