@@ -1885,7 +1885,7 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(Il2CppObject**)*(void**)(localVarBase + __dst)) = (*(Il2CppObject**)(localVarBase + __src));	HYBRIDCLR_SET_WRITE_BARRIER((void**)(localVarBase + __dst));
+					(*(Il2CppObject**)*(void**)(localVarBase + __dst)) = (*(Il2CppObject**)(localVarBase + __src));	HYBRIDCLR_SET_WRITE_BARRIER((void**)(*(void**)(localVarBase + __dst)));
 				    ip += 8;
 				    continue;
 				}
