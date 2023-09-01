@@ -2218,7 +2218,7 @@ else \
 				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
 					uint32_t size = GetTypeValueSize(objKlass);
-					if (!HYBRIDCLR_ENABLE_WRITE_BARRIERS || objKlass->has_references)
+					if (!HYBRIDCLR_ENABLE_WRITE_BARRIERS || !objKlass->has_references)
 					{
 						switch (size)
 						{
