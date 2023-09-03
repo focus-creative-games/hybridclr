@@ -11,8 +11,6 @@
 <br/>
 <br/>
 
-HybridCLR is the excellent work of **Code Philosophy** company. We hope to profoundly change the entire industry through our ingenuity and help game teams make better games.
-
 HybridCLR is a **almost perfect** full-platform native c# hot update solution for Unity with complete features, zero cost, high performance, and low memory**.
 
 HybridCLR expands the ability of il2cpp, making it change from pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to 'AOT+Interpreter' hybrid runtime, and then natively supports dynamic loading of assembly , so that the games packaged based on il2cpp backend can be executed not only on the Android platform, but also on IOS, Consoles and other platforms that limit JIT efficiently in **AOT+interpreter** hybrid mode, completely supporting hot updates from the bottom layer.
@@ -23,8 +21,8 @@ Welcome to embrace modern native C# hot update technology! ! !
 
 ## Documentation
 
-- [Official Documentation](https://hybridclr.doc.code-philosophy.com/en/en/docs/intro)
-- [Quick Start](https://hybridclr.doc.code-philosophy.com/en/en/docs/beginner/quickstart)
+- [Official Documentation](https://hybridclr.doc.code-philosophy.com/en/docs/intro)
+- [Quick Start](https://hybridclr.doc.code-philosophy.com/en/docs/beginner/quickstart)
 
 ## Features
 
@@ -60,7 +58,7 @@ Other hot update solutions are independent vm, and the relationship with il2cpp 
 
 ## Compatibility
 
-- Support 2019.4.x, 2020.3.x, 2021.3.x, 2022.3.x, 2023.2.x series LTS versions
+- Support 2019.4.x, 2020.3.x, 2021.3.x, 2022.3.x, 2023.2.x versions
 - Supports all platforms supported by il2cpp. At present, it has fully supported PC (Win32 and Win64), macOS (x86, x64, Arm64), Android (armv7, armv8), iOS (64bit), WebGL, **WeChat applet platform**, and the remaining platforms are yet to be tested.
 - Tested a large number of common game libraries, and did not find a library that is natively compatible with il2cpp but incompatible after using HybridCLR. As long as the library can work under the il2cpp backend, it can work normally under HybridCLR. Even those libraries that are incompatible with il2cpp due to AOT issues can now run normally because of HybridCLR's ability to expand il2cpp.
 
