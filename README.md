@@ -34,7 +34,7 @@ Welcome to embrace modern native C# hot update technology! ! !
 - Support some features not supported by il2cpp, such as __makeref, __reftype, __refvalue directives
 - [Differential Hybrid Execution](https://hybridclr.doc.code-philosophy.com/en/docs/basic/differentialhybridexecution)
 
-## working principle
+## Working Principle
 
 HybridCLR is inspired by mono's [mixed mode execution](https://www.mono-project.com/news/2017/11/13/mono-interpreter/) technology, and provides additional AOT runtimes such as unity's il2cpp The interpreter module is provided to transform them from pure AOT runtime to "AOT + Interpreter" hybrid operation mode.
 
@@ -48,7 +48,7 @@ More specifically, HybridCLR does the following:
 - Implemented an efficient register interpreter
 - Provide a large number of instinct functions to improve the performance of the interpreter
 
-## The difference from other popular c# hot update schemes
+## The Difference From Other C# Hot-Update Solution
 
 HybridCLR is a native c# hot update solution. In layman's terms, il2cpp is equivalent to the aot module of mono, and HybridCLR is equivalent to the interpreter module of mono, and the combination of the two becomes a complete mono. HybridCLR makes il2cpp a full-featured runtime, natively (that is, through System.Reflection.Assembly.Load) supports dynamic loading of dlls, thereby supporting hot updates of the ios platform.
 
@@ -56,21 +56,21 @@ Just because HybridCLR is implemented at the native runtime level, the types of 
 
 Other hot update solutions are independent vm, and the relationship with il2cpp is essentially equivalent to the relationship of embedding lua in mono. Therefore, the type system is not uniform. In order to allow the hot update type to inherit some AOT types, an adapter needs to be written, and the type in the interpreter cannot be recognized by the type system of the main project. Incomplete features, troublesome development, and low operating efficiency.
 
-## Compatibility
+## Supported Versions And Platforms
 
-- Support 2019.4.x, 2020.3.x, 2021.3.x, 2022.3.x, 2023.2.x versions
-- Supports all platforms supported by il2cpp. At present, it has fully supported PC (Win32 and Win64), macOS (x86, x64, Arm64), Android (armv7, armv8), iOS (64bit), WebGL, **WeChat applet platform**, and the remaining platforms are yet to be tested.
-- Tested a large number of common game libraries, and did not find a library that is natively compatible with il2cpp but incompatible after using HybridCLR. As long as the library can work under the il2cpp backend, it can work normally under HybridCLR. Even those libraries that are incompatible with il2cpp due to AOT issues can now run normally because of HybridCLR's ability to expand il2cpp.
+- Support 2019.4.x, 2020.3.x, 2021.3.x, 2022.3.x full series of LTS versions. The `2023.2.0ax` version is also supported, but not released to the public.
+- Supports all il2cpp supported platforms
 
 ## Stability Status
 
-At present, **extremely stable** official versions 1.x, 2.x, and 3.x have been released, which are sufficient to meet the stability requirements of large and medium-sized commercial projects. Since the first game was launched on June 7, 2022, only one small bug occurred in the online project, and it was quickly fixed within a few hours.
+HybridCLR has been widely verified as a very efficient and stable solution for hot update of Unity.
 
-At present, at least thousands of commercial game projects have completed access, and hundreds of them have been launched on both ends. The online projects include games such as MMORPG, heavy card, and heavy tower defense.
+The official versions of **extremely stable** 1.x, 2.x, and 3.x are currently released, which are sufficient to meet the stability requirements of large and medium-sized commercial projects.
+At present, at least thousands of commercial game projects have been integrated, and hundreds of them have been launched on both ends. The online projects include MMORPG, heavy card, heavy tower defense and other games. **Most top game companies** (such as Tencent and NetEase) are already using HybridCLR.
 
-Most leading companies such as Tencent, NetEase, Baidu, funplus, Perfect, Stacked Paper, and Byte have already connected to multiple projects and will soon (or already) go online.
+You can read the [game projects in top game companies](https://hybridclr.doc.code-philosophy.com/en/docs/other/businesscase) those are using HybridCLR and has been launched.
 
-## Support and Contact
+## Support And Contact
 
 - Official 1 group: 651188171 (full)
 - Novice QQ group 1: 428404198 (full)
@@ -79,12 +79,12 @@ Most leading companies such as Tencent, NetEase, Baidu, funplus, Perfect, Stacke
 - Business cooperation email: business#code-philosophy.com
 - [Commercial Support](https://hybridclr.doc.code-philosophy.com/en/docs/business/intro)
 
-## About the author
+## About The Author
 
 **walon** : Founder of **Code Philosophy (code philosophy)**
 
 Graduated from the Department of Physics of Tsinghua University, won the CMO gold medal in 2006, a member of the National Mathematical Olympiad Training Team, and was recommended to Tsinghua University for basic courses. Focus on game technology, good at developing architecture and basic technical facilities.
 
-## license
+## License
 
 HybridCLR is licensed under the [MIT](https://github.com/focus-creative-games/hybridclr/blob/main/LICENSE) license
