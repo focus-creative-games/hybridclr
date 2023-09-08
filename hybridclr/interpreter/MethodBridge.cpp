@@ -151,16 +151,16 @@ namespace interpreter
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
-			if (hybridclr::metadata::IsInterpreterType((Il2CppTypeDefinition*)type->data.typeHandle))
-			{
-				AppendSignatureInterpreterValueType(sigBuf, bufferSize, pos);
-				break;
-			}
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 			if (klass->enumtype)
 			{
 				AppendSignature(&klass->castClass->byval_arg, sigBuf, bufferSize, pos);
+				break;
+			}
+			if (hybridclr::metadata::IsInterpreterType((Il2CppTypeDefinition*)type->data.typeHandle))
+			{
+				AppendSignatureInterpreterValueType(sigBuf, bufferSize, pos);
 				break;
 			}
 			char tempFullName[1024];
@@ -178,18 +178,18 @@ namespace interpreter
 				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 				break;
 			}
-			IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
-			if (hybridclr::metadata::IsInterpreterType((Il2CppTypeDefinition*)underlyingGenericType->data.typeHandle))
-			{
-				AppendSignatureInterpreterValueType(sigBuf, bufferSize, pos);
-				break;
-			}
 
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
 			if (klass->enumtype)
 			{
 				AppendSignature(&klass->castClass->byval_arg, sigBuf, bufferSize, pos);
+				break;
+			}
+			IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
+			if (hybridclr::metadata::IsInterpreterType(klass))
+			{
+				AppendSignatureInterpreterValueType(sigBuf, bufferSize, pos);
 				break;
 			}
 			
