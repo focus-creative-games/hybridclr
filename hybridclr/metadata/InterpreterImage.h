@@ -524,7 +524,7 @@ namespace metadata
 			{
 				InitCustomAttributeData(cai, *dataRange);
 			}
-			return {cai.dataStartPtr, cai.dataEndPtr};
+			return std::tuple<void*, void*>(cai.dataStartPtr, cai.dataEndPtr);
 		}
 
 		std::tuple<void*, void*> CreateCustomAttributeDataTupleByToken(uint32_t token)
