@@ -1,5 +1,6 @@
 #include "CommonDef.h"
 
+#include "codegen/il2cpp-codegen.h"
 #include "metadata/MetadataModule.h"
 #include "Config.h"
 

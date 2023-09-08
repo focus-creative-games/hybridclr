@@ -1,6 +1,7 @@
 #pragma once
 
 #include "il2cpp-config.h"
+#include "codegen/il2cpp-codegen-metadata.h"
 #include "il2cpp-class-internals.h"
 
 #include "vm/Array.h"

@@ -1,5 +1,6 @@
 #include "Image.h"
 
+#include "vm/ClassInlines.h"
 #include "vm/Image.h"
 #include "vm/GlobalMetadata.h"
 #include "vm/Type.h"
