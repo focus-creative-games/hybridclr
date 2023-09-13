@@ -10,7 +10,7 @@ namespace hybridclr
 {
 	namespace transform
 	{
-		const size_t kMinBlockSize = 1024 * 1024;
+		const size_t kMinBlockSize = 8 * 1024;
 
 		class TemporaryMemoryArena
 		{
