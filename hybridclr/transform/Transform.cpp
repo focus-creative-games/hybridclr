@@ -3363,6 +3363,11 @@ ir->ele = ele.locOffset;
 		}
 		IL2CPP_ASSERT(tranOffset == totalSize);
 
+		for (FlowInfo* fi : pendingFlows)
+		{
+			fi->~FlowInfo();
+		}
+
 		MethodArgDesc* argDescs;
 		if (actualParamCount > 0)
 		{
