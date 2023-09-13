@@ -799,6 +799,7 @@ namespace interpreter
 		SetArrayElementVarVar_size_12_4,
 		SetArrayElementVarVar_size_16_4,
 		SetArrayElementVarVar_n_4,
+		SetArrayElementVarVar_WriteBarrier_n_4,
 		SetArrayElementVarVar_i1_8,
 		SetArrayElementVarVar_u1_8,
 		SetArrayElementVarVar_i2_8,
@@ -811,6 +812,7 @@ namespace interpreter
 		SetArrayElementVarVar_size_12_8,
 		SetArrayElementVarVar_size_16_8,
 		SetArrayElementVarVar_n_8,
+		SetArrayElementVarVar_WriteBarrier_n_8,
 		NewMdArrVarVar_length,
 		NewMdArrVarVar_length_bound,
 		GetMdArrElementVarVar_i1,
@@ -825,6 +827,7 @@ namespace interpreter
 		GetMdArrElementVarVar_size,
 		GetMdArrElementAddressVarVar,
 		SetMdArrElementVarVar,
+		SetMdArrElementVarVar_WriteBarrier,
 		ThrowEx,
 		RethrowEx,
 		LeaveEx,
@@ -6831,7 +6834,13 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t src;
-		uint16_t size;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t size;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
 	};
 
 
@@ -6847,7 +6856,13 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t src;
-		uint16_t size;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t size;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
 	};
 
 
@@ -6954,7 +6969,13 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t src;
-		uint16_t size;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t size;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
 	};
 
 
@@ -7061,7 +7082,13 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t src;
-		uint16_t size;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t size;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
 	};
 
 
@@ -7069,7 +7096,13 @@ namespace interpreter
 	{
 		uint16_t dst;
 		uint16_t src;
-		uint16_t size;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t size;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
 	};
 
 
@@ -9139,6 +9172,14 @@ namespace interpreter
 	};
 
 
+	struct IRSetArrayElementVarVar_WriteBarrier_n_4 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t index;
+		uint16_t ele;
+	};
+
+
 	struct IRSetArrayElementVarVar_i1_8 : IRCommon
 	{
 		uint16_t arr;
@@ -9228,6 +9269,14 @@ namespace interpreter
 
 
 	struct IRSetArrayElementVarVar_n_8 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t index;
+		uint16_t ele;
+	};
+
+
+	struct IRSetArrayElementVarVar_WriteBarrier_n_8 : IRCommon
 	{
 		uint16_t arr;
 		uint16_t index;
@@ -9351,6 +9400,14 @@ namespace interpreter
 
 
 	struct IRSetMdArrElementVarVar : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t value;
+	};
+
+
+	struct IRSetMdArrElementVarVar_WriteBarrier : IRCommon
 	{
 		uint16_t arr;
 		uint16_t lengthIdxs;

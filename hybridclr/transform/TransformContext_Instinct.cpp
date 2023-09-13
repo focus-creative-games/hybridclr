@@ -767,6 +767,16 @@ namespace transform
 			else if (strcmp(methodName, "Set") == 0)
 			{
 				CreateAddIR(ir, SetMdArrElementVarVar);
+				LocationDescInfo desc = ComputLocationDescInfo(klass->byval_arg.data.array->etype);
+				switch (desc.type)
+				{
+				case LocationDescType::S:
+				case LocationDescType::StructContainsRef:
+				{
+					ir->type = HiOpcodeEnum::SetMdArrElementVarVar_WriteBarrier;
+					break;
+				}
+				}
 				ir->arr = GetEvalStackOffset(evalStackTop - paramCount);
 				ir->lengthIdxs = ir->arr + 1;
 				ir->value = GetEvalStackTopOffset();

@@ -29,6 +29,7 @@
 #include "MemoryUtil.h"
 #include "InterpreterModule.h"
 #include "InterpreterUtil.h"
+#include "gc/WriteBarrier.h"
 
 using namespace hybridclr::metadata;
 
@@ -795,6 +796,12 @@ namespace interpreter
 
 #define MAX_DIMENSION  10
 
+	inline void SetArrayElementWithSize(Il2CppArray* array, uint32_t elementSize, int32_t index, void* value)
+	{
+		void* __p = (void*) il2cpp_array_addr_with_size (array, elementSize, index);
+		memcpy(__p, value, elementSize);
+	}
+	
 	inline Il2CppArray* NewMdArray(Il2CppClass* fullArrKlass, StackObject* lengths, StackObject* lowerBounds)
 	{
 		il2cpp_array_size_t arrLengths[MAX_DIMENSION];
@@ -937,6 +944,14 @@ namespace interpreter
 	inline void SetMdArrayElement(Il2CppArray* arr, StackObject* indexs, void* value)
 	{
 		CopyBySize(GetMdArrayElementAddress(arr, indexs), value, arr->klass->element_size);
+	}
+
+	inline void SetMdArrayElementWriteBarrier(Il2CppArray* arr, StackObject* indexs, void* value)
+	{
+		void* dst = GetMdArrayElementAddress(arr, indexs);
+		uint32_t eleSize = arr->klass->element_size;
+		CopyBySize(dst, value, eleSize);
+		HYBRIDCLR_SET_WRITE_BARRIER((void**)dst, eleSize);
 	}
 
 #pragma endregion
@@ -8529,7 +8544,7 @@ else \
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
-					std::memmove((*(void**)(localVarBase + __dst)), (*(void**)(localVarBase + __src)), (*(uint16_t*)(localVarBase + __size)));
+					std::memmove((*(void**)(localVarBase + __dst)), (*(void**)(localVarBase + __src)), __size);
 				    ip += 8;
 				    continue;
 				}
@@ -8537,9 +8552,9 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
-					std::memmove((*(void**)(localVarBase + __dst)), (*(void**)(localVarBase + __src)), (*(uint32_t*)(localVarBase + __size)));
-				    ip += 8;
+					uint32_t __size = *(uint32_t*)(ip + 8);
+					std::memmove((*(void**)(localVarBase + __dst)), (*(void**)(localVarBase + __src)), __size);
+				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::CpobjVarVar_WriteBarrier_n_2:
@@ -8548,8 +8563,8 @@ else \
 					uint16_t __src = *(uint16_t*)(ip + 4);
 					uint16_t __size = *(uint16_t*)(ip + 6);
 				    void* _dstAddr_ = (void*)((*(void**)(localVarBase + __dst)));
-				    std::memmove(_dstAddr_, (*(void**)(localVarBase + __src)), (*(uint16_t*)(localVarBase + __size)));
-				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_dstAddr_, (*(uint16_t*)(localVarBase + __size)));
+				    std::memmove(_dstAddr_, (*(void**)(localVarBase + __src)), __size);
+				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_dstAddr_, __size);
 				    ip += 8;
 				    continue;
 				}
@@ -8557,11 +8572,11 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __size = *(uint32_t*)(ip + 8);
 				    void* _dstAddr_ = (void*)((*(void**)(localVarBase + __dst)));
-				    std::memmove(_dstAddr_, (*(void**)(localVarBase + __src)), (*(uint32_t*)(localVarBase + __size)));
-				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_dstAddr_, (*(uint32_t*)(localVarBase + __size)));
-				    ip += 8;
+				    std::memmove(_dstAddr_, (*(void**)(localVarBase + __src)), __size);
+				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_dstAddr_, __size);
+				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::LdobjVarVar_ref:
@@ -8656,9 +8671,9 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __size = *(uint32_t*)(ip + 8);
 					std::memmove((void*)(localVarBase + __dst), (*(void**)(localVarBase + __src)), __size);
-				    ip += 8;
+				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::StobjVarVar_ref:
@@ -8755,20 +8770,20 @@ else \
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __size = *(uint32_t*)(ip + 8);
 					std::memmove((*(void**)(localVarBase + __dst)), (void*)(localVarBase + __src), __size);
-				    ip += 8;
+				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::StobjVarVar_WriteBarrier_n_4:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __size = *(uint32_t*)(ip + 8);
 				    void* _dstAddr_ = (*(void**)(localVarBase + __dst));
 				    std::memmove(_dstAddr_, (void*)(localVarBase + __src), __size);
 				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_dstAddr_, __size);
-				    ip += 8;
+				    ip += 16;
 				    continue;
 				}
 				case HiOpcodeEnum::InitobjVar_ref:
@@ -10780,6 +10795,18 @@ else \
 				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
 				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, (*(int32_t*)(localVarBase + __index)));
 				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
+				    SetArrayElementWithSize(_arr, _eleSize, (*(int32_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetArrayElementVarVar_WriteBarrier_n_4:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __index = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, (*(int32_t*)(localVarBase + __index)));
+				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
 				    il2cpp_array_setrefwithsize(_arr, _eleSize, (*(int32_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
@@ -10907,6 +10934,18 @@ else \
 				    continue;
 				}
 				case HiOpcodeEnum::SetArrayElementVarVar_n_8:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __index = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    CHECK_NOT_NULL_AND_ARRAY_BOUNDARY(_arr, (*(int64_t*)(localVarBase + __index)));
+				    int32_t _eleSize = il2cpp::vm::Array::GetElementSize(_arr->klass);
+				    SetArrayElementWithSize(_arr, _eleSize, (*(int64_t*)(localVarBase + __index)), (void*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetArrayElementVarVar_WriteBarrier_n_8:
 				{
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __index = *(uint16_t*)(ip + 4);
@@ -11042,6 +11081,15 @@ else \
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
 					uint16_t __value = *(uint16_t*)(ip + 6);
 				    SetMdArrayElement((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_WriteBarrier:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __value = *(uint16_t*)(ip + 6);
+				    SetMdArrayElementWriteBarrier((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
 				    ip += 8;
 				    continue;
 				}

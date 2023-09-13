@@ -1741,6 +1741,7 @@ else \
 						CreateAddIR(ir, CpobjVarVar_WriteBarrier_n_4);
 						ir->dst = dst.locOffset;
 						ir->src = src.locOffset;
+						ir->size = size;
 					}
 				}
 				else
@@ -2716,15 +2717,14 @@ ir->ele = ele.locOffset;
 					break;
 				}
 				case LocationDescType::StructContainsRef:
-					{
-						uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
-						CreateAddIR(ir, SetArrayElementVarVar_n_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_n_4 : HiOpcodeEnum::SetArrayElementVarVar_n_8;
-						ir->arr = arr.locOffset;
-						ir->index = index.locOffset;
-						ir->ele = ele.locOffset;
-						break;
-					}
+				{
+					CreateAddIR(ir, SetArrayElementVarVar_WriteBarrier_n_8);
+					ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_WriteBarrier_n_4 : HiOpcodeEnum::SetArrayElementVarVar_WriteBarrier_n_8;
+					ir->arr = arr.locOffset;
+					ir->index = index.locOffset;
+					ir->ele = ele.locOffset;
+					break;
+				}
 				default:
 				{
 					RaiseExecutionEngineException("stelem not support type");
