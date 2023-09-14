@@ -1377,6 +1377,7 @@ namespace metadata
 			Il2CppTypeDefinition& typeDef = _typesDefines[i];
 			uint32_t rawMethodStart = DecodeMetadataIndex(typeDef.methodStart);
 			bool isInterface = IsInterface(typeDef.flags);
+			uint16_t slotIdx = 0;
 			for (int m = 0; m < typeDef.method_count; m++)
 			{
 				Il2CppMethodDefinition& md = _methodDefines[rawMethodStart + m];
@@ -1389,9 +1390,9 @@ namespace metadata
 				{
 					typeDef.bitfield |= (1 << (il2cpp::vm::kBitHasFinalizer - 1));
 				}
-				if (isInterface)
+				if (isInterface && IsInstanceMethod(&md) && IsVirtualMethod(md.flags))
 				{
-					md.slot = m;
+					md.slot = slotIdx++;
 				}
 				// TODO 可以考虑优化一下,将 signature在前一步存到暂时不用的 returnType里
 				TbMethod methodData = _rawImage.ReadMethod(rawMethodStart + m + 1);
