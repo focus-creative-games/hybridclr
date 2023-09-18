@@ -37,11 +37,13 @@ namespace interpreter
 
 		static bool HasImplementCallNative2Managed(const MethodInfo* method)
 		{
+			IL2CPP_ASSERT(method->methodPointer != NotSupportAdjustorThunk);
 			return method->methodPointerCallByInterp != (Il2CppMethodPointer)NotSupportNative2Managed;
 		}
 
 		static bool HasImplementCallVirtualNative2Managed(const MethodInfo* method)
 		{
+			IL2CPP_ASSERT(method->virtualMethodPointer != NotSupportNative2Managed);
 			return method->virtualMethodPointerCallByInterp != (Il2CppMethodPointer)NotSupportAdjustorThunk;
 		}
 

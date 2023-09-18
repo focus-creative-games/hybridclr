@@ -290,7 +290,10 @@ namespace interpreter
 		StackObject* args = (StackObject*)alloca(sizeof(StackObject) * imi->argStackObjectSize);
 		if (isInstanceMethod)
 		{
-			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
+			if (IS_CLASS_VALUE_TYPE(method->klass))
+			{
+				__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
+			}
 			args[0].ptr = __this;
 		}
 		
@@ -374,7 +377,10 @@ namespace interpreter
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
 		if (isInstanceMethod)
 		{
-			__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
+			if (IS_CLASS_VALUE_TYPE(method->klass))
+			{
+				__this = (Il2CppObject*)__this + (methodPointer != method->methodPointerCallByInterp);
+			}
 			args[0].ptr = __this;
 		}
 		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
