@@ -284,8 +284,9 @@ namespace metadata
                 instanceSize = std::max(instanceSize, field.offset + (int32_t)sa.size);
             }
             // TODO FIXME. not consider packingSize
+            layout.alignment = std::max(packingSize, (uint8_t)1);
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
-            layout.naturalAlignment = layout.alignment = std::max(packingSize, (uint8_t)1);
+            layout.naturalAlignment = layout.alignment;
 #endif
             layout.actualSize = layout.instanceSize = AlignTo(instanceSize, layout.alignment);
             layout.nativeSize = -1;
