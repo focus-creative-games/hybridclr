@@ -108,7 +108,9 @@ namespace metadata
 	protected:
 		Image()
 		{
-			for (auto ass : *il2cpp::vm::Assembly::GetAllAssemblies())
+			il2cpp::vm::AssemblyVector assemblies;
+			il2cpp::vm::Assembly::GetAllAssemblies(assemblies);
+			for (auto ass : assemblies)
 			{
 				_nameToAssemblies[ass->image->nameNoExt] = ass;
 			}
