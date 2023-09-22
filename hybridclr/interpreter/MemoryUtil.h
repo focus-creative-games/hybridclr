@@ -146,11 +146,6 @@ namespace interpreter
 		switch (size)
 		{
 		case 1: Copy1(dst, src); break;
-		case 2: Copy2(dst, src); break;
-		case 4: Copy4(dst, src); break;
-		case 8: Copy8(dst, src); break;
-		case 12: Copy12(dst, src); break;
-		case 16: Copy16(dst, src); break;
 		default: std::memmove(dst, src, size); break;
 		}
 	}
