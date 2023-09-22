@@ -3192,15 +3192,123 @@ ir->ele = ele.locOffset;
 					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 					if (IS_CLASS_VALUE_TYPE(objKlass))
 					{
-						CreateAddIR(ir, InitobjVar_n_4);
-#if HYBRIDCLR_ENABLE_WRITE_BARRIERS
-						if (objKlass->has_references)
+						uint32_t objSize = GetTypeValueSize(objKlass);
+						if ((HYBRIDCLR_ENABLE_WRITE_BARRIERS && objKlass->has_references))
 						{
-							ir->type = HiOpcodeEnum::InitobjVar_WriteBarrier_n_4;
+							CreateAddIR(ir, InitobjVar_WriteBarrier_n_4);
+							ir->obj = ctx.GetEvalStackTopOffset();
+							ir->size = objSize;
 						}
-#endif
-						ir->obj = ctx.GetEvalStackTopOffset();
-						ir->size = GetTypeValueSize(objKlass);
+						else
+						{
+							bool convert = false;
+							switch (objSize)
+							{
+							case 1:
+							{
+								CreateAddIR(ir, InitobjVar_1);
+								ir->obj = ctx.GetEvalStackTopOffset();
+								convert = true;
+								break;
+							}
+							case 2:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 2)
+								{
+									CreateAddIR(ir, InitobjVar_2);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 4:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 4)
+								{
+									CreateAddIR(ir, InitobjVar_4);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 8:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 8)
+								{
+									CreateAddIR(ir, InitobjVar_8);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 12:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 4)
+								{
+									CreateAddIR(ir, InitobjVar_12);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 16:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 8)
+								{
+									CreateAddIR(ir, InitobjVar_16);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 20:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 4)
+								{
+									CreateAddIR(ir, InitobjVar_20);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 24:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 8)
+								{
+									CreateAddIR(ir, InitobjVar_24);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 28:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 4)
+								{
+									CreateAddIR(ir, InitobjVar_28);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							case 32:
+							{
+								if (SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS || objKlass->minimumAlignment >= 8)
+								{
+									CreateAddIR(ir, InitobjVar_32);
+									ir->obj = ctx.GetEvalStackTopOffset();
+									convert = true;
+								}
+								break;
+							}
+							}
+							if (!convert)
+							{
+								CreateAddIR(ir, InitobjVar_n_4);
+								ir->obj = ctx.GetEvalStackTopOffset();
+								ir->size = objSize;
+							}
+						}
 					}
 					else
 					{

@@ -172,8 +172,10 @@ namespace interpreter
 
 	inline void InitDefault12(void* dst)
 	{
-		*(uint64_t*)dst = 0;
-		*(uint32_t*)((byte*)dst + 8) = 0;
+		int32_t* p = (int32_t*)dst;
+		p[0] = 0;
+		p[1] = 0;
+		p[2] = 0;
 	}
 
 	inline void InitDefault16(void* dst)
@@ -184,9 +186,12 @@ namespace interpreter
 
 	inline void InitDefault20(void* dst)
 	{
-		*(uint64_t*)dst = 0;
-		*(uint64_t*)((byte*)dst + 8) = 0;
-		*(uint32_t*)((byte*)dst + 16) = 0;
+		int32_t* p = (int32_t*)dst;
+		p[0] = 0;
+		p[1] = 0;
+		p[2] = 0;
+		p[3] = 0;
+		p[4] = 0;
 	}
 
 	inline void InitDefault24(void* dst)
@@ -198,10 +203,14 @@ namespace interpreter
 
 	inline void InitDefault28(void* dst)
 	{
-		*(uint64_t*)dst = 0;
-		*(uint64_t*)((byte*)dst + 8) = 0;
-		*(uint64_t*)((byte*)dst + 16) = 0;
-		*(uint32_t*)((byte*)dst + 24) = 0;
+		int32_t* p = (int32_t*)dst;
+		p[0] = 0;
+		p[1] = 0;
+		p[2] = 0;
+		p[3] = 0;
+		p[4] = 0;
+		p[5] = 0;
+		p[6] = 0;
 	}
 
 	inline void InitDefault32(void* dst)
@@ -215,26 +224,6 @@ namespace interpreter
 	inline void InitDefaultN(void* dst, size_t size)
 	{
 		std::memset(dst, 0, size);
-	}
-
-	inline void SetConst1(void* dst, int8_t value)
-	{
-		*(int8_t*)dst = value;
-	}
-
-	inline void SetConst2(void* dst, int16_t value)
-	{
-		*(int16_t*)dst = value;
-	}
-
-	inline void SetConst4(void* dst, int32_t value)
-	{
-		*(int32_t*)dst = value;
-	}
-
-	inline void SetConst8(void* dst, int64_t value)
-	{
-		*(int64_t*)dst = value;
 	}
 }
 }
