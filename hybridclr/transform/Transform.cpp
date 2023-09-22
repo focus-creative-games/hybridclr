@@ -1763,7 +1763,54 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
-				if (IS_CLASS_VALUE_TYPE(objKlass))
+				LocationDescInfo desc = ComputLocationDescInfo(&objKlass->byval_arg);
+
+				switch (desc.type)
+				{
+				case LocationDescType::I1:
+				{
+					CreateAddIR(ir, LdindVarVar_i1);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::U1:
+				{
+					CreateAddIR(ir, LdindVarVar_u1);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::I2:
+				{
+					CreateAddIR(ir, LdindVarVar_i2);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::U2:
+				{
+					CreateAddIR(ir, LdindVarVar_u2);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::I4:
+				{
+					CreateAddIR(ir, LdindVarVar_i4);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::I8:
+				{
+					CreateAddIR(ir, LdindVarVar_i8);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::Ref:
+				{
+					CreateAddIR(ir, LdobjVarVar_ref);
+					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::S:
+				case LocationDescType::StructContainsRef:
 				{
 					uint32_t size = GetTypeValueSize(objKlass);
 					switch (size)
@@ -1812,12 +1859,14 @@ else \
 						break;
 					}
 					}
+					break;
 				}
-				else
+				default:
 				{
-					CreateAddIR(ir, LdobjVarVar_ref);
-					ir->dst = ir->src = top.locOffset;
+					RaiseExecutionEngineException("field");
 				}
+				}
+
 				ctx.PopStack();
 				ctx.PushStackByType(&objKlass->byval_arg);
 				ctx.InsertMemoryBarrier();
