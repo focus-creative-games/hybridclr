@@ -1748,57 +1748,105 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
+				LocationDescInfo desc = ComputLocationDescInfo(&objKlass->byval_arg);
 
-				uint32_t size = GetTypeValueSize(objKlass);
-				switch (size)
+				switch (desc.type)
 				{
-				case 1:
+				case LocationDescType::I1:
 				{
-					CreateAddIR(ir, LdobjVarVar_1);
+					CreateAddIR(ir, LdindVarVar_i1);
 					ir->dst = ir->src = top.locOffset;
 					break;
 				}
-				case 2:
+				case LocationDescType::U1:
 				{
-					CreateAddIR(ir, LdobjVarVar_2);
+					CreateAddIR(ir, LdindVarVar_u1);
 					ir->dst = ir->src = top.locOffset;
 					break;
 				}
-				case 4:
+				case LocationDescType::I2:
 				{
-					CreateAddIR(ir, LdobjVarVar_4);
+					CreateAddIR(ir, LdindVarVar_i2);
 					ir->dst = ir->src = top.locOffset;
 					break;
 				}
-				case 8:
+				case LocationDescType::U2:
 				{
-					CreateAddIR(ir, LdobjVarVar_8);
+					CreateAddIR(ir, LdindVarVar_u2);
 					ir->dst = ir->src = top.locOffset;
 					break;
 				}
-				case 12:
+				case LocationDescType::I4:
 				{
-					CreateAddIR(ir, LdobjVarVar_12);
+					CreateAddIR(ir, LdindVarVar_i4);
 					ir->dst = ir->src = top.locOffset;
 					break;
 				}
-				case 16:
+				case LocationDescType::I8:
 				{
-					CreateAddIR(ir, LdobjVarVar_16);
+					CreateAddIR(ir, LdindVarVar_i8);
 					ir->dst = ir->src = top.locOffset;
+					break;
+				}
+				case LocationDescType::S:
+				{
+					uint32_t size = GetTypeValueSize(objKlass);
+					switch (size)
+					{
+					case 1:
+					{
+						CreateAddIR(ir, LdobjVarVar_1);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 2:
+					{
+						CreateAddIR(ir, LdobjVarVar_2);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 4:
+					{
+						CreateAddIR(ir, LdobjVarVar_4);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 8:
+					{
+						CreateAddIR(ir, LdobjVarVar_8);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 12:
+					{
+						CreateAddIR(ir, LdobjVarVar_12);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					case 16:
+					{
+						CreateAddIR(ir, LdobjVarVar_16);
+						ir->dst = ir->src = top.locOffset;
+						break;
+					}
+					default:
+					{
+						CreateAddIR(ir, LdobjVarVar_n_4);
+						ir->dst = ir->src = top.locOffset;
+						ir->size = size;
+						break;
+					}
+					}
 					break;
 				}
 				default:
 				{
-					CreateAddIR(ir, LdobjVarVar_n_4);
-					ir->dst = ir->src = top.locOffset;
-					ir->size = size;
-					break;
+					RaiseExecutionEngineException("ldobj: unsupported location type");
 				}
 				}
+				
 				ctx.PopStack();
 				ctx.PushStackByType(&objKlass->byval_arg);
-				IL2CPP_ASSERT(size == GetTypeValueSize(&objKlass->byval_arg));
 				ctx.InsertMemoryBarrier();
 				ctx.ResetPrefixFlags();
 				ip += 5;
