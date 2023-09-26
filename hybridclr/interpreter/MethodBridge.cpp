@@ -2,6 +2,7 @@
 
 #include "vm/Object.h"
 #include "vm/Class.h"
+#include "metadata/GenericMetadata.h"
 
 #include "../metadata/MetadataModule.h"
 #include "../metadata/MetadataUtil.h"
@@ -151,20 +152,20 @@ namespace interpreter
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
-			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-			if (klass->enumtype)
+			const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)type->data.typeHandle;
+			if (hybridclr::metadata::IsEnumType(typeDef))
 			{
-				AppendSignature(&klass->castClass->byval_arg, sigBuf, bufferSize, pos);
+				AppendSignature(il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->elementTypeIndex), sigBuf, bufferSize, pos);
 				break;
 			}
-			if (hybridclr::metadata::IsInterpreterType((Il2CppTypeDefinition*)type->data.typeHandle))
+			if (hybridclr::metadata::IsInterpreterType(typeDef))
 			{
 				AppendSignatureInterpreterValueType(sigBuf, bufferSize, pos);
 				break;
 			}
 			char tempFullName[1024];
 			size_t fullNamePos = 0;
+			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			BuildValueTypeFullName(klass, tempFullName, sizeof(tempFullName) - 1, fullNamePos);
 			tempFullName[fullNamePos] = 0;
 			AppendString(sigBuf, bufferSize, pos, InterpreterModule::GetValueTypeSignature(tempFullName));
@@ -178,16 +179,14 @@ namespace interpreter
 				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 				break;
 			}
-
-			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-			if (klass->enumtype)
+			const Il2CppTypeDefinition* underlyingTypeDef = (const Il2CppTypeDefinition*)underlyingGenericType->data.typeHandle;
+			if (hybridclr::metadata::IsEnumType(underlyingTypeDef))
 			{
-				AppendSignature(&klass->castClass->byval_arg, sigBuf, bufferSize, pos);
+				AppendSignature(il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(underlyingTypeDef->elementTypeIndex), sigBuf, bufferSize, pos);
 				break;
 			}
 			IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
-			if (hybridclr::metadata::IsInterpreterType(klass))
+			if (hybridclr::metadata::IsInterpreterType(underlyingTypeDef))
 			{
 				AppendSignatureInterpreterValueType(sigBuf, bufferSize, pos);
 				break;
@@ -231,6 +230,11 @@ namespace interpreter
 	bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize)
 	{
 		size_t pos = 0;
+		if (method->genericContainerIndex != kGenericContainerIndexInvalid)
+		{
+			AppendString(sigBuf, bufferSize, pos, "!");
+			return true;
+		}
 
 		const Il2CppImage* image = hybridclr::metadata::MetadataModule::GetImage(method)->GetIl2CppImage();
 
@@ -250,9 +254,29 @@ namespace interpreter
 		return true;
 	}
 
+	inline bool ContainsGenericParameters(const MethodInfo* method)
+	{
+		IL2CPP_ASSERT(method->is_inflated);
+		auto& ctx = method->genericMethod->context;
+		if (ctx.class_inst && il2cpp::metadata::GenericMetadata::ContainsGenericParameters(ctx.class_inst))
+		{
+			return true;
+		}
+		if (ctx.method_inst && il2cpp::metadata::GenericMetadata::ContainsGenericParameters(ctx.method_inst))
+		{
+			return true;
+		}
+		return false;
+	}
+
 	bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize)
 	{
 		size_t pos = 0;
+		if (method->is_generic || (method->is_inflated && ContainsGenericParameters(method)))
+		{
+			AppendString(sigBuf, bufferSize, pos, "!");
+			return true;
+		}
 
 		AppendSignature(method->return_type, sigBuf, bufferSize, pos);
 

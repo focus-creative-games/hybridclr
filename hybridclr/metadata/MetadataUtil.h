@@ -232,6 +232,11 @@ namespace metadata
         return typeDef->bitfield & (1 << (il2cpp::vm::kBitIsValueType - 1));
     }
 
+    inline bool IsEnumType(const Il2CppTypeDefinition* typeDef)
+    {
+        return (typeDef->bitfield >> (il2cpp::vm::kBitIsEnum - 1)) & 0x1;
+    }
+
     inline const Il2CppTypeDefinition* GetUnderlyingTypeDefinition(const Il2CppType* type)
     {
         if (IsGenericIns(type))

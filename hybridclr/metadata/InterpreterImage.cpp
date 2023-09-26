@@ -262,7 +262,7 @@ namespace metadata
 			uint32_t typeIndex = i; // type index start from 0, diff with field index ...
 
 			// enum element_type == 
-			if (cur.bitfield & (1 << (il2cpp::vm::kBitIsEnum - 1)))
+			if (IsEnumType(&cur))
 			{
 				cur.elementTypeIndex = _fieldDetails[DecodeMetadataIndex(cur.fieldStart)].fieldDef.typeIndex;
 			}
