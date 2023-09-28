@@ -11009,16 +11009,7 @@ else \
 				    ip += 8;
 				    continue;
 				}
-				case HiOpcodeEnum::GetMdArrElementVarVar_ref:
-				{
-					uint16_t __arr = *(uint16_t*)(ip + 2);
-					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
-					uint16_t __value = *(uint16_t*)(ip + 6);
-				    GetMdArrayElementCopyToStack<Il2CppObject*>((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::GetMdArrElementVarVar_size:
+				case HiOpcodeEnum::GetMdArrElementVarVar_n:
 				{
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
@@ -11036,21 +11027,121 @@ else \
 				    ip += 8;
 				    continue;
 				}
-				case HiOpcodeEnum::SetMdArrElementVarVar:
+				case HiOpcodeEnum::SetMdArrElementVarVar_i1:
 				{
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
-					uint16_t __value = *(uint16_t*)(ip + 6);
-				    SetMdArrayElement((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(int8_t*)_addr = (*(int8_t*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}
-				case HiOpcodeEnum::SetMdArrElementVarVar_WriteBarrier:
+				case HiOpcodeEnum::SetMdArrElementVarVar_u1:
 				{
 					uint16_t __arr = *(uint16_t*)(ip + 2);
 					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
-					uint16_t __value = *(uint16_t*)(ip + 6);
-				    SetMdArrayElementWriteBarrier((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __value));
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(uint8_t*)_addr = (*(uint8_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_i2:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(int16_t*)_addr = (*(int16_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_u2:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(uint16_t*)_addr = (*(uint16_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_i4:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(int32_t*)_addr = (*(int32_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_u4:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(uint32_t*)_addr = (*(uint32_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_i8:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(int64_t*)_addr = (*(int64_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_u8:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    *(uint64_t*)_addr = (*(uint64_t*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_ref:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    Il2CppArray* _arr = (*(Il2CppArray**)(localVarBase + __arr));
+				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
+				    CheckArrayElementTypeCompatible(_arr, (*(Il2CppObject**)(localVarBase + __ele)));
+				    *(Il2CppObject**)_addr = (*(Il2CppObject**)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_n:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    SetMdArrayElement((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __ele));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::SetMdArrElementVarVar_WriteBarrier_n:
+				{
+					uint16_t __arr = *(uint16_t*)(ip + 2);
+					uint16_t __lengthIdxs = *(uint16_t*)(ip + 4);
+					uint16_t __ele = *(uint16_t*)(ip + 6);
+				    SetMdArrayElementWriteBarrier((*(Il2CppArray**)(localVarBase + __arr)), (StackObject*)(void*)(localVarBase + __lengthIdxs), (void*)(localVarBase + __ele));
 				    ip += 8;
 				    continue;
 				}

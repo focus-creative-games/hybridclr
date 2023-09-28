@@ -819,11 +819,19 @@ namespace interpreter
 		GetMdArrElementVarVar_u4,
 		GetMdArrElementVarVar_i8,
 		GetMdArrElementVarVar_u8,
-		GetMdArrElementVarVar_ref,
-		GetMdArrElementVarVar_size,
+		GetMdArrElementVarVar_n,
 		GetMdArrElementAddressVarVar,
-		SetMdArrElementVarVar,
-		SetMdArrElementVarVar_WriteBarrier,
+		SetMdArrElementVarVar_i1,
+		SetMdArrElementVarVar_u1,
+		SetMdArrElementVarVar_i2,
+		SetMdArrElementVarVar_u2,
+		SetMdArrElementVarVar_i4,
+		SetMdArrElementVarVar_u4,
+		SetMdArrElementVarVar_i8,
+		SetMdArrElementVarVar_u8,
+		SetMdArrElementVarVar_ref,
+		SetMdArrElementVarVar_n,
+		SetMdArrElementVarVar_WriteBarrier_n,
 		ThrowEx,
 		RethrowEx,
 		LeaveEx,
@@ -9329,15 +9337,7 @@ namespace interpreter
 	};
 
 
-	struct IRGetMdArrElementVarVar_ref : IRCommon
-	{
-		uint16_t arr;
-		uint16_t lengthIdxs;
-		uint16_t value;
-	};
-
-
-	struct IRGetMdArrElementVarVar_size : IRCommon
+	struct IRGetMdArrElementVarVar_n : IRCommon
 	{
 		uint16_t arr;
 		uint16_t lengthIdxs;
@@ -9353,19 +9353,91 @@ namespace interpreter
 	};
 
 
-	struct IRSetMdArrElementVarVar : IRCommon
+	struct IRSetMdArrElementVarVar_i1 : IRCommon
 	{
 		uint16_t arr;
 		uint16_t lengthIdxs;
-		uint16_t value;
+		uint16_t ele;
 	};
 
 
-	struct IRSetMdArrElementVarVar_WriteBarrier : IRCommon
+	struct IRSetMdArrElementVarVar_u1 : IRCommon
 	{
 		uint16_t arr;
 		uint16_t lengthIdxs;
-		uint16_t value;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_i2 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_u2 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_i4 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_u4 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_i8 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_u8 : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_ref : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_n : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
+	};
+
+
+	struct IRSetMdArrElementVarVar_WriteBarrier_n : IRCommon
+	{
+		uint16_t arr;
+		uint16_t lengthIdxs;
+		uint16_t ele;
 	};
 
 
