@@ -8990,16 +8990,6 @@ else \
 				    ip += 8;
 				    continue;
 				}
-				case HiOpcodeEnum::LdfldVarVar_ref:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __obj = *(uint16_t*)(ip + 4);
-					uint16_t __offset = *(uint16_t*)(ip + 6);
-				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
-				    (*(Il2CppObject**)(localVarBase + __dst)) = *(Il2CppObject**)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
-				    ip += 8;
-				    continue;
-				}
 				case HiOpcodeEnum::LdfldVarVar_size_8:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
@@ -9161,15 +9151,6 @@ else \
 					uint16_t __obj = *(uint16_t*)(ip + 4);
 					uint16_t __offset = *(uint16_t*)(ip + 6);
 					(*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
-				    ip += 8;
-				    continue;
-				}
-				case HiOpcodeEnum::LdfldValueTypeVarVar_ref:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					uint16_t __obj = *(uint16_t*)(ip + 4);
-					uint16_t __offset = *(uint16_t*)(ip + 6);
-					(*(Il2CppObject**)(localVarBase + __dst)) = *(Il2CppObject**)((byte*)(void*)(localVarBase + __obj) + __offset);
 				    ip += 8;
 				    continue;
 				}
@@ -9560,16 +9541,6 @@ else \
 					uint16_t __offset = *(uint16_t*)(ip + 4);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)(((byte*)__klass->static_fields) + __offset);
-				    ip += 16;
-				    continue;
-				}
-				case HiOpcodeEnum::LdsfldVarVar_ref:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
-				    RuntimeInitClassCCtorWithoutInitClass(__klass);
-				    (*(Il2CppObject**)(localVarBase + __dst)) = *(Il2CppObject**)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
 				    continue;
 				}
@@ -9987,16 +9958,6 @@ else \
 					int32_t __offset = *(int32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
-				    ip += 16;
-				    continue;
-				}
-				case HiOpcodeEnum::LdthreadlocalVarVar_ref:
-				{
-					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
-					int32_t __offset = *(int32_t*)(ip + 8);
-				    RuntimeInitClassCCtorWithoutInitClass(__klass);
-				    (*(Il2CppObject**)(localVarBase + __dst)) = *(Il2CppObject**)((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset);
 				    ip += 16;
 				    continue;
 				}

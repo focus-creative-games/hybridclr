@@ -316,7 +316,7 @@ namespace transform
 		}
 		case LocationDescType::Ref:
 		{
-			ir->type = HiOpcodeEnum::LdfldVarVar_ref;
+			ir->type = HYBRIDCLR_ARCH_64 ? HiOpcodeEnum::LdfldVarVar_i8 : HiOpcodeEnum::LdfldVarVar_i4;
 			return ir;
 		}
 		case LocationDescType::S:
@@ -418,7 +418,7 @@ namespace transform
 		}
 		case LocationDescType::Ref:
 		{
-			ir->type = HiOpcodeEnum::LdfldValueTypeVarVar_ref;
+			ir->type = HYBRIDCLR_ARCH_64 ? HiOpcodeEnum::LdfldValueTypeVarVar_i8 : HiOpcodeEnum::LdfldValueTypeVarVar_i4;
 			return ir;
 		}
 		case LocationDescType::S:
@@ -631,7 +631,7 @@ namespace transform
 		}
 		case LocationDescType::Ref:
 		{
-			ir->type = HiOpcodeEnum::LdsfldVarVar_ref;
+			ir->type = HYBRIDCLR_ARCH_64 ? HiOpcodeEnum::LdsfldVarVar_i8 : HiOpcodeEnum::LdsfldVarVar_i4;
 			return ir;
 		}
 		case LocationDescType::S:
@@ -847,7 +847,7 @@ namespace transform
 		}
 		case LocationDescType::Ref:
 		{
-			ir->type = HiOpcodeEnum::LdthreadlocalVarVar_ref;
+			ir->type = HYBRIDCLR_ARCH_64 ? HiOpcodeEnum::LdthreadlocalVarVar_i8 : HiOpcodeEnum::LdthreadlocalVarVar_i4;
 			return ir;
 		}
 		case LocationDescType::S:

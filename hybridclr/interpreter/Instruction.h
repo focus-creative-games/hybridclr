@@ -627,7 +627,6 @@ namespace interpreter
 		LdfldVarVar_u4,
 		LdfldVarVar_i8,
 		LdfldVarVar_u8,
-		LdfldVarVar_ref,
 		LdfldVarVar_size_8,
 		LdfldVarVar_size_12,
 		LdfldVarVar_size_16,
@@ -645,7 +644,6 @@ namespace interpreter
 		LdfldValueTypeVarVar_u4,
 		LdfldValueTypeVarVar_i8,
 		LdfldValueTypeVarVar_u8,
-		LdfldValueTypeVarVar_ref,
 		LdfldValueTypeVarVar_size_8,
 		LdfldValueTypeVarVar_size_12,
 		LdfldValueTypeVarVar_size_16,
@@ -684,7 +682,6 @@ namespace interpreter
 		LdsfldVarVar_u4,
 		LdsfldVarVar_i8,
 		LdsfldVarVar_u8,
-		LdsfldVarVar_ref,
 		LdsfldVarVar_size_8,
 		LdsfldVarVar_size_12,
 		LdsfldVarVar_size_16,
@@ -725,7 +722,6 @@ namespace interpreter
 		LdthreadlocalVarVar_u4,
 		LdthreadlocalVarVar_i8,
 		LdthreadlocalVarVar_u8,
-		LdthreadlocalVarVar_ref,
 		LdthreadlocalVarVar_size_8,
 		LdthreadlocalVarVar_size_12,
 		LdthreadlocalVarVar_size_16,
@@ -7319,14 +7315,6 @@ namespace interpreter
 	};
 
 
-	struct IRLdfldVarVar_ref : IRCommon
-	{
-		uint16_t dst;
-		uint16_t obj;
-		uint16_t offset;
-	};
-
-
 	struct IRLdfldVarVar_size_8 : IRCommon
 	{
 		uint16_t dst;
@@ -7468,14 +7456,6 @@ namespace interpreter
 
 
 	struct IRLdfldValueTypeVarVar_u8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t obj;
-		uint16_t offset;
-	};
-
-
-	struct IRLdfldValueTypeVarVar_ref : IRCommon
 	{
 		uint16_t dst;
 		uint16_t obj;
@@ -7858,20 +7838,6 @@ namespace interpreter
 
 
 	struct IRLdsfldVarVar_u8 : IRCommon
-	{
-		uint16_t dst;
-		uint16_t offset;
-		uint8_t __pad6;
-		uint8_t __pad7;
-		uint32_t klass;
-		uint8_t __pad12;
-		uint8_t __pad13;
-		uint8_t __pad14;
-		uint8_t __pad15;
-	};
-
-
-	struct IRLdsfldVarVar_ref : IRCommon
 	{
 		uint16_t dst;
 		uint16_t offset;
@@ -8397,18 +8363,6 @@ namespace interpreter
 
 
 	struct IRLdthreadlocalVarVar_u8 : IRCommon
-	{
-		uint16_t dst;
-		uint32_t klass;
-		int32_t offset;
-		uint8_t __pad12;
-		uint8_t __pad13;
-		uint8_t __pad14;
-		uint8_t __pad15;
-	};
-
-
-	struct IRLdthreadlocalVarVar_ref : IRCommon
 	{
 		uint16_t dst;
 		uint32_t klass;
