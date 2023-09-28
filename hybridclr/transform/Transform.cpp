@@ -117,8 +117,8 @@ else \
 
 #define CI_compare(op) ctx.Add_compare(HiOpcodeEnum::CompOpVarVarVar_##op##_i4, HiOpcodeEnum::CompOpVarVarVar_##op##_i8, HiOpcodeEnum::CompOpVarVarVar_##op##_f4, HiOpcodeEnum::CompOpVarVarVar_##op##_f8);
 
-#define CI_ldele(eleType, resultType) ctx.Add_ldelem(EvalStackReduceDataType::resultType, HiOpcodeEnum::GetArrayElementVarVar_##eleType##_4, HiOpcodeEnum::GetArrayElementVarVar_##eleType##_8);
-#define CI_stele(eleType) ctx.Add_stelem(HiOpcodeEnum::SetArrayElementVarVar_##eleType##_4, HiOpcodeEnum::SetArrayElementVarVar_##eleType##_8);
+#define CI_ldele(eleType, resultType) ctx.Add_ldelem(EvalStackReduceDataType::resultType, HiOpcodeEnum::GetArrayElementVarVar_##eleType);
+#define CI_stele(eleType) ctx.Add_stelem(HiOpcodeEnum::SetArrayElementVarVar_##eleType);
 
 	static const MethodInfo* FindRedirectCreateString(const MethodInfo* shareMethod)
 	{
@@ -2435,28 +2435,11 @@ else \
 				IL2CPP_ASSERT(eleKlass);
 				Il2CppClass* arrKlass = il2cpp::vm::Class::GetArrayClass(eleKlass, 1);
 				uint32_t arrKlassIndex = ctx.GetOrAddResolveDataIndex(arrKlass);
-				switch (varSize.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-					CreateAddIR(ir, NewArrVarVar_4);
-					ir->arr = ir->size = varSize.locOffset;
-					ir->klass = arrKlassIndex;
-					break;
-				}
-				case EvalStackReduceDataType::I8:
-				{
-					CreateAddIR(ir, NewArrVarVar_8);
-					ir->arr = ir->size = varSize.locOffset;
-					ir->klass = arrKlassIndex;
-					break;
-				}
-				default:
-				{
-					RaiseExecutionEngineException("NEWARR invalid reduceType");
-					break;
-				}
-				}
+
+				CreateAddIR(ir, NewArrVarVar);
+				ir->arr = ir->size = varSize.locOffset;
+				ir->klass = arrKlassIndex;
+
 				ctx.PopStack();
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
@@ -2466,7 +2449,7 @@ else \
 			case OpcodeValue::LDLEN:
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
-				CreateAddIR(ir, GetArrayLengthVarVar_8);
+				CreateAddIR(ir, GetArrayLengthVarVar);
 				ir->arr = ir->len = ctx.GetEvalStackTopOffset();
 				ctx.PopStack();
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -2483,30 +2466,11 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
 				uint32_t eleKlassIndex = ctx.GetOrAddResolveDataIndex(eleKlass);
-				switch (index.reduceType)
-				{
-				case EvalStackReduceDataType::I4:
-				{
-					CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar_i4);
-					ir->arr = ir->addr = arr.locOffset;
-					ir->index = index.locOffset;
-					ir->eleKlass = eleKlassIndex;
-					break;
-				}
-				case EvalStackReduceDataType::I8:
-				{
-					CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar_i8);
-					ir->arr = ir->addr = arr.locOffset;
-					ir->index = index.locOffset;
-					ir->eleKlass = eleKlassIndex;
-					break;
-				}
-				default:
-				{
-					RaiseExecutionEngineException("ldelema");
-					break;
-				}
-				}
+
+				CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar);
+				ir->arr = ir->addr = arr.locOffset;
+				ir->index = index.locOffset;
+				ir->eleKlass = eleKlassIndex;
 
 				ctx.PopStackN(2);
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -2622,8 +2586,7 @@ else \
 			}
 
 #define CI_ldele0(eleType) \
-CreateAddIR(ir,  GetArrayElementVarVar_##eleType##_4); \
-ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_##eleType##_4 : HiOpcodeEnum::GetArrayElementVarVar_##eleType##_8; \
+CreateAddIR(ir,  GetArrayElementVarVar_##eleType); \
 ir->arr = arr.locOffset; \
 ir->index = index.locOffset; \
 ir->dst = arr.locOffset;
@@ -2659,8 +2622,7 @@ ir->dst = arr.locOffset;
 					{
 					case 12:
 					{
-						CreateAddIR(ir, GetArrayElementVarVar_size_12_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_size_12_4 : HiOpcodeEnum::GetArrayElementVarVar_size_12_8;
+						CreateAddIR(ir, GetArrayElementVarVar_size_12);
 						ir->arr = arr.locOffset;
 						ir->index = index.locOffset;
 						ir->dst = arr.locOffset;
@@ -2668,8 +2630,7 @@ ir->dst = arr.locOffset;
 					}
 					case 16:
 					{
-						CreateAddIR(ir, GetArrayElementVarVar_size_16_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_size_16_4 : HiOpcodeEnum::GetArrayElementVarVar_size_16_8;
+						CreateAddIR(ir, GetArrayElementVarVar_size_16);
 						ir->arr = arr.locOffset;
 						ir->index = index.locOffset;
 						ir->dst = arr.locOffset;
@@ -2677,8 +2638,7 @@ ir->dst = arr.locOffset;
 					}
 					default:
 					{
-						CreateAddIR(ir, GetArrayElementVarVar_n_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::GetArrayElementVarVar_n_4 : HiOpcodeEnum::GetArrayElementVarVar_n_8;
+						CreateAddIR(ir, GetArrayElementVarVar_n);
 						ir->arr = arr.locOffset;
 						ir->index = index.locOffset;
 						ir->dst = arr.locOffset;
@@ -2701,8 +2661,7 @@ ir->dst = arr.locOffset;
 
 
 #define CI_stele0(eleType) \
-CreateAddIR(ir, SetArrayElementVarVar_##eleType##_8); \
-ir->type =  isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_##eleType##_4 : HiOpcodeEnum::SetArrayElementVarVar_##eleType##_8;\
+CreateAddIR(ir, SetArrayElementVarVar_##eleType); \
 ir->arr = arr.locOffset; \
 ir->index = index.locOffset; \
 ir->ele = ele.locOffset; 
@@ -2737,8 +2696,7 @@ ir->ele = ele.locOffset;
 					{
 					case 12:
 					{
-						CreateAddIR(ir, SetArrayElementVarVar_size_12_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_size_12_4 : HiOpcodeEnum::SetArrayElementVarVar_size_12_8;
+						CreateAddIR(ir, SetArrayElementVarVar_size_12);
 						ir->arr = arr.locOffset;
 						ir->index = index.locOffset;
 						ir->ele = ele.locOffset;
@@ -2746,8 +2704,7 @@ ir->ele = ele.locOffset;
 					}
 					case 16:
 					{
-						CreateAddIR(ir, SetArrayElementVarVar_size_16_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_size_16_4 : HiOpcodeEnum::SetArrayElementVarVar_size_16_8;
+						CreateAddIR(ir, SetArrayElementVarVar_size_16);
 						ir->arr = arr.locOffset;
 						ir->index = index.locOffset;
 						ir->ele = ele.locOffset;
@@ -2755,8 +2712,7 @@ ir->ele = ele.locOffset;
 					}
 					default:
 					{
-						CreateAddIR(ir, SetArrayElementVarVar_n_8);
-						ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_n_4 : HiOpcodeEnum::SetArrayElementVarVar_n_8;
+						CreateAddIR(ir, SetArrayElementVarVar_n);
 						ir->arr = arr.locOffset;
 						ir->index = index.locOffset;
 						ir->ele = ele.locOffset;
@@ -2767,8 +2723,7 @@ ir->ele = ele.locOffset;
 				}
 				case LocationDescType::StructContainsRef:
 				{
-					CreateAddIR(ir, SetArrayElementVarVar_WriteBarrier_n_8);
-					ir->type = isIndexInt32Type ? HiOpcodeEnum::SetArrayElementVarVar_WriteBarrier_n_4 : HiOpcodeEnum::SetArrayElementVarVar_WriteBarrier_n_8;
+					CreateAddIR(ir, SetArrayElementVarVar_WriteBarrier_n);
 					ir->arr = arr.locOffset;
 					ir->index = index.locOffset;
 					ir->ele = ele.locOffset;
