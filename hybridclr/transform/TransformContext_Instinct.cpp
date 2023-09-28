@@ -743,14 +743,16 @@ namespace transform
 		{
 			const char* methodName = method->name;
 			uint8_t paramCount = method->parameters_count + 1;
+			const Il2CppType* eleType = &klass->element_class->byval_arg;
+			LocationDescInfo desc = ComputLocationDescInfo(eleType);
 			if (strcmp(methodName, "Get") == 0)
 			{
-				CreateAddIR(ir, GetMdArrElementVarVar_size);
-				ir->type = CalcGetMdArrElementVarVarOpcode(&klass->element_class->byval_arg);
+				CreateAddIR(ir, GetMdArrElementVarVar_n);
+				ir->type = CalcGetMdArrElementVarVarOpcode(eleType);
 				ir->arr = GetEvalStackOffset(evalStackTop - paramCount);
 				ir->lengthIdxs = ir->arr + 1;
 				PopStackN(paramCount);
-				PushStackByType(&klass->element_class->byval_arg);
+				PushStackByType(eleType);
 				ir->value = GetEvalStackTopOffset();
 				return true;
 			}
@@ -766,20 +768,23 @@ namespace transform
 			}
 			else if (strcmp(methodName, "Set") == 0)
 			{
-				CreateAddIR(ir, SetMdArrElementVarVar);
-				LocationDescInfo desc = ComputLocationDescInfo(klass->byval_arg.data.array->etype);
+				CreateAddIR(ir, SetMdArrElementVarVar_n);
 				switch (desc.type)
 				{
-				case LocationDescType::S:
-				case LocationDescType::StructContainsRef:
-				{
-					ir->type = HiOpcodeEnum::SetMdArrElementVarVar_WriteBarrier;
-					break;
-				}
+				case LocationDescType::I1: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_i1; break;
+				case LocationDescType::U1: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_u1; break;
+				case LocationDescType::I2: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_i2; break;
+				case LocationDescType::U2: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_u2; break;
+				case LocationDescType::I4: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_i4; break;
+				case LocationDescType::I8: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_i8; break;
+				case LocationDescType::Ref: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_ref; break;
+				case LocationDescType::S: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_n; break;
+				case LocationDescType::StructContainsRef: ir->type = HiOpcodeEnum::SetMdArrElementVarVar_WriteBarrier_n; break;
+				default: RaiseExecutionEngineException("not support array element type"); break;
 				}
 				ir->arr = GetEvalStackOffset(evalStackTop - paramCount);
 				ir->lengthIdxs = ir->arr + 1;
-				ir->value = GetEvalStackTopOffset();
+				ir->ele = GetEvalStackTopOffset();
 				PopStackN(paramCount);
 				return true;
 			}

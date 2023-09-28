@@ -1027,9 +1027,9 @@ namespace transform
 		case LocationDescType::U2: return HiOpcodeEnum::GetMdArrElementVarVar_u2;
 		case LocationDescType::I4: return HiOpcodeEnum::GetMdArrElementVarVar_i4;
 		case LocationDescType::I8: return HiOpcodeEnum::GetMdArrElementVarVar_i8;
-		case LocationDescType::Ref: return HiOpcodeEnum::GetMdArrElementVarVar_ref;
+		case LocationDescType::Ref: return HYBRIDCLR_ARCH_64 ? HiOpcodeEnum::GetMdArrElementVarVar_i8 : HiOpcodeEnum::GetMdArrElementVarVar_i4;
 		case LocationDescType::S:
-		case LocationDescType::StructContainsRef: return HiOpcodeEnum::GetMdArrElementVarVar_size;
+		case LocationDescType::StructContainsRef: return HiOpcodeEnum::GetMdArrElementVarVar_n;
 		default:
 		{
 			RaiseExecutionEngineException("CalcGetMdArrElementVarVarOpcode");
