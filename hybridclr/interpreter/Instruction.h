@@ -763,9 +763,16 @@ namespace interpreter
 		GetArrayElementVarVar_u4,
 		GetArrayElementVarVar_i8,
 		GetArrayElementVarVar_u8,
-		GetArrayElementVarVar_ref,
+		GetArrayElementVarVar_size_1,
+		GetArrayElementVarVar_size_2,
+		GetArrayElementVarVar_size_4,
+		GetArrayElementVarVar_size_8,
 		GetArrayElementVarVar_size_12,
 		GetArrayElementVarVar_size_16,
+		GetArrayElementVarVar_size_20,
+		GetArrayElementVarVar_size_24,
+		GetArrayElementVarVar_size_28,
+		GetArrayElementVarVar_size_32,
 		GetArrayElementVarVar_n,
 		SetArrayElementVarVar_i1,
 		SetArrayElementVarVar_u1,
@@ -8837,7 +8844,31 @@ namespace interpreter
 	};
 
 
-	struct IRGetArrayElementVarVar_ref : IRCommon
+	struct IRGetArrayElementVarVar_size_1 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_2 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_4 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_8 : IRCommon
 	{
 		uint16_t dst;
 		uint16_t arr;
@@ -8854,6 +8885,38 @@ namespace interpreter
 
 
 	struct IRGetArrayElementVarVar_size_16 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_20 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_24 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_28 : IRCommon
+	{
+		uint16_t dst;
+		uint16_t arr;
+		uint16_t index;
+	};
+
+
+	struct IRGetArrayElementVarVar_size_32 : IRCommon
 	{
 		uint16_t dst;
 		uint16_t arr;

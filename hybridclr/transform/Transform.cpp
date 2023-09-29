@@ -2613,36 +2613,81 @@ ir->dst = arr.locOffset;
 				case LocationDescType::U2: { CI_ldele0(u2); break; }
 				case LocationDescType::I4: { CI_ldele0(i4); break; }
 				case LocationDescType::I8: { CI_ldele0(i8); break; }
-				case LocationDescType::Ref: { CI_ldele0(ref); break; }
+				case LocationDescType::Ref:
+				{
+					if (HYBRIDCLR_ARCH_64)
+					{
+						CI_ldele0(i8);
+					}
+					else
+					{
+						CI_ldele0(i4);
+					}
+					break;
+				}
 				case LocationDescType::S:
 				case LocationDescType::StructContainsRef:
 				{
+					CreateAddIR(ir, GetArrayElementVarVar_size_1);
+					ir->arr = arr.locOffset;
+					ir->index = index.locOffset;
+					ir->dst = arr.locOffset;
 					uint32_t size = il2cpp::vm::Class::GetValueSize(objKlass, nullptr);
 					switch (size)
 					{
+					case 1:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_1;
+						break;
+					}
+					case 2:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_2;
+						break;
+					}
+					case 4:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_4;
+						break;
+					}
+					case 8:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_8;
+						break;
+					}
 					case 12:
 					{
-						CreateAddIR(ir, GetArrayElementVarVar_size_12);
-						ir->arr = arr.locOffset;
-						ir->index = index.locOffset;
-						ir->dst = arr.locOffset;
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_12;
 						break;
 					}
 					case 16:
 					{
-						CreateAddIR(ir, GetArrayElementVarVar_size_16);
-						ir->arr = arr.locOffset;
-						ir->index = index.locOffset;
-						ir->dst = arr.locOffset;
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_16;
+						break;
+					}
+					case 20:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_20;
+						break;
+					}
+					case 24:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_24;
+						break;
+					}
+					case 28:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_28;
+						break;
+					}
+					case 32:
+					{
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_size_32;
 						break;
 					}
 					default:
 					{
-						CreateAddIR(ir, GetArrayElementVarVar_n);
-						ir->arr = arr.locOffset;
-						ir->index = index.locOffset;
-						ir->dst = arr.locOffset;
-						break;
+						ir->type = HiOpcodeEnum::GetArrayElementVarVar_n;
 					}
 					}
 					break;
