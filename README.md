@@ -11,9 +11,9 @@
 <br/>
 <br/>
 
-HybridCLR is a **almost perfect** full-platform native c# hot update solution for Unity with complete features, zero cost, high performance, and low memory**.
+HybridCLR is a full-platform native c# hot update solution for Unity with **complete features, zero cost, high performance, and low memory**.
 
-HybridCLR expands the ability of il2cpp, making it change from pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to 'AOT+Interpreter' hybrid runtime, and then natively supports dynamic loading of assembly , so that the games packaged based on il2cpp backend can be executed not only on the Android platform, but also on IOS, Consoles and other platforms that limit JIT efficiently in **AOT+interpreter** hybrid mode, completely supporting hot updates from the bottom layer.
+HybridCLR extends the ability of il2cpp, making it change from pure [AOT](https://en.wikipedia.org/wiki/Ahead-of-time_compilation) runtime to 'AOT+Interpreter' runtime, and then natively supports dynamic loading of assembly , so that the games built based on il2cpp backend can be executed not only on the Android platform, but also on IOS, Consoles and other platforms that support only AOT mode.
 
 HybridCLR not only supports the traditional fully interpreted execution mode, but also pioneered [Differential Hybrid Execution](https://hybridclr.doc.code-philosophy.com/en/docs/business/differentialhybridexecution) technique. That is, you can add, delete, or modify the AOT dll at will, and intelligently make the changed or newly added classes and functions run in interpreter mode, but the unchanged classes and functions run in AOT mode, so that the running performance of the hot-updated game logic basically reaches the original AOT level.
 
@@ -65,8 +65,8 @@ Other hot update solutions are independent vm, and the relationship with il2cpp 
 
 HybridCLR has been widely verified as a very efficient and stable solution for hot update of Unity.
 
-The official versions of **extremely stable** 1.x, 2.x, and 3.x are currently released, which are sufficient to meet the stability requirements of large and medium-sized commercial projects.
-At present, at least thousands of commercial game projects have been integrated, and hundreds of them have been launched on both ends. The online projects include MMORPG, heavy card, heavy tower defense and other games. **Most top game companies** (such as Tencent and NetEase) are already using HybridCLR.
+The official versions of **extremely stable** 1.x, 2.x, 3.x and 4.x are currently released, which are sufficient to meet the stability requirements of large and medium-sized commercial projects.
+At present, at least thousands of commercial game projects are using HybridCLR, and hundreds of them have been launched on multi-platforms. **Most top game companies** (such as Tencent and NetEase) are already using HybridCLR.
 
 You can read the [game projects in top game companies](https://hybridclr.doc.code-philosophy.com/en/docs/other/businesscase) those are using HybridCLR and has been launched.
 
