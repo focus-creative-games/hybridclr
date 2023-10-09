@@ -60,7 +60,7 @@ namespace interpreter
 		AppendString(sigBuf, bufSize, pos, "$");
 	}
 
-	static void AppendSignature(const Il2CppType* type, char* sigBuf, size_t bufferSize, size_t& pos);
+	static void AppendSignature(const Il2CppType* type, char* sigBuf, size_t bufferSize, size_t& pos, bool convertTypeName2SigName = true);
 
 	static bool IsSystemOrUnityAssembly(const Il2CppImage* image)
 	{
@@ -115,12 +115,12 @@ namespace interpreter
 			{
 				AppendString(sigBuf, bufferSize, pos, ",");
 			}
-			AppendSignature(classInst->type_argv[i], sigBuf, bufferSize, pos);
+			AppendSignature(classInst->type_argv[i], sigBuf, bufferSize, pos, false);
 		}
 		AppendString(sigBuf, bufferSize, pos, ">");
 	}
 
-	static void AppendSignature(const Il2CppType* type, char* sigBuf, size_t bufferSize, size_t& pos)
+	static void AppendSignature(const Il2CppType* type, char* sigBuf, size_t bufferSize, size_t& pos, bool convertTypeName2SigName)
 	{
 		if (type->byref)
 		{
@@ -168,7 +168,7 @@ namespace interpreter
 			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 			BuildValueTypeFullName(klass, tempFullName, sizeof(tempFullName) - 1, fullNamePos);
 			tempFullName[fullNamePos] = 0;
-			AppendString(sigBuf, bufferSize, pos, InterpreterModule::GetValueTypeSignature(tempFullName));
+			AppendString(sigBuf, bufferSize, pos, convertTypeName2SigName ? InterpreterModule::GetValueTypeSignature(tempFullName) : tempFullName);
 			break;
 		}
 		case IL2CPP_TYPE_GENERICINST:
@@ -196,7 +196,7 @@ namespace interpreter
 			size_t fullNamePos = 0;
 			BuildGenericValueTypeFullName(type, tempFullName, sizeof(tempFullName) - 1, fullNamePos);
 			tempFullName[fullNamePos] = 0;
-			AppendString(sigBuf, bufferSize, pos, InterpreterModule::GetValueTypeSignature(tempFullName));
+			AppendString(sigBuf, bufferSize, pos, convertTypeName2SigName ? InterpreterModule::GetValueTypeSignature(tempFullName) : tempFullName);
 			break;
 		}
 		case IL2CPP_TYPE_VAR:
