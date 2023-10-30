@@ -196,6 +196,10 @@ namespace interpreter
 			TEMP_FORMAT(errMsg, "GetManaged2NativeMethodPointer. sinature:%s not support.", sigName);
 			RaiseMethodNotSupportException(method, errMsg);
 		}
+		if (!InitAndGetInterpreterDirectlyCallMethodPointer(method))
+		{
+			RaiseAOTGenericMethodNotInstantiatedException(method);
+		}
 		void* thisPtr;
 		uint16_t* argVarIndexBase;
 		if (hybridclr::metadata::IsInstanceMethod(method))
