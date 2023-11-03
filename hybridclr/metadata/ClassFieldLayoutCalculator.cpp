@@ -147,7 +147,7 @@ namespace metadata
         for (FieldLayout* field : fields)
         {
             SizeAndAlignment sa = GetTypeSizeAndAlignment(field->type);
-            field->size = sa.nativeSize ? sa.nativeSize : sa.size;
+            field->size = sa.size;// sa.nativeSize > 0 ? sa.nativeSize : sa.size;
 
             // For fields, we might not want to take the actual alignment of the type - that might account for
             // packing. When a type is used as a field, we should not care about its alignment with packing,
@@ -274,6 +274,10 @@ namespace metadata
             IL2CPP_ASSERT(IsValueType(typeDef));
             IL2CPP_ASSERT(isCurAssemblyType);
             int32_t instanceSize = IL2CPP_SIZEOF_STRUCT_WITH_NO_INSTANCE_FIELDS + sizeof(Il2CppObject);
+            if (classLayoutData.classSize > 0)
+			{
+                instanceSize = std::max(instanceSize, (int32_t)classLayoutData.classSize + (int32_t)sizeof(Il2CppObject));
+			}
             for (FieldLayout& field : fields)
             {
                 if (!IsInstanceField(field.type))
@@ -345,7 +349,7 @@ namespace metadata
             }
             if (classLayoutData.classSize > 0)
             {
-                layout.actualSize = layout.instanceSize = layout.instanceSize = classLayoutData.classSize + sizeof(Il2CppObject);
+                layout.actualSize = layout.nativeSize = layout.instanceSize = classLayoutData.classSize + sizeof(Il2CppObject);
             }
         }
 	}
