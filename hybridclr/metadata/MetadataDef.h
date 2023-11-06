@@ -455,7 +455,7 @@ namespace metadata
 	{
 		Il2CppType containerType; // maybe generic
 		const Il2CppMethodDefinition* methodDef;
-		Il2CppGenericInst* instantiation;
+		const Il2CppGenericInst* instantiation;
 	};
 
 	struct MethodImpl

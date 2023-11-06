@@ -713,13 +713,15 @@ namespace metadata
 		}
 	}
 
-	Il2CppGenericInst* TryInflateGenericInst(Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext)
+	const Il2CppGenericInst* TryInflateGenericInst(const Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext)
 	{
+		IL2CPP_ASSERT(inst->type_argc > 0);
+		const Il2CppType** argv = (const Il2CppType**)alloca(sizeof(Il2CppType*) * inst->type_argc);
 		for (uint32_t i = 0; i < inst->type_argc; i++)
 		{
-			inst->type_argv[i] = TryInflateIfNeed(inst->type_argv[i], genericContext, true);
+			argv[i] = TryInflateIfNeed(inst->type_argv[i], genericContext, true);
 		}
-		return inst;
+		return il2cpp::vm::MetadataCache::GetGenericInst(argv, inst->type_argc);
 	}
 }
 }

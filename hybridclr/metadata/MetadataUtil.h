@@ -339,7 +339,7 @@ namespace metadata
         return newType;
     }
 
-    Il2CppGenericInst* TryInflateGenericInst(Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext);
+    const Il2CppGenericInst* TryInflateGenericInst(const Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext);
 
 #pragma endregion
 
