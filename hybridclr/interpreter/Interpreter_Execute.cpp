@@ -4115,13 +4115,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgt((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCle((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4130,13 +4130,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgt((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCle((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4145,13 +4145,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgt((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCle((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4160,13 +4160,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgt((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCle((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4175,13 +4175,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgtUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCleUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4190,13 +4190,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgtUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCleUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4205,13 +4205,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgtUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCleUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4220,13 +4220,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgtUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCleUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4235,13 +4235,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCge((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareClt((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4250,13 +4250,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCge((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareClt((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4265,13 +4265,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCge((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareClt((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4280,13 +4280,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCge((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareClt((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4295,13 +4295,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgeUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCltUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4310,13 +4310,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgeUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCltUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4325,13 +4325,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgeUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCltUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4340,13 +4340,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCgeUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCltUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4355,13 +4355,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareClt((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCge((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4370,13 +4370,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareClt((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCge((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4385,13 +4385,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareClt((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCge((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4400,13 +4400,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareClt((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCge((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4415,13 +4415,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCltUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCgeUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4430,13 +4430,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCltUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCgeUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4445,13 +4445,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCltUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCgeUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4460,13 +4460,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCltUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCgeUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4475,13 +4475,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCle((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCgt((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4490,13 +4490,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCle((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCgt((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4505,13 +4505,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCle((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCgt((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4520,13 +4520,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCle((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCgt((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4535,13 +4535,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCleUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
+				    if (CompareCgtUn((*(int32_t*)(localVarBase + __op1)), (*(int32_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4550,13 +4550,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCleUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
+				    if (CompareCgtUn((*(int64_t*)(localVarBase + __op1)), (*(int64_t*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4565,13 +4565,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCleUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
+				    if (CompareCgtUn((*(float*)(localVarBase + __op1)), (*(float*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
@@ -4580,13 +4580,13 @@ else \
 					uint16_t __op1 = *(uint16_t*)(ip + 2);
 					uint16_t __op2 = *(uint16_t*)(ip + 4);
 					int32_t __offset = *(int32_t*)(ip + 8);
-				    if (CompareCleUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
+				    if (CompareCgtUn((*(double*)(localVarBase + __op1)), (*(double*)(localVarBase + __op2))))
 				    {
-				        ip = ipBase + __offset;
+				        ip += 16;
 				    }
 				    else
 				    {
-				        ip += 16;
+				        ip = ipBase + __offset;
 				    }
 				    continue;
 				}
