@@ -30,7 +30,11 @@ namespace interpreter
 			}
 			else
 			{
+#if SUPPORT_MEMORY_NOT_ALIGMENT_ACCESS
 				CopyStackObject(dst, args[i], argDesc.stackObjectSize);
+#else
+				std::memcpy(dst, args[i], argDesc.stackObjectSize * sizeof(StackObject));
+#endif
 				dstIdx += argDesc.stackObjectSize;
 			}
 		}
