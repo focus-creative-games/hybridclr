@@ -86,7 +86,7 @@ namespace metadata
         case IL2CPP_TYPE_VALUETYPE:
         {
             CalcClassNotStaticFields(type);
-            ClassLayoutInfo& classLayout = _classMap[type];
+            ClassLayoutInfo& classLayout = *_classMap[type];
             sa.size = classLayout.instanceSize - sizeof(Il2CppObject);
             sa.nativeSize = classLayout.nativeSize;
             sa.alignment = classLayout.alignment;
@@ -103,7 +103,7 @@ namespace metadata
             if (IsValueType(typeDef))
             {
                 CalcClassNotStaticFields(type);
-                ClassLayoutInfo& classLayout = _classMap[type];
+                ClassLayoutInfo& classLayout = *_classMap[type];
                 sa.size = classLayout.instanceSize - sizeof(Il2CppObject);
                 sa.nativeSize = classLayout.nativeSize;
                 sa.alignment = classLayout.alignment;
@@ -216,7 +216,7 @@ namespace metadata
 		{
 			return;
 		}
-		ClassLayoutInfo& layout = _classMap[type] = {};
+		ClassLayoutInfo& layout = *(_classMap[type] = new ClassLayoutInfo());
 		layout.type = type;
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
 		std::vector<FieldLayout>& fields = layout.fields;
@@ -357,7 +357,7 @@ namespace metadata
 	void ClassFieldLayoutCalculator::CalcClassStaticFields(const Il2CppType* type)
 	{
         IL2CPP_ASSERT(_classMap.find(type) != _classMap.end());
-        ClassLayoutInfo& layout = _classMap[type];
+        ClassLayoutInfo& layout = *_classMap[type];
 
         std::vector<FieldLayout*> staticFields;
         std::vector<FieldLayout*> threadStaticFields;

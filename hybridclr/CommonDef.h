@@ -8,6 +8,9 @@
 
 #include "utils/Memory.h"
 #include "utils/StringView.h"
+#include "utils/Il2CppHashSet.h"
+#include "utils/Il2CppHashMap.h"
+#include "utils/HashUtils.h"
 #include "vm/GlobalMetadataFileInternals.h"
 #include "vm/Exception.h"
 #include "vm/Class.h"

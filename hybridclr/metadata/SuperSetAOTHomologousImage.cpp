@@ -29,7 +29,7 @@ namespace metadata
 		const Table& typeDefTb = _rawImage.GetTable(TableType::TYPEDEF);
 		uint32_t typeCount = typeDefTb.rowNum;
 		_typeDefs.resize(typeCount);
-		_aotTypeIndex2TypeDefs.reserve(typeCount);
+		_aotTypeIndex2TypeDefs.resize(typeCount);
 
 		Il2CppImage* image = _aotAssembly->image;
 		for (uint32_t index = 0; index < typeCount; index++)
@@ -147,7 +147,7 @@ namespace metadata
 		const Table& methodTb = _rawImage.GetTable(TableType::METHOD);
 		uint32_t methodCount = methodTb.rowNum;
 		_methodDefs.resize(methodCount);
-		_token2MethodDefs.reserve(methodCount * 2);
+		_token2MethodDefs.resize(methodCount * 2);
 		uint32_t typeCount = (uint32_t)_typeDefs.size();
 		for (SuperSetTypeDefDetail& type : _typeDefs)
 		{

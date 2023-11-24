@@ -68,9 +68,9 @@ namespace hybridclr
 			Il2CppType _defaultIl2CppType;
 
 			std::vector<SuperSetTypeDefDetail> _typeDefs;
-			std::unordered_map<int32_t, SuperSetTypeDefDetail*> _aotTypeIndex2TypeDefs;
+			Il2CppHashMap<int32_t, SuperSetTypeDefDetail*, il2cpp::utils::PassThroughHash<int32_t>> _aotTypeIndex2TypeDefs;
 
-			std::unordered_map<uint32_t, SuperSetMethodDefDetail*> _token2MethodDefs;
+			Il2CppHashMap<uint32_t, SuperSetMethodDefDetail*, il2cpp::utils::PassThroughHash<uint32_t>> _token2MethodDefs;
 			std::vector<SuperSetMethodDefDetail> _methodDefs;
 
 			std::vector<SuperSetFieldDefDetail> _fields;

@@ -10,7 +10,7 @@ namespace hybridclr
 namespace transform
 {
 
-	void BasicBlockSpliter::SplitNormal(const byte* ilcodeStart, uint32_t codeSize, std::unordered_set<uint32_t>& ilOffsets)
+	void BasicBlockSpliter::SplitNormal(const byte* ilcodeStart, uint32_t codeSize, Uin32Set& ilOffsets)
 	{
 		const byte* codeEnd = ilcodeStart + codeSize;
 		const byte* ip = ilcodeStart;
@@ -115,11 +115,13 @@ namespace transform
 	{
 		const byte* ilcodeStart = _body.ilcodes;
 
-		std::unordered_set<uint32_t> ilOffsets;
-		ilOffsets.insert(_body.codeSize);
+		uint32_t codeSize = _body.codeSize;
 
-		SplitNormal(ilcodeStart, _body.codeSize, ilOffsets);
-		SplitExceptionHandles(ilcodeStart, _body.codeSize, _body.exceptionClauses);
+		Uin32Set ilOffsets(codeSize);
+		ilOffsets.insert(codeSize);
+
+		SplitNormal(ilcodeStart, codeSize, ilOffsets);
+		SplitExceptionHandles(ilcodeStart, codeSize, _body.exceptionClauses);
 
 		/*if (_splitOffsets.find(0) != _splitOffsets.end())
 		{
@@ -130,7 +132,7 @@ namespace transform
 		{
 			IL2CPP_ASSERT(ilOffsets.find(offset) != ilOffsets.end());
 		}
-		IL2CPP_ASSERT(_splitOffsets.find(_body.codeSize) != _splitOffsets.end());
+		IL2CPP_ASSERT(_splitOffsets.find(codeSize) != _splitOffsets.end());
 #endif
 	}
 }

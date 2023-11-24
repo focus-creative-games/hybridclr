@@ -54,7 +54,7 @@ namespace metadata
 
 	class InterpreterImage;
 
-	typedef std::unordered_map<const Il2CppType*, ClassLayoutInfo, Il2CppTypeHash, Il2CppTypeEqualTo> Il2CppType2ClassLayoutInfoMap;
+	typedef Il2CppHashMap<const Il2CppType*, ClassLayoutInfo*, Il2CppTypeHash, Il2CppTypeEqualTo> Il2CppType2ClassLayoutInfoMap;
 
 	class ClassFieldLayoutCalculator
 	{
@@ -71,7 +71,7 @@ namespace metadata
 		ClassLayoutInfo* GetClassLayoutInfo(const Il2CppType* type)
 		{
 			auto it = _classMap.find(type);
-			return it != _classMap.end() ? &it->second : nullptr;
+			return it != _classMap.end() ? it->second : nullptr;
 		}
 
 		void CalcClassNotStaticFields(const Il2CppType* type);

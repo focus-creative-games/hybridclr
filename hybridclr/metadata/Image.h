@@ -126,9 +126,9 @@ namespace metadata
 
 		RawImage _rawImage;
 		Il2CppHashMap<const char*, const Il2CppAssembly*, CStringHash, CStringEqualTo> _nameToAssemblies;
-		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, std::hash<uint32_t>> _il2cppStringCache;
+		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, il2cpp::utils::PassThroughHash<uint32_t>> _il2cppStringCache;
 
-		std::unordered_map<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> _token2ResolvedDataCache;
+		Il2CppHashMap<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> _token2ResolvedDataCache;
 	};
 }
 }

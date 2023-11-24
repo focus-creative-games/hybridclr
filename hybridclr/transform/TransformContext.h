@@ -173,8 +173,8 @@ namespace transform
 		EvalStackVarInfo* evalStack;
 		int32_t evalStackBaseOffset;
 		std::vector<uint64_t>& resolveDatas;
-		std::unordered_map<uint32_t, uint32_t>& token2DataIdxs;
-		std::unordered_map<const void*, uint32_t>& ptr2DataIdxs;
+		Il2CppHashMap<uint32_t, uint32_t, il2cpp::utils::PassThroughHash<uint32_t>>& token2DataIdxs;
+		Il2CppHashMap<const void*, uint32_t, il2cpp::utils::PassThroughHash<const void*>>& ptr2DataIdxs;
 		std::vector<int32_t*>& relocationOffsets;
 		std::vector<std::pair<int32_t, int32_t>>& switchOffsetsInResolveData;
 		std::vector<FlowInfo*>& pendingFlows;

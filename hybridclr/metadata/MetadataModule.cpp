@@ -31,9 +31,9 @@ namespace hybridclr
 namespace metadata
 {
 
-    std::unordered_map<const MethodInfo*, const ReversePInvokeInfo*> MetadataModule::s_methodInfo2ReverseInfos;
-    std::unordered_map<Il2CppMethodPointer, const ReversePInvokeInfo*> MetadataModule::s_methodPointer2ReverseInfos;
-    std::unordered_map<const char*, int32_t, CStringHash, CStringEqualTo> MetadataModule::s_methodSig2Indexs;
+    Il2CppHashMap<const MethodInfo*, const ReversePInvokeInfo*, il2cpp::utils::PointerHash<MethodInfo>> MetadataModule::s_methodInfo2ReverseInfos;
+    Il2CppHashMap<Il2CppMethodPointer, const ReversePInvokeInfo*, il2cpp::utils::PassThroughHash<Il2CppMethodPointer>> MetadataModule::s_methodPointer2ReverseInfos;
+    Il2CppHashMap<const char*, int32_t, CStringHash, CStringEqualTo> MetadataModule::s_methodSig2Indexs;
     std::vector<ReversePInvokeInfo> MetadataModule::s_reverseInfos;
 
     static baselib::ReentrantLock g_reversePInvokeMethodLock;
@@ -54,8 +54,8 @@ namespace metadata
                 s_methodSig2Indexs.insert({ data.methodSig, i });
             }
         }
-        s_methodInfo2ReverseInfos.reserve(s_reverseInfos.size() * 2);
-        s_methodPointer2ReverseInfos.reserve(s_reverseInfos.size() * 2);
+        s_methodInfo2ReverseInfos.resize(s_reverseInfos.size() * 2);
+        s_methodPointer2ReverseInfos.resize(s_reverseInfos.size() * 2);
         for (ReversePInvokeInfo& rpi : s_reverseInfos)
         {
             s_methodPointer2ReverseInfos.insert({ rpi.methodPointer, &rpi });

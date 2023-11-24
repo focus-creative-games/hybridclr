@@ -28,7 +28,7 @@ namespace metadata
 		std::vector<const Il2CppType*> _il2cppTypeForTypeDefs;
 		std::vector<Il2CppTypeDefinition*> _typeDefs;
 
-		std::unordered_map<uint32_t, MethodBody*> _token2MethodBodies;
+		Il2CppHashMap<uint32_t, MethodBody*, il2cpp::utils::PassThroughHash<uint32_t>> _token2MethodBodies;
 		std::vector< const Il2CppMethodDefinition*> _methodDefs;
 
 		std::vector<AOTFieldData> _fields;

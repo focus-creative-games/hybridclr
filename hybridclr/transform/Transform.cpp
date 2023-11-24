@@ -196,9 +196,9 @@ else \
 
 		std::vector<uint64_t>& resolveDatas = result.resolveDatas;
 		// TODO. alloc use pool
-		std::unordered_map<uint32_t, uint32_t> token2DataIdxs;
+		Il2CppHashMap<uint32_t, uint32_t, il2cpp::utils::PassThroughHash<uint32_t>> token2DataIdxs;
 		// TOTO. alloc use pool
-		std::unordered_map<const void*, uint32_t> ptr2DataIdxs;
+		Il2CppHashMap<const void*, uint32_t, il2cpp::utils::PassThroughHash<const void*>> ptr2DataIdxs;
 
 		resolveDatas.push_back(0); // reserved
 

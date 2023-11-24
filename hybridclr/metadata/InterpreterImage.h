@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #if HYBRIDCLR_UNITY_2021_OR_NEW
 #include "metadata/CustomAttributeDataReader.h"
 #include "CustomAttributeDataWriter.h"
@@ -636,7 +638,7 @@ namespace metadata
 		std::vector<Il2CppTypeDefinition> _exportedTypeDefines;
 
 		std::vector<Il2CppType> _types;
-		std::unordered_map<Il2CppType, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;
+		Il2CppHashMap<Il2CppType, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;
 		std::vector<TypeIndex> _interfaceDefines;
 		std::vector<InterfaceOffsetInfo> _interfaceOffsets;
 
