@@ -401,7 +401,6 @@ namespace metadata
 		default:
 		{
 			RaiseBadImageException("Image::ReadTypeFromResolutionScope invaild TableType");
-			break;
 		}
 		}
 		IL2CPP_ASSERT(type.data.typeHandle);

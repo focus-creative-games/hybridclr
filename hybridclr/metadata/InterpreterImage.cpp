@@ -91,13 +91,20 @@ namespace metadata
 		image2->exportedTypeCount = _rawImage.GetTableRowNum(TableType::EXPORTEDTYPE);
 		image2->customAttributeCount = _rawImage.GetTableRowNum(TableType::CUSTOMATTRIBUTE);
 
-		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppImageGlobalMetadata));
+#if HYBRIDCLR_UNITY_2019
+		image2->typeStart = EncodeWithIndex(0);
+		image2->customAttributeStart = EncodeWithIndex(0);
+		image2->entryPointIndex = EncodeWithIndexExcept0(_rawImage.GetEntryPointToken());
+		image2->exportedTypeStart = EncodeWithIndex(0);
+#else
+		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)il2cpp::vm::MetadataMalloc(sizeof(Il2CppImageGlobalMetadata));
 		metadataImage->typeStart = EncodeWithIndex(0);
 		metadataImage->customAttributeStart = EncodeWithIndex(0);
 		metadataImage->entryPointIndex = EncodeWithIndexExcept0(_rawImage.GetEntryPointToken());
 		metadataImage->exportedTypeStart = EncodeWithIndex(0);
 		metadataImage->image = image2;
 		image2->metadataHandle = reinterpret_cast<Il2CppMetadataImageHandle>(metadataImage);
+#endif
 
 		image2->nameToClassHashTable = nullptr;
 		image2->codeGenModule = nullptr;
@@ -168,6 +175,11 @@ namespace metadata
 			SET_IL2CPPTYPE_VALUE_TYPE(cppType, isValueType);
 			cppType.data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
+#if HYBRIDCLR_UNITY_2019
+			Il2CppType byRefType = cppType;
+			byRefType.byref = 1;
+			cur.byrefTypeIndex = AddIl2CppTypeCache(byRefType);
+#endif
 
 			if (IsInterface(cur.flags))
 			{
@@ -550,7 +562,7 @@ namespace metadata
 			Il2CppType type = {};
 			type.type = (Il2CppTypeEnum)data.type;
 			TypeIndex dataTypeIndex = AddIl2CppTypeCache(type);
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 			bool isNullValue = type.type == IL2CPP_TYPE_CLASS;
 #endif
 			switch (parentType)
@@ -631,7 +643,7 @@ namespace metadata
 #endif
 				curTypeRange = &_customAttributeHandles[handleIndex];
 			}
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 			++curTypeRange->count;
 #endif
 			TableType ctorMethodTableType = DecodeCustomAttributeTypeCodedIndexTableType(data.type);
@@ -1099,7 +1111,7 @@ namespace metadata
 	}
 #endif
 
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 
 	void InterpreterImage::ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod)
 	{
@@ -1486,6 +1498,20 @@ namespace metadata
 		{
 			last->property_count = propertyTb.rowNum - DecodeMetadataIndex(last->propertyStart) + 1;
 		}
+#if HYBRIDCLR_UNITY_2019
+		for (const TypeDefinitionDetail& tdd : _typeDetails)
+		{
+			const Il2CppTypeDefinition* typeDef = tdd.typeDef;
+			if (typeDef->property_count == 0)
+			{
+				continue;
+	}
+			for (int32_t start = DecodeMetadataIndex(typeDef->propertyStart), i = 0; i < typeDef->property_count; i++)
+			{
+				_propeties[start + i - 1].declaringType = typeDef;
+			}
+		}
+#endif
 	}
 
 	void InterpreterImage::InitEvents()
@@ -1497,7 +1523,12 @@ namespace metadata
 		for (uint32_t rowIndex = 1; rowIndex <= eventTb.rowNum; rowIndex++)
 		{
 			TbEvent data = _rawImage.ReadEvent(rowIndex);
-			_events.push_back({ _rawImage.GetStringFromRawIndex(data.name), data.eventFlags, data.eventType, 0, 0, 0});
+			_events.push_back({ _rawImage.GetStringFromRawIndex(data.name), data.eventFlags, data.eventType, 0, 0, 0
+#if HYBRIDCLR_UNITY_2019
+				, nullptr
+				, { (StringIndex)EncodeWithIndex(data.name), kTypeIndexInvalid, kMethodIndexInvalid, kMethodIndexInvalid, kMethodIndexInvalid, EncodeToken(TableType::EVENT, rowIndex)}
+#endif
+				});
 		}
 
 		Il2CppTypeDefinition* last = nullptr;
@@ -1516,6 +1547,22 @@ namespace metadata
 		{
 			last->event_count = eventTb.rowNum - DecodeMetadataIndex(last->eventStart) + 1;
 		}
+#if HYBRIDCLR_UNITY_2019
+		for (const TypeDefinitionDetail& tdd : _typeDetails)
+		{
+			const Il2CppTypeDefinition* typeDef = tdd.typeDef;
+			if (typeDef->event_count == 0)
+			{
+				continue;
+	}
+			for (int32_t start = DecodeMetadataIndex(typeDef->eventStart), i = 0; i < typeDef->event_count; i++)
+			{
+				EventDetail& ed = _events[start + i - 1];
+				ed.declaringType = typeDef;
+				ed.il2cppDefinition.typeIndex = typeDef->byvalTypeIndex;
+			}
+		}
+#endif
 	}
 
 
@@ -1534,30 +1581,45 @@ namespace metadata
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
 				pd.getterMethodIndex = method;
+#if HYBRIDCLR_UNITY_2019
+				pd.il2cppDefinition.get = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
+#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::Setter)
 			{
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
 				pd.setterMethodIndex = method;
+#if HYBRIDCLR_UNITY_2019
+				pd.il2cppDefinition.set = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
+#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::AddOn)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
 				ed.addMethodIndex = method;
+#if HYBRIDCLR_UNITY_2019
+				ed.il2cppDefinition.add = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
+#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::RemoveOn)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
 				ed.removeMethodIndex = method;
+#if HYBRIDCLR_UNITY_2019
+				ed.il2cppDefinition.remove = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
+#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::Fire)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
 				ed.fireMethodIndex = method;
+#if HYBRIDCLR_UNITY_2019
+				ed.il2cppDefinition.raise = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
+#endif
 			}
 		}
 	}
@@ -2126,7 +2188,7 @@ namespace metadata
 		else
 		{
 			uint32_t len = reader.ReadCompressedUint32();
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 			return il2cpp::vm::String::NewLen((char*)reader.GetAndSkipCurBytes(len), len);
 #else
 			char* chars = (char*)reader.GetDataOfReadPosition();

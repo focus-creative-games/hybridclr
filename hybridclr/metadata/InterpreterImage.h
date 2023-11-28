@@ -55,7 +55,7 @@ namespace metadata
 		uint32_t signatureBlobIndex;
 		uint32_t getterMethodIndex; // start from 1;
 		uint32_t setterMethodIndex;
-		Il2CppTypeDefinition* declaringType;
+		const Il2CppTypeDefinition* declaringType;
 		Il2CppPropertyDefinition il2cppDefinition;
 	};
 
@@ -67,6 +67,10 @@ namespace metadata
 		uint32_t addMethodIndex; // start from 1
 		uint32_t removeMethodIndex; // start from 1
 		uint32_t fireMethodIndex; // start from 1;
+#if HYBRIDCLR_UNITY_2019
+		const Il2CppTypeDefinition* declaringType;
+		Il2CppEventDefinition il2cppDefinition;
+#endif
 	};
 
 	struct CustomAttribute
@@ -377,7 +381,7 @@ namespace metadata
 
 		const uint8_t* GetFieldOrParameterDefalutValueByRawIndex(uint32_t index)
 		{
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 			return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(index);
 #else
 			BlobSource source = (BlobSource)(index & 0x1);
@@ -416,6 +420,16 @@ namespace metadata
 			return { pd.name, getter, setter, pd.flags, EncodeToken(TableType::PROPERTY, rowIndex) };
 		}
 
+#ifdef HYBRIDCLR_UNITY_2019
+		const Il2CppEventDefinition* GetEventDefinitionFromIndex(EventIndex index)
+		{
+			IL2CPP_ASSERT(index > 0 && index <= (int32_t)_events.size());
+			EventDetail& pd = _events[index - 1];
+			return &pd.il2cppDefinition;
+		}
+#endif
+
+
 		Il2CppMetadataEventInfo GetEventInfo(const Il2CppClass* klass, TypeEventIndex index)
 		{
 			const Il2CppTypeDefinition* typeDef = (Il2CppTypeDefinition*)klass->typeMetadataHandle;
@@ -443,7 +457,7 @@ namespace metadata
 			return it != _tokenCustomAttributes.end() ? it->second.typeRangeIndex : kCustomAttributeIndexInvalid;
 		}
 
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 		std::tuple<void*, void*> GetCustomAttributeDataRange(uint32_t token)
 		{
 			const Il2CppCustomAttributeTypeRange* dataRangeCur = (const Il2CppCustomAttributeTypeRange*)GetCustomAttributeTypeToken(token);
@@ -624,7 +638,7 @@ namespace metadata
 		Il2CppObject* ReadBoxedValue(BlobReader& reader);
 		void ReadFixedArg(BlobReader& reader, const Il2CppType* argType, void* data);
 		void ReadCustomAttributeFieldOrPropType(BlobReader& reader, Il2CppType& type);
-#if HYBRIDCLR_UNITY_2020
+#if !HYBRIDCLR_UNITY_2021_OR_NEW
 		void ConstructCustomAttribute(BlobReader& reader, Il2CppObject* obj, const MethodInfo* ctorMethod);
 #endif
 
