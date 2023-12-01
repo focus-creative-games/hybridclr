@@ -68,6 +68,14 @@ namespace metadata
 
 		}
 
+		~ClassFieldLayoutCalculator()
+		{
+			for (auto it : _classMap)
+			{
+				IL2CPP_FREE(it.second);
+			}
+		}
+
 		ClassLayoutInfo* GetClassLayoutInfo(const Il2CppType* type)
 		{
 			auto it = _classMap.find(type);
