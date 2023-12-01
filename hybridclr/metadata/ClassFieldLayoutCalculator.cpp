@@ -216,7 +216,7 @@ namespace metadata
 		{
 			return;
 		}
-		ClassLayoutInfo& layout = *(_classMap[type] = new ClassLayoutInfo());
+		ClassLayoutInfo& layout = *(_classMap[type] = new (IL2CPP_MALLOC_ZERO(sizeof(ClassLayoutInfo))) ClassLayoutInfo());
 		layout.type = type;
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
 		std::vector<FieldLayout>& fields = layout.fields;
