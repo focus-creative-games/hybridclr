@@ -443,6 +443,11 @@ namespace transform
 			switch (ir->type)
 			{
 				case HiOpcodeEnum::BoxVarVar:
+				{
+					IRBoxVarVar* irBox = (IRBoxVarVar*)ir;
+					Il2CppClass* klass = ((Il2CppClass*)resolveDatas[irBox->klass]);
+					return IS_CLASS_VALUE_TYPE(klass) && !il2cpp::vm::Class::IsNullable(klass);
+				}
 				case HiOpcodeEnum::NewSystemObjectVar:
 				case HiOpcodeEnum::NewString:
 				case HiOpcodeEnum::NewString_2:
