@@ -38,7 +38,9 @@ namespace metadata
 		int32_t size;
 		int32_t nativeSize;
 		uint8_t alignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		uint8_t naturalAlignment;
+#endif
 	};
 
 	struct FieldLayoutData
@@ -49,7 +51,9 @@ namespace metadata
 		int32_t nativeSize;
 		
 		uint8_t minimumAlignment;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
 		uint8_t naturalAlignment;
+#endif
 	};
 
 	class InterpreterImage;
