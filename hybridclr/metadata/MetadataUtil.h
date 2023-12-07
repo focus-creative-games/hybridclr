@@ -305,8 +305,6 @@ namespace metadata
 
     bool IsTypeGenericCompatible(const Il2CppType* t1, const Il2CppType* t2);
 
-    bool IsExactlyMatch(const Il2CppMethodDefinition* src, const Il2CppMethodDefinition* dst);
-
     bool IsOverrideMethod(const Il2CppType* type1, const Il2CppMethodDefinition* method1, const Il2CppType* type2, const Il2CppMethodDefinition* method2);
     bool IsOverrideMethodIgnoreName(const Il2CppType* type1, const Il2CppMethodDefinition* methodDef1, const Il2CppType* type2, const Il2CppMethodDefinition* methodDef2);
 
@@ -325,6 +323,13 @@ namespace metadata
     }
 
     const Il2CppGenericContainer* GetGenericContainerFromIl2CppType(const Il2CppType* type);
+
+    inline const Il2CppGenericContainer* GetGenericContainer(const MethodInfo* methodDef)
+    {
+        return methodDef->is_inflated ?
+            (const Il2CppGenericContainer*)methodDef->genericMethod->methodDefinition->genericContainerHandle :
+            (const Il2CppGenericContainer*)methodDef->genericContainerHandle;
+    }
 
     bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
 
