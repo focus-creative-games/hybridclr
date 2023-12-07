@@ -180,37 +180,6 @@ namespace metadata
 		return true;
 	}
 
-	bool IsExactlyMatch(const Il2CppMethodDefinition* src, const Il2CppMethodDefinition* dst)
-	{
-		if (std::strcmp(il2cpp::vm::GlobalMetadata::GetStringFromIndex(src->nameIndex), il2cpp::vm::GlobalMetadata::GetStringFromIndex(dst->nameIndex)))
-		{
-			return false;
-		}
-		if (src->parameterCount != dst->parameterCount)
-		{
-			return false;
-		}
-
-		if (!IsTypeSameByTypeIndex(src->returnType, dst->returnType))
-		{
-			return false;
-		}
-
-		for (uint32_t i = 0; i < src->parameterCount; i++)
-		{
-			const Il2CppParameterDefinition* srcParam = (const Il2CppParameterDefinition*)il2cpp::vm::GlobalMetadata::GetParameterDefinitionFromIndex(src, src->parameterStart + i);
-			IL2CPP_ASSERT(srcParam);
-			const Il2CppParameterDefinition* dstParam = (const Il2CppParameterDefinition*)il2cpp::vm::GlobalMetadata::GetParameterDefinitionFromIndex(dst, dst->parameterStart + i);
-			IL2CPP_ASSERT(dstParam);
-
-			if (!IsTypeSameByTypeIndex(srcParam->typeIndex, dstParam->typeIndex))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
 	const Il2CppType* TryInflateIfNeed(const Il2CppType* selfType, const Il2CppGenericContext* genericContext, bool inflateMethodVars)
 	{
 		// FIXME mEMORY LEAK
@@ -304,9 +273,34 @@ namespace metadata
 		return false;
 	}
 
+	static bool IsGenericMethodSameGenericParamCount(const Il2CppMethodDefinition* method1, const Il2CppMethodDefinition* method2)
+	{
+		if (method1->genericContainerIndex == kGenericContainerIndexInvalid)
+		{
+			return method2->genericContainerIndex == kGenericContainerIndexInvalid;
+		}
+		else
+		{
+			if (method2->genericContainerIndex == kGenericContainerIndexInvalid)
+			{
+				return false;
+			}
+			else
+			{
+				Il2CppGenericContainer* genericContainer1 = (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(method1->genericContainerIndex);
+				Il2CppGenericContainer* genericContainer2 = (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(method2->genericContainerIndex);
+				return genericContainer1->type_argc == genericContainer2->type_argc;
+			}
+		}
+	}
+
 	bool IsOverrideMethodIgnoreName(const Il2CppType* type1, const Il2CppMethodDefinition* methodDef1, const Il2CppType* type2, const Il2CppMethodDefinition* methodDef2)
 	{
 		if (methodDef1->parameterCount != methodDef2->parameterCount)
+		{
+			return false;
+		}
+		if (!IsGenericMethodSameGenericParamCount(methodDef1, methodDef2))
 		{
 			return false;
 		}
@@ -520,46 +514,6 @@ namespace metadata
 		return false;
 	}
 
-
-	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
-	{
-		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
-		{
-			return false;
-		}
-		Il2CppGenericContainer* methodGenericContainer = methodDef->is_generic ? (Il2CppGenericContainer*)methodDef->genericContainerHandle : nullptr;
-		if (methodGenericContainer)
-		{
-			if (methodGenericContainer->type_argc != resolveSig.genericParamCount)
-			{
-				return false;
-			}
-		}
-		else
-		{
-			if (resolveSig.genericParamCount)
-			{
-				return false;
-			}
-		}
-		const Il2CppType* returnType1 = &resolveSig.returnType;
-		const Il2CppType* returnType2 = methodDef->return_type;
-		if (!IsMatchSigType(returnType2, returnType1, klassGenericContainer, methodGenericContainer))
-		{
-			return false;
-		}
-		for (uint32_t i = 0; i < methodDef->parameters_count; i++)
-		{
-			const Il2CppType* paramType1 = &resolveSig.params[i];
-			const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(methodDef->parameters[i]);
-			if (!IsMatchSigType(paramType2, paramType1, klassGenericContainer, methodGenericContainer))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
 	bool IsMatchMethodSig(const Il2CppMethodDefinition* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
 	{
 		if (methodDef->parameterCount != (uint16_t)resolveSig.params.size())
@@ -604,13 +558,67 @@ namespace metadata
 		return true;
 	}
 
+
+	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
+	{
+		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
+		{
+			return false;
+		}
+		const Il2CppGenericContainer* methodGenericContainer = GetGenericContainer(methodDef);
+		if (methodGenericContainer)
+		{
+			if (methodGenericContainer->type_argc != resolveSig.genericParamCount)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if (resolveSig.genericParamCount)
+			{
+				return false;
+			}
+		}
+		const Il2CppType* returnType1 = &resolveSig.returnType;
+		const Il2CppType* returnType2 = methodDef->return_type;
+		if (!IsMatchSigType(returnType2, returnType1, klassGenericContainer, methodGenericContainer))
+		{
+			return false;
+		}
+		for (uint32_t i = 0; i < methodDef->parameters_count; i++)
+		{
+			const Il2CppType* paramType1 = &resolveSig.params[i];
+			const Il2CppType* paramType2 = GET_METHOD_PARAMETER_TYPE(methodDef->parameters[i]);
+			if (!IsMatchSigType(paramType2, paramType1, klassGenericContainer, methodGenericContainer))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv)
 	{
 		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
 		{
 			return false;
 		}
-		Il2CppGenericContainer* methodGenericContainer = nullptr;
+		const Il2CppGenericContainer* methodGenericContainer = GetGenericContainer(methodDef);
+		if (methodGenericContainer)
+		{
+			if (methodGenericContainer->type_argc != resolveSig.genericParamCount)
+			{
+				return false;
+			}
+		}
+		else
+		{
+			if (resolveSig.genericParamCount)
+			{
+				return false;
+			}
+		}
 		const Il2CppType* returnType1 = &resolveSig.returnType;
 		const Il2CppType* returnType2 = methodDef->return_type;
 		if (!IsMatchSigType(returnType2, returnType1, klassInstArgv, methodInstArgv))
