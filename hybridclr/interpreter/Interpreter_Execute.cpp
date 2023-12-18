@@ -4663,7 +4663,6 @@ else \
 				    StackObject* _frameBasePtr = localVarBase + _argIdxs[0];
 				    Il2CppObject* _this = (Il2CppObject*)(_frameBasePtr - GetStackSizeByByteSize(_typeSize));
 				    _frameBasePtr->ptr = _this;
-				    InitDefaultN(_this, _typeSize);
 				    ((Managed2NativeCallMethod)__managed2NativeMethod)(__method, _argIdxs, localVarBase, nullptr);
 				    std::memmove((void*)(localVarBase + __obj), _this, _typeSize);
 				    ip += 16;
@@ -4710,7 +4709,6 @@ else \
 				    std::memmove(_frameBasePtr + 1, (void*)(localVarBase + __argBase), __argStackObjectNum * sizeof(StackObject)); // move arg
 				    _frameBasePtr->ptr = (StackObject*)(void*)(localVarBase + __obj);
 				    int32_t _typeSize = GetTypeValueSize(__method->klass);
-				    InitDefaultN((void*)(localVarBase + __obj), _typeSize); // init after move
 				    CALL_INTERP_VOID((ip + 16), __method, _frameBasePtr);
 				    continue;
 				}
