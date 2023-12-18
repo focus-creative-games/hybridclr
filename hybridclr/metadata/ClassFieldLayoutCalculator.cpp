@@ -1,6 +1,7 @@
 #include "ClassFieldLayoutCalculator.h"
 
 #include "metadata/FieldLayout.h"
+#include "metadata/GenericMetadata.h"
 #include "vm/Field.h"
 
 #include "InterpreterImage.h"
@@ -102,10 +103,16 @@ namespace metadata
         case IL2CPP_TYPE_ARRAY:
         case IL2CPP_TYPE_CLASS:
         case IL2CPP_TYPE_OBJECT:
-        case IL2CPP_TYPE_VAR:
-        case IL2CPP_TYPE_MVAR:
             sa.size = sa.nativeSize = sizeof(voidptr_t);
             sa.alignment = IL2CPP_ALIGN_OF(voidptr_t);
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
+            sa.naturalAlignment = sa.alignment;
+#endif
+            return sa;
+        case IL2CPP_TYPE_VAR:
+        case IL2CPP_TYPE_MVAR:
+            sa.size = sa.nativeSize = 1;
+            sa.alignment = 1;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
             sa.naturalAlignment = sa.alignment;
 #endif
@@ -255,6 +262,7 @@ namespace metadata
 		ClassLayoutInfo& layout = *(_classMap[type] = new (IL2CPP_MALLOC_ZERO(sizeof(ClassLayoutInfo))) ClassLayoutInfo());
 		layout.type = type;
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+        const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
 		std::vector<FieldLayout>& fields = layout.fields;
         fields.resize(typeDef->field_count, {});
 
@@ -299,6 +307,19 @@ namespace metadata
                 fieldLayout.isThreadStatic = il2cpp::vm::Field::IsThreadStatic(fieldInfo);
             } 
 		}
+
+        if (il2cpp::metadata::GenericMetadata::ContainsGenericParameters(type)
+            || ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) && typeDef->genericContainerIndex != kGenericContainerIndexInvalid))
+        {
+            layout.instanceSize = 0;
+            layout.actualSize = 0;
+            layout.nativeSize = -1;
+            layout.alignment = 1;
+#if !HYBRIDCLR_UNITY_2022_OR_NEW
+            layout.naturalAlignment = 1;
+#endif
+            return;
+        }
 
 
         TbClassLayout classLayoutData = _image->GetClassLayout(typeDef);
