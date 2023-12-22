@@ -9,7 +9,7 @@
 #include "vm/StackTrace.h"
 
 #include "../metadata/MetadataUtil.h"
-#include "../Config.h"
+#include "../RuntimeConfig.h"
 
 #include "InterpreterDefs.h"
 #include "MemoryUtil.h"
@@ -39,7 +39,6 @@ namespace interpreter
 	public:
 		MachineState()
 		{
-			Config& hc = Config::GetIns();
 			_stackSize = -1;
 			_stackBase = nullptr;
 			_stackTopIdx = 0;
@@ -278,9 +277,8 @@ namespace interpreter
 
 		void InitEvalStack()
 		{
-			Config& hc = Config::GetIns();
-			_stackSize = (int32_t)hc.GetInterpreterThreadObjectStackSize();
-			_stackBase = (StackObject*)IL2CPP_MALLOC_ZERO(hc.GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
+			_stackSize = (int32_t)RuntimeConfig::GetInterpreterThreadObjectStackSize();
+			_stackBase = (StackObject*)IL2CPP_MALLOC_ZERO(RuntimeConfig::GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
 			_stackTopIdx = 0;
 			_localPoolBottomIdx = _stackSize;
 			il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
@@ -288,17 +286,15 @@ namespace interpreter
 
 		void InitFrames()
 		{
-			Config& hc = Config::GetIns();
-			_frameBase = (InterpFrame*)IL2CPP_CALLOC(hc.GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
-			_frameCount = (int32_t)hc.GetInterpreterThreadFrameStackSize();
+			_frameBase = (InterpFrame*)IL2CPP_CALLOC(RuntimeConfig::GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
+			_frameCount = (int32_t)RuntimeConfig::GetInterpreterThreadFrameStackSize();
 			_frameTopIdx = 0;
 		}
 
 		void InitExceptionFlows()
 		{
-			Config& hc = Config::GetIns();
-			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(hc.GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
-			_exceptionFlowCount = (int32_t)hc.GetInterpreterThreadExceptionFlowSize();
+			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(RuntimeConfig::GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
+			_exceptionFlowCount = (int32_t)RuntimeConfig::GetInterpreterThreadExceptionFlowSize();
 			_exceptionFlowTopIdx = 0;
 		}
 
