@@ -258,17 +258,21 @@ namespace interpreter
 
 		void CollectFrames(il2cpp::vm::StackFrames* stackFrames)
 		{
+			if (_frameTopIdx <= 0)
+			{
+				return;
+			}
+			stackFrames->insert(stackFrames->begin(), _frameTopIdx, Il2CppStackFrameInfo());
 			for (int32_t i = 0; i < _frameTopIdx; i++)
 			{
 				InterpFrame* frame = _frameBase + i;
 				const MethodInfo* method = frame->method->method;
-				Il2CppStackFrameInfo stackFrameInfo = {
+				(*stackFrames)[i] = {
 					method
 #if HYBRIDCLR_UNITY_2020_OR_NEW
 					, (uintptr_t)method->methodPointer
 #endif
 				};
-				stackFrames->push_back(stackFrameInfo);
 			}
 		}
 
