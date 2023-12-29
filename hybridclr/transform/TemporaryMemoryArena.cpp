@@ -7,7 +7,7 @@ namespace transform
 
 	TemporaryMemoryArena::Block TemporaryMemoryArena::AllocBlock(size_t size)
 	{
-		void* data = IL2CPP_MALLOC(size);
+		void* data = HYBRIDCLR_MALLOC(size);
 		return { data, size };
 	}
 
@@ -23,13 +23,13 @@ namespace transform
 	{
 		if (_buf)
 		{
-			IL2CPP_FREE(_buf);
+			HYBRIDCLR_FREE(_buf);
 			//_buf = nullptr;
 			//_size = _pos = 0;
 		}
 		for (auto& block : _useOuts)
 		{
-			IL2CPP_FREE(block.data);
+			HYBRIDCLR_FREE(block.data);
 		}
 	}
 }

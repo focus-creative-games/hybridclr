@@ -20,12 +20,12 @@ namespace metadata
 	public:
 		CustomAttributeDataWriter(uint32_t capacity) : _capacity(Round2Exp(capacity)), _size(0)
 		{
-			_data = (uint8_t*)IL2CPP_MALLOC_ZERO(_capacity);
+			_data = (uint8_t*)HYBRIDCLR_MALLOC_ZERO(_capacity);
 		}
 
 		~CustomAttributeDataWriter()
 		{
-			IL2CPP_FREE(_data);
+			HYBRIDCLR_FREE(_data);
 			_data = nullptr;
 		}
 
@@ -241,9 +241,9 @@ namespace metadata
 		{
 			_capacity = newSize = Round2Exp(newSize);
 			uint8_t* oldData = _data;
-			_data = (uint8_t*)IL2CPP_MALLOC(newSize);
+			_data = (uint8_t*)HYBRIDCLR_MALLOC(newSize);
 			std::memcpy(_data, oldData, _size);
-			IL2CPP_FREE(oldData);
+			HYBRIDCLR_FREE(oldData);
 		}
 	};
 }

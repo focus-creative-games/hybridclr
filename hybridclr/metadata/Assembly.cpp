@@ -32,7 +32,7 @@ namespace metadata
         if (extStr)
         {
             size_t nameLen = extStr - assemblyName;
-            char* name = (char*)IL2CPP_MALLOC(nameLen + 1);
+            char* name = (char*)HYBRIDCLR_MALLOC(nameLen + 1);
             std::strncpy(name, assemblyName, nameLen);
             name[nameLen] = '\0';
             return name;
@@ -45,8 +45,8 @@ namespace metadata
 
     static Il2CppAssembly* CreatePlaceHolderAssembly(const char* assemblyName)
     {
-        auto ass = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppAssembly))) Il2CppAssembly;
-        auto image2 = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppImage))) Il2CppImage;
+        auto ass = new (HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppAssembly))) Il2CppAssembly;
+        auto image2 = new (HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppImage))) Il2CppImage;
         ass->image = image2;
         ass->image->name = CopyString(assemblyName);
         ass->image->nameNoExt = ass->aname.name = CreateAssemblyNameWithoutExt(assemblyName);
@@ -79,7 +79,7 @@ namespace metadata
         {
             const char* nameWithExtension = ConcatNewString(*ptrPlaceHolderName, ".dll");
             Il2CppAssembly* placeHolderAss = CreatePlaceHolderAssembly(nameWithExtension);
-            IL2CPP_FREE((void*)nameWithExtension);
+            HYBRIDCLR_FREE((void*)nameWithExtension);
             il2cpp::vm::MetadataCache::RegisterInterpreterAssembly(placeHolderAss);
         }
     }
@@ -130,7 +130,7 @@ namespace metadata
         {
             if (copyData)
             {
-                IL2CPP_FREE((void*)assemblyData);
+                HYBRIDCLR_FREE((void*)assemblyData);
             }
             TEMP_FORMAT(errMsg, "LoadImageErrorCode:%d", (int)err);
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetBadImageFormatException(errMsg));
@@ -149,13 +149,13 @@ namespace metadata
                 RaiseExecutionEngineException("reloading placeholder assembly is not supported!");
             }
             image2 = ass->image;
-            IL2CPP_FREE((void*)ass->image->name);
-            IL2CPP_FREE((void*)ass->image->nameNoExt);
+            HYBRIDCLR_FREE((void*)ass->image->name);
+            HYBRIDCLR_FREE((void*)ass->image->nameNoExt);
         }
         else
         {
-            ass = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppAssembly))) Il2CppAssembly;
-            image2 = new (IL2CPP_MALLOC_ZERO(sizeof(Il2CppImage))) Il2CppImage;
+            ass = new (HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppAssembly))) Il2CppAssembly;
+            image2 = new (HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppImage))) Il2CppImage;
         }
 
         image->InitBasic(image2);

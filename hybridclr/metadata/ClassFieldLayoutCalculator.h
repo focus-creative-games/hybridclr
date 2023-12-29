@@ -76,7 +76,7 @@ namespace metadata
 		{
 			for (auto it : _classMap)
 			{
-				IL2CPP_FREE(it.second);
+				HYBRIDCLR_FREE(it.second);
 			}
 		}
 

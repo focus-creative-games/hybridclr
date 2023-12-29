@@ -259,7 +259,7 @@ namespace metadata
 		{
 			return;
 		}
-		ClassLayoutInfo& layout = *(_classMap[type] = new (IL2CPP_MALLOC_ZERO(sizeof(ClassLayoutInfo))) ClassLayoutInfo());
+		ClassLayoutInfo& layout = *(_classMap[type] = new (HYBRIDCLR_MALLOC_ZERO(sizeof(ClassLayoutInfo))) ClassLayoutInfo());
 		layout.type = type;
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
         const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);

@@ -59,15 +59,15 @@ namespace interpreter
 			{
 				//il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
 				il2cpp::gc::GarbageCollector::UnregisterDynamicRoot(this);
-				IL2CPP_FREE(_stackBase);
+				HYBRIDCLR_FREE(_stackBase);
 			}
 			if (_frameBase)
 			{
-				IL2CPP_FREE(_frameBase);
+				HYBRIDCLR_FREE(_frameBase);
 			}
 			if (_exceptionFlowBase)
 			{
-				IL2CPP_FREE(_exceptionFlowBase);
+				HYBRIDCLR_FREE(_exceptionFlowBase);
 			}
 		}
 
@@ -282,7 +282,7 @@ namespace interpreter
 		void InitEvalStack()
 		{
 			_stackSize = (int32_t)RuntimeConfig::GetInterpreterThreadObjectStackSize();
-			_stackBase = (StackObject*)IL2CPP_MALLOC_ZERO(RuntimeConfig::GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
+			_stackBase = (StackObject*)HYBRIDCLR_MALLOC_ZERO(RuntimeConfig::GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
 			_stackTopIdx = 0;
 			_localPoolBottomIdx = _stackSize;
 			il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
@@ -290,14 +290,14 @@ namespace interpreter
 
 		void InitFrames()
 		{
-			_frameBase = (InterpFrame*)IL2CPP_CALLOC(RuntimeConfig::GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
+			_frameBase = (InterpFrame*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
 			_frameCount = (int32_t)RuntimeConfig::GetInterpreterThreadFrameStackSize();
 			_frameTopIdx = 0;
 		}
 
 		void InitExceptionFlows()
 		{
-			_exceptionFlowBase = (ExceptionFlowInfo*)IL2CPP_CALLOC(RuntimeConfig::GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
+			_exceptionFlowBase = (ExceptionFlowInfo*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
 			_exceptionFlowCount = (int32_t)RuntimeConfig::GetInterpreterThreadExceptionFlowSize();
 			_exceptionFlowTopIdx = 0;
 		}

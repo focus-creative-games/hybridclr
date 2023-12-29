@@ -26,7 +26,7 @@ namespace metadata
 	VTableSetUp* VTableSetUp::InflateVts(Il2CppType2TypeDeclaringTreeMap& cache, VTableSetUp* genericType, const Il2CppType* type)
 	{
 		IL2CPP_ASSERT(genericType->_type->data.typeHandle == type->data.generic_class->type->data.typeHandle);
-		VTableSetUp* tdt = new (IL2CPP_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
+		VTableSetUp* tdt = new (HYBRIDCLR_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
 		tdt->_type = type;
 		tdt->_typeDef = genericType->_typeDef;
 		tdt->_parent = genericType->_parent ? BuildByType(cache, TryInflateIfNeed(type, genericType->_parent->_type)) : nullptr;
@@ -75,7 +75,7 @@ namespace metadata
 			VTableSetUp* gidt = InflateVts(cache, gdt, type);
 			return cache[type] = gidt;
 		}
-		VTableSetUp* tdt = new (IL2CPP_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
+		VTableSetUp* tdt = new (HYBRIDCLR_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
 		const char* ns = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->namespaceIndex);
 		const char* name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);

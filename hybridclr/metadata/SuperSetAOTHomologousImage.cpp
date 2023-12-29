@@ -271,7 +271,7 @@ namespace metadata
 		{
 			uint32_t rowIndex = method->homoRowIndex;
 			TbMethod methodData = _rawImage.ReadMethod(rowIndex);
-			MethodBody* body = new (IL2CPP_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
+			MethodBody* body = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
 			ReadMethodBody(*method->aotMethodDef, methodData, *body);
 			method->body = body;
 		}

@@ -516,7 +516,7 @@ namespace interpreter
 			TEMP_FORMAT(errMsg, "Method body is null. %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		}
-		InterpMethodInfo* imi = new (IL2CPP_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;
+		InterpMethodInfo* imi = new (HYBRIDCLR_MALLOC_ZERO(sizeof(InterpMethodInfo))) InterpMethodInfo;
 		transform::HiTransform::Transform(image, methodInfo, *methodBody, *imi);
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		const_cast<MethodInfo*>(methodInfo)->interpData = imi;

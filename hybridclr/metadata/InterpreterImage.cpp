@@ -91,7 +91,7 @@ namespace metadata
 		image2->exportedTypeCount = _rawImage.GetTableRowNum(TableType::EXPORTEDTYPE);
 		image2->customAttributeCount = _rawImage.GetTableRowNum(TableType::CUSTOMATTRIBUTE);
 
-		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)IL2CPP_MALLOC_ZERO(sizeof(Il2CppImageGlobalMetadata));
+		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppImageGlobalMetadata));
 		metadataImage->typeStart = EncodeWithIndex(0);
 		metadataImage->customAttributeStart = EncodeWithIndex(0);
 		metadataImage->entryPointIndex = EncodeWithIndexExcept0(_rawImage.GetEntryPointToken());
@@ -717,7 +717,7 @@ namespace metadata
 				_il2cppFormatCustomDataBlob.WriteCompressedUint32(0);
 			}
 		}
-		void* resultData = IL2CPP_MALLOC(_il2cppFormatCustomDataBlob.Size());
+		void* resultData = HYBRIDCLR_MALLOC(_il2cppFormatCustomDataBlob.Size());
 		std::memcpy(resultData, _il2cppFormatCustomDataBlob.Data(), _il2cppFormatCustomDataBlob.Size());
 		cai.dataStartPtr = resultData;
 		cai.dataEndPtr = (uint8_t*)resultData + _il2cppFormatCustomDataBlob.Size();
@@ -2003,7 +2003,7 @@ namespace metadata
 		for (auto& e : _cacheTrees)
 		{
 			e.second->~VTableSetUp();
-			IL2CPP_FREE(e.second);
+			HYBRIDCLR_FREE(e.second);
 		}
 		Il2CppType2TypeDeclaringTreeMap temp;
 		_cacheTrees.swap(temp);
@@ -2353,7 +2353,7 @@ namespace metadata
 		case IL2CPP_TYPE_SZARRAY:
 		{
 			// FIXME MEMORY LEAK
-			Il2CppType* eleType = (Il2CppType*)IL2CPP_MALLOC_ZERO(sizeof(Il2CppType));
+			Il2CppType* eleType = (Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
 			ReadCustomAttributeFieldOrPropType(reader, *eleType);
 			type.data.type = eleType;
 			break;

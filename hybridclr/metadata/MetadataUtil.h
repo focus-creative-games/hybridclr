@@ -339,7 +339,7 @@ namespace metadata
 
     inline Il2CppType* CloneIl2CppType(const Il2CppType* type)
     {
-        Il2CppType* newType = (Il2CppType*)IL2CPP_MALLOC(sizeof(Il2CppType));
+        Il2CppType* newType = (Il2CppType*)HYBRIDCLR_MALLOC(sizeof(Il2CppType));
         *newType = *type;
         return newType;
     }
