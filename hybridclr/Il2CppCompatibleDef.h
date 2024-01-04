@@ -65,6 +65,8 @@
 #define HYBRIDCLR_CALLOC(count, size) IL2CPP_CALLOC(count, size, IL2CPP_MEM_META_POOL)
 #define HYBRIDCLR_FREE(ptr) IL2CPP_FREE(ptr, IL2CPP_MEM_META_POOL)
 #define HYBRIDCLR_FREE_ALIGNED(ptr) IL2CPP_FREE_ALIGNED(ptr, IL2CPP_MEM_META_POOL)
+#define HYBRIDCLR_METADATA_MALLOC(size) il2cpp::vm::MetadataMalloc(size, IL2CPP_MSTAT_TYPE)
+#define HYBRIDCLR_METADATA_CALLOC(count, size) il2cpp::vm::MetadataCalloc(count, size, IL2CPP_MSTAT_TYPE)
 #else
 #define HYBRIDCLR_MALLOC(size) IL2CPP_MALLOC(size)
 #define HYBRIDCLR_MALLOC_ALIGNED(size, alignment) IL2CPP_MALLOC_ALIGNED(size, alignment)
@@ -72,6 +74,8 @@
 #define HYBRIDCLR_CALLOC(count, size) IL2CPP_CALLOC(count, size)
 #define HYBRIDCLR_FREE(ptr) IL2CPP_FREE(ptr)
 #define HYBRIDCLR_FREE_ALIGNED(ptr) IL2CPP_FREE_ALIGNED(ptr)
+#define HYBRIDCLR_METADATA_MALLOC(size) il2cpp::vm::MetadataMalloc(size)
+#define HYBRIDCLR_METADATA_CALLOC(count, size) il2cpp::vm::MetadataCalloc(count, size)
 #endif
 
 
