@@ -5,6 +5,7 @@
 #include <tuple>
 
 #include "vm/GlobalMetadataFileInternals.h"
+#include "vm/Assembly.h"
 #include "gc/GarbageCollector.h"
 #include "gc/Allocator.h"
 #include "gc/AppendOnlyGCHashMap.h"
@@ -116,10 +117,23 @@ namespace metadata
 			}
 		}
 
-		const Il2CppAssembly* GetLoadedAssembly(const char* assemblyName) const
+		const Il2CppAssembly* GetLoadedAssembly(const char* assemblyName)
 		{
 			auto it = _nameToAssemblies.find(assemblyName);
-			return it != _nameToAssemblies.end() ? it->second : nullptr;
+			if (it != _nameToAssemblies.end())
+			{
+				return it->second;
+			}
+			// relying assembly is loaded after self
+			for (const Il2CppAssembly* ass : *il2cpp::vm::Assembly::GetAllAssemblies())
+			{
+				if (!std::strcmp(ass->image->nameNoExt, assemblyName))
+				{
+					_nameToAssemblies[ass->image->nameNoExt] = ass;
+					return ass;
+				}
+			}
+			return nullptr;
 		}
 
 		Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr);
