@@ -14,6 +14,7 @@
 #include "vm/Array.h"
 #include "vm/MetadataLock.h"
 #include "vm/MetadataCache.h"
+#include "vm/MetadataAlloc.h"
 #include "vm/String.h"
 #include "vm/Reflection.h"
 #include "metadata/FieldLayout.h"
