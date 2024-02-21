@@ -599,6 +599,7 @@ namespace metadata
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
 
+		const Il2CppType* GetInterfaceFromGlobalOffset(TypeInterfaceIndex offset);
 		const Il2CppType* GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex index);
 		const Il2CppType* GetInterfaceFromOffset(const Il2CppClass* klass, TypeInterfaceIndex offset);
 		const Il2CppType* GetInterfaceFromOffset(const Il2CppTypeDefinition* typeDefine, TypeInterfaceIndex offset);

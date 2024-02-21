@@ -1777,10 +1777,28 @@ namespace metadata
 		return klass;
 	}
 
-	const Il2CppType* InterpreterImage::GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex globalOffset)
+	const Il2CppType* InterpreterImage::GetInterfaceFromGlobalOffset(TypeInterfaceIndex globalOffset)
 	{
 		IL2CPP_ASSERT((uint32_t)globalOffset < (uint32_t)_interfaceDefines.size());
-		return &_types[_interfaceDefines[globalOffset]];
+
+		TypeIndex typeIndex = _interfaceDefines[globalOffset];
+		if (typeIndex == kTypeIndexInvalid)
+		{
+			uint32_t rowIndex = globalOffset + 1;
+			TbInterfaceImpl data = _rawImage.ReadInterfaceImpl(rowIndex);
+			Il2CppTypeDefinition& typeDef = _typesDefines[data.classIdx - 1];
+			Il2CppType intType = {};
+			ReadTypeFromToken(GetGenericContainerByTypeDefinition(&typeDef), nullptr,
+				DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.interfaceIdx), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.interfaceIdx), intType);
+			_interfaceDefines[globalOffset] = typeIndex = DecodeMetadataIndex(AddIl2CppTypeCache(intType));
+		}
+
+		return &_types[typeIndex];
+	}
+
+	const Il2CppType* InterpreterImage::GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex globalOffset)
+	{
+		return GetInterfaceFromGlobalOffset(globalOffset);
 	}
 
 	const Il2CppType* InterpreterImage::GetInterfaceFromOffset(const Il2CppClass* klass, TypeInterfaceIndex offset)
@@ -1793,8 +1811,7 @@ namespace metadata
 	const Il2CppType* InterpreterImage::GetInterfaceFromOffset(const Il2CppTypeDefinition* typeDef, TypeInterfaceIndex offset)
 	{
 		uint32_t globalOffset = typeDef->interfacesStart + offset;
-		IL2CPP_ASSERT(globalOffset < (uint32_t)_interfaceDefines.size());
-		return &_types[_interfaceDefines[globalOffset]];
+		return GetInterfaceFromGlobalOffset(globalOffset);
 	}
 
 	Il2CppInterfaceOffsetInfo InterpreterImage::GetInterfaceOffsetInfo(const Il2CppTypeDefinition* typeDefine, TypeInterfaceOffsetIndex index)
@@ -1985,7 +2002,7 @@ namespace metadata
 		// 此interface只在CastClass及Type.GetInterfaces()反射函数中
 		// 发挥作用，不在callvir中发挥作用。
 		// interfaceOffsets中包含了水平展开的所有interface(包括父类的)
-		_interfaceDefines.resize(table.rowNum);
+		_interfaceDefines.resize(table.rowNum, kTypeIndexInvalid);
 		uint32_t lastClassIdx = 0;
 		for (uint32_t i = 0; i < table.rowNum; i++)
 		{
@@ -1993,10 +2010,10 @@ namespace metadata
 			TbInterfaceImpl data = _rawImage.ReadInterfaceImpl(rowIndex);
 
 			Il2CppTypeDefinition& typeDef = _typesDefines[data.classIdx - 1];
-			Il2CppType intType = {};
-			ReadTypeFromToken(GetGenericContainerByTypeDefinition(&typeDef), nullptr,
-				DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.interfaceIdx), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.interfaceIdx), intType);
-			_interfaceDefines[i] = DecodeMetadataIndex(AddIl2CppTypeCache(intType));
+			//Il2CppType intType = {};
+			//ReadTypeFromToken(GetGenericContainerByTypeDefinition(&typeDef), nullptr,
+			//	DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.interfaceIdx), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.interfaceIdx), intType);
+			//_interfaceDefines[i] = DecodeMetadataIndex(AddIl2CppTypeCache(intType));
 			if (typeDef.interfaces_count == 0)
 			{
 				typeDef.interfacesStart = (InterfacesIndex)i;
