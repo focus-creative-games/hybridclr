@@ -309,7 +309,22 @@ namespace metadata
 		Il2CppType* GetGenericParameterConstraintFromIndex(GenericParameterConstraintIndex index)
 		{
 			IL2CPP_ASSERT((size_t)index < _genericConstraints.size());
-			return &_types[_genericConstraints[index]];
+			TypeIndex typeIndex = _genericConstraints[index];
+			if (typeIndex == kTypeIndexInvalid)
+			{
+
+				TbGenericParamConstraint data = _rawImage.ReadGenericParamConstraint(index + 1);
+				Il2CppGenericParameter& genericParam = _genericParams[data.owner - 1];
+				Il2CppType paramCons = {};
+
+				const Il2CppGenericContainer* klassGc;
+				const Il2CppGenericContainer* methodGc;
+				GetClassAndMethodGenericContainerFromGenericContainerIndex(genericParam.ownerIndex, klassGc, methodGc);
+
+				ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint), paramCons);
+				_genericConstraints[index] = typeIndex = DecodeMetadataIndex(AddIl2CppTypeCache(paramCons));
+			}
+			return &_types[typeIndex];
 		}
 
 		Il2CppClass* GetNestedTypeFromOffset(const Il2CppClass* klass, TypeNestedTypeIndex offset);

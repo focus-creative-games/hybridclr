@@ -1893,7 +1893,7 @@ namespace metadata
 	void InterpreterImage::InitGenericParamConstraintDefs()
 	{
 		const Table& tb = _rawImage.GetTable(TableType::GENERICPARAMCONSTRAINT);
-		_genericConstraints.resize(tb.rowNum);
+		_genericConstraints.resize(tb.rowNum, kTypeIndexInvalid);
 		for (uint32_t i = 0; i < tb.rowNum; i++)
 		{
 			uint32_t rowIndex = i + 1;
@@ -1905,15 +1905,16 @@ namespace metadata
 				genericParam.constraintsStart = EncodeWithIndex(i);
 			}
 			++genericParam.constraintsCount;
+			//_genericConstraints[i] == kTypeIndexInvalid;
 
-			Il2CppType paramCons = {};
+			//Il2CppType paramCons = {};
 
-			const Il2CppGenericContainer* klassGc;
-			const Il2CppGenericContainer* methodGc;
-			GetClassAndMethodGenericContainerFromGenericContainerIndex(genericParam.ownerIndex, klassGc, methodGc);
+			//const Il2CppGenericContainer* klassGc;
+			//const Il2CppGenericContainer* methodGc;
+			//GetClassAndMethodGenericContainerFromGenericContainerIndex(genericParam.ownerIndex, klassGc, methodGc);
 
-			ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint), paramCons);
-			_genericConstraints[i] = DecodeMetadataIndex(AddIl2CppTypeCache(paramCons));
+			//ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint), paramCons);
+			//_genericConstraints[i] = DecodeMetadataIndex(AddIl2CppTypeCache(paramCons));
 		}
 	}
 
