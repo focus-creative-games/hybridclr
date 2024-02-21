@@ -1381,8 +1381,8 @@ namespace metadata
 				md.parameterCount = (int)paramTableRowNum - (int32_t)md.parameterStart;
 			}
 
-			MethodBody& body = _methodBodies[index];
-			ReadMethodBody(md, methodData, body);
+			//MethodBody& body = _methodBodies[index];
+			//ReadMethodBody(md, methodData, body);
 		}
 
 		for (uint32_t i = 0, n = typeDefTb.rowNum; i < n; i++)

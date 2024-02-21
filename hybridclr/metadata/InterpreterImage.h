@@ -168,7 +168,17 @@ namespace metadata
 			IL2CPP_ASSERT(DecodeTokenTableType(token) == TableType::METHOD);
 			uint32_t rowIndex = DecodeTokenRowIndex(token);
 			IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= (uint32_t)_methodBodies.size());
-			return &_methodBodies[rowIndex - 1];
+			uint32_t methodIndex = rowIndex - 1;
+			MethodBody* methodBody = _methodBodies[methodIndex];
+			if (!methodBody)
+			{
+				TbMethod methodData = _rawImage.ReadMethod(rowIndex);
+				methodBody = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
+				ReadMethodBody(_methodDefines[methodIndex], methodData, *methodBody);
+				_methodBodies[methodIndex] = methodBody;
+			}
+
+			return methodBody;
 		}
 
 		// type index start from 0, difference with table index...
@@ -658,7 +668,7 @@ namespace metadata
 
 		std::vector<const MethodInfo*> _methodDefine2InfoCaches;
 		std::vector<Il2CppMethodDefinition> _methodDefines;
-		std::vector<MethodBody> _methodBodies;
+		std::vector<MethodBody*> _methodBodies;
 
 		std::vector<ParamDetail> _params;
 		std::vector<int32_t> _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count
