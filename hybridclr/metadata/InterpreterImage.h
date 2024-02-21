@@ -27,7 +27,9 @@ namespace metadata
 		Il2CppTypeDefinition* typeDef;
 		Il2CppTypeDefinitionSizes typeSizes;
 		std::vector<VirtualMethodImpl> vtable;
-		std::vector<MethodImpl> methodImpls;
+		uint32_t methodImplStart;
+		uint32_t methodImplCount;
+		std::vector<MethodImpl>* methodImpls;
 	};
 
 	struct ParamDetail
@@ -299,12 +301,7 @@ namespace metadata
 			return GetGenericContainerByTypeDefinition(&_typesDefines[typeDefIndex]);
 		}
 
-		const std::vector<MethodImpl>& GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef)
-		{
-			uint32_t index = (uint32_t)(typeDef - &_typesDefines[0]);
-			IL2CPP_ASSERT(index < (uint32_t)_typeDetails.size());
-			return _typeDetails[index].methodImpls;
-		}
+		const std::vector<MethodImpl>& GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef);
 
 		Il2CppType* GetGenericParameterConstraintFromIndex(GenericParameterConstraintIndex index)
 		{
