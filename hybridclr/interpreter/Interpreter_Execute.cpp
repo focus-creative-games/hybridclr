@@ -1655,8 +1655,6 @@ else \
 
 		PREPARE_NEW_FRAME_FROM_NATIVE(methodInfo, args, ret);
 
-		StackObject tempRet[kMaxRetValueTypeStackObjectSize];
-
 	LoopStart:
 		try
 		{
@@ -5119,6 +5117,7 @@ else \
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 2);
 					void* _ret = nullptr;
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject tempRet[kMaxRetValueTypeStackObjectSize];
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
 					CHECK_NOT_NULL_THROW(_del);
@@ -5198,6 +5197,7 @@ else \
 					uint16_t __retTypeStackObjectSize = *(uint16_t*)(ip + 6);
 				    void* _ret = (void*)(localVarBase + __ret);
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject tempRet[kMaxRetValueTypeStackObjectSize];
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
 					CHECK_NOT_NULL_THROW(_del);
@@ -5278,6 +5278,7 @@ else \
 					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
 				    void* _ret = (void*)(localVarBase + __ret);
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
+					StackObject tempRet[kMaxRetValueTypeStackObjectSize];
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
 					CHECK_NOT_NULL_THROW(_del);
