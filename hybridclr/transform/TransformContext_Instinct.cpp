@@ -407,6 +407,25 @@ namespace transform
 		}
 	}
 
+	static bool IH_ByReference_get_Value(TransformContext& ctx, const MethodInfo* method)
+	{
+		// ByReference<T>.Value equals to *this
+		IL2CPP_ASSERT(ctx.evalStackTop >= 1);
+		TemporaryMemoryArena& pool = ctx.pool;
+		IRBasicBlock*& curbb = ctx.curbb;
+
+		CreateAddIR(ir, LdindVarVar_i1);
+#if HYBRIDCLR_ARCH_64
+		ir->type = HiOpcodeEnum::LdindVarVar_i8;
+#else
+		ir->type = HiOpcodeEnum::LdindVarVar_i4;
+#endif
+		ir->dst = ir->src = ctx.GetEvalStackTopOffset();
+		ctx.PopStack();
+		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+		return true;
+	}
+
 
 	struct InstinctHandlerInfo
 	{
@@ -434,6 +453,7 @@ namespace transform
 		{"UnityEngine", "Vector2", ".ctor", IH_UnityEngine_Vector2_ctor},
 		{"UnityEngine", "Vector3", ".ctor", IH_UnityEngine_Vector3_ctor},
 		{"UnityEngine", "Vector4", ".ctor", IH_UnityEngine_Vector4_ctor},
+		{"System", "ByReference`1", "get_Value", IH_ByReference_get_Value},
 	};
 
 	struct CtorInstinctHandlerInfo
@@ -669,6 +689,16 @@ namespace transform
 		}
 	}
 
+	static bool CIH_ByReference(TransformContext& ctx, const MethodInfo* method)
+	{
+		// new ByReference<T>(ref T value) don't need to do anything
+		Il2CppClass* klass = method->klass;
+		IL2CPP_ASSERT(ctx.evalStackTop > 0);
+		ctx.PopStack();
+		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+		return true;
+	}
+
 	static CtorInstinctHandlerInfo s_ctorInstinctHandlerInfos[] =
 	{
 		{"System", "Object", CIH_Object},
@@ -678,6 +708,8 @@ namespace transform
 		{"UnityEngine", "Vector2", CIH_UnityEngine_Vector2_ctor},
 		{"UnityEngine", "Vector3", CIH_UnityEngine_Vector3_ctor},
 		{"UnityEngine", "Vector4", CIH_UnityEngine_Vector4_ctor},
+
+		{"System", "ByReference`1", CIH_ByReference},
 	};
 	
 	void TransformContext::InitializeInstinctHandlers()
