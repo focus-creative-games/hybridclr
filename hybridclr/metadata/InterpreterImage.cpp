@@ -1772,14 +1772,16 @@ namespace metadata
 
 	uint32_t InterpreterImage::AddIl2CppTypeCache(const Il2CppType& type)
 	{
-		auto it = _type2Indexs.find(type);
+		auto it = _type2Indexs.find(&type);
 		if (it != _type2Indexs.end())
 		{
 			return it->second;
 		}
 		uint32_t encodeIndex = EncodeWithIndex((uint32_t)_types.size());
-		_types.push_back(type);
-		_type2Indexs.insert({ type, encodeIndex });
+		Il2CppType* newType = (Il2CppType*)il2cpp::vm::MetadataMalloc(sizeof(Il2CppType));
+		*newType = type;
+		_types.push_back(newType);
+		_type2Indexs.insert({ newType, encodeIndex });
 		return encodeIndex;
 	}
 
@@ -1833,7 +1835,7 @@ namespace metadata
 			_interfaceDefines[globalOffset] = typeIndex = DecodeMetadataIndex(AddIl2CppTypeCache(intType));
 		}
 
-		return &_types[typeIndex];
+		return _types[typeIndex];
 	}
 
 	const Il2CppType* InterpreterImage::GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex globalOffset)

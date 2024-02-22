@@ -217,7 +217,7 @@ namespace metadata
 
 		uint32_t GetTypeRawIndexByEncodedIl2CppTypeIndex(int32_t il2cppTypeIndex) const
 		{
-			return GetTypeRawIndex((const Il2CppTypeDefinition*)_types[DecodeMetadataIndex(il2cppTypeIndex)].data.typeHandle);
+			return GetTypeRawIndex((const Il2CppTypeDefinition*)_types[DecodeMetadataIndex(il2cppTypeIndex)]->data.typeHandle);
 		}
 
 		const Il2CppTypeDefinition* GetTypeFromRawIndex(uint32_t index) const
@@ -229,13 +229,13 @@ namespace metadata
 		const Il2CppType* GetIl2CppTypeFromRawIndex(uint32_t index) const
 		{
 			IL2CPP_ASSERT((size_t)index < _types.size());
-			return &_types[index];
+			return _types[index];
 		}
 
 		const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override
 		{
 			IL2CPP_ASSERT(index < (uint32_t)_typeDetails.size());
-			return &_types[DecodeMetadataIndex(_typeDetails[index].typeDef->byvalTypeIndex)];
+			return _types[DecodeMetadataIndex(_typeDetails[index].typeDef->byvalTypeIndex)];
 		}
 
 		const Il2CppFieldDefinition* GetFieldDefinitionFromRawIndex(uint32_t index)
@@ -321,7 +321,7 @@ namespace metadata
 				ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint), paramCons);
 				_genericConstraints[index] = typeIndex = DecodeMetadataIndex(AddIl2CppTypeCache(paramCons));
 			}
-			return &_types[typeIndex];
+			return _types[typeIndex];
 		}
 
 		Il2CppClass* GetNestedTypeFromOffset(const Il2CppClass* klass, TypeNestedTypeIndex offset);
@@ -674,8 +674,8 @@ namespace metadata
 		std::vector<Il2CppTypeDefinition> _typesDefines;
 		std::vector<Il2CppTypeDefinition> _exportedTypeDefines;
 
-		std::vector<Il2CppType> _types;
-		Il2CppHashMap<Il2CppType, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;
+		std::vector<Il2CppType*> _types;
+		Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;
 		std::vector<TypeIndex> _interfaceDefines;
 		std::vector<InterfaceOffsetInfo> _interfaceOffsets;
 

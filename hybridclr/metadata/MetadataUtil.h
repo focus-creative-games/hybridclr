@@ -386,15 +386,15 @@ namespace metadata
     class Il2CppTypeHashShallow
     {
     public:
-        size_t operator()(const Il2CppType& t1) const
+        size_t operator()(const Il2CppType* t1) const
         {
-            size_t h = (size_t)t1.data.dummy;
-            h = il2cpp::utils::HashUtils::Combine(h, t1.attrs);
-            h = il2cpp::utils::HashUtils::Combine(h, (size_t)t1.type);
-            h = il2cpp::utils::HashUtils::Combine(h, t1.byref);
-            h = il2cpp::utils::HashUtils::Combine(h, t1.pinned);
+            size_t h = (size_t)t1->data.dummy;
+            h = il2cpp::utils::HashUtils::Combine(h, t1->attrs);
+            h = il2cpp::utils::HashUtils::Combine(h, (size_t)t1->type);
+            h = il2cpp::utils::HashUtils::Combine(h, t1->byref);
+            h = il2cpp::utils::HashUtils::Combine(h, t1->pinned);
 #if HYBRIDCLR_UNITY_2021_OR_NEW
-            h = il2cpp::utils::HashUtils::Combine(h, t1.valuetype);
+            h = il2cpp::utils::HashUtils::Combine(h, t1->valuetype);
 #endif
             return h;
         }
@@ -403,15 +403,15 @@ namespace metadata
     class Il2CppTypeEqualityComparerShallow
     {
     public:
-        bool operator()(const Il2CppType& t1, const Il2CppType& t2) const
+        bool operator()(const Il2CppType* t1, const Il2CppType* t2) const
         {
-            return (t1.data.dummy == t2.data.dummy)
-                && t1.type == t2.type
-                && t1.attrs == t2.attrs
-                && t1.byref == t2.byref
-                && t1.pinned == t2.pinned
+            return (t1->data.dummy == t2->data.dummy)
+                && t1->type == t2->type
+                && t1->attrs == t2->attrs
+                && t1->byref == t2->byref
+                && t1->pinned == t2->pinned
 #if HYBRIDCLR_UNITY_2021_OR_NEW
-                && t1.valuetype == t2.valuetype
+                && t1->valuetype == t2->valuetype
 #endif
                 ;
         }
