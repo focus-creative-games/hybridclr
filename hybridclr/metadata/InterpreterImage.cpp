@@ -98,7 +98,7 @@ namespace metadata
 		image2->entryPointIndex = EncodeWithIndexExcept0(_rawImage.GetEntryPointToken());
 		image2->exportedTypeStart = EncodeWithIndex(0);
 #else
-		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)il2cpp::vm::MetadataMalloc(sizeof(Il2CppImageGlobalMetadata));
+		Il2CppImageGlobalMetadata* metadataImage = (Il2CppImageGlobalMetadata*)HYBRIDCLR_METADATA_MALLOC(sizeof(Il2CppImageGlobalMetadata));
 		metadataImage->typeStart = EncodeWithIndex(0);
 		metadataImage->customAttributeStart = EncodeWithIndex(0);
 		metadataImage->entryPointIndex = EncodeWithIndexExcept0(_rawImage.GetEntryPointToken());
@@ -1038,7 +1038,20 @@ namespace metadata
 			}
 			typeIndex = il2cpp::vm::GlobalMetadata::GetIndexForTypeDefinition(klass);
 		}
+#if UNITY_ENGINE_TUANJIE
+		fieldIndex = -1;
+		for (int32_t i = 0; i < klass->property_count; i++)
+		{
+			if (klass->properties[i] == propertyInfo)
+			{
+				fieldIndex = i;
+				break;;
+			}
+		}
+		IL2CPP_ASSERT(fieldIndex != -1);
+#else
 		fieldIndex = (int32_t)(propertyInfo - klass->properties);
+#endif
 	}
 
 	void InterpreterImage::ConvertILCustomAttributeData2Il2CppFormat(const MethodInfo* ctorMethod, BlobReader& reader)
@@ -1778,7 +1791,7 @@ namespace metadata
 			return it->second;
 		}
 		uint32_t encodeIndex = EncodeWithIndex((uint32_t)_types.size());
-		Il2CppType* newType = (Il2CppType*)il2cpp::vm::MetadataMalloc(sizeof(Il2CppType));
+		Il2CppType* newType = (Il2CppType*)HYBRIDCLR_METADATA_MALLOC(sizeof(Il2CppType));
 		*newType = type;
 		_types.push_back(newType);
 		_type2Indexs.insert({ newType, encodeIndex });
