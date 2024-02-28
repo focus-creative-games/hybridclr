@@ -10879,6 +10879,7 @@ else \
 				    void* _addr = GetMdArrayElementAddress(_arr, (StackObject*)(void*)(localVarBase + __lengthIdxs));
 				    CheckArrayElementTypeCompatible(_arr, (*(Il2CppObject**)(localVarBase + __ele)));
 				    *(Il2CppObject**)_addr = (*(Il2CppObject**)(localVarBase + __ele));
+				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_addr);
 				    ip += 8;
 				    continue;
 				}
