@@ -262,7 +262,15 @@ namespace metadata
         }
         case IL2CPP_TYPE_FNPTR:
         {
-            RaiseNotSupportedException("Image::ReadType IL2CPP_TYPE_FNPTR");
+            // il2cpp doesn't support FNPTR. il2cpp treats IL2CPP_TYPE_FNPTR as IL2CPP_TYPE_I.
+            // so we handle it as IL2CPP_TYPE_I.
+            // 
+            //MethodRefSig* method = new (HYBRIDCLR_MALLOC(sizeof(MethodRefSig))) MethodRefSig();
+            //ReadMethodRefSig(reader, *method);
+            //type.data.method = method;
+            type.type = IL2CPP_TYPE_I;
+            MethodRefSig method = {};
+            ReadMethodRefSig(reader, method);
             break;
         }
         case IL2CPP_TYPE_OBJECT:
@@ -504,10 +512,10 @@ namespace metadata
         ReadType(reader, klassGenericContainer, nullptr, field.type);
     }
 
-    void Image::ReadMethodRefSig(TbMemberRef& data, MethodRefSig& method)
+    void Image::ReadMethodRefSig(BlobReader& reader, MethodRefSig& method)
     {
         method = {};
-        BlobReader reader = _rawImage.GetBlobReaderByRawIndex(data.signature);
+        //BlobReader reader = _rawImage.GetBlobReaderByRawIndex(signature);
         uint8_t rawSigFlags = reader.ReadByte();
         method.flags = rawSigFlags;
         if (rawSigFlags & (uint8_t)SigType::GENERIC)
@@ -546,7 +554,7 @@ namespace metadata
         else
         {
             signature.memberType = TableType::METHOD_POINTER;
-            ReadMethodRefSig(data, signature.method);
+            ReadMethodRefSig(reader, signature.method);
         }
     }
 
