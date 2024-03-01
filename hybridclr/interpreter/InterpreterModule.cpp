@@ -331,6 +331,10 @@ namespace interpreter
 			{
 				RaiseExecutionEngineExceptionMethodIsNotFound(curMethod);
 			}
+			if (!InitAndGetInterpreterDirectlyCallMethodPointer(curMethod))
+			{
+				RaiseAOTGenericMethodNotInstantiatedException(curMethod);
+			}
 			switch ((int)(method->parameters_count - curMethod->parameters_count))
 			{
 			case 0:
@@ -428,6 +432,10 @@ namespace interpreter
 			if (curMethod->invoker_method == nullptr)
 			{
 				RaiseExecutionEngineExceptionMethodIsNotFound(curMethod);
+			}
+			if (!InitAndGetInterpreterDirectlyCallMethodPointer(curMethod))
+			{
+				RaiseAOTGenericMethodNotInstantiatedException(curMethod);
 			}
 			switch ((int)(method->parameters_count - curMethod->parameters_count))
 			{
