@@ -53,7 +53,7 @@ namespace metadata
 		const byte* GetBlobFromRawIndex(StringIndex index) const
 		{
 			IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
-			IL2CPP_ASSERT(index >= 0 && (size_t)index < _streamBlobHeap.size);
+			IL2CPP_ASSERT(index == 0 || (index > 0 && (size_t)index < _streamBlobHeap.size));
 			return _streamBlobHeap.data + index;
 		}
 
