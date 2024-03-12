@@ -218,6 +218,7 @@ namespace metadata
             *ptrType = {};
             ReadType(reader, klassGenericContainer, methodGenericContainer, *ptrType);
             type.data.type = ptrType;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
         }
         case IL2CPP_TYPE_BYREF:
