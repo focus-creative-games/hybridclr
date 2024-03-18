@@ -112,10 +112,10 @@ namespace metadata
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentNullException("rawAssembly is null"));
         }
 
-        uint32_t imageId = InterpreterImage::AllocImageIndex();
-        if (imageId > kMaxLoadImageCount)
+        uint32_t imageId = InterpreterImage::AllocImageIndex((uint32_t)length);
+        if (imageId == kInvalidImageIndex)
         {
-            il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetArgumentException("exceed max image index", ""));
+            il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("InterpreterImage::AllocImageIndex failed"));
         }
         InterpreterImage* image = new InterpreterImage(imageId);
         

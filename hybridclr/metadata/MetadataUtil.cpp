@@ -14,6 +14,23 @@ namespace hybridclr
 {
 namespace metadata
 {
+	const uint32_t kMetadataImageIndexExtraShiftBitsArr[4] = 
+	{
+		kMetadataImageIndexExtraShiftBitsA,
+		kMetadataImageIndexExtraShiftBitsB,
+		kMetadataImageIndexExtraShiftBitsC,
+		kMetadataImageIndexExtraShiftBitsD,
+	};
+
+	const uint32_t kMetadataIndexMaskArr[4] = 
+	{
+		kMetadataIndexMaskA,
+		kMetadataIndexMaskB,
+		kMetadataIndexMaskC,
+		kMetadataIndexMaskD,
+	};
+
+
 	uint32_t GetNotZeroBitCount(uint64_t x)
 	{
 		uint32_t count = 0;

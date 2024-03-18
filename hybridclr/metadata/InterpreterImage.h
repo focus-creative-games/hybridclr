@@ -104,21 +104,20 @@ namespace metadata
 
 		static void Initialize();
 
-		static uint32_t AllocImageIndex();
+		static uint32_t AllocImageIndex(uint32_t dllLength);
 
 		static void RegisterImage(InterpreterImage* image);
 
 		static InterpreterImage* GetImage(uint32_t imageIndex)
 		{
 			//os::FastAutoLock lock(&s_imageLock);
-			IL2CPP_ASSERT(imageIndex <= kMaxLoadImageCount);
+			IL2CPP_ASSERT(imageIndex < kMaxMetadataImageCount);
 			return s_images[imageIndex];
 		}
 
 	private:
 
-		static uint32_t s_cliImageCount;
-		static InterpreterImage* s_images[kMaxLoadImageCount + 1];
+		static InterpreterImage* s_images[kMaxMetadataImageCount];
 
 	public:
 

@@ -38,25 +38,52 @@ namespace hybridclr
 namespace metadata
 {
 
-	uint32_t InterpreterImage::s_cliImageCount = 0;
-	InterpreterImage* InterpreterImage::s_images[kMaxLoadImageCount + 1] = {};
+	static uint32_t s_nextImageIndexByKind[4] = { (1u << kMetadataImageIndexExtraShiftBitsA), 0, 0, 0};
+
+	InterpreterImage* InterpreterImage::s_images[kMaxMetadataImageCount] = {};
+
+	static int32_t GetImageKindByDllLength(uint32_t dllLength)
+	{
+		uint32_t maxPossibleIndexValue = dllLength * 4;
+		for (int32_t i = 3; i >= 0; i--)
+		{
+			if (maxPossibleIndexValue <= kMetadataIndexMaskArr[i])
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
 
 	void InterpreterImage::Initialize()
 	{
-		s_cliImageCount = 0;
-		std::memset(s_images, 0, sizeof(Assembly*) * (kMaxLoadImageCount + 1));
+		
 	}
 
-	uint32_t InterpreterImage::AllocImageIndex()
+	uint32_t InterpreterImage::AllocImageIndex(uint32_t dllLength)
 	{
-		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-		return ++s_cliImageCount;
+		int32_t kind = GetImageKindByDllLength(dllLength);
+		if (kind < 0)
+		{
+			return kInvalidImageIndex;
+		}
+		for (int32_t finalKind = kind; finalKind >= 0; finalKind--)
+		{
+			uint32_t newImageIndex = s_nextImageIndexByKind[finalKind];
+			// 255 is preserved for invalid image index when kind is 3
+			if (newImageIndex >= kMaxMetadataImageIndexWithoutKind - (finalKind == 3))
+			{
+				continue;
+			}
+			s_nextImageIndexByKind[finalKind] += (1u << kMetadataImageIndexExtraShiftBitsArr[finalKind]);
+			return newImageIndex | ((uint32_t)finalKind << (kMetadataImageIndexBits - kMetadataKindBits));
+		}
+		return kInvalidImageIndex;
 	}
 
 	void InterpreterImage::RegisterImage(InterpreterImage* image)
 	{
 		il2cpp::os::Atomic::FullMemoryBarrier();
-		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 		IL2CPP_ASSERT(image->GetIndex() > 0);
 		s_images[image->GetIndex()] = image;
 	}
