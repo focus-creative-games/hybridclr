@@ -276,6 +276,37 @@ namespace interpreter
 			}
 		}
 
+		void CollectFramesWithoutDuplicates(il2cpp::vm::StackFrames* stackFrames)
+		{
+			int32_t firstNativeFrameIdx = 0;
+			for (Il2CppStackFrameInfo& frame : *stackFrames)
+			{
+				if (frame.method == nullptr || !hybridclr::metadata::IsInterpreterMethod(frame.method))
+				{
+					break;
+				}
+				firstNativeFrameIdx++;
+			}
+			stackFrames->erase(stackFrames->begin(), stackFrames->begin() + firstNativeFrameIdx);
+
+			if (_frameTopIdx <= 0)
+			{
+				return;
+			}
+			stackFrames->insert(stackFrames->begin(), _frameTopIdx, Il2CppStackFrameInfo());
+			for (int32_t i = 0; i < _frameTopIdx; i++)
+			{
+				InterpFrame* frame = _frameBase + i;
+				const MethodInfo* method = frame->method->method;
+				(*stackFrames)[i] = {
+					method
+#if HYBRIDCLR_UNITY_2020_OR_NEW
+					, (uintptr_t)method->methodPointer
+#endif
+				};
+			}
+		}
+
 	private:
 
 
