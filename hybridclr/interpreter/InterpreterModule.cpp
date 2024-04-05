@@ -350,7 +350,7 @@ namespace interpreter
 			case -1:
 			{
 				IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(curMethod));
-				void** newArgs = (void**)alloca(sizeof(void*) * (size_t)curMethod->parameters_count);
+				void** newArgs = (void**)alloca(sizeof(void*) * (size_t)(curMethod->parameters_count + 1));
 				newArgs[0] = curTarget;
 				for (int k = 0, endK = curMethod->parameters_count; k < endK; k++)
 				{
@@ -452,7 +452,7 @@ namespace interpreter
 			case -1:
 			{
 				IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(curMethod));
-				void** newArgs = (void**)alloca(sizeof(void*) * (size_t)curMethod->parameters_count);
+				void** newArgs = (void**)alloca(sizeof(void*) * (size_t)(curMethod->parameters_count + 1));
 				newArgs[0] = curTarget;
 				for (int k = 0, endK = curMethod->parameters_count; k < endK; k++)
 				{
