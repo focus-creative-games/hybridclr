@@ -1005,9 +1005,17 @@ else \
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
 				int32_t argIdxDataIndex;
 				uint16_t* __argIdxs;
-				AllocResolvedData(resolveDatas, needDataSlotNum, argIdxDataIndex, __argIdxs);
+
+				// we need at least one slot for argBasePtr when resolvedTotalArgNum == 0
+				AllocResolvedData(resolveDatas, std::max(needDataSlotNum, 1), argIdxDataIndex, __argIdxs);
 
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgNum - 1 /*funtion ptr*/;
+
+				// CallInd need know the argBasePtr when resolvedTotalArgNum == 0
+				if (needDataSlotNum == 0)
+				{
+					__argIdxs[0] = evalStack[callArgEvalStackIdxBase].locOffset;
+				}
 
 				if (hasThis)
 				{
