@@ -75,16 +75,28 @@ namespace metadata
         {
             return nullptr;
         }
+
+        {
+            il2cpp::os::FastAutoLock lock(&g_reversePInvokeMethodLock);
+            auto it = s_methodInfo2ReverseInfos.find(method);
+            if (it != s_methodInfo2ReverseInfos.end())
+            {
+                return it->second->methodPointer;
+            }
+        }
+
+        char sigName[1000];
+        interpreter::ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
+
         il2cpp::os::FastAutoLock lock(&g_reversePInvokeMethodLock);
+
+
         auto it = s_methodInfo2ReverseInfos.find(method);
         if (it != s_methodInfo2ReverseInfos.end())
         {
             return it->second->methodPointer;
         }
 
-
-        char sigName[1000];
-        interpreter::ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
         auto it2 = s_methodSig2Indexs.find(sigName);
         if (it2 == s_methodSig2Indexs.end())
         {
