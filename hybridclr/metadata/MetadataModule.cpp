@@ -69,7 +69,7 @@ namespace metadata
         Assembly::InitializePlaceHolderAssemblies();
     }
 
-    Il2CppMethodPointer MetadataModule::GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method)
+    Il2CppMethodPointer MetadataModule::GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method, Il2CppCallConvention callConvention)
     {
         if (!hybridclr::metadata::IsStaticMethod(method))
         {
@@ -86,7 +86,8 @@ namespace metadata
         }
 
         char sigName[1000];
-        interpreter::ComputeSignature(method, false, sigName, sizeof(sigName) - 1);
+        sigName[0] = 'A' + callConvention;
+        interpreter::ComputeSignature(method, false, sigName + 1, sizeof(sigName) - 2);
 
         il2cpp::os::FastAutoLock lock(&g_reversePInvokeMethodLock);
 

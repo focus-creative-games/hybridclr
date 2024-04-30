@@ -251,7 +251,7 @@ namespace metadata
 			}
 		}
 
-		static Il2CppMethodPointer GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method);
+		static Il2CppMethodPointer GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method, Il2CppCallConvention callConvention);
 
 		static const MethodInfo* GetMethodInfoByReversePInvokeWrapperIndex(int32_t index)
 		{
