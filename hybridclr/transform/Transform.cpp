@@ -818,7 +818,7 @@ else \
 				uint32_t methodDataIndex = ctx.GetOrAddResolveDataIndex(shareMethod);
 
 				bool isMultiDelegate = IsChildTypeOfMulticastDelegate(shareMethod->klass);
-				if (!isMultiDelegate && IsInterpreterMethod(shareMethod))
+				if (!isMultiDelegate && IsInterpreterMethod(shareMethod) && !IsInterface(shareMethod->klass->flags))
 				{
 					ctx.PopStackN(resolvedTotalArgNum);
 
