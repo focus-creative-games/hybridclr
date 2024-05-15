@@ -1645,7 +1645,6 @@ else \
 
 	void Interpreter::Execute(const MethodInfo* methodInfo, StackObject* args, void* ret)
 	{
-		INIT_CLASS(methodInfo->klass);
 		MachineState& machine = InterpreterModule::GetCurrentThreadMachineState();
 		InterpFrameGroup interpFrameGroup(machine);
 
