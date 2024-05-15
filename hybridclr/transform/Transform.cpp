@@ -3075,6 +3075,39 @@ ir->ele = ele.locOffset;
 					ip += 2;
 					continue;
 				}
+				case OpcodeValue::LDFTN:
+				{
+					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 2);
+					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
+					IL2CPP_ASSERT(methodInfo);
+					CreateAddIR(ir, LdcVarConst_8);
+					ir->dst = ctx.GetEvalStackNewTopOffset();
+					ir->src = (uint64_t)methodInfo;
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+					ip += 6;
+					continue;
+				}
+				case OpcodeValue::LDVIRTFTN:
+				{
+					IL2CPP_ASSERT(evalStackTop > 0);
+					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 2);
+					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
+					IL2CPP_ASSERT(methodInfo);
+
+					CreateAddIR(ir, LdvirftnVarVar);
+					ir->resultMethod = ir->obj = ctx.GetEvalStackTopOffset();
+					ir->virtualMethod = ctx.GetOrAddResolveDataIndex(methodInfo);
+
+					ctx.PopStack();
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+					ip += 6;
+					continue;
+				}
+				case OpcodeValue::UNUSED56:
+				{
+					ip += 2;
+					continue;
+				}
 				case OpcodeValue::LDARG:
 				{
 					argIdx = GetU2LittleEndian(ip + 2);
@@ -3117,59 +3150,51 @@ ir->ele = ele.locOffset;
 					ip += 4;
 					continue;
 				}
-				case OpcodeValue::CONSTRAINED_:
+				case OpcodeValue::LOCALLOC:
 				{
-					uint32_t typeToken = (uint32_t)GetI4LittleEndian(ip + 2);
-					Il2CppClass* conKlass = image->GetClassFromToken(typeToken, klassContainer, methodContainer, genericContext);
-					IL2CPP_ASSERT(conKlass);
-					ip += 6;
+					IL2CPP_ASSERT(evalStackTop > 0);
+					EvalStackVarInfo& top = evalStack[evalStackTop - 1];
 
-					IL2CPP_ASSERT(*ip == (uint8_t)OpcodeValue::CALLVIRT);
-					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 1);
-					ip += 5;
-
-					// TODO token cache optimistic
-					shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
-					IL2CPP_ASSERT(shareMethod);
-
-
-					int32_t resolvedTotalArgNum = shareMethod->parameters_count + 1;
-
-					int32_t selfIdx = evalStackTop - resolvedTotalArgNum;
-					EvalStackVarInfo& self = evalStack[selfIdx];
-					if (IS_CLASS_VALUE_TYPE(conKlass))
+					switch (top.reduceType)
 					{
-						// impl in self
-						const MethodInfo* implMethod = image->FindImplMethod(conKlass, shareMethod);
-						if (implMethod->klass == conKlass)
-						{
-							shareMethod = implMethod;
-							goto LabelCall;
-						}
-						else
-						{
-							CreateAddIR(ir, BoxRefVarVar);
-							ir->dst = ir->src = self.locOffset;
-							ir->klass = ctx.GetOrAddResolveDataIndex(conKlass);
-
-							self.reduceType = NATIVE_INT_REDUCE_TYPE;
-							self.byteSize = GetSizeByReduceType(self.reduceType);
-							goto LabelCallVir;
-						}
-					}
-					else
+					case EvalStackReduceDataType::I4:
+					case EvalStackReduceDataType::I8: // FIXE ME
 					{
-						// deref object. FIXME gc memory barrier
-#if HYBRIDCLR_ARCH_64
-						CreateAddIR(ir, LdindVarVar_i8);
-#else
-						CreateAddIR(ir, LdindVarVar_i4);
-#endif
-						ir->dst = ir->src = self.locOffset;
-						self.reduceType = NATIVE_INT_REDUCE_TYPE;
-						self.byteSize = GetSizeByReduceType(self.reduceType);
-						goto LabelCallVir;
+						CreateAddIR(ir, LocalAllocVarVar_n_4);
+						ir->dst = ir->size = ctx.GetEvalStackTopOffset();
+						break;
 					}
+					default:
+					{
+						RaiseExecutionEngineException("LOCALLOC invalid reduceType");
+						break;
+					}
+					}
+					ctx.PopStack();
+					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+
+					ip += 2;
+					continue;
+				}
+				case OpcodeValue::UNUSED57:
+				{
+					ip += 2;
+					continue;
+				}
+				case OpcodeValue::ENDFILTER:
+				{
+					CreateAddIR(ir, EndFilterEx);
+					ir->value = ctx.GetEvalStackTopOffset();
+					ctx.PopAllStack();
+
+					PopBranch();
+					continue;
+				}
+				case OpcodeValue::UNALIGNED_:
+				{
+					// Nothing to do here.
+					prefixFlags |= (int32_t)PrefixFlags::Unaligned;
+					ip += 2;
 					continue;
 				}
 				case OpcodeValue::VOLATILE_:
@@ -3180,19 +3205,12 @@ ir->ele = ele.locOffset;
 					ip += 2;
 					continue;
 				}
-				case OpcodeValue::LDFTN:
+				case OpcodeValue::TAIL_:
 				{
-					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 2);
-					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
-					IL2CPP_ASSERT(methodInfo);
-					CreateAddIR(ir, LdcVarConst_8);
-					ir->dst = ctx.GetEvalStackNewTopOffset();
-					ir->src = (uint64_t)methodInfo;
-					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
-					ip += 6;
+					prefixFlags |= (int32_t)PrefixFlags::Tail;
+					ip += 2;
 					continue;
 				}
-
 				case OpcodeValue::INITOBJ:
 				{
 					IL2CPP_ASSERT(evalStackTop > 0);
@@ -3328,85 +3346,59 @@ ir->ele = ele.locOffset;
 					ip += 6;
 					break;
 				}
-				case OpcodeValue::LOCALLOC:
+				case OpcodeValue::CONSTRAINED_:
 				{
-					IL2CPP_ASSERT(evalStackTop > 0);
-					EvalStackVarInfo& top = evalStack[evalStackTop - 1];
-
-					switch (top.reduceType)
-					{
-					case EvalStackReduceDataType::I4:
-					case EvalStackReduceDataType::I8: // FIXE ME
-					{
-						CreateAddIR(ir, LocalAllocVarVar_n_4);
-						ir->dst = ir->size = ctx.GetEvalStackTopOffset();
-						break;
-					}
-					default:
-					{
-						RaiseExecutionEngineException("LOCALLOC invalid reduceType");
-						break;
-					}
-					}
-					ctx.PopStack();
-					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
-
-					ip += 2;
-					continue;
-				}
-				case OpcodeValue::LDVIRTFTN:
-				{
-					IL2CPP_ASSERT(evalStackTop > 0);
-					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 2);
-					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
-					IL2CPP_ASSERT(methodInfo);
-
-					CreateAddIR(ir, LdvirftnVarVar);
-					ir->resultMethod = ir->obj = ctx.GetEvalStackTopOffset();
-					ir->virtualMethod = ctx.GetOrAddResolveDataIndex(methodInfo);
-
-					ctx.PopStack();
-					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+					uint32_t typeToken = (uint32_t)GetI4LittleEndian(ip + 2);
+					Il2CppClass* conKlass = image->GetClassFromToken(typeToken, klassContainer, methodContainer, genericContext);
+					IL2CPP_ASSERT(conKlass);
 					ip += 6;
-					continue;
-				}
-				case OpcodeValue::SIZEOF:
-				{
-					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
-					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
-					IL2CPP_ASSERT(objKlass);
-					int32_t typeSize = GetTypeValueSize(&objKlass->byval_arg);
-					ctx.CreateAddInst_ldc4(typeSize, EvalStackReduceDataType::I4);
-					ip += 6;
-					continue;
-				}
-				case OpcodeValue::RETHROW:
-				{
-					CreateAddIR(ir, RethrowEx);
-					ctx.AddInst(ir);
-					ctx.PopAllStack();
-					PopBranch();
-					continue;
-				}
-				case OpcodeValue::READONLY_:
-				{
-					prefixFlags |= (int32_t)PrefixFlags::ReadOnly;
-					ip += 2;
-					// generic md array also can follow readonly
-					//IL2CPP_ASSERT(*ip == (byte)OpcodeValue::LDELEMA && "According to the ECMA spec, READONLY may only precede LDELEMA");
-					continue;
-				}
-				case OpcodeValue::INITBLK:
-				{
-					IL2CPP_ASSERT(evalStackTop >= 3);
-					ctx.InsertMemoryBarrier();
-					ctx.ResetPrefixFlags();
-					CreateAddIR(ir, InitblkVarVarVar);
-					ir->addr = ctx.GetEvalStackOffset_3();
-					ir->value = ctx.GetEvalStackOffset_2();
-					ir->size = ctx.GetEvalStackOffset_1();
-					ctx.PopStackN(3);
-					ip += 2;
+
+					IL2CPP_ASSERT(*ip == (uint8_t)OpcodeValue::CALLVIRT);
+					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 1);
+					ip += 5;
+
+					// TODO token cache optimistic
+					shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
+					IL2CPP_ASSERT(shareMethod);
+
+
+					int32_t resolvedTotalArgNum = shareMethod->parameters_count + 1;
+
+					int32_t selfIdx = evalStackTop - resolvedTotalArgNum;
+					EvalStackVarInfo& self = evalStack[selfIdx];
+					if (IS_CLASS_VALUE_TYPE(conKlass))
+					{
+						// impl in self
+						const MethodInfo* implMethod = image->FindImplMethod(conKlass, shareMethod);
+						if (implMethod->klass == conKlass)
+						{
+							shareMethod = implMethod;
+							goto LabelCall;
+						}
+						else
+						{
+							CreateAddIR(ir, BoxRefVarVar);
+							ir->dst = ir->src = self.locOffset;
+							ir->klass = ctx.GetOrAddResolveDataIndex(conKlass);
+
+							self.reduceType = NATIVE_INT_REDUCE_TYPE;
+							self.byteSize = GetSizeByReduceType(self.reduceType);
+							goto LabelCallVir;
+						}
+					}
+					else
+					{
+						// deref object. FIXME gc memory barrier
+#if HYBRIDCLR_ARCH_64
+						CreateAddIR(ir, LdindVarVar_i8);
+#else
+						CreateAddIR(ir, LdindVarVar_i4);
+#endif
+						ir->dst = ir->src = self.locOffset;
+						self.reduceType = NATIVE_INT_REDUCE_TYPE;
+						self.byteSize = GetSizeByReduceType(self.reduceType);
+						goto LabelCallVir;
+					}
 					continue;
 				}
 				case OpcodeValue::CPBLK:
@@ -3425,26 +3417,45 @@ ir->ele = ele.locOffset;
 					ip += 2;
 					continue;
 				}
-				case OpcodeValue::ENDFILTER:
+				case OpcodeValue::INITBLK:
 				{
-					CreateAddIR(ir, EndFilterEx);
-					ir->value = ctx.GetEvalStackTopOffset();
+					IL2CPP_ASSERT(evalStackTop >= 3);
+					ctx.InsertMemoryBarrier();
+					ctx.ResetPrefixFlags();
+					CreateAddIR(ir, InitblkVarVarVar);
+					ir->addr = ctx.GetEvalStackOffset_3();
+					ir->value = ctx.GetEvalStackOffset_2();
+					ir->size = ctx.GetEvalStackOffset_1();
+					ctx.PopStackN(3);
+					ip += 2;
+					continue;
+				}
+				case OpcodeValue::NO_:
+				{
+					ip += 2;
+					continue;
+				}
+				case OpcodeValue::RETHROW:
+				{
+					CreateAddIR(ir, RethrowEx);
+					ctx.AddInst(ir);
 					ctx.PopAllStack();
-
 					PopBranch();
 					continue;
 				}
-				case OpcodeValue::UNALIGNED_:
+				case OpcodeValue::UNUSED:
 				{
-					// Nothing to do here.
-					prefixFlags |= (int32_t)PrefixFlags::Unaligned;
 					ip += 2;
 					continue;
 				}
-				case OpcodeValue::TAIL_:
+				case OpcodeValue::SIZEOF:
 				{
-					prefixFlags |= (int32_t)PrefixFlags::Tail;
-					ip += 2;
+					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
+					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+					IL2CPP_ASSERT(objKlass);
+					int32_t typeSize = GetTypeValueSize(&objKlass->byval_arg);
+					ctx.CreateAddInst_ldc4(typeSize, EvalStackReduceDataType::I4);
+					ip += 6;
 					continue;
 				}
 				case OpcodeValue::REFANYTYPE:
@@ -3455,6 +3466,22 @@ ir->ele = ele.locOffset;
 					ctx.PopStack();
 					ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 
+					ip += 2;
+					continue;
+				}
+				case OpcodeValue::READONLY_:
+				{
+					prefixFlags |= (int32_t)PrefixFlags::ReadOnly;
+					ip += 2;
+					// generic md array also can follow readonly
+					//IL2CPP_ASSERT(*ip == (byte)OpcodeValue::LDELEMA && "According to the ECMA spec, READONLY may only precede LDELEMA");
+					continue;
+				}
+				case OpcodeValue::UNUSED53:
+				case OpcodeValue::UNUSED54:
+				case OpcodeValue::UNUSED55:
+				case OpcodeValue::UNUSED70:
+				{
 					ip += 2;
 					continue;
 				}
