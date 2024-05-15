@@ -3432,7 +3432,10 @@ ir->ele = ele.locOffset;
 				}
 				case OpcodeValue::NO_:
 				{
-					ip += 2;
+					uint8_t checkType = ip[2];
+					// {typecheck:0x1} | {rangecheck:0x2} | {nullcheck:0x4}
+					IL2CPP_ASSERT(checkType < 8);
+					ip += 3;
 					continue;
 				}
 				case OpcodeValue::RETHROW:
