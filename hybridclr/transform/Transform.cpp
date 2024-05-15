@@ -3194,7 +3194,9 @@ ir->ele = ele.locOffset;
 				{
 					// Nothing to do here.
 					prefixFlags |= (int32_t)PrefixFlags::Unaligned;
-					ip += 2;
+					uint8_t alignment = ip[2];
+					IL2CPP_ASSERT(alignment == 1 || alignment == 2 || alignment == 4);
+					ip += 3;
 					continue;
 				}
 				case OpcodeValue::VOLATILE_:
