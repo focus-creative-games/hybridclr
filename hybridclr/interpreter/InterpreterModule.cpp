@@ -381,7 +381,8 @@ namespace interpreter
 	#else
 	static void* InterpreterInvoke(Il2CppMethodPointer methodPointer, const MethodInfo* method, void* __this, void** __args)
 	{
-		StackObject args[256];
+		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
+		StackObject* args = (StackObject*)alloca(sizeof(StackObject) * imi->argStackObjectSize);
 		bool isInstanceMethod = metadata::IsInstanceMethod(method);
 		if (isInstanceMethod)
 		{
@@ -391,7 +392,6 @@ namespace interpreter
 			}
 			args[0].ptr = __this;
 		}
-		InterpMethodInfo* imi = method->interpData ? (InterpMethodInfo*)method->interpData : InterpreterModule::GetInterpMethodInfo(method);
 		MethodArgDesc* argDescs = imi->args + isInstanceMethod;
 		ConvertInvokeArgs(args + isInstanceMethod, method, argDescs, __args);
 		if (method->return_type->type == IL2CPP_TYPE_VOID)
