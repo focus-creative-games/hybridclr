@@ -121,7 +121,7 @@ namespace metadata
 		}
 	}
 
-	MethodBody* ConsistentAOTHomologousImage::GetMethodBody(uint32_t token)
+	MethodBody* ConsistentAOTHomologousImage::GetMethodBody(uint32_t token, MethodBody& tempMethodBody)
 	{
 		auto it = _token2MethodBodies.find(token);
 		if (it != _token2MethodBodies.end())

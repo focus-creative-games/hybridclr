@@ -1395,7 +1395,6 @@ namespace metadata
 
 
 		_methodDefine2InfoCaches.resize(methodTb.rowNum);
-		_methodBodies.resize(methodTb.rowNum);
 
 		int32_t paramTableRowNum = _rawImage->GetTable(TableType::PARAM).rowNum;
 		for (uint32_t index = 0; index < methodTb.rowNum; index++)

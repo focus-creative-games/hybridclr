@@ -164,22 +164,34 @@ namespace metadata
 			return rawIndex != 0 ? EncodeImageAndMetadataIndex(_index, rawIndex) : 0;
 		}
 
-		MethodBody* GetMethodBody(uint32_t token) override
+		MethodBody* GetMethodBody(uint32_t token, MethodBody& tempMethodBody) override
 		{
 			IL2CPP_ASSERT(DecodeTokenTableType(token) == TableType::METHOD);
 			uint32_t rowIndex = DecodeTokenRowIndex(token);
-			IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= (uint32_t)_methodBodies.size());
-			uint32_t methodIndex = rowIndex - 1;
-			MethodBody* methodBody = _methodBodies[methodIndex];
-			if (!methodBody)
-			{
-				TbMethod methodData = _rawImage->ReadMethod(rowIndex);
-				methodBody = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
-				ReadMethodBody(_methodDefines[methodIndex], methodData, *methodBody);
-				_methodBodies[methodIndex] = methodBody;
-			}
+			IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= (uint32_t)_methodDefines.size());
 
-			return methodBody;
+			auto it = _methodBodyCache.find(rowIndex);
+			if (it != _methodBodyCache.end())
+			{
+				return it->second;
+			}
+			const Il2CppMethodDefinition* methodDef = &_methodDefines[rowIndex - 1];
+			bool isGenericMethod = methodDef->genericContainerIndex != kGenericContainerIndexInvalid || _typesDefines[DecodeMetadataIndex(methodDef->declaringType)].genericContainerIndex != kGenericContainerIndexInvalid;
+
+			TbMethod methodData = _rawImage->ReadMethod(rowIndex);
+			MethodBody* resultMethodBody = nullptr;
+			// only cache generic method
+			if (isGenericMethod)
+			{
+				resultMethodBody = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
+				_methodBodyCache.insert({ rowIndex, resultMethodBody });
+			}
+			else
+			{
+				resultMethodBody = &tempMethodBody;
+			}
+			ReadMethodBody(*methodDef, methodData, *resultMethodBody);
+			return resultMethodBody;
 		}
 
 		// type index start from 0, difference with table index...
@@ -680,7 +692,7 @@ namespace metadata
 
 		std::vector<const MethodInfo*> _methodDefine2InfoCaches;
 		std::vector<Il2CppMethodDefinition> _methodDefines;
-		std::vector<MethodBody*> _methodBodies;
+		Il2CppHashMap<uint32_t, MethodBody*, il2cpp::utils::PassThroughHash<uint32_t>> _methodBodyCache;
 
 		std::vector<ParamDetail> _params;
 		std::vector<int32_t> _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count

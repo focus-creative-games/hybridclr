@@ -259,7 +259,7 @@ namespace metadata
 		}
 	}
 
-	MethodBody* SuperSetAOTHomologousImage::GetMethodBody(uint32_t token)
+	MethodBody* SuperSetAOTHomologousImage::GetMethodBody(uint32_t token, MethodBody& tempMethodBody)
 	{
 		auto it = _token2MethodDefs.find(token);
 		if (it == _token2MethodDefs.end())

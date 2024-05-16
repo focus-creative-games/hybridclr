@@ -518,7 +518,8 @@ namespace interpreter
 				methodInfo->klass->rank ? il2cpp_defaults.corlib->assembly : methodInfo->klass->image->assembly);
 		IL2CPP_ASSERT(image);
 
-		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token);
+		metadata::MethodBody tempMethodBody = {};
+		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token, tempMethodBody);
 		if (methodBody == nullptr || methodBody->ilcodes == nullptr)
 		{
 			TEMP_FORMAT(errMsg, "Method body is null. %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
