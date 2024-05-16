@@ -41,14 +41,14 @@ namespace metadata
 
 	LoadImageErrorCode AOTHomologousImage::Load(const byte* imageData, size_t length)
 	{
-		LoadImageErrorCode err = _rawImage.Load(imageData, length);
+		LoadImageErrorCode err = _rawImage->Load(imageData, length);
 		if (err != LoadImageErrorCode::OK)
 		{
 			return err;
 		}
 
-		TbAssembly data = _rawImage.ReadAssembly(1);
-		const char* assName = _rawImage.GetStringFromRawIndex(data.name);
+		TbAssembly data = _rawImage->ReadAssembly(1);
+		const char* assName = _rawImage->GetStringFromRawIndex(data.name);
 		const Il2CppAssembly* aotAss = GetLoadedAssembly(assName);
 		// FIXME. not free memory.
 		if (!aotAss)
@@ -67,8 +67,8 @@ namespace metadata
 	bool AOTHomologousImage::GetModuleIl2CppType(Il2CppType& resultType, uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
 	{
 		IL2CPP_ASSERT(moduleRowIndex == 1);
-		const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
-		const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
+		const char* typeNameStr = _rawImage->GetStringFromRawIndex(typeName);
+		const char* typeNamespaceStr = _rawImage->GetStringFromRawIndex(typeNamespace);
 		
 		const Il2CppImage* aotImage = il2cpp::vm::Assembly::GetImage(_aotAssembly);
 		Il2CppClass* klass = il2cpp::vm::Class::FromName(aotImage, typeNamespaceStr, typeNameStr);

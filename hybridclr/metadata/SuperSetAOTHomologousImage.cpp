@@ -26,7 +26,7 @@ namespace metadata
 
 	void SuperSetAOTHomologousImage::InitTypes0()
 	{
-		const Table& typeDefTb = _rawImage.GetTable(TableType::TYPEDEF);
+		const Table& typeDefTb = _rawImage->GetTable(TableType::TYPEDEF);
 		uint32_t typeCount = typeDefTb.rowNum;
 		_typeDefs.resize(typeCount);
 		_aotTypeIndex2TypeDefs.resize(typeCount);
@@ -36,7 +36,7 @@ namespace metadata
 		{
 			SuperSetTypeDefDetail& td = _typeDefs[index];
 			uint32_t rowIndex = index + 1;
-			TbTypeDef data = _rawImage.ReadTypeDef(rowIndex);
+			TbTypeDef data = _rawImage->ReadTypeDef(rowIndex);
 			
 			td.inited = false;
 			td.homoParentRowIndex = 0;
@@ -44,8 +44,8 @@ namespace metadata
 			td.homoMethodStartIndex = data.methodList;
 			td.homoFieldStartIndex = data.fieldList;
 			
-			td.name = _rawImage.GetStringFromRawIndex(data.typeName);
-			td.namespaze = _rawImage.GetStringFromRawIndex(data.typeNamespace);
+			td.name = _rawImage->GetStringFromRawIndex(data.typeName);
+			td.namespaze = _rawImage->GetStringFromRawIndex(data.typeNamespace);
 			td.aotTypeIndex = kInvalidIndex;
 			td.aotIl2CppType = nullptr;
 			td.aotTypeDef = nullptr;
@@ -54,10 +54,10 @@ namespace metadata
 
 	void SuperSetAOTHomologousImage::InitNestedClass()
 	{
-		const Table& nestedClassTb = _rawImage.GetTable(TableType::NESTEDCLASS);
+		const Table& nestedClassTb = _rawImage->GetTable(TableType::NESTEDCLASS);
 		for (uint32_t i = 0; i < nestedClassTb.rowNum; i++)
 		{
-			TbNestedClass data = _rawImage.ReadNestedClass(i + 1);
+			TbNestedClass data = _rawImage->ReadNestedClass(i + 1);
 			SuperSetTypeDefDetail& nestedType = _typeDefs[data.nestedClass - 1];
 			nestedType.homoParentRowIndex = data.enclosingClass;
 		}
@@ -144,7 +144,7 @@ namespace metadata
 
 	void SuperSetAOTHomologousImage::InitMethods()
 	{
-		const Table& methodTb = _rawImage.GetTable(TableType::METHOD);
+		const Table& methodTb = _rawImage->GetTable(TableType::METHOD);
 		uint32_t methodCount = methodTb.rowNum;
 		_methodDefs.resize(methodCount);
 		_token2MethodDefs.resize(methodCount * 2);
@@ -158,15 +158,15 @@ namespace metadata
 			{
 				SuperSetMethodDefDetail& method = _methodDefs[i - 1];
 				method.homoRowIndex = i;
-				TbMethod data = _rawImage.ReadMethod(i);
+				TbMethod data = _rawImage->ReadMethod(i);
 				method.declaringTypeDef = type.aotTypeDef;
-				method.name = _rawImage.GetStringFromRawIndex(data.name);
+				method.name = _rawImage->GetStringFromRawIndex(data.name);
 				if (type.aotTypeDef == nullptr)
 				{
 					continue;
 				}
 				method.signature.flags = data.flags;
-				BlobReader methodSigReader = _rawImage.GetBlobReaderByRawIndex(data.signature);
+				BlobReader methodSigReader = _rawImage->GetBlobReaderByRawIndex(data.signature);
 				ReadMethodDefSig(methodSigReader, method.signature);
 				method.aotMethodDef = FindMatchMethod(type.aotKlass, method);
 				if (method.aotMethodDef)
@@ -226,7 +226,7 @@ namespace metadata
 
 	void SuperSetAOTHomologousImage::InitFields()
 	{
-		const Table& fieldTb = _rawImage.GetTable(TableType::FIELD);
+		const Table& fieldTb = _rawImage->GetTable(TableType::FIELD);
 		uint32_t fieldCount = fieldTb.rowNum;
 		_fields.resize(fieldTb.rowNum);
 
@@ -238,8 +238,8 @@ namespace metadata
 			{
 				SuperSetFieldDefDetail& field = _fields[i - 1];
 				field.homoRowIndex = i;
-				TbField data = _rawImage.ReadField(i);
-				field.name = _rawImage.GetStringFromRawIndex(data.name);
+				TbField data = _rawImage->ReadField(i);
+				field.name = _rawImage->GetStringFromRawIndex(data.name);
 
 				field.declaringTypeDef = type.aotTypeDef;
 				field.declaringIl2CppType = type.aotIl2CppType;
@@ -248,7 +248,7 @@ namespace metadata
 					continue;
 				}
 
-				BlobReader br = _rawImage.GetBlobReaderByRawIndex(data.signature);
+				BlobReader br = _rawImage->GetBlobReaderByRawIndex(data.signature);
 				FieldRefSig frs;
 				ReadFieldRefSig(br, nullptr, frs);
 				frs.type.attrs = data.flags;
@@ -270,7 +270,7 @@ namespace metadata
 		if (!method->body)
 		{
 			uint32_t rowIndex = method->homoRowIndex;
-			TbMethod methodData = _rawImage.ReadMethod(rowIndex);
+			TbMethod methodData = _rawImage->ReadMethod(rowIndex);
 			MethodBody* body = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
 			ReadMethodBody(*method->aotMethodDef, methodData, *body);
 			method->body = body;
@@ -347,7 +347,7 @@ namespace metadata
 		}
 		case TableType::ASSEMBLYREF:
 		{
-			TbAssemblyRef assRef = _rawImage.ReadAssemblyRef(rawIndex);
+			TbAssemblyRef assRef = _rawImage->ReadAssemblyRef(rawIndex);
 			const Il2CppType* refType = GetIl2CppType(rawIndex, typeNamespace, typeName, false);
 			if (refType)
 			{
@@ -365,7 +365,7 @@ namespace metadata
 			Il2CppType enClosingType = {};
 			ReadTypeFromTypeRef(rawIndex, enClosingType);
 			IL2CPP_ASSERT(typeNamespace == 0);
-			const char* name = _rawImage.GetStringFromRawIndex(typeName);
+			const char* name = _rawImage->GetStringFromRawIndex(typeName);
 
 			void* iter = nullptr;
 			Il2CppMetadataTypeHandle enclosingTypeDef = enClosingType.data.typeHandle;

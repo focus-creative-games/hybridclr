@@ -136,7 +136,7 @@ namespace metadata
 				RaiseExecutionEngineException("image can't be init again");
 			}
 			_inited = true;
-			return _rawImage.Load(imageData, length);
+			return _rawImage->Load(imageData, length);
 		}
 
 		bool IsInitialized() const
@@ -173,7 +173,7 @@ namespace metadata
 			MethodBody* methodBody = _methodBodies[methodIndex];
 			if (!methodBody)
 			{
-				TbMethod methodData = _rawImage.ReadMethod(rowIndex);
+				TbMethod methodData = _rawImage->ReadMethod(rowIndex);
 				methodBody = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
 				ReadMethodBody(_methodDefines[methodIndex], methodData, *methodBody);
 				_methodBodies[methodIndex] = methodBody;
@@ -206,7 +206,7 @@ namespace metadata
 		const char* GetStringFromRawIndex(StringIndex index) const
 		{
 			IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
-			return _rawImage.GetStringFromRawIndex(index);
+			return _rawImage->GetStringFromRawIndex(index);
 		}
 
 		uint32_t GetTypeRawIndex(const Il2CppTypeDefinition* typeDef) const
@@ -309,7 +309,7 @@ namespace metadata
 			if (typeIndex == kTypeIndexInvalid)
 			{
 
-				TbGenericParamConstraint data = _rawImage.ReadGenericParamConstraint(index + 1);
+				TbGenericParamConstraint data = _rawImage->ReadGenericParamConstraint(index + 1);
 				Il2CppGenericParameter& genericParam = _genericParams[data.owner - 1];
 				Il2CppType paramCons = {};
 
@@ -403,13 +403,13 @@ namespace metadata
 		const uint8_t* GetFieldOrParameterDefalutValueByRawIndex(uint32_t index)
 		{
 #if !HYBRIDCLR_UNITY_2021_OR_NEW
-			return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(index);
+			return _rawImage->GetFieldOrParameterDefalutValueByRawIndex(index);
 #else
 			BlobSource source = (BlobSource)(index & 0x1);
 			uint32_t offset = index >> 1;
 			if (source == BlobSource::RAW_IMAGE)
 			{
-				return _rawImage.GetFieldOrParameterDefalutValueByRawIndex(offset);
+				return _rawImage->GetFieldOrParameterDefalutValueByRawIndex(offset);
 			}
 			else
 			{
@@ -486,7 +486,7 @@ namespace metadata
 			CustomAttributeIndex nextIndex = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(*(dataRangeCur + 1)));
 			CustomAttribute& curCa = _customAttribues[curIndex];
 			CustomAttribute& nextCa = _customAttribues[nextIndex];
-			return std::make_tuple<void*, void*>((void*)_rawImage.GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage.GetBlobReaderByRawIndex(nextCa.value).GetData());
+			return std::make_tuple<void*, void*>((void*)_rawImage->GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage->GetBlobReaderByRawIndex(nextCa.value).GetData());
 		}
 
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)

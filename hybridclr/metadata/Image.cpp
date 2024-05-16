@@ -59,13 +59,13 @@ namespace metadata
         {
         case TableType::TYPEREF:
         {
-            TbTypeRef r = _rawImage.ReadTypeRef(rowIndex);
-            const char* typeNamespace = _rawImage.GetStringFromRawIndex(r.typeNamespace);
+            TbTypeRef r = _rawImage->ReadTypeRef(rowIndex);
+            const char* typeNamespace = _rawImage->GetStringFromRawIndex(r.typeNamespace);
             if (std::strcmp(typeNamespace, "System"))
             {
                 return false;
             }
-            const char* typeName = _rawImage.GetStringFromRawIndex(r.typeName);
+            const char* typeName = _rawImage->GetStringFromRawIndex(r.typeName);
             return std::strcmp(typeName, "ValueType") == 0 || std::strcmp(typeName, "Enum") == 0;
         }
         default:
@@ -81,7 +81,7 @@ namespace metadata
         {
             return false;
         }
-        TbMemberRef data = _rawImage.ReadMemberRef(rowIndex);
+        TbMemberRef data = _rawImage->ReadMemberRef(rowIndex);
         TableType parentTableType = DecodeMemberRefParentType(data.classIdx);
         if (parentTableType != TableType::TYPEREF)
         {
@@ -398,7 +398,7 @@ namespace metadata
         }
         case TableType::ASSEMBLYREF:
         {
-            TbAssemblyRef assRef = _rawImage.ReadAssemblyRef(rawIndex);
+            TbAssemblyRef assRef = _rawImage->ReadAssemblyRef(rawIndex);
             const Il2CppType* refType = GetIl2CppType(rawIndex, typeNamespace, typeName, true);
             type.type = refType->type;
             type.data = refType->data;
@@ -409,7 +409,7 @@ namespace metadata
             Il2CppType enClosingType = {};
             ReadTypeFromTypeRef(rawIndex, enClosingType);
             IL2CPP_ASSERT(typeNamespace == 0);
-            const char* name = _rawImage.GetStringFromRawIndex(typeName);
+            const char* name = _rawImage->GetStringFromRawIndex(typeName);
 
             void* iter = nullptr;
             Il2CppMetadataTypeHandle enclosingTypeDef = enClosingType.data.typeHandle;
@@ -456,14 +456,14 @@ namespace metadata
 
     void Image::ReadTypeFromTypeRef(uint32_t rowIndex, Il2CppType& type)
     {
-        TbTypeRef r = _rawImage.ReadTypeRef(rowIndex);
+        TbTypeRef r = _rawImage->ReadTypeRef(rowIndex);
         ReadTypeFromResolutionScope(r.resolutionScope, r.typeNamespace, r.typeName, type);
     }
 
     void Image::ReadTypeFromTypeSpec(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, Il2CppType& type)
     {
-        TbTypeSpec r = _rawImage.ReadTypeSpec(rowIndex);
-        BlobReader reader = _rawImage.GetBlobReaderByRawIndex(r.signature);
+        TbTypeSpec r = _rawImage->ReadTypeSpec(rowIndex);
+        BlobReader reader = _rawImage->GetBlobReaderByRawIndex(r.signature);
         ReadType(reader, klassGenericContainer, methodGenericContainer, type);
     }
 
@@ -516,7 +516,7 @@ namespace metadata
     void Image::ReadMethodRefSig(BlobReader& reader, MethodRefSig& method)
     {
         method = {};
-        //BlobReader reader = _rawImage.GetBlobReaderByRawIndex(signature);
+        //BlobReader reader = _rawImage->GetBlobReaderByRawIndex(signature);
         uint8_t rawSigFlags = reader.ReadByte();
         method.flags = rawSigFlags;
         if (rawSigFlags & (uint8_t)SigType::GENERIC)
@@ -544,7 +544,7 @@ namespace metadata
 
     void Image::ReadMemberRefSig(const Il2CppGenericContainer* klassGenericContainer, TbMemberRef& data, ResolveMemberRefSig& signature)
     {
-        BlobReader reader = _rawImage.GetBlobReaderByRawIndex(data.signature);
+        BlobReader reader = _rawImage->GetBlobReaderByRawIndex(data.signature);
         uint8_t rawSigFlags = reader.PeekByte();
         SigType sigType = DecodeSigType(rawSigFlags);
         if (sigType == SigType::FIELD)
@@ -584,7 +584,7 @@ namespace metadata
         }
         case TableType::METHODSPEC:
         {
-            TbMethodSpec methodSpec = _rawImage.ReadMethodSpec(rowIndex);
+            TbMethodSpec methodSpec = _rawImage->ReadMethodSpec(rowIndex);
 
             ReadMethodSpecInstantiation(methodSpec.instantiation, klassGenericContainer, methodGenericContainer, ret.instantiation);
             //FIXME instantiation memory leak
@@ -621,8 +621,8 @@ namespace metadata
     void Image::ReadResolveMemberRefFromMemberRef(const Il2CppGenericContainer* klassGenericContainer,
         const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, ResolveMemberRef& ret)
     {
-        TbMemberRef data = _rawImage.ReadMemberRef(rowIndex);
-        ret.name = _rawImage.GetStringFromRawIndex(data.name);
+        TbMemberRef data = _rawImage->ReadMemberRef(rowIndex);
+        ret.name = _rawImage->GetStringFromRawIndex(data.name);
         ReadMemberRefParentFromToken(klassGenericContainer, methodGenericContainer, DecodeMemberRefParentType(data.classIdx), DecodeMemberRefParentRowIndex(data.classIdx), ret.parent);
         IL2CPP_ASSERT(ret.parent.parentType == TableType::TYPEDEF || ret.parent.parentType == TableType::TYPEREF || ret.parent.parentType == TableType::TYPESPEC);
         Il2CppType& parentType = ret.parent.type;
@@ -643,7 +643,7 @@ namespace metadata
     void Image::ReadMethodSpecInstantiation(uint32_t signature, const Il2CppGenericContainer* klassGenericContainer,
         const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericInst*& genericInstantiation)
     {
-        BlobReader reader = _rawImage.GetBlobReaderByRawIndex(signature);
+        BlobReader reader = _rawImage->GetBlobReaderByRawIndex(signature);
         uint8_t rawSigFlags = reader.ReadByte();
         IL2CPP_ASSERT(rawSigFlags == 0xA);
         uint32_t argCount = reader.ReadCompressedUint32();
@@ -689,7 +689,7 @@ namespace metadata
 
     void Image::ReadStandAloneSig(uint32_t signatureIdx, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, ResolveStandAloneMethodSig& methodSig)
     {
-        BlobReader reader = _rawImage.GetBlobReaderByRawIndex(signatureIdx);
+        BlobReader reader = _rawImage->GetBlobReaderByRawIndex(signatureIdx);
         uint8_t sig = reader.ReadByte();
         methodSig.flags = sig;
         uint32_t paramCount = reader.ReadCompressedUint32();
@@ -738,10 +738,10 @@ namespace metadata
 
     const Il2CppType* Image::GetIl2CppType(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound)
     {
-        TbAssemblyRef data = _rawImage.ReadAssemblyRef(assemblyRefIndex);
-        const char* assName = _rawImage.GetStringFromRawIndex(data.name);
-        const char* typeNameStr = _rawImage.GetStringFromRawIndex(typeName);
-        const char* typeNamespaceStr = _rawImage.GetStringFromRawIndex(typeNamespace);
+        TbAssemblyRef data = _rawImage->ReadAssemblyRef(assemblyRefIndex);
+        const char* assName = _rawImage->GetStringFromRawIndex(data.name);
+        const char* typeNameStr = _rawImage->GetStringFromRawIndex(typeName);
+        const char* typeNamespaceStr = _rawImage->GetStringFromRawIndex(typeNamespace);
         const Il2CppAssembly* refAss = GetLoadedAssembly(assName);
         Il2CppClass* klass = nullptr;
         if (refAss)
@@ -773,9 +773,9 @@ namespace metadata
         if (bodyRVA > 0)
         {
             uint32_t methodImageOffset = 0;
-            bool ret = _rawImage.TranslateRVAToImageOffset(bodyRVA, methodImageOffset);
+            bool ret = _rawImage->TranslateRVAToImageOffset(bodyRVA, methodImageOffset);
             IL2CPP_ASSERT(ret);
-            const byte* bodyStart = _rawImage.GetDataPtrByImageOffset(methodImageOffset);
+            const byte* bodyStart = _rawImage->GetDataPtrByImageOffset(methodImageOffset);
             byte bodyFlags = *bodyStart;
             byte smallFatFlags = bodyFlags & 0x3;
 
@@ -800,9 +800,9 @@ namespace metadata
 
                 if (methodHeader->localVarSigToken)
                 {
-                    TbStandAloneSig sigData = _rawImage.ReadStandAloneSig(DecodeTokenRowIndex(methodHeader->localVarSigToken));
+                    TbStandAloneSig sigData = _rawImage->ReadStandAloneSig(DecodeTokenRowIndex(methodHeader->localVarSigToken));
 
-                    BlobReader reader = _rawImage.GetBlobReaderByRawIndex(sigData.signature);
+                    BlobReader reader = _rawImage->GetBlobReaderByRawIndex(sigData.signature);
                     ReadLocalVarSig(reader,
                         GetGenericContainerByTypeDefRawIndex(DecodeMetadataIndex(methodDef.declaringType)),
                         GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef.genericContainerIndex)),
@@ -910,7 +910,7 @@ namespace metadata
         }
         else
         {
-            const byte* str = _rawImage.GetUserStringBlogByIndex((uint32_t)index);
+            const byte* str = _rawImage->GetUserStringBlogByIndex((uint32_t)index);
             uint32_t lengthSize;
             uint32_t stringLength = BlobReader::ReadCompressedUint32(str, lengthSize);
 
@@ -1151,7 +1151,7 @@ namespace metadata
         }
         case TableType::METHODSPEC:
         {
-            TbMethodSpec methodSpec = _rawImage.ReadMethodSpec(rowIndex);
+            TbMethodSpec methodSpec = _rawImage->ReadMethodSpec(rowIndex);
             const Il2CppGenericInst* genericInstantiation = nullptr;
             // FIXME! genericInstantiation memory leak
             ReadMethodSpecInstantiation(methodSpec.instantiation, klassGenericContainer, methodGenericContainer, genericInstantiation);
@@ -1230,7 +1230,7 @@ namespace metadata
 
     void Image::GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig)
     {
-        TbStandAloneSig sas = _rawImage.ReadStandAloneSig(DecodeTokenRowIndex(token));
+        TbStandAloneSig sas = _rawImage->ReadStandAloneSig(DecodeTokenRowIndex(token));
         ReadStandAloneSig(sas.signature, klassGenericContainer, methodGenericContainer, methodSig);
         if (genericContext)
         {

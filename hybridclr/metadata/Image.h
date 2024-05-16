@@ -42,7 +42,7 @@ namespace metadata
 
 		const RawImage& GetRawImage() const
 		{
-			return _rawImage;
+			return *_rawImage;
 		}
 
 		// misc
@@ -115,6 +115,15 @@ namespace metadata
 			{
 				_nameToAssemblies[ass->image->nameNoExt] = ass;
 			}
+			_rawImage = new RawImage();
+		}
+
+		virtual ~Image()
+		{
+			if (_rawImage)
+			{
+				delete _rawImage;
+			}
 		}
 
 		const Il2CppAssembly* GetLoadedAssembly(const char* assemblyName)
@@ -138,7 +147,7 @@ namespace metadata
 
 		Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr);
 
-		RawImage _rawImage;
+		RawImage* _rawImage;
 		Il2CppHashMap<const char*, const Il2CppAssembly*, CStringHash, CStringEqualTo> _nameToAssemblies;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, il2cpp::utils::PassThroughHash<uint32_t>> _il2cppStringCache;
 
