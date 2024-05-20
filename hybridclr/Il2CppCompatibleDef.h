@@ -13,7 +13,7 @@
 
 #if HYBRIDCLR_UNITY_2020
 #include "icalls/mscorlib/System/MonoType.h"
-#elif HYBRIDCLR_UNITY_2021 || HYBRIDCLR_UNITY_2022
+#elif HYBRIDCLR_UNITY_2021_OR_NEW
 #include "icalls/mscorlib/System/RuntimeType.h"
 #include "icalls/mscorlib/System/RuntimeTypeHandle.h"
 #elif HYBRIDCLR_UNITY_2019
@@ -203,7 +203,7 @@ namespace hybridclr
 		return il2cpp::icalls::mscorlib::System::MonoType::getFullName(refType, false, false);
 	}
 }
-#elif HYBRIDCLR_UNITY_2021 || HYBRIDCLR_UNITY_2022
+#elif HYBRIDCLR_UNITY_2021_OR_NEW
 
 inline bool IS_CLASS_VALUE_TYPE(const Il2CppClass* klass)
 {
