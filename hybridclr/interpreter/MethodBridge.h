@@ -36,10 +36,35 @@ namespace interpreter
 		const char* signature;
 	};
 
-	extern Managed2NativeMethodInfo g_managed2nativeStub[];
-	extern Native2ManagedMethodInfo g_native2managedStub[];
-	extern NativeAdjustThunkMethodInfo g_adjustThunkStub[];
-	extern FullName2Signature g_fullName2SignatureStub[];
+	extern const Managed2NativeMethodInfo g_managed2nativeStub[];
+	extern const Native2ManagedMethodInfo g_native2managedStub[];
+	extern const NativeAdjustThunkMethodInfo g_adjustThunkStub[];
+	extern const FullName2Signature g_fullName2SignatureStub[];
+
+
+	struct ReversePInvokeInfo
+	{
+		int32_t index;
+		Il2CppMethodPointer methodPointer;
+		const MethodInfo* methodInfo;
+	};
+
+	struct ReversePInvokeMethodData
+	{
+		const char* methodSig;
+		Il2CppMethodPointer methodPointer;
+	};
+
+	extern const ReversePInvokeMethodData g_reversePInvokeMethodStub[];
+
+	typedef void (*PInvokeMethodPointer)(intptr_t method, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
+
+	struct PInvokeMethodData
+	{
+		const char* methodSig;
+		PInvokeMethodPointer methodPointer;
+	};
+	extern const PInvokeMethodData g_PInvokeMethodStub[];
 	
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args);
 

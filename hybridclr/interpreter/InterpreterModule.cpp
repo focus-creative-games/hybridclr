@@ -4,6 +4,7 @@
 
 #include <unordered_map>
 
+#include "Baselib.h"
 #include "vm/GlobalMetadata.h"
 #include "vm/MetadataCache.h"
 #include "vm/MetadataLock.h"
@@ -25,73 +26,155 @@ namespace interpreter
 {
 	il2cpp::os::ThreadLocalValue InterpreterModule::s_machineState;
 
-	static Il2CppHashMap<const char*, Managed2NativeCallMethod, CStringHash, CStringEqualTo> g_managed2natives;
-	static Il2CppHashMap<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> g_native2manageds;
-	static Il2CppHashMap<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> g_adjustThunks;
-	static Il2CppHashMap<const char*, const char*, CStringHash, CStringEqualTo> g_fullName2signature;
+	static Il2CppHashMap<const char*, Managed2NativeCallMethod, CStringHash, CStringEqualTo> s_managed2natives;
+	static Il2CppHashMap<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> s_native2manageds;
+	static Il2CppHashMap<const char*, Il2CppMethodPointer, CStringHash, CStringEqualTo> s_adjustThunks;
+	static Il2CppHashMap<const char*, const char*, CStringHash, CStringEqualTo> s_fullName2signature;
 
-	MachineState& InterpreterModule::GetCurrentThreadMachineState()
+	static Il2CppHashMap<const MethodInfo*, const ReversePInvokeInfo*, il2cpp::utils::PointerHash<MethodInfo>> s_methodInfo2ReverseInfos;
+	static Il2CppHashMap<Il2CppMethodPointer, const ReversePInvokeInfo*, il2cpp::utils::PassThroughHash<Il2CppMethodPointer>> s_methodPointer2ReverseInfos;
+	static Il2CppHashMap<const char*, int32_t, CStringHash, CStringEqualTo> s_methodSig2Indexs;
+	static std::vector<ReversePInvokeInfo> s_reverseInfos;
+
+	static baselib::ReentrantLock s_reversePInvokeMethodLock;
+
+	const MethodInfo* InterpreterModule::GetMethodInfoByReversePInvokeWrapperIndex(int32_t index)
 	{
-		MachineState* state = nullptr;
-		s_machineState.GetValue((void**)&state);
-		if (!state)
-		{
-			state = new MachineState();
-			s_machineState.SetValue(state);
-		}
-		return *state;
+		return s_reverseInfos[index].methodInfo;
 	}
 
-	void InterpreterModule::FreeThreadLocalMachineState()
+	const MethodInfo* InterpreterModule::GetMethodInfoByReversePInvokeWrapperMethodPointer(Il2CppMethodPointer methodPointer)
 	{
-		MachineState* state = nullptr;
-		s_machineState.GetValue((void**)&state);
-		if (state)
+		auto it = s_methodPointer2ReverseInfos.find(methodPointer);
+		return it != s_methodPointer2ReverseInfos.end() ? it->second->methodInfo : nullptr;
+	}
+
+	int32_t InterpreterModule::GetWrapperIndexByReversePInvokeWrapperMethodPointer(Il2CppMethodPointer methodPointer)
+	{
+		auto it = s_methodPointer2ReverseInfos.find(methodPointer);
+		return it != s_methodPointer2ReverseInfos.end() ? it->second->index : -1;
+	}
+
+	static void InitReversePInvokeInfo()
+	{
+		for (int32_t i = 0; ; i++)
 		{
-			delete state;
-			s_machineState.SetValue(nullptr);
+			const ReversePInvokeMethodData& data = g_reversePInvokeMethodStub[i];
+			if (data.methodPointer == nullptr)
+			{
+				break;
+			}
+			s_reverseInfos.push_back({ i, data.methodPointer, nullptr });
+			auto it = s_methodSig2Indexs.find(data.methodSig);
+			if (it == s_methodSig2Indexs.end())
+			{
+				s_methodSig2Indexs.insert({ data.methodSig, i });
+			}
+		}
+		s_methodInfo2ReverseInfos.resize(s_reverseInfos.size() * 2);
+		s_methodPointer2ReverseInfos.resize(s_reverseInfos.size() * 2);
+		for (ReversePInvokeInfo& rpi : s_reverseInfos)
+		{
+			s_methodPointer2ReverseInfos.insert({ rpi.methodPointer, &rpi });
+		}
+	}
+
+	Il2CppMethodPointer InterpreterModule::GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method, Il2CppCallConvention callConvention)
+	{
+		if (!hybridclr::metadata::IsStaticMethod(method))
+		{
+			return nullptr;
+		}
+
+		{
+			il2cpp::os::FastAutoLock lock(&s_reversePInvokeMethodLock);
+			auto it = s_methodInfo2ReverseInfos.find(method);
+			if (it != s_methodInfo2ReverseInfos.end())
+			{
+				return it->second->methodPointer;
+			}
+		}
+
+		char sigName[1000];
+		sigName[0] = 'A' + callConvention;
+		ComputeSignature(method, false, sigName + 1, sizeof(sigName) - 2);
+
+		il2cpp::os::FastAutoLock lock(&s_reversePInvokeMethodLock);
+
+
+		auto it = s_methodInfo2ReverseInfos.find(method);
+		if (it != s_methodInfo2ReverseInfos.end())
+		{
+			return it->second->methodPointer;
+		}
+
+		auto it2 = s_methodSig2Indexs.find(sigName);
+		if (it2 == s_methodSig2Indexs.end())
+		{
+			TEMP_FORMAT(methodSigBuf, "GetReversePInvokeWrapper fail. not find wrapper of method:%s", GetMethodNameWithSignature(method).c_str());
+			RaiseExecutionEngineException(methodSigBuf);
+		}
+		int32_t wrapperIndex = it2->second;
+		const ReversePInvokeMethodData& data = g_reversePInvokeMethodStub[wrapperIndex];
+		if (data.methodPointer == nullptr || std::strcmp(data.methodSig, sigName))
+		{
+			TEMP_FORMAT(methodSigBuf, "GetReversePInvokeWrapper fail. exceed max wrapper num of method:%s", GetMethodNameWithSignature(method).c_str());
+			RaiseExecutionEngineException(methodSigBuf);
+		}
+
+		s_methodSig2Indexs[sigName] = wrapperIndex + 1;
+
+		ReversePInvokeInfo& rpi = s_reverseInfos[wrapperIndex];
+		rpi.methodInfo = method;
+		s_methodInfo2ReverseInfos.insert({ method, &rpi });
+		return rpi.methodPointer;
+	}
+
+	static void InitMethodBridge()
+	{
+		for (size_t i = 0; ; i++)
+		{
+			const Managed2NativeMethodInfo& method = g_managed2nativeStub[i];
+			if (!method.signature)
+			{
+				break;
+			}
+			s_managed2natives.insert({ method.signature, method.method });
+		}
+		for (size_t i = 0; ; i++)
+		{
+			const Native2ManagedMethodInfo& method = g_native2managedStub[i];
+			if (!method.signature)
+			{
+				break;
+			}
+			s_native2manageds.insert({ method.signature, method.method });
+		}
+
+		for (size_t i = 0; ; i++)
+		{
+			const NativeAdjustThunkMethodInfo& method = g_adjustThunkStub[i];
+			if (!method.signature)
+			{
+				break;
+			}
+			s_adjustThunks.insert({ method.signature, method.method });
+		}
+		for (size_t i = 0; ; i++)
+		{
+			const FullName2Signature& nameSig = g_fullName2SignatureStub[i];
+			if (!nameSig.fullName)
+			{
+				break;
+			}
+			s_fullName2signature.insert({ nameSig.fullName, nameSig.signature });
 		}
 	}
 
 	void InterpreterModule::Initialize()
 	{
-		for (size_t i = 0; ; i++)
-		{
-			Managed2NativeMethodInfo& method = g_managed2nativeStub[i];
-			if (!method.signature)
-			{
-				break;
-			}
-			g_managed2natives.insert({ method.signature, method.method });
-		}
-		for (size_t i = 0; ; i++)
-		{
-			Native2ManagedMethodInfo& method = g_native2managedStub[i];
-			if (!method.signature)
-			{
-				break;
-			}
-			g_native2manageds.insert({ method.signature, method.method });
-		}
-
-		for (size_t i = 0; ; i++)
-		{
-			NativeAdjustThunkMethodInfo& method = g_adjustThunkStub[i];
-			if (!method.signature)
-			{
-				break;
-			}
-			g_adjustThunks.insert({ method.signature, method.method });
-		}
-		for (size_t i = 0 ; ; i++)
-		{
-			FullName2Signature& nameSig = g_fullName2SignatureStub[i];
-			if (!nameSig.fullName)
-			{
-				break;
-			}
-			g_fullName2signature.insert({ nameSig.fullName, nameSig.signature });
-		}
+		InitMethodBridge();
+		InitReversePInvokeInfo();
 	}
 
 	void InterpreterModule::NotSupportNative2Managed()
@@ -106,8 +189,8 @@ namespace interpreter
 
 	const char* InterpreterModule::GetValueTypeSignature(const char* fullName)
 	{
-		auto it = g_fullName2signature.find(fullName);
-		return it != g_fullName2signature.end() ? it->second : "$";
+		auto it = s_fullName2signature.find(fullName);
+		return it != s_fullName2signature.end() ? it->second : "$";
 	}
 
 	static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
@@ -124,8 +207,8 @@ namespace interpreter
 	{
 		char sigName[1000];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
-		auto it = g_managed2natives.find(sigName);
-		return it != g_managed2natives.end() ? it->second : nullptr;
+		auto it = s_managed2natives.find(sigName);
+		return it != s_managed2natives.end() ? it->second : nullptr;
 	}
 
 	template<typename T>
@@ -133,8 +216,8 @@ namespace interpreter
 	{
 		char sigName[1000];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
-		auto it = g_native2manageds.find(sigName);
-		return it != g_native2manageds.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
+		auto it = s_native2manageds.find(sigName);
+		return it != s_native2manageds.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
 	}
 
 	template<typename T>
@@ -142,8 +225,8 @@ namespace interpreter
 	{
 		char sigName[1000];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
-		auto it = g_adjustThunks.find(sigName);
-		return it != g_adjustThunks.end() ? it->second : InterpreterModule::NotSupportAdjustorThunk;
+		auto it = s_adjustThunks.find(sigName);
+		return it != s_adjustThunks.end() ? it->second : InterpreterModule::NotSupportAdjustorThunk;
 	}
 
 	static void RaiseMethodNotSupportException(const MethodInfo* method, const char* desc)
@@ -265,16 +348,16 @@ namespace interpreter
 		}
 		char sigName[1000];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
-		auto it = g_managed2natives.find(sigName);
-		return it != g_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
+		auto it = s_managed2natives.find(sigName);
+		return it != s_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
 	}
 
 	Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
 	{
 		char sigName[1000];
 		ComputeSignature(&method.returnType, method.params, method.paramCount, metadata::IsPrologHasThis(method.flags), sigName, sizeof(sigName) - 1);
-		auto it = g_managed2natives.find(sigName);
-		return it != g_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
+		auto it = s_managed2natives.find(sigName);
+		return it != s_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
 	}
 
 	static void RaiseExecutionEngineExceptionMethodIsNotFound(const MethodInfo* method)

@@ -9,13 +9,6 @@ namespace hybridclr
 
 namespace metadata
 {
-	struct ReversePInvokeInfo
-	{
-		int32_t index;
-		Il2CppMethodPointer methodPointer;
-		const MethodInfo* methodInfo;
-	};
-
 	class MetadataModule
 	{
 	public:
@@ -251,33 +244,9 @@ namespace metadata
 			}
 		}
 
-		static Il2CppMethodPointer GetReversePInvokeWrapper(const Il2CppImage* image, const MethodInfo* method, Il2CppCallConvention callConvention);
-
-		static const MethodInfo* GetMethodInfoByReversePInvokeWrapperIndex(int32_t index)
-		{
-			return s_reverseInfos[index].methodInfo;
-		}
-
-		static const MethodInfo* GetMethodInfoByReversePInvokeWrapperMethodPointer(Il2CppMethodPointer methodPointer)
-		{
-			auto it = s_methodPointer2ReverseInfos.find(methodPointer);
-			return it != s_methodPointer2ReverseInfos.end() ? it->second->methodInfo : nullptr;
-		}
-
-		static int32_t GetWrapperIndexByReversePInvokeWrapperMethodPointer(Il2CppMethodPointer methodPointer)
-		{
-			auto it = s_methodPointer2ReverseInfos.find(methodPointer);
-			return it != s_methodPointer2ReverseInfos.end() ? it->second->index : -1;
-		}
-
 		static LoadImageErrorCode LoadMetadataForAOTAssembly(const void* dllBytes, uint32_t dllSize, HomologousImageMode mode);
 	private:
-		static void InitReversePInvokeInfo();
 
-		static Il2CppHashMap<const char*, int32_t, CStringHash, CStringEqualTo> s_methodSig2Indexs;
-		static Il2CppHashMap<const MethodInfo*, const ReversePInvokeInfo*, il2cpp::utils::PointerHash<MethodInfo>> s_methodInfo2ReverseInfos;
-		static Il2CppHashMap<Il2CppMethodPointer, const ReversePInvokeInfo*, il2cpp::utils::PassThroughHash<Il2CppMethodPointer>> s_methodPointer2ReverseInfos;
-		static std::vector<ReversePInvokeInfo> s_reverseInfos;
 	};
 }
 
