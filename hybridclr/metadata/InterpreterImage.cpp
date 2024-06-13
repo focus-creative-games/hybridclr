@@ -1486,6 +1486,9 @@ namespace metadata
 						// data.sequence == 0  is for returnType.
 						// used for parent of CustomeAttributes of ReturnType
 						// il2cpp not support ReturnType CustomAttributes. so we just ignore it.
+#if SUPPORT_METHOD_RETURN_TYPE_CUSTOM_ATTRIBUTE
+						md.returnParameterToken = EncodeToken(TableType::PARAM, paramRowIndex);
+#endif
 					}
 				}
 			}
