@@ -3377,6 +3377,35 @@ ir->ele = ele.locOffset;
 							shareMethod = implMethod;
 							goto LabelCall;
 						}
+						else if (conKlass->enumtype && !std::strcmp(shareMethod->name, "GetHashCode"))
+						{
+							Il2CppTypeEnum typeEnum = conKlass->element_class->byval_arg.type;
+
+							if (typeEnum == IL2CPP_TYPE_I8 || typeEnum == IL2CPP_TYPE_U8)
+							{
+								CreateAddIR(ir, GetEnumHashCode);
+								ir->dst = ir->src = self.locOffset;
+							}
+							else
+							{
+								CreateAddIR(ir, LdindVarVar_i1);
+								ir->dst = ir->src = self.locOffset;
+								switch (conKlass->element_class->byval_arg.type)
+								{
+								case IL2CPP_TYPE_U1: ir->type = HiOpcodeEnum::LdindVarVar_u1; break;
+								case IL2CPP_TYPE_I1: ir->type = HiOpcodeEnum::LdindVarVar_i1; break;
+								case IL2CPP_TYPE_U2: ir->type = HiOpcodeEnum::LdindVarVar_u2; break;
+								case IL2CPP_TYPE_I2: ir->type = HiOpcodeEnum::LdindVarVar_u2; break;
+								case IL2CPP_TYPE_U4: ir->type = HiOpcodeEnum::LdindVarVar_u4; break;
+								case IL2CPP_TYPE_I4: ir->type = HiOpcodeEnum::LdindVarVar_i4; break;
+								case IL2CPP_TYPE_CHAR: ir->type = HiOpcodeEnum::LdindVarVar_u2; break;
+								case IL2CPP_TYPE_BOOLEAN: ir->type = HiOpcodeEnum::LdindVarVar_i1; break;
+								default:
+									IL2CPP_ASSERT(false && "GetHashCode");
+									break;
+								}
+							}
+						}
 						else
 						{
 							CreateAddIR(ir, BoxRefVarVar);

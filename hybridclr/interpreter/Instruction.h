@@ -847,6 +847,7 @@ namespace interpreter
 		NewString_2,
 		NewString_3,
 		UnsafeEnumCast,
+		GetEnumHashCode,
 		AssemblyGetExecutingAssembly,
 
 		//!!!}}OPCODE
@@ -9638,6 +9639,15 @@ namespace interpreter
 		uint16_t dst;
 		uint16_t src;
 		uint16_t srcType;
+	};
+
+
+	struct IRGetEnumHashCode : IRCommon
+	{
+		uint16_t dst;
+		uint16_t src;
+		uint8_t __pad6;
+		uint8_t __pad7;
 	};
 
 

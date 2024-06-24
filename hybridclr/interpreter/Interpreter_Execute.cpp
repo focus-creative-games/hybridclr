@@ -1229,6 +1229,13 @@ namespace interpreter
 		}
 	}
 
+	// align with the implementation of Enum::get_hashcode
+	inline int32_t GetEnumLongHashCode(void* data)
+	{
+		int64_t value = *((int64_t*)data);
+		return (int32_t)(value & 0xffffffff) ^ (int32_t)(value >> 32);
+	}
+
 	inline void ConstructorDelegate2(MethodInfo* ctor, Il2CppDelegate* del, Il2CppObject* target, MethodInfo* method)
 	{
 #if HYBRIDCLR_UNITY_2021_OR_NEW
@@ -11259,6 +11266,14 @@ else \
 					uint16_t __src = *(uint16_t*)(ip + 4);
 					uint16_t __srcType = *(uint16_t*)(ip + 6);
 				    (*(int32_t*)(localVarBase + __dst)) =  UnsafeEnumCast((void*)(localVarBase + __src), __srcType);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::GetEnumHashCode:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __src = *(uint16_t*)(ip + 4);
+				    (*(int32_t*)(localVarBase + __dst)) = GetEnumLongHashCode({(*(void**)(localVarBase + __src))});
 				    ip += 8;
 				    continue;
 				}
