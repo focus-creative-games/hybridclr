@@ -226,9 +226,9 @@ namespace metadata
         }
         case IL2CPP_TYPE_PTR:
         {
-            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            //SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             type.data.type = ReadType(reader, klassGenericContainer, methodGenericContainer);
-            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            //SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
         }
         case IL2CPP_TYPE_BYREF:
