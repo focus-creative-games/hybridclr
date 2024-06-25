@@ -1,17 +1,6 @@
 #include "MetadataPool.h"
 
-#include "utils/Il2CppHashMap.h"
-#include "utils/Il2CppHashSet.h"
-#include "utils/HashUtils.h"
 #include "utils/MemoryPool.h"
-#include "metadata/Il2CppTypeHash.h"
-#include "metadata/Il2CppTypeCompare.h"
-#include "metadata/Il2CppGenericInstHash.h"
-#include "metadata/Il2CppGenericInstCompare.h"
-#include "metadata/Il2CppGenericMethodHash.h"
-#include "metadata/Il2CppGenericMethodCompare.h"
-#include "metadata/Il2CppGenericClassHash.h"
-#include "metadata/Il2CppGenericClassCompare.h"
 #include "vm/MetadataAlloc.h"
 #include "vm/MetadataLock.h"
 #include "vm/GlobalMetadata.h"
@@ -22,33 +11,102 @@ namespace hybridclr
 {
 namespace metadata
 {
-	using il2cpp::utils::HashUtils;
+#define SUPPORT_PRIMITIVE_TYPE_CACHE 1
 
-	
-	static size_t s_methodInfoSize = 0;
+	constexpr int kMaxPrimitiveType = (int)IL2CPP_TYPE_OBJECT;
 
-	static il2cpp::utils::MemoryPool* s_metadataPool = nullptr;
-
-	baselib::ReentrantLock s_metadataPoolLock;
-
-#define USE_METAPOOL_LOCK() il2cpp::os::FastAutoLock lock(&s_metadataPoolLock)
-
+	static Il2CppType s_primitiveTypes[(int)kMaxPrimitiveType + 1];
+	static Il2CppType s_byRefPrimitiveTypes[(int)kMaxPrimitiveType + 1];
 
 	template<typename T>
 	T* MetadataMallocT()
 	{
-		return (T*)s_metadataPool->Malloc(sizeof(T));
+		return (T*)HYBRIDCLR_MALLOC_ZERO(sizeof(T));
 	}
 
 	template<typename T>
 	T* MetadataCallocT(size_t count)
 	{
-		return (T*)s_metadataPool->Calloc(count, sizeof(T));
+		return (T*)HYBRIDCLR_CALLOC(count, sizeof(T));
+	}
+
+	static void InitPrimitiveTypes()
+	{
+		std::memset(s_primitiveTypes, 0, sizeof(s_primitiveTypes));
+		std::memset(s_byRefPrimitiveTypes, 0, sizeof(s_byRefPrimitiveTypes));
+
+		for (int i = 0; i <= kMaxPrimitiveType; i++)
+		{
+			Il2CppType& type = s_primitiveTypes[i];
+			type.type = (Il2CppTypeEnum)i;
+			bool isValueType = i != IL2CPP_TYPE_OBJECT && i != IL2CPP_TYPE_STRING && i != IL2CPP_TYPE_VOID;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, isValueType);
+
+			Il2CppType& byRefType = s_byRefPrimitiveTypes[i];
+			byRefType.type = (Il2CppTypeEnum)i;
+			byRefType.byref = 1;
+		}
+	}
+
+	static const Il2CppType* TryGetPrimitiveType(const Il2CppType& originalType)
+	{
+#if SUPPORT_PRIMITIVE_TYPE_CACHE
+		if (originalType.attrs || originalType.num_mods || originalType.pinned)
+		{
+			return nullptr;
+		}
+		Il2CppTypeEnum type = originalType.type;
+		switch (type)
+		{
+		case IL2CPP_TYPE_VOID:
+		case IL2CPP_TYPE_BOOLEAN:
+		case IL2CPP_TYPE_CHAR:
+		case IL2CPP_TYPE_I1:
+		case IL2CPP_TYPE_U1:
+		case IL2CPP_TYPE_I2:
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+		case IL2CPP_TYPE_R4:
+		case IL2CPP_TYPE_R8:
+		case IL2CPP_TYPE_STRING:
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+		case IL2CPP_TYPE_OBJECT:
+			return originalType.byref ? s_byRefPrimitiveTypes + (int)type : s_primitiveTypes + (int)type;
+		case IL2CPP_TYPE_VALUETYPE:
+		case IL2CPP_TYPE_CLASS:
+		{
+			const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)originalType.data.typeHandle;
+			if (typeDef)
+			{
+				if (originalType.byref)
+				{
+#if HYBRIDCLR_UNITY_2019
+					return il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->byrefTypeIndex);
+#endif
+				}
+				else
+				{
+					return il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->byvalTypeIndex);
+				}
+			}
+			return nullptr;
+		}
+		default:
+			return nullptr;
+		}
+#else
+		return nullptr;
+#endif
 	}
 
 	void MetadataPool::Initialize()
 	{
-		s_metadataPool = new il2cpp::utils::MemoryPool();
+		InitPrimitiveTypes();
+
 		//s_Il2CppTypePool.resize(1024 * 64);
 		//s_Il2CppArrayTypePool.resize(1024);
 		//s_Il2CppGenericInstPool.resize(10240);
@@ -66,6 +124,11 @@ namespace metadata
 
 	const Il2CppType* MetadataPool::GetPooledIl2CppType(const Il2CppType& type)
 	{
+		const Il2CppType* pooledType = TryGetPrimitiveType(type);
+		if (pooledType)
+		{
+			return pooledType;
+		}
 		return DeepCloneIl2CppType(type);
 	}
 
