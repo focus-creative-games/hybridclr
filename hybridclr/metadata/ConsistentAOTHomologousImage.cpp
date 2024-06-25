@@ -164,7 +164,7 @@ namespace metadata
 	{
 		IL2CPP_ASSERT(rowIndex > 0);
 		AOTFieldData& fd = _fields[rowIndex - 1];
-		ret.containerType = *_il2cppTypeForTypeDefs[fd.typeDefIndex];
+		ret.containerType = _il2cppTypeForTypeDefs[fd.typeDefIndex];
 		ret.field = fd.fieldDef;
 	}
 }

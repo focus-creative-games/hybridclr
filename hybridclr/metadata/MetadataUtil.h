@@ -291,11 +291,7 @@ namespace metadata
         }
     }
 
-    inline void GetIl2CppTypeFromTypeDefinition(const Il2CppTypeDefinition* typeDef, Il2CppType& type)
-    {
-        type.type = typeDef->bitfield & (1 << (il2cpp::vm::kBitIsValueType - 1)) ? IL2CPP_TYPE_VALUETYPE : IL2CPP_TYPE_CLASS;
-        type.data.typeHandle = (Il2CppMetadataTypeHandle)typeDef;
-    }
+    const Il2CppType* GetIl2CppTypeFromTypeDefinition(const Il2CppTypeDefinition* typeDef);
 
     inline uint32_t GetActualArgumentNum(const MethodInfo* method)
     {
@@ -354,9 +350,9 @@ namespace metadata
 
     const MethodInfo* GetMethodInfoFromMethodDef(const Il2CppType* type, const Il2CppMethodDefinition* methodDef);
 
-    bool ResolveField(const Il2CppType* type, const char* resolveFieldName, Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef);
+    bool ResolveField(const Il2CppType* type, const char* resolveFieldName, const Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef);
 
-    inline void ResolveFieldThrow(const Il2CppType* type, const char* resolveFieldName, Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef)
+    inline void ResolveFieldThrow(const Il2CppType* type, const char* resolveFieldName, const Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef)
     {
         if (!ResolveField(type, resolveFieldName, resolveFieldType, retFieldDef))
         {

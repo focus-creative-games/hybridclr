@@ -593,8 +593,8 @@ namespace metadata
 			{
 				for (const MethodImpl& mi : explicitImpls)
 				{
-					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, &mi.declaration.containerType,
-						mi.declaration.methodDef, &mi.body.containerType, mi.body.methodDef);
+					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, mi.declaration.containerType,
+						mi.declaration.methodDef, mi.body.containerType, mi.body.methodDef);
 				}
 			}
 			else
@@ -602,8 +602,8 @@ namespace metadata
 				const Il2CppGenericClass* genericClass = type->data.generic_class;
 				for (const MethodImpl& mi : explicitImpls)
 				{
-					const Il2CppType* containerType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(&mi.declaration.containerType, &genericClass->context, true);
-					const Il2CppType* implType = TryInflateIfNeed(type, type->data.generic_class->type, &mi.body.containerType);
+					const Il2CppType* containerType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(mi.declaration.containerType, &genericClass->context, true);
+					const Il2CppType* implType = TryInflateIfNeed(type, type->data.generic_class->type, mi.body.containerType);
 					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, containerType,
 						mi.declaration.methodDef, implType, mi.body.methodDef);
 				}

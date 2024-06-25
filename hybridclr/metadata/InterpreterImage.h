@@ -34,7 +34,7 @@ namespace metadata
 
 	struct ParamDetail
 	{
-		Il2CppType type;
+		const Il2CppType* type;
 		Il2CppParameterDefinition paramDef;
 		const Il2CppMethodDefinition* methodDef;
 		//uint32_t methodIndex;
@@ -226,6 +226,12 @@ namespace metadata
 			return (uint32_t)(typeDef - &_typesDefines[0]);
 		}
 
+		Il2CppTypeDefinition* GetTypeDefinitionByTypeDetail(const TypeDefinitionDetail* typeDetail)
+		{
+			uint32_t index = (uint32_t)(typeDetail - &_typeDetails[0]);
+			return &_typesDefines[index];
+		}
+
 		uint32_t GetTypeRawIndexByEncodedIl2CppTypeIndex(int32_t il2cppTypeIndex) const
 		{
 			return GetTypeRawIndex((const Il2CppTypeDefinition*)_types[DecodeMetadataIndex(il2cppTypeIndex)]->data.typeHandle);
@@ -314,7 +320,7 @@ namespace metadata
 
 		const std::vector<MethodImpl>& GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef);
 
-		Il2CppType* GetGenericParameterConstraintFromIndex(GenericParameterConstraintIndex index)
+		const Il2CppType* GetGenericParameterConstraintFromIndex(GenericParameterConstraintIndex index)
 		{
 			IL2CPP_ASSERT((size_t)index < _genericConstraints.size());
 			TypeIndex typeIndex = _genericConstraints[index];
@@ -323,13 +329,12 @@ namespace metadata
 
 				TbGenericParamConstraint data = _rawImage->ReadGenericParamConstraint(index + 1);
 				Il2CppGenericParameter& genericParam = _genericParams[data.owner - 1];
-				Il2CppType paramCons = {};
 
 				const Il2CppGenericContainer* klassGc;
 				const Il2CppGenericContainer* methodGc;
 				GetClassAndMethodGenericContainerFromGenericContainerIndex(genericParam.ownerIndex, klassGc, methodGc);
 
-				ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint), paramCons);
+				const Il2CppType* paramCons = ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint));
 				_genericConstraints[index] = typeIndex = DecodeMetadataIndex(AddIl2CppTypeCache(paramCons));
 			}
 			return _types[typeIndex];
@@ -614,11 +619,11 @@ namespace metadata
 
 		Il2CppInterfaceOffsetInfo GetInterfaceOffsetInfo(const Il2CppTypeDefinition* typeDefine, TypeInterfaceOffsetIndex index);
 
-		uint32_t AddIl2CppTypeCache(const Il2CppType& type);
+		uint32_t AddIl2CppTypeCache(const Il2CppType* type);
 
 		uint32_t AddIl2CppGenericContainers(Il2CppGenericContainer& geneContainer);
 
-		bool GetModuleIl2CppType(Il2CppType& type, uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound) override;
+		const Il2CppType* GetModuleIl2CppType(uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound) override;
 		void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 		void ReadMethodDefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr);
 
@@ -685,7 +690,7 @@ namespace metadata
 		std::vector<Il2CppTypeDefinition> _typesDefines;
 		std::vector<Il2CppTypeDefinition> _exportedTypeDefines;
 
-		std::vector<Il2CppType*> _types;
+		std::vector<const Il2CppType*> _types;
 		Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;
 		std::vector<TypeIndex> _interfaceDefines;
 		std::vector<InterfaceOffsetInfo> _interfaceOffsets;

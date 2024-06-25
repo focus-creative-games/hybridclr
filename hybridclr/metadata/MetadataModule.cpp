@@ -20,6 +20,7 @@
 #include "InterpreterImage.h"
 #include "ConsistentAOTHomologousImage.h"
 #include "SuperSetAOTHomologousImage.h"
+#include "MetadataPool.h"
 
 using namespace il2cpp;
 
@@ -33,6 +34,7 @@ namespace metadata
 
     void MetadataModule::Initialize()
     {
+        MetadataPool::Initialize();
         InterpreterImage::Initialize();
         Assembly::InitializePlaceHolderAssemblies();
     }

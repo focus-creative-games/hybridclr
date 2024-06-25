@@ -189,7 +189,7 @@ else \
 		int32_t actualParamCount = methodInfo->parameters_count + instanceCall;
 
 		ArgVarInfo* args = pool.NewNAny<ArgVarInfo>(actualParamCount);
-		LocVarInfo* locals = pool.NewNAny<LocVarInfo>(body.localVarCount);
+		LocVarInfo* locals = pool.NewNAny<LocVarInfo>(body.localVars.size());
 		// FIXME may exceed max size
 		// TODO MEMORY OPTIMISTIC
 		EvalStackVarInfo* evalStack = pool.NewNAny<EvalStackVarInfo>(body.maxStack + 100);
@@ -236,11 +236,11 @@ else \
 		}
 
 		int32_t totalArgLocalSize = totalArgSize;
-		for (uint32_t i = 0; i < body.localVarCount; i++)
+		for (size_t i = 0; i < body.localVars.size(); i++)
 		{
 			LocVarInfo& local = locals[i];
 			// FIXME memory leak
-			local.type = InflateIfNeeded(body.localVars + i, genericContext, true);
+			local.type = InflateIfNeeded(body.localVars[i], genericContext, true);
 			local.klass = il2cpp::vm::Class::FromIl2CppType(local.type);
 			il2cpp::vm::Class::SetupFields(local.klass);
 			local.locOffset = totalArgLocalSize;
@@ -1001,7 +1001,7 @@ else \
 				uint32_t managed2NativeMethodDataIdx = ctx.GetOrAddResolveDataIndex((void*)managed2NativeMethod);
 				bool hasThis = metadata::IsPrologHasThis(methodSig.flags);
 
-				int32_t resolvedTotalArgNum = methodSig.paramCount + hasThis;
+				int32_t resolvedTotalArgNum = (int32_t)methodSig.params.size() + hasThis;
 				int32_t needDataSlotNum = (resolvedTotalArgNum + 3) / 4;
 				int32_t argIdxDataIndex;
 				uint16_t* __argIdxs;
@@ -1022,18 +1022,18 @@ else \
 					__argIdxs[0] = evalStack[callArgEvalStackIdxBase].locOffset;
 				}
 
-				for (uint32_t i = 0; i < methodSig.paramCount; i++)
+				for (size_t i = 0; i < methodSig.params.size(); i++)
 				{
-					uint32_t curArgIdx = i + hasThis;
+					size_t curArgIdx = i + hasThis;
 					__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
 				}
 
 				ctx.PopStackN(resolvedTotalArgNum + 1);
 
-				if (!IsVoidType(&methodSig.returnType))
+				if (!IsVoidType(methodSig.returnType))
 				{
-					ctx.PushStackByType(&methodSig.returnType);
-					interpreter::LocationDataType locDataType = GetLocationDataTypeByType(&methodSig.returnType);
+					ctx.PushStackByType(methodSig.returnType);
+					interpreter::LocationDataType locDataType = GetLocationDataTypeByType(methodSig.returnType);
 					if (interpreter::IsNeedExpandLocationType(locDataType))
 					{
 						CreateAddIR(ir, CallInd_ret_expand);

@@ -355,7 +355,7 @@ namespace interpreter
 	Managed2NativeCallMethod InterpreterModule::GetManaged2NativeMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
 	{
 		char sigName[1000];
-		ComputeSignature(&method.returnType, method.params, method.paramCount, metadata::IsPrologHasThis(method.flags), sigName, sizeof(sigName) - 1);
+		ComputeSignature(method.returnType, method.params, metadata::IsPrologHasThis(method.flags), sigName, sizeof(sigName) - 1);
 		auto it = s_managed2natives.find(sigName);
 		return it != s_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
 	}

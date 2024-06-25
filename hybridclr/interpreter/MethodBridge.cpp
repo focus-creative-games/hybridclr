@@ -213,7 +213,7 @@ namespace interpreter
 		}
 	}
 
-	bool ComputeSignature(const Il2CppType* ret, const Il2CppType* params, uint32_t paramCount, bool instanceCall, char* sigBuf, size_t bufferSize)
+	bool ComputeSignature(const Il2CppType* ret, const il2cpp::utils::dynamic_array<const Il2CppType*>& params, bool instanceCall, char* sigBuf, size_t bufferSize)
 	{
 		size_t pos = 0;
 		AppendSignature(ret, sigBuf, bufferSize, pos);
@@ -223,9 +223,9 @@ namespace interpreter
 			AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 		}
 
-		for (uint32_t i = 0; i < paramCount; i++)
+		for (uint32_t i = 0, paramCount = (uint32_t)params.size(); i < paramCount; i++)
 		{
-			AppendSignature(params + i, sigBuf, bufferSize, pos);
+			AppendSignature(params[i], sigBuf, bufferSize, pos);
 		}
 		sigBuf[pos] = 0;
 		return true;
