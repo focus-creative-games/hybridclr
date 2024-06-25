@@ -199,13 +199,13 @@ namespace metadata
 			cur.token = EncodeToken(TableType::TYPEDEF, rowIndex);
 
 			bool isValueType = data.extends && IsValueTypeFromToken(DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.extends), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.extends));
-			Il2CppType* cppType = (Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
+			Il2CppType* cppType = MetadataMallocT<Il2CppType>();
 			cppType->type = isValueType ? IL2CPP_TYPE_VALUETYPE : IL2CPP_TYPE_CLASS;
 			SET_IL2CPPTYPE_VALUE_TYPE(*cppType, isValueType);
 			cppType->data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
 #if HYBRIDCLR_UNITY_2019
-			Il2CppType* byRefType = (Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
+			Il2CppType* byRefType = MetadataMallocT<Il2CppType>();
 			*byRefType = *cppType;
 			byRefType->byref = 1;
 			cur.byrefTypeIndex = AddIl2CppTypeCache(byRefType);
@@ -382,7 +382,7 @@ namespace metadata
 			ReadFieldRefSig(br, GetGenericContainerByTypeDefRawIndex(DecodeMetadataIndex(fd.typeDefIndex)), frs);
 			if (data.flags != 0)
 			{
-				Il2CppType* typeWithAttrs = (Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
+				Il2CppType* typeWithAttrs = MetadataMallocT<Il2CppType>();
 				*typeWithAttrs = *frs.type;
 				typeWithAttrs->attrs = data.flags;
 				frs.type = typeWithAttrs;
@@ -594,7 +594,7 @@ namespace metadata
 			TableType parentType = DecodeHasConstantType(data.parent);
 			uint32_t rowIndex = DecodeHashConstantIndex(data.parent);
 
-			Il2CppType& type = *(Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
+			Il2CppType& type = *MetadataMallocT<Il2CppType>();
 			type.type = (Il2CppTypeEnum)data.type;
 			TypeIndex dataTypeIndex = AddIl2CppTypeCache(&type);
 #if !HYBRIDCLR_UNITY_2021_OR_NEW
@@ -2524,7 +2524,7 @@ namespace metadata
 		case IL2CPP_TYPE_SZARRAY:
 		{
 			// FIXME MEMORY LEAK
-			Il2CppType* eleType = (Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
+			Il2CppType* eleType = MetadataMallocT<Il2CppType>();
 			ReadCustomAttributeFieldOrPropType(reader, *eleType);
 			type.data.type = eleType;
 			break;

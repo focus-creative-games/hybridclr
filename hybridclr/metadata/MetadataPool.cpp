@@ -18,18 +18,6 @@ namespace metadata
 	static Il2CppType s_primitiveTypes[(int)kMaxPrimitiveType + 1];
 	static Il2CppType s_byRefPrimitiveTypes[(int)kMaxPrimitiveType + 1];
 
-	template<typename T>
-	T* MetadataMallocT()
-	{
-		return (T*)HYBRIDCLR_MALLOC_ZERO(sizeof(T));
-	}
-
-	template<typename T>
-	T* MetadataCallocT(size_t count)
-	{
-		return (T*)HYBRIDCLR_CALLOC(count, sizeof(T));
-	}
-
 	static void InitPrimitiveTypes()
 	{
 		std::memset(s_primitiveTypes, 0, sizeof(s_primitiveTypes));

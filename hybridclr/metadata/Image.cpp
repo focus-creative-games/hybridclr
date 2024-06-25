@@ -131,9 +131,9 @@ namespace metadata
 
     const Il2CppType* Image::ReadArrayType(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer)
     {
-        Il2CppType* arrType = (Il2CppType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppType));
+        Il2CppType* arrType = MetadataMallocT<Il2CppType>();;
         arrType->type = IL2CPP_TYPE_ARRAY;
-        Il2CppArrayType& type = *(Il2CppArrayType*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppArrayType));
+        Il2CppArrayType& type = *MetadataMallocT<Il2CppArrayType>();
         arrType->data.array = &type;
 
         const Il2CppType* eleType = ReadType(reader, klassGenericContainer, methodGenericContainer);
@@ -183,7 +183,7 @@ namespace metadata
         }
         const Il2CppGenericInst* genericInst = il2cpp::vm::MetadataCache::GetGenericInst(types, argc);
 
-        Il2CppGenericClass* genericClass = (Il2CppGenericClass*)HYBRIDCLR_MALLOC_ZERO(sizeof(Il2CppGenericClass));
+        Il2CppGenericClass* genericClass = MetadataMallocT<Il2CppGenericClass>();
         genericClass->type = genericBase;
         genericClass->context.class_inst = genericInst;
         genericClass->context.method_inst = nullptr;
