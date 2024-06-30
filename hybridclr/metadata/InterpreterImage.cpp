@@ -1279,7 +1279,7 @@ namespace metadata
 			CustomAttribute& ca = _customAttribues[attrIndex];
 			MethodRefInfo mri = {};
 			ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(ca.ctorMethodToken), DecodeTokenRowIndex(ca.ctorMethodToken), mri);
-			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(&mri.containerType, mri.methodDef);
+			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(mri.containerType, mri.methodDef);
 			IL2CPP_ASSERT(ctorMethod);
 			Il2CppClass* klass = ctorMethod->klass;
 			Il2CppObject* attr = il2cpp::vm::Object::New(klass);

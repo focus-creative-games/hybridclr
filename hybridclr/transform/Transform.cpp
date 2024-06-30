@@ -189,7 +189,7 @@ else \
 		int32_t actualParamCount = methodInfo->parameters_count + instanceCall;
 
 		ArgVarInfo* args = pool.NewNAny<ArgVarInfo>(actualParamCount);
-		LocVarInfo* locals = pool.NewNAny<LocVarInfo>(body.localVars.size());
+		LocVarInfo* locals = pool.NewNAny<LocVarInfo>((int)body.localVars.size());
 		// FIXME may exceed max size
 		// TODO MEMORY OPTIMISTIC
 		EvalStackVarInfo* evalStack = pool.NewNAny<EvalStackVarInfo>(body.maxStack + 100);
