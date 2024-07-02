@@ -484,8 +484,7 @@ namespace interpreter
 		}
 		else
 		{
-			IL2CPP_ASSERT(GetTypeArgDesc(method->return_type).stackObjectSize <= hybridclr::metadata::kMaxRetValueTypeStackObjectSize);
-			StackObject ret[hybridclr::metadata::kMaxRetValueTypeStackObjectSize];
+			StackObject* ret = (StackObject*)alloca(sizeof(StackObject) * imi->retStackObjectSize);
 			Interpreter::Execute(method, args, ret);
 			return TranslateNativeValueToBoxValue(method->return_type, ret);
 		}

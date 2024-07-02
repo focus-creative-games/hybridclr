@@ -5126,7 +5126,6 @@ else \
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 2);
 					void* _ret = nullptr;
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-					StackObject tempRet[kMaxRetValueTypeStackObjectSize];
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
 					CHECK_NOT_NULL_THROW(_del);
@@ -5175,7 +5174,7 @@ else \
 						{
 							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _ret);
 						}
 					}
 					else
@@ -5190,7 +5189,7 @@ else \
 							IL2CPP_ASSERT(subDel->delegates == nullptr);
 							const MethodInfo* method = subDel->delegate.method;
 							Il2CppObject* target = subDel->delegate.target;
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _ret);
 						}
 					}
 				    ip += 16;
@@ -5205,8 +5204,8 @@ else \
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 4);
 					uint16_t __retTypeStackObjectSize = *(uint16_t*)(ip + 6);
 				    void* _ret = (void*)(localVarBase + __ret);
+					StackObject* _tempRet = (StackObject*)alloca(sizeof(StackObject) * __retTypeStackObjectSize);
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-					StackObject tempRet[kMaxRetValueTypeStackObjectSize];
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
 					CHECK_NOT_NULL_THROW(_del);
@@ -5255,7 +5254,7 @@ else \
 						{
 							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _tempRet);
 						}
 					}
 					else
@@ -5270,10 +5269,10 @@ else \
 							IL2CPP_ASSERT(subDel->delegates == nullptr);
 							const MethodInfo* method = subDel->delegate.method;
 							Il2CppObject* target = subDel->delegate.target;
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _tempRet);
 						}
 					}
-					CopyStackObject((StackObject*)_ret, tempRet, __retTypeStackObjectSize);
+					CopyStackObject((StackObject*)_ret, _tempRet, __retTypeStackObjectSize);
 				    ip += 24;
 				    continue;
 				}
@@ -5286,8 +5285,8 @@ else \
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 6);
 					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
 				    void* _ret = (void*)(localVarBase + __ret);
+					StackObject _tempRet[1];
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
-					StackObject tempRet[kMaxRetValueTypeStackObjectSize];
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
 					CHECK_NOT_NULL_THROW(_del);
@@ -5336,7 +5335,7 @@ else \
 						{
 							Managed2NativeCallMethod _staticM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeStaticMethod];
 							Managed2NativeCallMethod _instanceM2NMethod = (Managed2NativeCallMethod)imi->resolveDatas[__managed2NativeInstanceMethod];
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _tempRet);
 						}
 					}
 					else
@@ -5351,10 +5350,10 @@ else \
 							IL2CPP_ASSERT(subDel->delegates == nullptr);
 							const MethodInfo* method = subDel->delegate.method;
 							Il2CppObject* target = subDel->delegate.target;
-							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, tempRet);
+							InvokeSingleDelegate(__invokeParamCount, method, target, _staticM2NMethod, _instanceM2NMethod, _resolvedArgIdxs, localVarBase, _tempRet);
 						}
 					}
-				    CopyLocationData2StackDataByType((StackObject*)_ret, tempRet, (LocationDataType)__retLocationType);
+				    CopyLocationData2StackDataByType((StackObject*)_ret, _tempRet, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;
 				}

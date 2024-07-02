@@ -108,6 +108,7 @@ namespace hybridclr
 			MethodArgDesc* args;
 			uint32_t argCount;
 			uint32_t argStackObjectSize;
+			uint32_t retStackObjectSize;
 			byte* codes;
 			uint32_t codeLength;
 			uint32_t maxStackSize; // args + locals + evalstack size
