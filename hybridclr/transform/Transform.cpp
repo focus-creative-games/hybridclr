@@ -3580,6 +3580,7 @@ ir->ele = ele.locOffset;
 				std::memcpy(tranCodes + tranOffset, &ir->type, irSize);
 				tranOffset += irSize;
 			}
+			bb->~IRBasicBlock();
 		}
 		IL2CPP_ASSERT(tranOffset == totalSize);
 
