@@ -297,7 +297,7 @@ namespace metadata
 		{
 			uint32_t rowIndex = (uint32_t)(method - &_methodDefs[0] + 1);
 			TbMethod methodData = _rawImage->ReadMethod(rowIndex);
-			MethodBody* body = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
+			MethodBody* body = new (HYBRIDCLR_METADATA_MALLOC(sizeof(MethodBody))) MethodBody();
 			ReadMethodBody(*method->aotMethodDef, methodData, *body);
 			method->body = body;
 		}

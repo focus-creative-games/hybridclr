@@ -375,13 +375,6 @@ namespace metadata
     bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer);
     bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv);
 
-    inline Il2CppType* CloneIl2CppType(const Il2CppType* type)
-    {
-        Il2CppType* newType = (Il2CppType*)HYBRIDCLR_MALLOC(sizeof(Il2CppType));
-        *newType = *type;
-        return newType;
-    }
-
     const Il2CppGenericInst* TryInflateGenericInst(const Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext);
 
 #pragma endregion

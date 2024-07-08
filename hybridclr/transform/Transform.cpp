@@ -317,7 +317,7 @@ else \
 
 		for (ExceptionClause& ec : body.exceptionClauses)
 		{
-			InterpExceptionClause* iec = (InterpExceptionClause*)HYBRIDCLR_MALLOC_ZERO(sizeof(InterpExceptionClause));
+			InterpExceptionClause* iec = (InterpExceptionClause*)HYBRIDCLR_METADATA_MALLOC(sizeof(InterpExceptionClause));
 			iec->flags = ec.flags;
 			iec->tryBeginOffset = ec.tryOffset;
 			iec->tryEndOffset = ec.tryOffset + ec.tryLength;
@@ -3608,7 +3608,6 @@ ir->ele = ele.locOffset;
 			argDescs = nullptr;
 		}
 
-		result.method = methodInfo;
 		result.args = argDescs;
 		result.argCount = actualParamCount;
 		result.argStackObjectSize = totalArgSize;

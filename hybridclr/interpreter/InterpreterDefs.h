@@ -61,7 +61,7 @@ namespace hybridclr
 
 		struct InterpFrame
 		{
-			const InterpMethodInfo* method;
+			const MethodInfo* method;
 			StackObject* stackBasePtr;
 			int32_t oldStackTop;
 			void* ret;
@@ -104,20 +104,19 @@ namespace hybridclr
 
 		struct InterpMethodInfo
 		{
-			const MethodInfo* method;
-			MethodArgDesc* args;
-			uint32_t argCount;
-			uint32_t argStackObjectSize;
-			uint32_t retStackObjectSize;
 			byte* codes;
-			uint32_t codeLength;
+			MethodArgDesc* args;
+			uint32_t argStackObjectSize;
+			uint32_t retStackObjectSize : 24;
+			uint32_t initLocals : 8;
+			uint32_t localStackSize; // args + locals StackObject size
 			uint32_t maxStackSize; // args + locals + evalstack size
+			uint32_t argCount : 8;
+			uint32_t codeLength : 24;
 			uint32_t localVarBaseOffset;
 			uint32_t evalStackBaseOffset;
-			uint32_t localStackSize; // args + locals StackObject size
 			std::vector<uint64_t> resolveDatas;
 			std::vector<InterpExceptionClause*> exClauses;
-			bool initLocals;
 		};
 	}
 }

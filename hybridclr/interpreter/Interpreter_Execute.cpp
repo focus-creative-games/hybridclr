@@ -1255,7 +1255,7 @@ namespace interpreter
 }
 
 #define LOAD_PREV_FRAME() { \
-	imi = frame->method; \
+	imi = (const InterpMethodInfo*)frame->method->interpData; \
 	ip = frame->ip; \
 	ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
@@ -1264,7 +1264,7 @@ namespace interpreter
 	// maxStackSize包含 arg + local + eval,对于解释器栈来说，可能多余
 #define PREPARE_NEW_FRAME_FROM_NATIVE(newMethodInfo, argBasePtr, retPtr) { \
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
-	frame = interpFrameGroup.EnterFrameFromNative(imi, argBasePtr); \
+	frame = interpFrameGroup.EnterFrameFromNative(newMethodInfo, argBasePtr); \
 	frame->ret = retPtr; \
 	ip = ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
@@ -1272,7 +1272,7 @@ namespace interpreter
 
 #define PREPARE_NEW_FRAME_FROM_INTERPRETER(newMethodInfo, argBasePtr, retPtr) { \
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
-	frame = interpFrameGroup.EnterFrameFromInterpreter(imi, argBasePtr); \
+	frame = interpFrameGroup.EnterFrameFromInterpreter(newMethodInfo, argBasePtr); \
 	frame->ret = retPtr; \
 	ip = ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
@@ -1541,7 +1541,7 @@ while (true) \
 #define RETHROW_EX() { \
 	ExceptionFlowInfo* curExFlow = frame->GetCurExFlow(); \
 	IL2CPP_ASSERT(curExFlow->exFlowType == ExceptionFlowType::Catch); \
-	il2cpp::vm::Exception::Raise(curExFlow->ex, const_cast<MethodInfo*>(imi->method)); \
+	il2cpp::vm::Exception::Raise(curExFlow->ex, const_cast<MethodInfo*>(frame->method)); \
 }
 
 #define CONTINUE_NEXT_FINALLY() { \
@@ -11279,7 +11279,7 @@ else \
 				case HiOpcodeEnum::AssemblyGetExecutingAssembly:
 				{
 					uint16_t __ret = *(uint16_t*)(ip + 2);
-				    (*(Il2CppObject**)(localVarBase + __ret)) = (Il2CppObject*)il2cpp::vm::Reflection::GetAssemblyObject(imi->method->klass->image->assembly);
+				    (*(Il2CppObject**)(localVarBase + __ret)) = (Il2CppObject*)il2cpp::vm::Reflection::GetAssemblyObject(frame->method->klass->image->assembly);
 				    ip += 8;
 				    continue;
 				}

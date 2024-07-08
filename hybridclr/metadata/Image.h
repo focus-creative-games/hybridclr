@@ -36,6 +36,8 @@ namespace metadata
 		}
 	};
 
+	typedef Il2CppHashMap<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> Token2RuntimeHandleMap;
+
 	class Image
 	{
 	public:

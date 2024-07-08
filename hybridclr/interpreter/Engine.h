@@ -275,7 +275,7 @@ namespace interpreter
 			for (int32_t i = 0; i < _frameTopIdx; i++)
 			{
 				InterpFrame* frame = _frameBase + i;
-				const MethodInfo* method = frame->method->method;
+				const MethodInfo* method = frame->method;
 				(*stackFrames)[i] = {
 					method
 #if HYBRIDCLR_UNITY_2020_OR_NEW
@@ -366,10 +366,9 @@ namespace interpreter
 			}
 		}
 
-		InterpFrame* EnterFrameFromInterpreter(const InterpMethodInfo* imi, StackObject* argBase);
+		InterpFrame* EnterFrameFromInterpreter(const MethodInfo* method, StackObject* argBase);
 
-
-		InterpFrame* EnterFrameFromNative(const InterpMethodInfo* imi, StackObject* argBase);
+		InterpFrame* EnterFrameFromNative(const MethodInfo* method, StackObject* argBase);
 
 		InterpFrame* LeaveFrame();
 
