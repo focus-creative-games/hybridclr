@@ -183,11 +183,7 @@ namespace metadata
         }
         const Il2CppGenericInst* genericInst = il2cpp::vm::MetadataCache::GetGenericInst(types, argc);
 
-        Il2CppGenericClass* genericClass = MetadataMallocT<Il2CppGenericClass>();
-        genericClass->type = genericBase;
-        genericClass->context.class_inst = genericInst;
-        genericClass->context.method_inst = nullptr;
-        return genericClass;
+        return il2cpp::metadata::GenericMetadata::GetGenericClass(genericBase, genericInst);
     }
 
     const Il2CppType* Image::ReadType(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer)
