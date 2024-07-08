@@ -911,17 +911,15 @@ namespace metadata
         }
     }
 
-    Il2CppClass* Image::GetClassFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    Il2CppClass* Image::GetClassFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         TokenGenericContextType key = { token, genericContext };
+        auto it = tokenCache.find(key);
+        if (it != tokenCache.end())
         {
-            il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-            auto it = _token2ResolvedDataCache.find(key);
-            if (it != _token2ResolvedDataCache.end())
-            {
-                return (Il2CppClass*)it->second;
-            }
+            return (Il2CppClass*)it->second;
         }
+
         const Il2CppType* originType = ReadTypeFromToken(klassGenericContainer, methodGenericContainer, DecodeTokenTableType(token), DecodeTokenRowIndex(token));
         const Il2CppType* resultType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(originType, genericContext, true) : originType;
         Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(resultType);
@@ -930,11 +928,7 @@ namespace metadata
             TEMP_FORMAT(errMsg, "InterpreterImage::GetClassFromToken token:%u class not exists", token);
             il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
         }
-        // FIXME free resultType
-        {
-            il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-            _token2ResolvedDataCache.insert({ key, (void*)klass });
-        }
+        tokenCache.insert({ key, (void*)klass });
         return klass;
     }
 
@@ -1026,10 +1020,11 @@ namespace metadata
         }
     }
 
-    const void* Image::GetRuntimeHandleFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    const void* Image::GetRuntimeHandleFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         TableType ttype = DecodeTokenTableType(token);
         uint32_t rowIndex = DecodeTokenRowIndex(token);
+        const void* handle = nullptr;
         switch (ttype)
         {
         case hybridclr::metadata::TableType::TYPEREF:
@@ -1041,22 +1036,25 @@ namespace metadata
             {
                 type = TryInflateIfNeed(type, genericContext, true);
             }
-            return type;
+            handle = type;
+            break;
         }
         case hybridclr::metadata::TableType::FIELD:
         {
-            return GetFieldInfoFromToken(token, klassGenericContainer, methodGenericContainer, genericContext);
+            handle = GetFieldInfoFromToken(tokenCache, token, klassGenericContainer, methodGenericContainer, genericContext);
+            break;
         }
         case hybridclr::metadata::TableType::METHOD:
         case hybridclr::metadata::TableType::METHODSPEC:
         {
-            return GetMethodInfoFromToken(token, klassGenericContainer, methodGenericContainer, genericContext);
+            handle = GetMethodInfoFromToken(tokenCache, token, klassGenericContainer, methodGenericContainer, genericContext);
+            break;
         }
         case hybridclr::metadata::TableType::MEMBERREF:
         {
-            const void* handle = ReadRuntimeHandleFromMemberRef(klassGenericContainer, methodGenericContainer, genericContext, rowIndex);
+            handle = ReadRuntimeHandleFromMemberRef(klassGenericContainer, methodGenericContainer, genericContext, rowIndex);
             //_token2RuntimeHandleCache.insert({ key, (void*)handle });
-            return handle;
+            break;
         }
         default:
         {
@@ -1066,16 +1064,13 @@ namespace metadata
         }
     }
 
-    const FieldInfo* Image::GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    const FieldInfo* Image::GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         TokenGenericContextType key = { token, genericContext };
+        auto it = tokenCache.find(key);
+        if (it != tokenCache.end())
         {
-            il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-            auto it = _token2ResolvedDataCache.find(key);
-            if (it != _token2ResolvedDataCache.end())
-            {
-                return (const FieldInfo*)it->second;
-            }
+            return (const FieldInfo*)it->second;
         }
 
         FieldRefInfo fri;
@@ -1088,10 +1083,7 @@ namespace metadata
         const Il2CppType* resultType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(fri.containerType, genericContext, true) : fri.containerType;
         const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(*resultType, fri.field);
         il2cpp::vm::Class::Init(fieldInfo->parent);
-        {
-            il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-            _token2ResolvedDataCache.insert({ key, (void*)fieldInfo });
-        }
+        tokenCache.insert({ key, (void*)fieldInfo });
         return fieldInfo;
     }
 
@@ -1155,16 +1147,13 @@ namespace metadata
         }
     }
 
-    const MethodInfo* Image::GetMethodInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    const MethodInfo* Image::GetMethodInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         auto key = std::tuple<uint32_t, const Il2CppGenericContext*>(token, genericContext);
+        auto it = tokenCache.find(key);
+        if (it != tokenCache.end())
         {
-            il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-            auto it = _token2ResolvedDataCache.find(key);
-            if (it != _token2ResolvedDataCache.end())
-            {
-                return (const MethodInfo*)it->second;
-            }
+            return (const MethodInfo*)it->second;
         }
 
         const MethodInfo* method = ReadMethodInfoFromToken(klassGenericContainer, methodGenericContainer, genericContext,
@@ -1172,10 +1161,8 @@ namespace metadata
 
         IL2CPP_ASSERT(method);
         il2cpp::vm::Class::Init(method->klass);
-        {
-            il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
-            _token2ResolvedDataCache.insert({ key, (void*)method });
-        }
+
+        tokenCache.insert({ key, (void*)method });
         return method;
     }
 

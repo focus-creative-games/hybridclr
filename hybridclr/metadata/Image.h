@@ -87,14 +87,14 @@ namespace metadata
 		void ReadMethodBody(const Il2CppMethodDefinition& methodDef, const TbMethod& methodData, MethodBody& body);
 
 		Il2CppString* GetIl2CppUserStringFromRawIndex(StringIndex index);
-		Il2CppClass* GetClassFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
+		Il2CppClass* GetClassFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const FieldInfo* GetFieldInfoFromFieldRef(const Il2CppType& type, const Il2CppFieldDefinition* fieldDef);
-		const void* GetRuntimeHandleFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
+		const void* GetRuntimeHandleFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const MethodInfo* FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod);
-		const FieldInfo* GetFieldInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
+		const FieldInfo* GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const MethodInfo* ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer,
 			const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, const Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex);
-		const MethodInfo* GetMethodInfoFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
+		const MethodInfo* GetMethodInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const MethodInfo* GetMethodInfo(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext);
 		void GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig);
 		void ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret);
@@ -152,8 +152,6 @@ namespace metadata
 		RawImage* _rawImage;
 		Il2CppHashMap<const char*, const Il2CppAssembly*, CStringHash, CStringEqualTo> _nameToAssemblies;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, il2cpp::utils::PassThroughHash<uint32_t>> _il2cppStringCache;
-
-		Il2CppHashMap<std::tuple<uint32_t, const Il2CppGenericContext*>, void*, TokenGenericContextTypeHash, TokenGenericContextTypeEqual> _token2ResolvedDataCache;
 	};
 }
 }

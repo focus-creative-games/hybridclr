@@ -268,6 +268,8 @@ else \
 		int32_t brOffset = 0;
 		const MethodInfo* shareMethod = nullptr;
 
+		Token2RuntimeHandleMap tokenCache(64);
+
 		TransformContext ctx =
 		{
 			image,
@@ -330,7 +332,7 @@ else \
 			if (ec.flags == CorILExceptionClauseType::Exception)
 			{
 				iec->filterBeginOffset = 0;
-				iec->exKlass = image->GetClassFromToken(ec.classTokenOrFilterOffset, klassContainer, methodContainer, genericContext);
+				iec->exKlass = image->GetClassFromToken(tokenCache, ec.classTokenOrFilterOffset, klassContainer, methodContainer, genericContext);
 			}
 			else if (ec.flags == CorILExceptionClauseType::Filter)
 			{
@@ -683,7 +685,7 @@ else \
 			{
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				ip += 5;
-				shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(shareMethod);
 			}
 
@@ -802,7 +804,7 @@ else \
 			{
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				ip += 5;
-				shareMethod = image->GetMethodInfoFromToken(token, klassContainer, methodContainer, genericContext);
+				shareMethod = image->GetMethodInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 			}
 		LabelCallVir:
 			{
@@ -1677,7 +1679,7 @@ else \
 				EvalStackVarInfo& src = evalStack[evalStackTop - 1];
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 				if (IS_CLASS_VALUE_TYPE(objKlass))
 				{
@@ -1763,7 +1765,7 @@ else \
 				EvalStackVarInfo& top = evalStack[evalStackTop - 1];
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 				LocationDescInfo desc = ComputLocationDescInfo(&objKlass->byval_arg);
 
@@ -1895,7 +1897,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				ip += 5;
 				// TODO token cache optimistic
-				shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(shareMethod);
 				IL2CPP_ASSERT(!std::strcmp(shareMethod->name, ".ctor"));
 				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(shareMethod));
@@ -2026,7 +2028,7 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 
 				if (il2cpp::vm::Class::IsNullable(objKlass))
@@ -2045,7 +2047,7 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 
 				if (il2cpp::vm::Class::IsNullable(objKlass))
@@ -2093,7 +2095,7 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				//if (il2cpp::vm::Class::IsNullable(objKlass))
 				//{
 				//    objKlass = il2cpp::vm::Class::GetNullableArgument(objKlass);
@@ -2122,7 +2124,7 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 				// ldfld obj may be obj or or valuetype or ref valuetype....
 				EvalStackVarInfo& obj = evalStack[evalStackTop - 1];
@@ -2142,7 +2144,7 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 
 				uint16_t topIdx = ctx.GetEvalStackTopOffset();
@@ -2163,7 +2165,7 @@ else \
 
 				IL2CPP_ASSERT(evalStackTop >= 2);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 
 				IRCommon* ir = CreateStfld(pool, ctx.GetEvalStackOffset_2(), fieldInfo, ctx.GetEvalStackOffset_1());
@@ -2175,7 +2177,7 @@ else \
 			case OpcodeValue::LDSFLD:
 			{
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 				uint32_t parentIndex = ctx.GetOrAddResolveDataIndex(fieldInfo->parent);
 				uint16_t dstIdx = ctx.GetEvalStackNewTopOffset();
@@ -2194,7 +2196,7 @@ else \
 			case OpcodeValue::LDSFLDA:
 			{
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 
 				uint16_t dstIdx = ctx.GetEvalStackNewTopOffset();
@@ -2239,7 +2241,7 @@ else \
 				ctx.ResetPrefixFlags();
 				IL2CPP_ASSERT(evalStackTop >= 1);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(token, klassContainer, methodContainer, genericContext));
+				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
 
 				uint32_t klassIndex = ctx.GetOrAddResolveDataIndex(fieldInfo->parent);
@@ -2264,7 +2266,7 @@ else \
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 
 				IL2CPP_ASSERT(objKlass);
 				if (IS_CLASS_VALUE_TYPE(objKlass))
@@ -2407,7 +2409,7 @@ else \
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				/*	if (il2cpp::vm::Class::IsNullable(objKlass))
 					{
 						objKlass = il2cpp::vm::Class::GetNullableArgument(objKlass);
@@ -2433,7 +2435,7 @@ else \
 				IL2CPP_ASSERT(evalStackTop > 0);
 				EvalStackVarInfo& varSize = evalStack[evalStackTop - 1];
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* eleKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(eleKlass);
 				Il2CppClass* arrKlass = il2cpp::vm::Class::GetArrayClass(eleKlass, 1);
 				uint32_t arrKlassIndex = ctx.GetOrAddResolveDataIndex(arrKlass);
@@ -2466,7 +2468,7 @@ else \
 				EvalStackVarInfo& index = evalStack[evalStackTop - 1];
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* eleKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* eleKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				uint32_t eleKlassIndex = ctx.GetOrAddResolveDataIndex(eleKlass);
 
 				CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar);
@@ -2601,7 +2603,7 @@ ir->dst = arr.locOffset;
 				EvalStackVarInfo& index = evalStack[evalStackTop - 1];
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				const Il2CppType* eleType = &objKlass->byval_arg;
 
 				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8);
@@ -2721,7 +2723,7 @@ ir->ele = ele.locOffset;
 				EvalStackVarInfo& ele = evalStack[evalStackTop - 1];
 
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				const Il2CppType* eleType = &objKlass->byval_arg;
 
 				IL2CPP_ASSERT(index.reduceType == EvalStackReduceDataType::I4 || index.reduceType == EvalStackReduceDataType::I8);
@@ -2790,7 +2792,7 @@ ir->ele = ele.locOffset;
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 
 				if (IS_CLASS_VALUE_TYPE(objKlass))
@@ -2856,7 +2858,7 @@ ir->ele = ele.locOffset;
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				CreateAddIR(ir, RefAnyValueVarVar);
 				ir->addr = ir->typedRef = ctx.GetEvalStackTopOffset();
 				ir->klass = ctx.GetOrAddResolveDataIndex(objKlass);
@@ -2897,7 +2899,7 @@ ir->ele = ele.locOffset;
 			{
 				IL2CPP_ASSERT(evalStackTop > 0);
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+				Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				IL2CPP_ASSERT(objKlass);
 				CreateAddIR(ir, MakeRefVarVar);
 				ir->dst = ir->data = ctx.GetEvalStackTopOffset();
@@ -2914,7 +2916,7 @@ ir->ele = ele.locOffset;
 			case OpcodeValue::LDTOKEN:
 			{
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
-				void* runtimeHandle = (void*)image->GetRuntimeHandleFromToken(token, klassContainer, methodContainer, genericContext);
+				void* runtimeHandle = (void*)image->GetRuntimeHandleFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 
 				CreateAddIR(ir, LdtokenVar);
 				ir->runtimeHandle = ctx.GetEvalStackNewTopOffset();
@@ -3072,7 +3074,7 @@ ir->ele = ele.locOffset;
 				case OpcodeValue::LDFTN:
 				{
 					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 2);
-					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
+					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(tokenCache, methodToken, klassContainer, methodContainer, genericContext));
 					IL2CPP_ASSERT(methodInfo);
 					CreateAddIR(ir, LdcVarConst_8);
 					ir->dst = ctx.GetEvalStackNewTopOffset();
@@ -3085,7 +3087,7 @@ ir->ele = ele.locOffset;
 				{
 					IL2CPP_ASSERT(evalStackTop > 0);
 					uint32_t methodToken = (uint32_t)GetI4LittleEndian(ip + 2);
-					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
+					MethodInfo* methodInfo = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(tokenCache, methodToken, klassContainer, methodContainer, genericContext));
 					IL2CPP_ASSERT(methodInfo);
 
 					CreateAddIR(ir, LdvirftnVarVar);
@@ -3211,7 +3213,7 @@ ir->ele = ele.locOffset;
 				{
 					IL2CPP_ASSERT(evalStackTop > 0);
 					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
-					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+					Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 					if (IS_CLASS_VALUE_TYPE(objKlass))
 					{
 						uint32_t objSize = GetTypeValueSize(objKlass);
@@ -3345,7 +3347,7 @@ ir->ele = ele.locOffset;
 				case OpcodeValue::CONSTRAINED_:
 				{
 					uint32_t typeToken = (uint32_t)GetI4LittleEndian(ip + 2);
-					Il2CppClass* conKlass = image->GetClassFromToken(typeToken, klassContainer, methodContainer, genericContext);
+					Il2CppClass* conKlass = image->GetClassFromToken(tokenCache, typeToken, klassContainer, methodContainer, genericContext);
 					IL2CPP_ASSERT(conKlass);
 					ip += 6;
 
@@ -3354,7 +3356,7 @@ ir->ele = ele.locOffset;
 					ip += 5;
 
 					// TODO token cache optimistic
-					shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(methodToken, klassContainer, methodContainer, genericContext));
+					shareMethod = const_cast<MethodInfo*>(image->GetMethodInfoFromToken(tokenCache, methodToken, klassContainer, methodContainer, genericContext));
 					IL2CPP_ASSERT(shareMethod);
 
 
@@ -3479,7 +3481,7 @@ ir->ele = ele.locOffset;
 				case OpcodeValue::SIZEOF:
 				{
 					uint32_t token = (uint32_t)GetI4LittleEndian(ip + 2);
-					Il2CppClass* objKlass = image->GetClassFromToken(token, klassContainer, methodContainer, genericContext);
+					Il2CppClass* objKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 					IL2CPP_ASSERT(objKlass);
 					int32_t typeSize = GetTypeValueSize(&objKlass->byval_arg);
 					ctx.CreateAddInst_ldc4(typeSize, EvalStackReduceDataType::I4);
