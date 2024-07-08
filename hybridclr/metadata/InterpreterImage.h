@@ -316,7 +316,7 @@ namespace metadata
 			return GetGenericContainerByTypeDefinition(&_typesDefines[typeDefIndex]);
 		}
 
-		const std::vector<MethodImpl>& GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef);
+		const il2cpp::utils::dynamic_array<MethodImpl> GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef);
 
 		const Il2CppType* GetGenericParameterConstraintFromIndex(GenericParameterConstraintIndex index)
 		{

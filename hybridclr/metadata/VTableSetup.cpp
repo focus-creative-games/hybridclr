@@ -588,7 +588,7 @@ namespace metadata
 		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
 		if (IsInterpreterType(typeDef))
 		{
-			const std::vector<MethodImpl>& explicitImpls = MetadataModule::GetImage(typeDef)->GetTypeMethodImplByTypeDefinition(typeDef);
+			const il2cpp::utils::dynamic_array<MethodImpl> explicitImpls = MetadataModule::GetImage(typeDef)->GetTypeMethodImplByTypeDefinition(typeDef);
 			if (type->type != IL2CPP_TYPE_GENERICINST)
 			{
 				for (const MethodImpl& mi : explicitImpls)

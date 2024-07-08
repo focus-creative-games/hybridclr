@@ -1504,39 +1504,24 @@ namespace metadata
 		}
 	}
 
-	std::vector<MethodImpl> s_emptyMethodImpls;
-
-	const std::vector<MethodImpl>& InterpreterImage::GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef)
+	const il2cpp::utils::dynamic_array<MethodImpl> InterpreterImage::GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef)
 	{
 		uint32_t index = (uint32_t)(typeDef - &_typesDefines[0]);
 		IL2CPP_ASSERT(index < (uint32_t)_typeDetails.size());
 		TypeDefinitionDetail& tdd = _typeDetails[index];
-		std::vector<MethodImpl>* methodImpls = tdd.methodImpls;
-		if (methodImpls == nullptr)
+		il2cpp::utils::dynamic_array<MethodImpl> methodImpls(tdd.methodImplCount);
+
+		for (uint32_t i = 0; i < tdd.methodImplCount; i++)
 		{
-			if (tdd.methodImplCount == 0)
-			{
-				methodImpls = &s_emptyMethodImpls;
-			}
-			else
-			{
-				methodImpls = new std::vector<MethodImpl>(tdd.methodImplCount);
-				for (uint32_t i = 0; i < tdd.methodImplCount; i++)
-				{
-					uint32_t index = tdd.methodImplStart + i;
-					TbMethodImpl data = _rawImage->ReadMethodImpl(index + 1);
-					TypeDefinitionDetail& tdd = _typeDetails[data.classIdx - 1];
-					Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(tdd.typeDef);
-					MethodImpl& impl = (*methodImpls)[i];
-					ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodBody), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodBody), impl.body);
-					ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodDeclaration), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodDeclaration), impl.declaration);
-				}
-			}
-
-
-			tdd.methodImpls = methodImpls;
+			uint32_t index = tdd.methodImplStart + i;
+			TbMethodImpl data = _rawImage->ReadMethodImpl(index + 1);
+			TypeDefinitionDetail& tdd = _typeDetails[data.classIdx - 1];
+			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(tdd.typeDef);
+			MethodImpl& impl = methodImpls[i];
+			ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodBody), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodBody), impl.body);
+			ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodDeclaration), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodDeclaration), impl.declaration);
 		}
-		return *methodImpls;
+		return methodImpls;
 	}
 
 	void InterpreterImage::InitMethodImpls0()
