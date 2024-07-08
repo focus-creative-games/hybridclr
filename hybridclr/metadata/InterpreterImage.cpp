@@ -1402,9 +1402,6 @@ namespace metadata
 			}
 		}
 
-
-		_methodDefine2InfoCaches.resize(methodTb.rowNum);
-
 		int32_t paramTableRowNum = _rawImage->GetTable(TableType::PARAM).rowNum;
 		for (uint32_t index = 0; index < methodTb.rowNum; index++)
 		{
@@ -2195,19 +2192,14 @@ namespace metadata
 	// index => MethodDefinition -> DeclaringClass -> index - klass->methodStart -> MethodInfo*
 	const MethodInfo* InterpreterImage::GetMethodInfoFromMethodDefinitionRawIndex(uint32_t index)
 	{
-		IL2CPP_ASSERT((size_t)index <= _methodDefine2InfoCaches.size());
-		if (_methodDefine2InfoCaches[index])
-		{
-			return _methodDefine2InfoCaches[index];
-		}
+		IL2CPP_ASSERT((size_t)index <= _methodDefines.size());
 		const Il2CppMethodDefinition* methodDefinition = GetMethodDefinitionFromRawIndex(index);
 		const Il2CppTypeDefinition* typeDefinition = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(methodDefinition->declaringType);
 		int32_t indexInClass = index - DecodeMetadataIndex(typeDefinition->methodStart);
 		IL2CPP_ASSERT(indexInClass >= 0 && indexInClass < typeDefinition->method_count);
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)typeDefinition);
 		il2cpp::vm::Class::SetupMethods(klass);
-		// il2cpp::vm::Class::Init(klass);
-		return _methodDefine2InfoCaches[index] = klass->methods[indexInClass];
+		return klass->methods[indexInClass];
 	}
 
 	const MethodInfo* InterpreterImage::GetMethodInfoFromMethodDefinition(const Il2CppMethodDefinition* methodDef)

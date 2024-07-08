@@ -693,7 +693,6 @@ namespace metadata
 		std::vector<TypeIndex> _interfaceDefines;
 		std::vector<InterfaceOffsetInfo> _interfaceOffsets;
 
-		std::vector<const MethodInfo*> _methodDefine2InfoCaches;
 		std::vector<Il2CppMethodDefinition> _methodDefines;
 		Il2CppHashMap<uint32_t, MethodBody*, il2cpp::utils::PassThroughHash<uint32_t>> _methodBodyCache;
 
