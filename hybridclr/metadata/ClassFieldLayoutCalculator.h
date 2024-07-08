@@ -76,7 +76,9 @@ namespace metadata
 		{
 			for (auto it : _classMap)
 			{
-				HYBRIDCLR_FREE(it.second);
+				ClassLayoutInfo* info = it.second;
+				info->~ClassLayoutInfo();
+				HYBRIDCLR_FREE(info);
 			}
 		}
 
