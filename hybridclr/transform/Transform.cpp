@@ -194,14 +194,12 @@ else \
 		// TODO MEMORY OPTIMISTIC
 		EvalStackVarInfo* evalStack = pool.NewNAny<EvalStackVarInfo>(body.maxStack + 100);
 
-		std::vector<uint64_t>& resolveDatas = result.resolveDatas;
+		il2cpp::utils::dynamic_array<uint64_t> resolveDatas;
+
 		// TODO. alloc use pool
 		Il2CppHashMap<uint32_t, uint32_t, il2cpp::utils::PassThroughHash<uint32_t>> token2DataIdxs;
 		// TOTO. alloc use pool
 		Il2CppHashMap<const void*, uint32_t, il2cpp::utils::PassThroughHash<const void*>> ptr2DataIdxs;
-
-		resolveDatas.push_back(0); // reserved
-
 
 		std::vector<int32_t*> relocationOffsets;
 		// index, count 
@@ -317,9 +315,11 @@ else \
 			ctx.AddInst(CreateInitLocals(pool, totalLocalSize * sizeof(StackObject)));
 		}
 
+		il2cpp::utils::dynamic_array<InterpExceptionClause> exClauses(body.exceptionClauses.size());
+		int clauseIdx = 0;
 		for (ExceptionClause& ec : body.exceptionClauses)
 		{
-			InterpExceptionClause* iec = (InterpExceptionClause*)HYBRIDCLR_METADATA_MALLOC(sizeof(InterpExceptionClause));
+			InterpExceptionClause* iec = &exClauses[clauseIdx++];
 			iec->flags = ec.flags;
 			iec->tryBeginOffset = ec.tryOffset;
 			iec->tryEndOffset = ec.tryOffset + ec.tryLength;
@@ -402,7 +402,6 @@ else \
 				RaiseExecutionEngineException("");
 			}
 			}
-			result.exClauses.push_back(iec);
 		}
 
 #pragma endregion
@@ -3621,6 +3620,32 @@ ir->ele = ele.locOffset;
 		result.localStackSize = totalArgLocalSize;
 		result.maxStackSize = maxStackSize;
 		result.initLocals = initLocals;
+
+		if (resolveDatas.empty())
+		{
+			result.resolveDatas = nullptr;
+		}
+		else
+		{
+			//result.resolveData = (uint8_t*)HYBRIDCLR_MALLOC(resolveDatas.size() * sizeof(uint8_t));
+			size_t dataSize = resolveDatas.size() * sizeof(uint64_t);
+			uint64_t* data = (uint64_t*)HYBRIDCLR_METADATA_MALLOC(dataSize);
+			std::memcpy(data, resolveDatas.data(), dataSize);
+			result.resolveDatas = data;
+		}
+		if (exClauses.empty())
+		{
+			result.exClauses = nullptr;
+			result.exClauseCount = 0;
+		}
+		else
+		{
+			size_t dataSize = exClauses.size() * sizeof(InterpExceptionClause);
+			InterpExceptionClause* data = (InterpExceptionClause*)HYBRIDCLR_METADATA_MALLOC(dataSize);
+			std::memcpy(data, exClauses.data(), dataSize);
+			result.exClauses = data;
+			result.exClauseCount = exClauses.size();
+		}
 	}
 }
 

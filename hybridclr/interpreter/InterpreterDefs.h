@@ -106,6 +106,8 @@ namespace hybridclr
 		{
 			byte* codes;
 			MethodArgDesc* args;
+			uint64_t* resolveDatas;
+			const InterpExceptionClause* exClauses;
 			uint32_t argStackObjectSize;
 			uint32_t retStackObjectSize : 24;
 			uint32_t initLocals : 8;
@@ -115,8 +117,7 @@ namespace hybridclr
 			uint32_t codeLength : 24;
 			uint32_t localVarBaseOffset;
 			uint32_t evalStackBaseOffset;
-			std::vector<uint64_t> resolveDatas;
-			std::vector<InterpExceptionClause*> exClauses;
+			uint32_t exClauseCount;
 		};
 	}
 }

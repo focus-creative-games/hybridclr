@@ -1464,11 +1464,11 @@ while (true) \
 	ExceptionFlowInfo* efi = frame->GetCurExFlow(); \
 	IL2CPP_ASSERT(efi && efi->exFlowType == ExceptionFlowType::Exception); \
 	IL2CPP_ASSERT(efi->ex); \
-	int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
+	int32_t exClauseNum = (int32_t)imi->exClauseCount; \
 	for (; efi->nextExClauseIndex < exClauseNum; ) \
 	{ \
 		for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && efi->nextExClauseIndex >= prevExFlow->nextExClauseIndex ;) {\
-			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
+			const InterpExceptionClause* prevIec = &imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
 			if (!(prevIec->handlerBeginOffset <= efi->throwOffset && efi->throwOffset < prevIec->handlerEndOffset)) { \
 				PopPrevExceptionFlowInfo(frame, &efi);\
 			} \
@@ -1477,7 +1477,7 @@ while (true) \
 				break; \
 			} \
 		}\
-		InterpExceptionClause* iec = imi->exClauses[efi->nextExClauseIndex++]; \
+		const InterpExceptionClause* iec = &imi->exClauses[efi->nextExClauseIndex++]; \
 		if (iec->tryBeginOffset <= efi->throwOffset && efi->throwOffset < iec->tryEndOffset) \
 		{ \
 			switch (iec->flags) \
@@ -1547,10 +1547,10 @@ while (true) \
 #define CONTINUE_NEXT_FINALLY() { \
 ExceptionFlowInfo* efi = frame->GetCurExFlow(); \
 IL2CPP_ASSERT(efi && efi->exFlowType == ExceptionFlowType::Leave); \
-int32_t exClauseNum = (int32_t)imi->exClauses.size(); \
+int32_t exClauseNum = (int32_t)imi->exClauseCount; \
 for (; efi->nextExClauseIndex < exClauseNum; ) \
 { \
-	InterpExceptionClause* iec = imi->exClauses[efi->nextExClauseIndex++]; \
+	const InterpExceptionClause* iec = &imi->exClauses[efi->nextExClauseIndex++]; \
 	if (iec->tryBeginOffset <= efi->throwOffset && efi->throwOffset < iec->tryEndOffset) \
 	{ \
 		if (iec->tryBeginOffset <= efi->leaveTarget && efi->leaveTarget < iec->tryEndOffset) \
@@ -1584,7 +1584,7 @@ PopCurExceptionFlowInfo(frame); \
 #define POP_PREV_CATCH_HANDLERS(leaveTarget)\
 { \
 	for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && prevExFlow->exFlowType == ExceptionFlowType::Catch ;) { \
-			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
+			const InterpExceptionClause* prevIec = &imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
 			if (!(prevIec->handlerBeginOffset <= leaveTarget && leaveTarget < prevIec->handlerEndOffset)) {	\
 					PopPrevExceptionFlowInfo(frame, nullptr); \
 			} \
@@ -1597,7 +1597,7 @@ PopCurExceptionFlowInfo(frame); \
 
 #define LEAVE_EX(target, firstHandlerIndex)  { \
 	PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Leave, (int32_t)(ip - ipBase), nullptr, firstHandlerIndex + 1, target}); \
-	InterpExceptionClause* iec = imi->exClauses[firstHandlerIndex]; \
+	const InterpExceptionClause* iec = &imi->exClauses[firstHandlerIndex]; \
 	POP_PREV_CATCH_HANDLERS(target); \
 	ip = ipBase + iec->handlerBeginOffset; \
 }
@@ -1605,7 +1605,7 @@ PopCurExceptionFlowInfo(frame); \
 #define POP_CUR_CATCH_HANDLERS(leaveTarget)\
 { \
 	for (ExceptionFlowInfo* prevExFlow; (prevExFlow = frame->GetCurExFlow()) && prevExFlow->exFlowType == ExceptionFlowType::Catch ;) { \
-			InterpExceptionClause* prevIec = imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
+			const InterpExceptionClause* prevIec = &imi->exClauses[prevExFlow->nextExClauseIndex - 1]; \
 			if (!(prevIec->handlerBeginOffset <= leaveTarget && leaveTarget < prevIec->handlerEndOffset)) {	\
 					PopCurExceptionFlowInfo(frame); \
 			} \

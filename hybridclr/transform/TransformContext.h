@@ -97,13 +97,11 @@ namespace transform
 		int32_t size;
 	};
 
-
-
 	struct FlowInfo
 	{
 		uint32_t curStackSize;
 		uint32_t offset;
-		std::vector<EvalStackVarInfo> evalStack;
+		il2cpp::utils::dynamic_array<EvalStackVarInfo> evalStack;
 	};
 
 	const int32_t MAX_STACK_SIZE = (2 << 16) - 1;
@@ -113,12 +111,12 @@ namespace transform
 	int32_t GetSizeByReduceType(EvalStackReduceDataType type);
 
 	template<typename T>
-	void AllocResolvedData(std::vector<uint64_t>& resolvedDatas, int32_t size, int32_t& index, T*& buf)
+	void AllocResolvedData(il2cpp::utils::dynamic_array<uint64_t>& resolvedDatas, int32_t size, int32_t& index, T*& buf)
 	{
 		if (size > 0)
 		{
 			int32_t oldSize = index = (int32_t)resolvedDatas.size();
-			resolvedDatas.resize(oldSize + size);
+			resolvedDatas.resize_initialized(oldSize + size);
 			buf = (T*)&resolvedDatas[oldSize];
 		}
 		else
@@ -172,7 +170,7 @@ namespace transform
 		LocVarInfo* locals;
 		EvalStackVarInfo* evalStack;
 		int32_t evalStackBaseOffset;
-		std::vector<uint64_t>& resolveDatas;
+		il2cpp::utils::dynamic_array<uint64_t>& resolveDatas;
 		Il2CppHashMap<uint32_t, uint32_t, il2cpp::utils::PassThroughHash<uint32_t>>& token2DataIdxs;
 		Il2CppHashMap<const void*, uint32_t, il2cpp::utils::PassThroughHash<const void*>>& ptr2DataIdxs;
 		std::vector<int32_t*>& relocationOffsets;
