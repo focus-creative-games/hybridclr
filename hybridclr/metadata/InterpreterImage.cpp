@@ -172,6 +172,8 @@ namespace metadata
 		InitInterfaces();
 		InitClass();
 		InitVTables();
+
+		_type2Indexs.swap(Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow>());
 	}
 
 	void InterpreterImage::InitTypeDefs_0()
