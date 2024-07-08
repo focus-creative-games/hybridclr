@@ -28,6 +28,7 @@ namespace metadata
 		static void Initialize();
 		static const Il2CppType* GetPooledIl2CppType(const Il2CppType& type);
 		static Il2CppType* ShallowCloneIl2CppType(const Il2CppType* type);
+		static const Il2CppArrayType* GetPooledIl2CppArrayType(const Il2CppType* elementType, uint32_t rank);
 	};
 }
 }
