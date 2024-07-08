@@ -24,12 +24,13 @@ namespace metadata
 	struct TypeDefinitionDetail
 	{
 		uint32_t index; // from 0
-		Il2CppTypeDefinition* typeDef;
-		Il2CppTypeDefinitionSizes typeSizes;
-		std::vector<VirtualMethodImpl> vtable;
 		uint32_t methodImplStart;
 		uint32_t methodImplCount;
+		uint32_t vtableCount;
+		Il2CppTypeDefinitionSizes typeSizes;
+		Il2CppTypeDefinition* typeDef;
 		std::vector<MethodImpl>* methodImpls;
+		VirtualMethodImpl* vtable;
 	};
 
 	struct ParamDetail

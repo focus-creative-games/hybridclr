@@ -2147,8 +2147,17 @@ namespace metadata
 		uint32_t offsetsStart = (uint32_t)_interfaceOffsets.size();
 
 		auto& vms = typeTree->GetVirtualMethodImpls();
-		IL2CPP_ASSERT(tdd->vtable.empty());
-		tdd->vtable = vms;
+		if (vms.empty())
+		{
+			tdd->vtable = nullptr;
+			tdd->vtableCount = 0;
+		}
+		else
+		{
+			tdd->vtable = (VirtualMethodImpl*)HYBRIDCLR_METADATA_CALLOC(vms.size(), sizeof(VirtualMethodImpl));
+			tdd->vtableCount = (uint32_t)vms.size();
+			std::memcpy(tdd->vtable, &vms[0], vms.size() * sizeof(VirtualMethodImpl));
+		}
 
 		auto& interfaceOffsetInfos = typeTree->GetInterfaceOffsetInfos();
 		for (auto ioi : interfaceOffsetInfos)
@@ -2215,7 +2224,7 @@ namespace metadata
 		IL2CPP_ASSERT(typeDefIndex < (uint32_t)_typeDetails.size());
 		TypeDefinitionDetail& td = _typeDetails[typeDefIndex];
 
-		IL2CPP_ASSERT(vTableSlot >= 0 && vTableSlot < (int32_t)td.vtable.size());
+		IL2CPP_ASSERT(vTableSlot >= 0 && vTableSlot < (int32_t)td.vtableCount);
 		VirtualMethodImpl& vmi = td.vtable[vTableSlot];
 		return vmi.method;
 	}
@@ -2232,7 +2241,7 @@ namespace metadata
 		IL2CPP_ASSERT(typeDefIndex < (uint32_t)_typeDetails.size());
 		TypeDefinitionDetail& td = _typeDetails[typeDefIndex];
 
-		IL2CPP_ASSERT(vTableSlot >= 0 && vTableSlot < (int32_t)td.vtable.size());
+		IL2CPP_ASSERT(vTableSlot >= 0 && vTableSlot < (int32_t)td.vtableCount);
 		VirtualMethodImpl& vmi = td.vtable[vTableSlot];
 		if (vmi.method)
 		{

@@ -54,7 +54,7 @@ namespace metadata
 		for (VirtualMethodImpl& vmi : genericType->_methodImpls)
 		{
 			const Il2CppType* declaringType = vmi.type ? TryInflateIfNeed(type, genericType->_type, vmi.type) : nullptr;
-			tdt->_methodImpls.push_back({ vmi.method, declaringType, vmi.slot, vmi.name });
+			tdt->_methodImpls.push_back({ vmi.method, declaringType, vmi.slot /*, vmi.name*/});
 		}
 
 		return tdt;
@@ -302,7 +302,7 @@ namespace metadata
 				}
 				else
 				{
-					_methodImpls.push_back({ nullptr, nullptr, i, nullptr });
+					_methodImpls.push_back({ nullptr, nullptr, i /*, nullptr*/});
 					++nullVtableSlotCount;
 				}
 				continue;
@@ -310,7 +310,7 @@ namespace metadata
 			const Il2CppType* implType = FindImplType(overideMethodDef);
 			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(overideMethodDef->nameIndex);
 			uint16_t slot = i;
-			_methodImpls.push_back({ overideMethodDef, implType, slot, methodName });
+			_methodImpls.push_back({ overideMethodDef, implType, slot /*, methodName*/});
 		}
 
 		// il2cpp set vtable slot to nullptr if method is abstract, so we fill correct type and method
@@ -324,7 +324,7 @@ namespace metadata
 				{
 					vmi.type = _type;
 					vmi.method = gcm.method;
-					vmi.name = gcm.name;
+					//vmi.name = gcm.name;
 					--nullVtableSlotCount;
 				}
 			}
@@ -343,7 +343,7 @@ namespace metadata
 								GenericClassMethod& igcm = interf->_virtualMethods[i];
 								const GenericClassMethod* implVirtualMethod = FindImplMethod(interf->_type, igcm.method);
 								IL2CPP_ASSERT(implVirtualMethod);
-								vmi.name = igcm.name;
+								//vmi.name = igcm.name;
 								vmi.type = implVirtualMethod->type;
 								vmi.method = implVirtualMethod->method;
 								--nullVtableSlotCount;
@@ -434,7 +434,7 @@ namespace metadata
 				// curOffset += (uint32_t)intTree->_virtualMethods.size();
 				for (auto& vm : intTree->_virtualMethods)
 				{
-					_methodImpls.push_back({ vm.method, intType, curOffset++, vm.name });
+					_methodImpls.push_back({ vm.method, intType, curOffset++ /*, vm.name*/});
 				}
 			}
 			else
@@ -511,7 +511,7 @@ namespace metadata
 					explicitImplToken2Slots.insert({ implMethod->token, slot });
 					ivmi.type = implType;
 					ivmi.method = implMethod;
-					ivmi.name = name1;
+					//ivmi.name = name1;
 					return;
 				}
 			}
@@ -546,7 +546,7 @@ namespace metadata
 					explicitImplToken2Slots.insert({ implMethod->token, slot});
 					ivmi.type = implType;
 					ivmi.method = implMethod;
-					ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
+					//ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
 					return;
 				}
 			}
@@ -569,7 +569,7 @@ namespace metadata
 					explicitImplToken2Slots.insert({ implMethod->token, rvm.method->slot });
 					ivmi.type = implType;
 					ivmi.method = implMethod;
-					ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
+					//ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
 					return;
 				}
 			}
@@ -666,7 +666,7 @@ namespace metadata
 				}
 				else
 				{
-					_methodImpls.push_back({ vm.method, _type, curOffset, vm.name });
+					_methodImpls.push_back({ vm.method, _type, curOffset /*, vm.name*/});
 					IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == curOffset);
 					const_cast<Il2CppMethodDefinition*>(vm.method)->slot = curOffset;
 					++curOffset;
@@ -686,7 +686,7 @@ namespace metadata
 				else
 				{
 					IL2CPP_ASSERT(metadata::IsPrivateMethod(mflags));
-					_methodImpls.push_back({ vm.method, _type, curOffset, vm.name });
+					_methodImpls.push_back({ vm.method, _type, curOffset /*, vm.name*/});
 					IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == curOffset);
 					const_cast<Il2CppMethodDefinition*>(vm.method)->slot = curOffset;
 					++curOffset;
@@ -713,7 +713,7 @@ namespace metadata
 				{
 					vmi.type = implVm->type;
 					vmi.method = implVm->method;
-					vmi.name = implVm->name;
+					//vmi.name = implVm->name;
 				}
 			}
 		}

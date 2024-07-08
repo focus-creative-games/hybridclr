@@ -24,7 +24,7 @@ namespace metadata
 		const Il2CppMethodDefinition* method;
 		const Il2CppType* type;
 		uint16_t slot;
-		const char* name; //  TODO for debug
+		//const char* name; //  TODO for debug
 	};
 
 	class VTableSetUp;
