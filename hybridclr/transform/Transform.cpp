@@ -3600,7 +3600,8 @@ ir->ele = ele.locOffset;
 				TypeDesc typeDesc = GetTypeArgDesc(argType);
 				MethodArgDesc& argDesc = argDescs[i];
 				argDesc.type = typeDesc.type;
-				argDesc.stackObjectSize = typeDesc.stackObjectSize;
+				IL2CPP_ASSERT(typeDesc.stackObjectSize < 0x10000);
+				argDesc.stackObjectSize = (uint16_t)typeDesc.stackObjectSize;
 				argDesc.passbyValWhenInvoke = argType->byref || !IsValueType(argType);
 			}
 		}

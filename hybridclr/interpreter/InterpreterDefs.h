@@ -8,7 +8,7 @@ namespace hybridclr
 	{
 
 		// from obj or arg
-		enum class LocationDataType
+		enum class LocationDataType : uint8_t
 		{
 			I1,
 			U1,
@@ -97,9 +97,9 @@ namespace hybridclr
 
 		struct MethodArgDesc
 		{
-			LocationDataType type;
-			uint32_t stackObjectSize;
 			bool passbyValWhenInvoke;
+			LocationDataType type;
+			uint16_t stackObjectSize;
 		};
 
 		struct InterpMethodInfo
