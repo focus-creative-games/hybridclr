@@ -8,6 +8,7 @@
 #include "vm/Type.h"
 #include "vm/Runtime.h"
 #include "vm/GlobalMetadataFileInternals.h"
+#include "vm/MetadataAlloc.h"
 #include "icalls/mscorlib/System/Type.h"
 #include "gc/GarbageCollector.h"
 

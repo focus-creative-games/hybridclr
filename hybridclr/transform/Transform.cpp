@@ -3568,7 +3568,7 @@ ir->ele = ele.locOffset;
 		}
 
 
-		byte* tranCodes = (byte*)HYBRIDCLR_MALLOC(totalSize);
+		byte* tranCodes = (byte*)HYBRIDCLR_METADATA_MALLOC(totalSize);
 
 		uint32_t tranOffset = 0;
 		for (IRBasicBlock* bb : irbbs)
@@ -3592,7 +3592,7 @@ ir->ele = ele.locOffset;
 		MethodArgDesc* argDescs;
 		if (actualParamCount > 0)
 		{
-			argDescs = (MethodArgDesc*)HYBRIDCLR_CALLOC(actualParamCount, sizeof(MethodArgDesc));
+			argDescs = (MethodArgDesc*)HYBRIDCLR_METADATA_CALLOC(actualParamCount, sizeof(MethodArgDesc));
 			for (int32_t i = 0; i < actualParamCount; i++)
 			{
 				const Il2CppType* argType = args[i].type;
