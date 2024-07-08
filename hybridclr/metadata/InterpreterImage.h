@@ -34,10 +34,7 @@ namespace metadata
 
 	struct ParamDetail
 	{
-		const Il2CppType* type;
 		Il2CppParameterDefinition paramDef;
-		const Il2CppMethodDefinition* methodDef;
-		//uint32_t methodIndex;
 		uint32_t parameterIndex;
 		uint32_t defaultValueIndex; // -1 for invalid
 	};

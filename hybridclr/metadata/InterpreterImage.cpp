@@ -1484,10 +1484,11 @@ namespace metadata
 						_paramRawIndex2ActualParamIndex[paramRowIndex - 1] = actualParamIndex;
 						if (data.flags)
 						{
-							Il2CppType* newType = MetadataPool::ShallowCloneIl2CppType(paramDetail.type);
+							const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(pd.typeIndex);
+							Il2CppType* newType = MetadataPool::ShallowCloneIl2CppType(fieldType);
 							newType->attrs = data.flags;
-							paramDetail.type = newType;
-							pd.typeIndex = AddIl2CppTypeCache(paramDetail.type);
+							//paramDetail.type = newType;
+							pd.typeIndex = AddIl2CppTypeCache(newType);
 						}
 					}
 					else
@@ -2583,7 +2584,6 @@ namespace metadata
 		{
 			ParamDetail curParam = {};
 			const Il2CppType* type = ReadType(reader, klassGenericContainer, methodGenericContainer);
-			curParam.type = type;
 			curParam.parameterIndex = readParamNum++;
 			curParam.paramDef.typeIndex = AddIl2CppTypeCache(type);
 			paramArr.push_back(curParam);
