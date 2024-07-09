@@ -3645,7 +3645,7 @@ ir->ele = ele.locOffset;
 			InterpExceptionClause* data = (InterpExceptionClause*)HYBRIDCLR_METADATA_MALLOC(dataSize);
 			std::memcpy(data, exClauses.data(), dataSize);
 			result.exClauses = data;
-			result.exClauseCount = exClauses.size();
+			result.exClauseCount = (uint32_t)exClauses.size();
 		}
 	}
 }
