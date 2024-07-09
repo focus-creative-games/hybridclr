@@ -174,6 +174,8 @@ namespace metadata
 		InitVTables();
 
 		_type2Indexs.swap(Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow>());
+		delete _paramRawIndex2ActualParamIndex;
+		_paramRawIndex2ActualParamIndex = nullptr;
 	}
 
 	void InterpreterImage::InitTypeDefs_0()
@@ -338,7 +340,7 @@ namespace metadata
 
 		// extra 16 for not name params
 		_params.reserve(tb.rowNum + 16);
-		_paramRawIndex2ActualParamIndex.resize(tb.rowNum);
+		_paramRawIndex2ActualParamIndex = new std::vector<TypeIndex>(tb.rowNum);
 		//for (uint32_t i = 0; i < tb.rowNum; i++)
 		//{
 		//	uint32_t rowIndex = i + 1;
@@ -596,8 +598,9 @@ namespace metadata
 			TableType parentType = DecodeHasConstantType(data.parent);
 			uint32_t rowIndex = DecodeHashConstantIndex(data.parent);
 
-			Il2CppType& type = *MetadataMallocT<Il2CppType>();
-			type.type = (Il2CppTypeEnum)data.type;
+			Il2CppType tempType = {};
+			tempType.type = (Il2CppTypeEnum)data.type;
+			const Il2CppType& type = *MetadataPool::GetPooledIl2CppType(tempType);
 			TypeIndex dataTypeIndex = AddIl2CppTypeCache(&type);
 #if !HYBRIDCLR_UNITY_2021_OR_NEW
 			bool isNullValue = type.type == IL2CPP_TYPE_CLASS;
@@ -623,7 +626,7 @@ namespace metadata
 			}
 			case TableType::PARAM:
 			{
-				int32_t actualIndex = _paramRawIndex2ActualParamIndex[rowIndex - 1];
+				int32_t actualIndex = (*_paramRawIndex2ActualParamIndex)[rowIndex - 1];
 				ParamDetail& fd = _params[actualIndex];
 				fd.defaultValueIndex = (uint32_t)_paramDefaultValues.size();
 
@@ -1480,7 +1483,7 @@ namespace metadata
 						IL2CPP_ASSERT(paramDetail.parameterIndex == data.sequence - 1);
 						pd.nameIndex = EncodeWithIndex(data.name);
 						pd.token = EncodeToken(TableType::PARAM, paramRowIndex);
-						_paramRawIndex2ActualParamIndex[paramRowIndex - 1] = actualParamIndex;
+						(*_paramRawIndex2ActualParamIndex)[paramRowIndex - 1] = actualParamIndex;
 						if (data.flags)
 						{
 							const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(pd.typeIndex);

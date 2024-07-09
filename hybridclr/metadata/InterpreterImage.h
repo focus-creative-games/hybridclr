@@ -697,7 +697,7 @@ namespace metadata
 		Il2CppHashMap<uint32_t, MethodBody*, il2cpp::utils::PassThroughHash<uint32_t>> _methodBodyCache;
 
 		std::vector<ParamDetail> _params;
-		std::vector<int32_t> _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count
+		std::vector<int32_t>* _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count
 		std::vector<Il2CppParameterDefaultValue> _paramDefaultValues;
 
 		std::vector<Il2CppGenericParameter> _genericParams;

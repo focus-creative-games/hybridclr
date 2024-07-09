@@ -338,7 +338,7 @@ namespace metadata
 		case IL2CPP_TYPE_VALUETYPE:
 		case IL2CPP_TYPE_CLASS:
 		{
-			return false;
+			return originalType.data.typeHandle == nullptr;
 		}
 		default:
 			return false;
