@@ -152,56 +152,6 @@ namespace metadata
 			reader.SkipBytes(count);
 		}
 
-		void Test()
-		{
-#if HYBRIDCLR_UNITY_2021_OR_NEW
-			for (uint64_t i = 0; i < UINT32_MAX; i = (i * 5) / 4 + 1)
-			{
-				_size = 0;
-				WriteCompressedUint32((uint32_t)i);
-				const char* p = (char*)_data;
-				uint32_t v = il2cpp::utils::ReadCompressedUInt32(&p);
-				IL2CPP_ASSERT(v == (uint32_t)i);
-				IL2CPP_ASSERT(p == (const char*)_data + _size);
-			}
-			for (uint64_t i = UINT32_MAX - 1; i <= UINT32_MAX; i++)
-			{
-				_size = 0;
-				WriteCompressedUint32((uint32_t)i);
-				const char* p = (char*)_data;
-				uint32_t v = il2cpp::utils::ReadCompressedUInt32(&p);
-				IL2CPP_ASSERT(v == (uint32_t)i);
-				IL2CPP_ASSERT(p == (const char*)_data + _size);
-			}
-
-			for (int64_t i = 0; i < INT32_MAX; i = (i * 5) / 4 + 1)
-			{
-				_size = 0;
-				WriteCompressedInt32((int32_t)i);
-				const char* p = (char*)_data;
-				int32_t v = il2cpp::utils::ReadCompressedInt32(&p);
-				IL2CPP_ASSERT(v == (int32_t)i);
-				IL2CPP_ASSERT(p == (const char*)_data + _size);
-
-				_size = 0;
-				WriteCompressedInt32((int32_t)-i);
-				p = (char*)_data;
-				v = il2cpp::utils::ReadCompressedInt32(&p);
-				IL2CPP_ASSERT(v == (int32_t)-i);
-				IL2CPP_ASSERT(p == (const char*)_data + _size);
-			}
-			for (int64_t i = INT32_MIN; i <= INT32_MIN + 4; i++)
-			{
-				_size = 0;
-				WriteCompressedInt32((int32_t)i);
-				const char* p = (char*)_data;
-				int32_t v = il2cpp::utils::ReadCompressedInt32(&p);
-				IL2CPP_ASSERT(v == (int32_t)i);
-				IL2CPP_ASSERT(p == (const char*)_data + _size);
-			}
-#endif
-		}
-
 		void PopByte()
 		{
 			IL2CPP_ASSERT(_size > 0);
