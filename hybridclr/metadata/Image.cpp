@@ -1062,6 +1062,7 @@ namespace metadata
             return nullptr;
         }
         }
+        return handle;
     }
 
     const FieldInfo* Image::GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
