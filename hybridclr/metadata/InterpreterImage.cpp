@@ -173,7 +173,9 @@ namespace metadata
 		InitClass();
 		InitVTables();
 
-		_type2Indexs.swap(Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow>());
+		Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> temp;
+		_type2Indexs.swap(temp);
+
 		delete _paramRawIndex2ActualParamIndex;
 		_paramRawIndex2ActualParamIndex = nullptr;
 	}
