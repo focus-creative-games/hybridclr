@@ -19,7 +19,7 @@ namespace interpreter
 		StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 		InterpFrame* newFrame = _machineState.PushFrame();
 		*newFrame = { method, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0, _machineState.GetLocalPoolBottomIdx() };
-		PUSH_STACK_FRAME(imi->method);
+		PUSH_STACK_FRAME(method);
 		return newFrame;
 	}
 
@@ -41,7 +41,7 @@ namespace interpreter
 			IL2CPP_ASSERT(imi->argCount == metadata::GetActualArgumentNum(method));
 			CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
 		}
-		PUSH_STACK_FRAME(imi->method);
+		PUSH_STACK_FRAME(method);
 		return newFrame;
 	}
 
