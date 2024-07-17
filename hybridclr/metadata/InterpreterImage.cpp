@@ -386,10 +386,9 @@ namespace metadata
 			ReadFieldRefSig(br, GetGenericContainerByTypeDefRawIndex(DecodeMetadataIndex(fd.typeDefIndex)), frs);
 			if (data.flags != 0)
 			{
-				Il2CppType* typeWithAttrs = MetadataMallocT<Il2CppType>();
-				*typeWithAttrs = *frs.type;
-				typeWithAttrs->attrs = data.flags;
-				frs.type = typeWithAttrs;
+				Il2CppType typeWithAttrs = *frs.type;
+				typeWithAttrs.attrs = data.flags;
+				frs.type = MetadataPool::GetPooledIl2CppType(typeWithAttrs);
 			}
 
 			//cur = {};
