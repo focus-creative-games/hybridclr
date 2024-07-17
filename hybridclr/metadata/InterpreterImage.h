@@ -23,12 +23,10 @@ namespace metadata
 
 	struct TypeDefinitionDetail
 	{
-		uint32_t index; // from 0
 		uint32_t methodImplStart;
 		uint32_t methodImplCount;
 		uint32_t vtableCount;
 		Il2CppTypeDefinitionSizes typeSizes;
-		Il2CppTypeDefinition* typeDef;
 		VirtualMethodImpl* vtable;
 	};
 
@@ -248,8 +246,8 @@ namespace metadata
 
 		const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override
 		{
-			IL2CPP_ASSERT(index < (uint32_t)_typeDetails.size());
-			return _types[DecodeMetadataIndex(_typeDetails[index].typeDef->byvalTypeIndex)];
+			IL2CPP_ASSERT(index < (uint32_t)_typesDefines.size());
+			return _types[DecodeMetadataIndex(_typesDefines[index].byvalTypeIndex)];
 		}
 
 		const Il2CppFieldDefinition* GetFieldDefinitionFromRawIndex(uint32_t index)
@@ -375,7 +373,7 @@ namespace metadata
 
 		uint32_t GetFieldOffset(TypeDefinitionIndex typeIndex, int32_t fieldIndexInType)
 		{
-			Il2CppTypeDefinition* typeDef = _typeDetails[typeIndex].typeDef;
+			Il2CppTypeDefinition* typeDef = &_typesDefines[typeIndex];
 			return GetFieldOffset(typeDef, fieldIndexInType);
 		}
 

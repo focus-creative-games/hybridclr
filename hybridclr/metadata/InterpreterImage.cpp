@@ -189,8 +189,6 @@ namespace metadata
 		{
 			Il2CppTypeDefinition& cur = _typesDefines[i];
 			TypeDefinitionDetail& typeDetail = _typeDetails[i];
-			typeDetail.index = i;
-			typeDetail.typeDef = &cur;
 			typeDetail.typeSizes = {};
 
 			uint32_t rowIndex = i + 1;
@@ -1520,8 +1518,8 @@ namespace metadata
 		{
 			uint32_t index = tdd.methodImplStart + i;
 			TbMethodImpl data = _rawImage->ReadMethodImpl(index + 1);
-			TypeDefinitionDetail& tdd = _typeDetails[data.classIdx - 1];
-			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(tdd.typeDef);
+			Il2CppTypeDefinition& typeDef = _typesDefines[data.classIdx - 1];
+			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(&typeDef);
 			MethodImpl& impl = methodImpls[i];
 			ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodBody), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodBody), impl.body);
 			ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodDeclaration), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodDeclaration), impl.declaration);
@@ -1535,8 +1533,10 @@ namespace metadata
 		for (uint32_t i = 0; i < miTb.rowNum; i++)
 		{
 			TbMethodImpl data = _rawImage->ReadMethodImpl(i + 1);
-			TypeDefinitionDetail& tdd = _typeDetails[data.classIdx - 1];
-			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(tdd.typeDef);
+			uint32_t typeIndex = data.classIdx - 1;
+			TypeDefinitionDetail& tdd = _typeDetails[typeIndex];
+			Il2CppTypeDefinition& typeDef = _typesDefines[typeIndex];
+			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(&typeDef);
 			if (tdd.methodImplCount == 0)
 			{
 				tdd.methodImplStart = i;
@@ -1568,29 +1568,28 @@ namespace metadata
 		for (uint32_t rowIndex = 1; rowIndex <= propertyMapTb.rowNum; rowIndex++)
 		{
 			TbPropertyMap data = _rawImage->ReadPropertyMap(rowIndex);
-			TypeDefinitionDetail& cur = _typeDetails[data.parent - 1];
-			cur.typeDef->propertyStart = EncodeWithIndex(data.propertyList); // start from 1
+			Il2CppTypeDefinition* typeDef = &_typesDefines[data.parent - 1];
+			typeDef->propertyStart = EncodeWithIndex(data.propertyList); // start from 1
 			if (last != nullptr)
 			{
 				last->property_count = data.propertyList - DecodeMetadataIndex(last->propertyStart);
 			}
-			last = cur.typeDef;
+			last = typeDef;
 		}
 		if (last)
 		{
 			last->property_count = propertyTb.rowNum - DecodeMetadataIndex(last->propertyStart) + 1;
 		}
 #if HYBRIDCLR_UNITY_2019
-		for (const TypeDefinitionDetail& tdd : _typeDetails)
+		for (const Il2CppTypeDefinition& typeDef : _typesDefines)
 		{
-			const Il2CppTypeDefinition* typeDef = tdd.typeDef;
-			if (typeDef->property_count == 0)
+			if (typeDef.property_count == 0)
 			{
 				continue;
-	}
-			for (int32_t start = DecodeMetadataIndex(typeDef->propertyStart), i = 0; i < typeDef->property_count; i++)
+			}
+			for (int32_t start = DecodeMetadataIndex(typeDef.propertyStart), i = 0; i < typeDef.property_count; i++)
 			{
-				_propeties[start + i - 1].declaringType = typeDef;
+				_propeties[start + i - 1].declaringType = &typeDef;
 			}
 		}
 #endif
@@ -1617,31 +1616,30 @@ namespace metadata
 		for (uint32_t rowIndex = 1; rowIndex <= eventMapTb.rowNum; rowIndex++)
 		{
 			TbEventMap data = _rawImage->ReadEventMap(rowIndex);
-			TypeDefinitionDetail& cur = _typeDetails[data.parent - 1];
-			cur.typeDef->eventStart = EncodeWithIndex(data.eventList); // start from 1
+			Il2CppTypeDefinition* typeDef = &_typesDefines[data.parent - 1];
+			typeDef->eventStart = EncodeWithIndex(data.eventList); // start from 1
 			if (last != nullptr)
 			{
 				last->event_count = data.eventList - DecodeMetadataIndex(last->eventStart);
 			}
-			last = cur.typeDef;
+			last = typeDef;
 		}
 		if (last)
 		{
 			last->event_count = eventTb.rowNum - DecodeMetadataIndex(last->eventStart) + 1;
 		}
 #if HYBRIDCLR_UNITY_2019
-		for (const TypeDefinitionDetail& tdd : _typeDetails)
+		for (const Il2CppTypeDefinition& typeDef : _typesDefines)
 		{
-			const Il2CppTypeDefinition* typeDef = tdd.typeDef;
-			if (typeDef->event_count == 0)
+			if (typeDef.event_count == 0)
 			{
 				continue;
-	}
-			for (int32_t start = DecodeMetadataIndex(typeDef->eventStart), i = 0; i < typeDef->event_count; i++)
+			}
+			for (int32_t start = DecodeMetadataIndex(typeDef.eventStart), i = 0; i < typeDef.event_count; i++)
 			{
 				EventDetail& ed = _events[start + i - 1];
-				ed.declaringType = typeDef;
-				ed.il2cppDefinition.typeIndex = typeDef->byvalTypeIndex;
+				ed.declaringType = &typeDef;
+				ed.il2cppDefinition.typeIndex = typeDef.byvalTypeIndex;
 			}
 		}
 #endif
@@ -1760,18 +1758,18 @@ namespace metadata
 		}
 
 		ClassFieldLayoutCalculator calculator(this);
-		for (TypeDefinitionDetail& type : _typeDetails)
+		for (Il2CppTypeDefinition& type : _typesDefines)
 		{
-			const Il2CppType* il2cppType = GetIl2CppTypeFromRawTypeDefIndex(type.index);
+			const Il2CppType* il2cppType = GetIl2CppTypeFromTypeDefinition(&type);
 			calculator.CalcClassNotStaticFields(il2cppType);
 		}
 
 		for (TypeDefinitionDetail& type : _typeDetails)
 		{
-			const Il2CppType* il2cppType = GetIl2CppTypeFromRawTypeDefIndex(type.index);
+			const Il2CppTypeDefinition* typeDef = GetTypeDefinitionByTypeDetail(&type);
+			const Il2CppType* il2cppType = GetIl2CppTypeFromTypeDefinition(typeDef);
 			calculator.CalcClassStaticFields(il2cppType);
 			ClassLayoutInfo* layout = calculator.GetClassLayoutInfo(il2cppType);
-			Il2CppTypeDefinition* typeDef = type.typeDef;
 
 			auto& sizes = type.typeSizes;
 			sizes.native_size = layout->nativeSize;
@@ -2110,7 +2108,7 @@ namespace metadata
 
 	void InterpreterImage::ComputeVTable(TypeDefinitionDetail* tdd)
 	{
-		Il2CppTypeDefinition& typeDef = *tdd->typeDef;
+		Il2CppTypeDefinition& typeDef = *GetTypeDefinitionByTypeDetail(tdd);
 		if (IsInterface(typeDef.flags) || typeDef.interfaceOffsetsStart != 0)
 		{
 			return;
@@ -2157,7 +2155,7 @@ namespace metadata
 		typeDef.interfaceOffsetsStart = EncodeWithIndex(offsetsStart);
 		typeDef.interface_offsets_count = (uint16_t)interfaceOffsetInfos.size();
 
-		Il2CppClass* klass = _classList[tdd->index];
+		Il2CppClass* klass = _classList[GetTypeRawIndex(&typeDef)];
 		IL2CPP_ASSERT(!klass);
 	}
 
