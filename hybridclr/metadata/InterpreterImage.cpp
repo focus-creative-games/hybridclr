@@ -2514,10 +2514,9 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_SZARRAY:
 		{
-			// FIXME MEMORY LEAK
-			Il2CppType* eleType = MetadataMallocT<Il2CppType>();
-			ReadCustomAttributeFieldOrPropType(reader, *eleType);
-			type.data.type = eleType;
+			Il2CppType eleType = {};
+			ReadCustomAttributeFieldOrPropType(reader, eleType);
+			type.data.type = MetadataPool::GetPooledIl2CppType(eleType);
 			break;
 		}
 		case IL2CPP_TYPE_ENUM:
