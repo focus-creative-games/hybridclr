@@ -448,8 +448,13 @@ namespace metadata
 			uint32_t rowIndex = DecodeMetadataIndex(typeDef->propertyStart) + index;
 			PropertyDetail& pd = _propeties[rowIndex - 1];
 			uint32_t baseMethodIdx = DecodeMetadataIndex(typeDef->methodStart) + 1;
+#if UNITY_ENGINE_TUANJIE
+			const MethodInfo* getter = pd.getterMethodIndex ? il2cpp::vm::Class::GetOrSetupOneMethod(const_cast<Il2CppClass*>(klass), pd.getterMethodIndex - baseMethodIdx) : nullptr;
+			const MethodInfo* setter = pd.setterMethodIndex ? il2cpp::vm::Class::GetOrSetupOneMethod(const_cast<Il2CppClass*>(klass), pd.setterMethodIndex - baseMethodIdx) : nullptr;
+#else
 			const MethodInfo* getter = pd.getterMethodIndex ? klass->methods[pd.getterMethodIndex - baseMethodIdx] : nullptr;
 			const MethodInfo* setter = pd.setterMethodIndex ? klass->methods[pd.setterMethodIndex - baseMethodIdx] : nullptr;
+#endif
 			return { pd.name, getter, setter, pd.flags, EncodeToken(TableType::PROPERTY, rowIndex) };
 		}
 
@@ -470,9 +475,15 @@ namespace metadata
 			uint32_t rowIndex = DecodeMetadataIndex(typeDef->eventStart) + index;
 			EventDetail& pd = _events[rowIndex - 1];
 			uint32_t baseMethodIdx = DecodeMetadataIndex(typeDef->methodStart) + 1;
+#if UNITY_ENGINE_TUANJIE
+			const MethodInfo* addOn = pd.addMethodIndex ? il2cpp::vm::Class::GetOrSetupOneMethod(const_cast<Il2CppClass*>(klass), pd.addMethodIndex - baseMethodIdx) : nullptr;
+			const MethodInfo* removeOn = pd.removeMethodIndex ? il2cpp::vm::Class::GetOrSetupOneMethod(const_cast<Il2CppClass*>(klass), pd.removeMethodIndex - baseMethodIdx) : nullptr;
+			const MethodInfo* raiseOn = pd.fireMethodIndex ? il2cpp::vm::Class::GetOrSetupOneMethod(const_cast<Il2CppClass*>(klass), pd.fireMethodIndex - baseMethodIdx) : nullptr;
+#else
 			const MethodInfo* addOn = pd.addMethodIndex ? klass->methods[pd.addMethodIndex - baseMethodIdx] : nullptr;
 			const MethodInfo* removeOn = pd.removeMethodIndex ? klass->methods[pd.removeMethodIndex - baseMethodIdx] : nullptr;
 			const MethodInfo* raiseOn = pd.fireMethodIndex ? klass->methods[pd.fireMethodIndex - baseMethodIdx] : nullptr;
+#endif
 			return { pd.name, &klass->byval_arg, addOn, removeOn, raiseOn, EncodeToken(TableType::EVENT, rowIndex) };
 		}
 
