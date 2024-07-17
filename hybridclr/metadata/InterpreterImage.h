@@ -29,7 +29,6 @@ namespace metadata
 		uint32_t vtableCount;
 		Il2CppTypeDefinitionSizes typeSizes;
 		Il2CppTypeDefinition* typeDef;
-		std::vector<MethodImpl>* methodImpls;
 		VirtualMethodImpl* vtable;
 	};
 
