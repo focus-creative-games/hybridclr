@@ -64,7 +64,7 @@ namespace metadata
         LOCALCONSTANT,
         IMPORTSCOPE,
         STATEMACHINEMETHOD,
-        CUSTOMDEBUGINFORMATION
+        CUSTOMDEBUGINFORMATION,
     };
 
 
@@ -368,52 +368,62 @@ namespace metadata
     // 以下这些都不是tables的类型
     // 但mono特殊处理一下，额外也加到这个表中
 
-    // size 84
     struct TbSymbolDocument
     {
-
+        uint32_t name;
+        uint32_t hashAlgorithm;
+        uint32_t hash;
+        uint32_t language;
     };
 
-    // size 52
     struct TbSymbolMethodBody
     {
-
+        uint32_t document;
+        uint32_t sequencePoints;
     };
 
-    // size 20
     struct TbSymbolLocalScope
     {
-
+        uint32_t method;
+        uint32_t importScope;
+        uint32_t variables;
+        uint32_t constants;
+        uint32_t startOffset;
+        uint32_t length;
     };
 
-    // size 56
     struct TbSymbolLocalVariable
     {
-
+        uint16_t attributes;
+        uint16_t index;
+        uint32_t name;
     };
 
-    // size 24
     struct TbSymbolConstant
     {
-
+        uint32_t name;
+        uint32_t signature;
     };
 
-    // SymUsing. size 8
     struct TbSymbolImportScope
     {
-
+        uint32_t parent;
+        uint32_t imports;
     };
 
 
-    struct TbSymbolMisc
+    struct TbSymbolStateMachineMethod
     {
-
+        uint32_t moveNextMethod;
+        uint32_t kickoffMethod;
     };
 
-    struct TbSymbolString
+    struct TbSymbolCustomDebugInformation
     {
-
-    };
+        uint32_t parent;
+		uint32_t kind;
+		uint32_t value;
+	};
 
 }
 

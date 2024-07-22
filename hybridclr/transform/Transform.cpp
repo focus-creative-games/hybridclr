@@ -254,8 +254,8 @@ else \
 
 
 		const byte* ipBase = body.ilcodes;
-
 		const byte* ip = body.ilcodes;
+		uint32_t ipOffset = 0;
 
 		int32_t evalStackTop = 0;
 		int32_t prefixFlags = 0;
@@ -267,6 +267,9 @@ else \
 		const MethodInfo* shareMethod = nullptr;
 
 		Token2RuntimeHandleMap tokenCache(64);
+
+		hybridclr::metadata::PDBImage* pdbImage = image->GetPDBImage();
+		IR2OffsetMap* ir2offsetMap = pdbImage ? new IR2OffsetMap(body.codeSize) : nullptr;
 
 		TransformContext ctx =
 		{
@@ -306,6 +309,8 @@ else \
 			varKst8,
 			brOffset,
 			shareMethod,
+			ipOffset,
+			ir2offsetMap,
 		};
 
 		bool initLocals = (body.flags & (uint32_t)CorILMethodFormat::InitLocals) != 0;
@@ -409,7 +414,7 @@ else \
 		IRBasicBlock* lastBb = nullptr;
 		for (;;)
 		{
-			int32_t ipOffset = (int32_t)(ip - ipBase);
+			ipOffset = (uint32_t)(ip - ipBase);
 			curbb = ip2bb[ipOffset];
 			if (curbb != lastBb)
 			{
@@ -3569,6 +3574,16 @@ ir->ele = ele.locOffset;
 		}
 
 
+		il2cpp::utils::dynamic_array<hybridclr::metadata::ILMapper>* ilMappers;
+		if (ir2offsetMap)
+		{
+			ilMappers = new il2cpp::utils::dynamic_array<hybridclr::metadata::ILMapper>();
+			ilMappers->reserve(ir2offsetMap->size());
+		}
+		else
+		{
+			ilMappers = nullptr;
+		}
 		byte* tranCodes = (byte*)HYBRIDCLR_METADATA_MALLOC(totalSize);
 
 		uint32_t tranOffset = 0;
@@ -3577,6 +3592,17 @@ ir->ele = ele.locOffset;
 			bb->codeOffset = tranOffset;
 			for (IRCommon* ir : bb->insts)
 			{
+				if (ilMappers)
+				{
+					auto it = ir2offsetMap->find(ir);
+					if (it != ir2offsetMap->end())
+					{
+						hybridclr::metadata::ILMapper ilMapper;
+						ilMapper.irOffset = tranOffset;
+						ilMapper.ilOffset = it->second;
+						ilMappers->push_back(ilMapper);
+					}
+				}
 				uint32_t irSize = g_instructionSizes[(int)ir->type];
 				std::memcpy(tranCodes + tranOffset, &ir->type, irSize);
 				tranOffset += irSize;
@@ -3646,6 +3672,11 @@ ir->ele = ele.locOffset;
 			std::memcpy(data, exClauses.data(), dataSize);
 			result.exClauses = data;
 			result.exClauseCount = (uint32_t)exClauses.size();
+		}
+
+		if (ilMappers)
+		{
+			pdbImage->SetMethodDebugInfo(methodInfo, *ilMappers);
 		}
 	}
 }

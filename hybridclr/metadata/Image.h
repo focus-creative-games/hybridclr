@@ -14,6 +14,7 @@
 #include "RawImage.h"
 #include "VTableSetup.h"
 #include "MetadataUtil.h"
+#include "PDBImage.h"
 
 
 namespace hybridclr
@@ -42,9 +43,27 @@ namespace metadata
 	{
 	public:
 
-		const RawImage& GetRawImage() const
+		RawImage& GetRawImage() const
 		{
 			return *_rawImage;
+		}
+
+		PDBImage* GetPDBImage() const
+		{
+			return _pdbImage;
+		}
+
+		LoadImageErrorCode LoadPDB(const void* pdbBytes, size_t pdbLength)
+		{
+			_pdbImage = new PDBImage();
+			LoadImageErrorCode err = _pdbImage->Load(pdbBytes, pdbLength);
+			if (err != LoadImageErrorCode::OK)
+			{
+				delete _pdbImage;
+				_pdbImage = nullptr;
+				return LoadImageErrorCode::PDB_BAD_FILE;
+			}
+			return LoadImageErrorCode::OK;
 		}
 
 		// misc
@@ -109,7 +128,7 @@ namespace metadata
 		virtual void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) = 0;
 		virtual void InitRuntimeMetadatas() = 0;
 	protected:
-		Image()
+		Image() : _rawImage(nullptr), _pdbImage(nullptr)
 		{
 			il2cpp::vm::AssemblyVector assemblies;
 			il2cpp::vm::Assembly::GetAllAssemblies(assemblies);
@@ -117,7 +136,6 @@ namespace metadata
 			{
 				_nameToAssemblies[ass->image->nameNoExt] = ass;
 			}
-			_rawImage = new RawImage();
 		}
 
 		virtual ~Image()
@@ -125,6 +143,12 @@ namespace metadata
 			if (_rawImage)
 			{
 				delete _rawImage;
+				_rawImage = nullptr;
+			}
+			if (_pdbImage)
+			{
+				delete _pdbImage;
+				_pdbImage = nullptr;
 			}
 		}
 
@@ -150,6 +174,7 @@ namespace metadata
 		Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr);
 
 		RawImage* _rawImage;
+		PDBImage* _pdbImage;
 		Il2CppHashMap<const char*, const Il2CppAssembly*, CStringHash, CStringEqualTo> _nameToAssemblies;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, il2cpp::utils::PassThroughHash<uint32_t>> _il2cppStringCache;
 	};

@@ -70,7 +70,7 @@ namespace transform
 #endif
 
 #define CreateIR(varName, typeName) IR##typeName* varName = pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName;
-#define CreateAddIR(varName, typeName) IR##typeName* varName = pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName; curbb->insts.push_back(varName);
+#define CreateAddIR(varName, typeName) IR##typeName* varName = pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName; curbb->insts.push_back(varName); if (ir2offsetMap) { ir2offsetMap->add(varName, ipOffset); }
 
 	enum class LocationDescType
 	{
@@ -150,6 +150,9 @@ namespace transform
 
 	HiOpcodeEnum CalcGetMdArrElementVarVarOpcode(const Il2CppType* type);
 
+
+	typedef Il2CppHashMap<IRCommon*, uint32_t, il2cpp::utils::PointerHash<IRCommon>> IR2OffsetMap;
+
 	struct TransformContext
 	{
 		metadata::Image* image;
@@ -191,6 +194,8 @@ namespace transform
 		int32_t& brOffset;
 
 		const MethodInfo*& shareMethod;
+		uint32_t& ipOffset;
+		IR2OffsetMap* ir2offsetMap;
 
 		static void InitializeInstinctHandlers();
 
@@ -426,6 +431,10 @@ namespace transform
 		{
 			IL2CPP_ASSERT(ir->type != HiOpcodeEnum::None);
 			curbb->insts.push_back(ir);
+			if (ir2offsetMap)
+			{
+				ir2offsetMap->insert({ ir, ipOffset });
+			}
 		}
 
 		void AddInst_ldarg(int32_t argIdx)

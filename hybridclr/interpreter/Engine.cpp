@@ -4,6 +4,8 @@
 
 #include "Interpreter.h"
 #include "MemoryUtil.h"
+#include "../metadata/InterpreterImage.h"
+#include "../metadata/MetadataModule.h"
 
 namespace hybridclr
 {
@@ -61,6 +63,79 @@ namespace interpreter
 		_machineState.SetStackTop(frame->oldStackTop);
 		_machineState.SetLocalPoolBottomIdx(frame->oldLocalPoolBottomIdx);
 		return _machineState.GetFrameTopIdx() > _frameBaseIdx ? _machineState.GetTopFrame() : nullptr;
+	}
+
+	static bool FrameNeedsSkipped(const Il2CppStackFrameInfo& frame)
+	{
+		const MethodInfo* method = frame.method;
+		const Il2CppClass* klass = method->klass;
+		return (strcmp(klass->namespaze, "System.Diagnostics") == 0 &&
+			(strcmp(klass->name, "StackFrame") == 0 || strcmp(klass->name, "StackTrace") == 0))
+			|| (strcmp(klass->namespaze, "UnityEngine") == 0
+				&& (strcmp(klass->name, "StackTraceUtility") == 0
+					|| strcmp(klass->name, "Debug") == 0
+					|| strcmp(klass->name, "Logger") == 0
+					|| strcmp(klass->name, "DebugLogHandler") == 0));
+	}
+
+	static void SetupStackFrameInfo(const InterpFrame* frame, Il2CppStackFrameInfo& stackFrame)
+	{
+		const MethodInfo* method = frame->method;
+		const InterpMethodInfo* imi = (const InterpMethodInfo*)method->interpData;
+		const byte* actualIp;
+		if (frame->ip >= imi->codes && frame->ip < imi->codes + imi->codeLength)
+		{
+			actualIp = frame->ip;
+		}
+		else
+		{
+			actualIp = *(byte**)frame->ip;
+			IL2CPP_ASSERT(actualIp >= imi->codes && actualIp < imi->codes + imi->codeLength);
+		}
+
+		stackFrame.method = method;
+#if HYBRIDCLR_UNITY_2020_OR_NEW
+		stackFrame.raw_ip = (uintptr_t)actualIp;
+#endif
+
+		if (!hybridclr::metadata::IsInterpreterMethod(method))
+		{
+			return;
+		}
+		
+		hybridclr::metadata::InterpreterImage* interpImage = hybridclr::metadata::MetadataModule::GetImage(method);
+		if (!interpImage)
+		{
+			return;
+		}
+
+		hybridclr::metadata::PDBImage* pdbImage = interpImage->GetPDBImage();
+		if (!pdbImage)
+		{
+			return;
+		}
+		pdbImage->SetupStackFrameInfo(method, actualIp, stackFrame);
+	}
+
+	void MachineState::CollectFrames(il2cpp::vm::StackFrames* stackFrames)
+	{
+		if (_frameTopIdx <= 0)
+		{
+			return;
+		}
+		size_t insertIndex = 0;
+		for (; insertIndex < stackFrames->size(); insertIndex++)
+		{
+			if (FrameNeedsSkipped((*stackFrames)[insertIndex]))
+			{
+				break;
+			}
+		}
+		stackFrames->insert(stackFrames->begin() + insertIndex, _frameTopIdx, Il2CppStackFrameInfo());
+		for (int32_t i = 0; i < _frameTopIdx; i++)
+		{
+			SetupStackFrameInfo(_frameBase + i, (*stackFrames)[insertIndex + i]);
+		}
 	}
 }
 }

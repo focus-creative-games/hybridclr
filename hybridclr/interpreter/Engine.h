@@ -265,46 +265,7 @@ namespace interpreter
 			}
 		}
 
-		static bool FrameNeedsSkipped(const Il2CppStackFrameInfo& frame)
-		{
-			const MethodInfo* method = frame.method;
-			const Il2CppClass* klass = method->klass;
-			return (strcmp(klass->namespaze, "System.Diagnostics") == 0 &&
-				(strcmp(klass->name, "StackFrame") == 0 || strcmp(klass->name, "StackTrace") == 0))
-				|| (strcmp(klass->namespaze, "UnityEngine") == 0
-					&& (strcmp(klass->name, "StackTraceUtility") == 0
-						|| strcmp(klass->name, "Debug") == 0
-						|| strcmp(klass->name, "Logger") == 0
-						|| strcmp(klass->name, "DebugLogHandler") == 0));
-		}
-
-		void CollectFrames(il2cpp::vm::StackFrames* stackFrames)
-		{
-			if (_frameTopIdx <= 0)
-			{
-				return;
-			}
-			size_t insertIndex = 0;
-			for (; insertIndex < stackFrames->size(); insertIndex++)
-			{
-				if (FrameNeedsSkipped((*stackFrames)[insertIndex]))
-				{
-					break;
-				}
-			}
-			stackFrames->insert(stackFrames->begin() + insertIndex, _frameTopIdx, Il2CppStackFrameInfo());
-			for (int32_t i = 0; i < _frameTopIdx; i++)
-			{
-				InterpFrame* frame = _frameBase + i;
-				const MethodInfo* method = frame->method;
-				(*stackFrames)[insertIndex + i] = {
-					method
-#if HYBRIDCLR_UNITY_2020_OR_NEW
-					, (uintptr_t)method->methodPointer
-#endif
-				};
-			}
-		}
+		void CollectFrames(il2cpp::vm::StackFrames* stackFrames);
 
 	private:
 

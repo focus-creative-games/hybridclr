@@ -1261,11 +1261,11 @@ namespace interpreter
 	localVarBase = frame->stackBasePtr; \
 }
 
-	// maxStackSize包含 arg + local + eval,对于解释器栈来说，可能多余
 #define PREPARE_NEW_FRAME_FROM_NATIVE(newMethodInfo, argBasePtr, retPtr) { \
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
 	frame = interpFrameGroup.EnterFrameFromNative(newMethodInfo, argBasePtr); \
 	frame->ret = retPtr; \
+	frame->ip = (byte*)&ip; \
 	ip = ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
 }
@@ -1274,6 +1274,7 @@ namespace interpreter
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
 	frame = interpFrameGroup.EnterFrameFromInterpreter(newMethodInfo, argBasePtr); \
 	frame->ret = retPtr; \
+	frame->ip = (byte*)&ip; \
 	ip = ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
 }

@@ -87,7 +87,7 @@ namespace metadata
 	};
 #pragma pack(pop)
 
-	const int MAX_TABLE_INDEX = 0x2C;
+	const int MAX_TABLE_INDEX = 0x37;
 	const int TABLE_NUM = MAX_TABLE_INDEX + 1;
 
 	class TagBits
@@ -106,6 +106,7 @@ namespace metadata
 		static const uint32_t CustomAttributeType = 3;
 		static const uint32_t ResoulutionScope = 2;
 		static const uint32_t TypeOrMethodDef = 1;
+		static const uint32_t HasCustomDebugInformation = 5;
 
 	};
 
@@ -133,6 +134,36 @@ namespace metadata
 		TableType::GENERICPARAM,
 		TableType::GENERICPARAMCONSTRAINT,
 		TableType::METHODSPEC,
+	};
+
+	const TableType HasCustomDebugInformation[] = {
+		TableType::METHOD,
+		TableType::FIELD,
+		TableType::TYPEREF,
+		TableType::TYPEDEF,
+		TableType::PARAM,
+		TableType::INTERFACEIMPL,
+		TableType::MEMBERREF,
+		TableType::MODULE,
+		TableType::DECLSECURITY,
+		TableType::PROPERTY,
+		TableType::EVENT,
+		TableType::STANDALONESIG,
+		TableType::MODULEREF,
+		TableType::TYPESPEC,
+		TableType::ASSEMBLY,
+		TableType::ASSEMBLYREF,
+		TableType::FILE,
+		TableType::EXPORTEDTYPE,
+		TableType::MANIFESTRESOURCE,
+		TableType::GENERICPARAM,
+		TableType::GENERICPARAMCONSTRAINT,
+		TableType::METHODSPEC,
+		TableType::DOCUMENT,
+		TableType::LOCALSCOPE,
+		TableType::LOCALVARIABLE,
+		TableType::LOCALCONSTANT,
+		TableType::IMPORTSCOPE,
 	};
 
 	inline TableType DecodeTokenTableType(uint32_t index)

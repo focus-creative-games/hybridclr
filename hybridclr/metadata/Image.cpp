@@ -886,22 +886,7 @@ namespace metadata
         }
         else
         {
-            const byte* str = _rawImage->GetUserStringBlogByIndex((uint32_t)index);
-            uint32_t lengthSize;
-            uint32_t stringLength = BlobReader::ReadCompressedUint32(str, lengthSize);
-
-            Il2CppString* clrStr;
-            if (stringLength == 0)
-            {
-                clrStr = il2cpp::vm::String::Empty();
-            }
-            else
-            {
-                str += lengthSize;
-                IL2CPP_ASSERT(stringLength % 2 == 1);
-                UserStringEncoding charEncoding = (UserStringEncoding)str[stringLength - 1];
-                clrStr = il2cpp::vm::String::NewUtf16((const Il2CppChar*)str, (stringLength - 1) / 2);
-            }
+            Il2CppString* clrStr = _rawImage->GetUserStringBlogByIndex((uint32_t)index);
 #if HYBRIDCLR_UNITY_2022_OR_NEW
             _il2cppStringCache.GetOrAdd(index, clrStr);
 #else

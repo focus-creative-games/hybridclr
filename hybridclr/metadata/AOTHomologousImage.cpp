@@ -41,6 +41,7 @@ namespace metadata
 
 	LoadImageErrorCode AOTHomologousImage::Load(const byte* imageData, size_t length)
 	{
+		_rawImage = new RawImage();
 		LoadImageErrorCode err = _rawImage->Load(imageData, length);
 		if (err != LoadImageErrorCode::OK)
 		{

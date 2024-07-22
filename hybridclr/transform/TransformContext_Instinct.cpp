@@ -70,7 +70,7 @@ namespace transform
 	typedef Il2CppHashMap<NamespaceAndName, InstinctHandler, NamespaceAndNameHash, NamespaceAndNameEquals> CtorInstinctHandlerMap;
 	static CtorInstinctHandlerMap s_ctorInstinctHandlerMap;
 
-#define IHCreateAddIR(varName, typeName) IR##typeName* varName = ctx.pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName; ctx.curbb->insts.push_back(varName);
+#define IHCreateAddIR(varName, typeName) IR##typeName* varName = ctx.pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName; ctx.AddInst(varName);
 
 
 	static bool IH_object_ctor(TransformContext& ctx, const MethodInfo* method)
@@ -413,6 +413,8 @@ namespace transform
 		IL2CPP_ASSERT(ctx.evalStackTop >= 1);
 		TemporaryMemoryArena& pool = ctx.pool;
 		IRBasicBlock*& curbb = ctx.curbb;
+		IR2OffsetMap* ir2offsetMap = ctx.ir2offsetMap;
+		uint32_t ipOffset = ctx.ipOffset;
 
 		CreateAddIR(ir, LdindVarVar_i1);
 #if HYBRIDCLR_ARCH_64

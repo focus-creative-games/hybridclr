@@ -128,10 +128,18 @@ namespace metadata
 		{
 			if (_inited)
 			{
-				RaiseExecutionEngineException("image can't be init again");
+				RaiseExecutionEngineException("image can't be inited again");
 			}
 			_inited = true;
-			return _rawImage->Load(imageData, length);
+			_rawImage = new RawImage();
+			LoadImageErrorCode err = _rawImage->Load(imageData, length);
+			if (err != LoadImageErrorCode::OK)
+			{
+				delete _rawImage;
+				_rawImage = nullptr;
+				return err;
+			}
+			return LoadImageErrorCode::OK;
 		}
 
 		bool IsInitialized() const
