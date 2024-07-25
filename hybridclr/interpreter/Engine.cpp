@@ -94,9 +94,7 @@ namespace interpreter
 		}
 
 		stackFrame.method = method;
-#if HYBRIDCLR_UNITY_2020_OR_NEW
 		stackFrame.raw_ip = (uintptr_t)actualIp;
-#endif
 
 		if (!hybridclr::metadata::IsInterpreterMethod(method))
 		{

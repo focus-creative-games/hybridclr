@@ -107,7 +107,6 @@ namespace metadata
 
 	void PDBImage::SetupStackFrameInfo(const MethodInfo* method, const void* ip, Il2CppStackFrameInfo& stackFrame)
 	{
-#if HYBRIDCLR_UNITY_2021_OR_NEW
 		auto it = _methodInfos.find(method);
 		if (it == _methodInfos.end())
 		{
@@ -129,7 +128,6 @@ namespace metadata
 		stackFrame.sourceCodeLineNumber = ssp->line;
 
 		stackFrame.filePath = GetDocumentName(ssp->document);
-#endif
 	}
 
 	void PDBImage::SetMethodDebugInfo(const MethodInfo* method, const il2cpp::utils::dynamic_array<ILMapper>& ilMapper)
