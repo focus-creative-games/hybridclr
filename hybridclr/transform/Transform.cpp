@@ -2475,11 +2475,20 @@ else \
 				Il2CppClass* eleKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				uint32_t eleKlassIndex = ctx.GetOrAddResolveDataIndex(eleKlass);
 
-				CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar);
-				ir->arr = ir->addr = arr.locOffset;
-				ir->index = index.locOffset;
-				ir->eleKlass = eleKlassIndex;
-
+				if (prefixFlags & (int32_t)PrefixFlags::ReadOnly)
+				{
+					CreateAddIR(ir, GetArrayElementAddressAddrVarVar);
+					ir->arr = ir->addr = arr.locOffset;
+					ir->index = index.locOffset;
+				}
+				else
+				{
+					CreateAddIR(ir, GetArrayElementAddressCheckAddrVarVar);
+					ir->arr = ir->addr = arr.locOffset;
+					ir->index = index.locOffset;
+					ir->eleKlass = eleKlassIndex;
+				}
+				ctx.ResetPrefixFlags();
 				ctx.PopStackN(2);
 				ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 				ip += 5;
