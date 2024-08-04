@@ -322,6 +322,15 @@ namespace transform
 		return true;
 	}
 
+	static bool IH_MethodBase_GetCurrentMethod(TransformContext& ctx, const MethodInfo* method)
+	{
+		IL2CPP_ASSERT(ctx.evalStackTop >= 0);
+		IHCreateAddIR(ir, MethodBaseGetCurrentMethod);
+		ir->ret = ctx.GetEvalStackNewTopOffset();
+		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+		return true;
+	}
+
 	static bool IH_UnityEngine_Vector2_ctor(TransformContext& ctx, const MethodInfo* method)
 	{
 		if (method->parameters_count != 2)
@@ -452,6 +461,7 @@ namespace transform
 		{"System.Runtime.CompilerServices", "JitHelpers", "UnsafeCast", IH_JitHelpers_UnsafeCast},
 		{"System.Runtime.CompilerServices", "JitHelpers", "UnsafeEnumCastLong", IH_JitHelpers_UnsafeEnumCastLong},
 		{"System.Reflection", "Assembly", "GetExecutingAssembly", IH_Assembly_GetExecutingAssembly},
+		{"System.Reflection", "MethodBase", "GetCurrentMethod", IH_MethodBase_GetCurrentMethod},
 		{"UnityEngine", "Vector2", ".ctor", IH_UnityEngine_Vector2_ctor},
 		{"UnityEngine", "Vector3", ".ctor", IH_UnityEngine_Vector3_ctor},
 		{"UnityEngine", "Vector4", ".ctor", IH_UnityEngine_Vector4_ctor},

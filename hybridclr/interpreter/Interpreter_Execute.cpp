@@ -11284,6 +11284,13 @@ else \
 				    ip += 8;
 				    continue;
 				}
+				case HiOpcodeEnum::MethodBaseGetCurrentMethod:
+				{
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    (*(Il2CppObject**)(localVarBase + __ret)) = (Il2CppObject*)il2cpp::vm::Reflection::GetMethodObject(frame->method, nullptr);
+				    ip += 8;
+				    continue;
+				}
 
 				//!!!}}INSTRINCT
 #pragma endregion

@@ -833,6 +833,7 @@ namespace interpreter
 		8,
 		8,
 		8,
+		8,
 
         //!!!}}INST_SIZE
     };

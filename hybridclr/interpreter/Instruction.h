@@ -849,6 +849,7 @@ namespace interpreter
 		UnsafeEnumCast,
 		GetEnumHashCode,
 		AssemblyGetExecutingAssembly,
+		MethodBaseGetCurrentMethod,
 
 		//!!!}}OPCODE
 	};
@@ -9652,6 +9653,16 @@ namespace interpreter
 
 
 	struct IRAssemblyGetExecutingAssembly : IRCommon
+	{
+		uint16_t ret;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+	};
+
+
+	struct IRMethodBaseGetCurrentMethod : IRCommon
 	{
 		uint16_t ret;
 		uint8_t __pad4;
