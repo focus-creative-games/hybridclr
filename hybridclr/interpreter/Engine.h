@@ -16,28 +16,6 @@
 #include "MethodBridge.h"
 #include <algorithm>
 
-
-#if IL2CPP_ENABLE_STACKTRACE_SENTRIES
-
-#if HYBRIDCLR_UNITY_2020_OR_NEW
-#define PUSH_STACK_FRAME(method) do { \
-	Il2CppStackFrameInfo stackFrameInfo = { method, (uintptr_t)method->methodPointer }; \
-	il2cpp::vm::StackTrace::PushFrame(stackFrameInfo); \
-} while(0)
-#else
-#define PUSH_STACK_FRAME(method) do { \
-	Il2CppStackFrameInfo stackFrameInfo = { method }; \
-	il2cpp::vm::StackTrace::PushFrame(stackFrameInfo); \
-} while(0)
-#endif
-
-#define POP_STACK_FRAME() do { il2cpp::vm::StackTrace::PopFrame(); } while(0)
-
-#else 
-#define PUSH_STACK_FRAME(method)
-#define POP_STACK_FRAME() 
-#endif
-
 namespace hybridclr
 {
 namespace interpreter
@@ -266,6 +244,7 @@ namespace interpreter
 		}
 
 		void CollectFrames(il2cpp::vm::StackFrames* stackFrames);
+		void SetupFramesDebugInfo(il2cpp::vm::StackFrames* stackFrames);
 
 	private:
 

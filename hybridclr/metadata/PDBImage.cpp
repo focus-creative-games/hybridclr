@@ -114,8 +114,19 @@ namespace metadata
 		}
 		const SymbolMethodInfoData* methodInfoData = it->second;
 		const SymbolMethodDefData* methodData = methodInfoData->methodData;
-		const hybridclr::interpreter::InterpMethodInfo* interpMethodInfo = (const hybridclr::interpreter::InterpMethodInfo*)method->interpData;
-		uint32_t irOffset = (uint32_t)((uintptr_t)ip - (uintptr_t)interpMethodInfo->codes);
+		const hybridclr::interpreter::InterpMethodInfo* imi = (const hybridclr::interpreter::InterpMethodInfo*)method->interpData;
+		const byte* actualIp;
+		if (ip >= imi->codes && ip < imi->codes + imi->codeLength)
+		{
+			actualIp = (const byte*)ip;
+		}
+		else
+		{
+			actualIp = *(byte**)ip;
+			IL2CPP_ASSERT(actualIp >= imi->codes && actualIp < imi->codes + imi->codeLength);
+		}
+
+		uint32_t irOffset = (uint32_t)((uintptr_t)actualIp - (uintptr_t)imi->codes);
 		uint32_t ilOffset = FindILOffsetByIROffset(methodInfoData->ilMapper, irOffset);
 
 		const SymbolSequencePoint* ssp = FindSequencePoint(methodData->sequencePoints, ilOffset);

@@ -11,6 +11,21 @@ namespace hybridclr
 {
 namespace interpreter
 {
+
+#if IL2CPP_ENABLE_STACKTRACE_SENTRIES
+
+#define PUSH_STACK_FRAME(method, rawIp) do { \
+	Il2CppStackFrameInfo stackFrameInfo = { method, rawIp }; \
+	il2cpp::vm::StackTrace::PushFrame(stackFrameInfo); \
+} while(0)
+
+#define POP_STACK_FRAME() do { il2cpp::vm::StackTrace::PopFrame(); } while(0)
+
+#else 
+#define PUSH_STACK_FRAME(method)
+#define POP_STACK_FRAME() 
+#endif
+
 	InterpFrame* InterpFrameGroup::EnterFrameFromInterpreter(const MethodInfo* method, StackObject* argBase)
 	{
 #if IL2CPP_ENABLE_PROFILER
@@ -21,7 +36,7 @@ namespace interpreter
 		StackObject* stackBasePtr = _machineState.AllocStackSlot(imi->maxStackSize - imi->argStackObjectSize);
 		InterpFrame* newFrame = _machineState.PushFrame();
 		*newFrame = { method, argBase, oldStackTop, nullptr, nullptr, nullptr, 0, 0, _machineState.GetLocalPoolBottomIdx() };
-		PUSH_STACK_FRAME(method);
+		PUSH_STACK_FRAME(method, (uintptr_t)newFrame);
 		return newFrame;
 	}
 
@@ -43,7 +58,7 @@ namespace interpreter
 			IL2CPP_ASSERT(imi->argCount == metadata::GetActualArgumentNum(method));
 			CopyStackObject(stackBasePtr, argBase, imi->argStackObjectSize);
 		}
-		PUSH_STACK_FRAME(method);
+		PUSH_STACK_FRAME(method, (uintptr_t)newFrame);
 		return newFrame;
 	}
 
@@ -82,19 +97,10 @@ namespace interpreter
 	{
 		const MethodInfo* method = frame->method;
 		const InterpMethodInfo* imi = (const InterpMethodInfo*)method->interpData;
-		const byte* actualIp;
-		if (frame->ip >= imi->codes && frame->ip < imi->codes + imi->codeLength)
-		{
-			actualIp = frame->ip;
-		}
-		else
-		{
-			actualIp = *(byte**)frame->ip;
-			IL2CPP_ASSERT(actualIp >= imi->codes && actualIp < imi->codes + imi->codeLength);
-		}
+		const byte* actualIp = (const byte*)frame->ip;
 
 		stackFrame.method = method;
-		stackFrame.raw_ip = (uintptr_t)actualIp;
+		stackFrame.raw_ip = (uintptr_t)frame;
 
 		if (!hybridclr::metadata::IsInterpreterMethod(method))
 		{
@@ -133,6 +139,25 @@ namespace interpreter
 		for (int32_t i = 0; i < _frameTopIdx; i++)
 		{
 			SetupStackFrameInfo(_frameBase + i, (*stackFrames)[insertIndex + i]);
+		}
+	}
+
+	void MachineState::SetupFramesDebugInfo(il2cpp::vm::StackFrames* stackFrames)
+	{
+		for (Il2CppStackFrameInfo& frame : *stackFrames)
+		{
+			if (frame.method && hybridclr::metadata::IsInterpreterImplement(frame.method) && frame.filePath == nullptr)
+			{
+				hybridclr::metadata::InterpreterImage* interpImage = hybridclr::metadata::MetadataModule::GetImage(frame.method);
+				if (interpImage)
+				{
+					hybridclr::metadata::PDBImage* pdbImage = interpImage->GetPDBImage();
+					if (pdbImage)
+					{
+						pdbImage->SetupStackFrameInfo(frame.method, (const byte*)(((InterpFrame*)frame.raw_ip)->ip), frame);
+					}
+				}
+			}
 		}
 	}
 }
