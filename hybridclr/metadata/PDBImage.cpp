@@ -128,6 +128,11 @@ namespace metadata
 
 		uint32_t irOffset = (uint32_t)((uintptr_t)actualIp - (uintptr_t)imi->codes);
 		uint32_t ilOffset = FindILOffsetByIROffset(methodInfoData->ilMapper, irOffset);
+		// when call sub interpreter method, ip point to next instruction, so we need to adjust ilOffset.
+		if (ilOffset > 0)
+		{
+			--ilOffset;
+		}
 
 		const SymbolSequencePoint* ssp = FindSequencePoint(methodData->sequencePoints, ilOffset);
 		if (!ssp)
