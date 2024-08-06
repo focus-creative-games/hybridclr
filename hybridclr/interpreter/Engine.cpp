@@ -146,7 +146,7 @@ namespace interpreter
 	{
 		for (Il2CppStackFrameInfo& frame : *stackFrames)
 		{
-			if (frame.method && hybridclr::metadata::IsInterpreterImplement(frame.method) && frame.filePath == nullptr)
+			if (frame.method && hybridclr::metadata::IsInterpreterImplement(frame.method))
 			{
 				hybridclr::metadata::InterpreterImage* interpImage = hybridclr::metadata::MetadataModule::GetImage(frame.method);
 				if (interpImage)
