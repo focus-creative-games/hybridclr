@@ -1257,6 +1257,7 @@ namespace interpreter
 #define LOAD_PREV_FRAME() { \
 	imi = (const InterpMethodInfo*)frame->method->interpData; \
 	ip = frame->ip; \
+	frame->ip = (byte*)&ip; \
 	ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
 }
