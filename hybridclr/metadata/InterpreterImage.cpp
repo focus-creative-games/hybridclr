@@ -821,7 +821,7 @@ namespace metadata
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
 		}
 		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type->type);
-		if (!klass->generic_class)
+		if (!klass->generic_class && (Il2CppTypeDefinition*)klass->typeMetadataHandle)
 		{
 			writer.WriteCompressedInt32(((Il2CppTypeDefinition*)klass->typeMetadataHandle)->byvalTypeIndex);
 		}
