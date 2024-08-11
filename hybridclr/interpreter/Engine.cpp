@@ -22,7 +22,7 @@ namespace interpreter
 #define POP_STACK_FRAME() do { il2cpp::vm::StackTrace::PopFrame(); } while(0)
 
 #else 
-#define PUSH_STACK_FRAME(method)
+#define PUSH_STACK_FRAME(method, rawIp)
 #define POP_STACK_FRAME() 
 #endif
 
