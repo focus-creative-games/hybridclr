@@ -12,7 +12,7 @@ namespace hybridclr
 namespace interpreter
 {
 
-#if IL2CPP_ENABLE_STACKTRACE_SENTRIES
+#if HYBRIDCLR_ENABLE_STRACKTRACE
 
 #define PUSH_STACK_FRAME(method, rawIp) do { \
 	Il2CppStackFrameInfo stackFrameInfo = { method, rawIp }; \
