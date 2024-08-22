@@ -1650,6 +1650,7 @@ else \
 
 #pragma endregion 
 
+const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 
 	void Interpreter::Execute(const MethodInfo* methodInfo, StackObject* args, void* ret)
 	{
@@ -1663,6 +1664,7 @@ else \
 		byte* ip;
 
 		Il2CppException* lastUnwindException;
+		StackObject* tempRet = nullptr;
 
 		PREPARE_NEW_FRAME_FROM_NATIVE(methodInfo, args, ret);
 
@@ -5206,7 +5208,8 @@ else \
 					uint16_t __invokeParamCount = *(uint16_t*)(ip + 4);
 					uint16_t __retTypeStackObjectSize = *(uint16_t*)(ip + 6);
 				    void* _ret = (void*)(localVarBase + __ret);
-					StackObject* _tempRet = (StackObject*)alloca(sizeof(StackObject) * __retTypeStackObjectSize);
+					IL2CPP_ASSERT(__retTypeStackObjectSize <= kMaxRetValueTypeStackObjectSize);
+					StackObject* _tempRet = tempRet ? tempRet : (tempRet = (StackObject*)alloca(sizeof(StackObject) * kMaxRetValueTypeStackObjectSize));
 					uint16_t* _resolvedArgIdxs = ((uint16_t*)&imi->resolveDatas[__argIdxs]);
 					StackObject* _argBasePtr = localVarBase + _resolvedArgIdxs[0];
 					Il2CppMulticastDelegate* _del = (Il2CppMulticastDelegate*)_argBasePtr->obj;
