@@ -28,7 +28,7 @@ namespace interpreter
 
 	InterpFrame* InterpFrameGroup::EnterFrameFromInterpreter(const MethodInfo* method, StackObject* argBase)
 	{
-#if IL2CPP_ENABLE_PROFILER
+#if HYBRIDCLR_ENABLE_PROFILER
 		il2cpp_codegen_profiler_method_enter(method);
 #endif
 		const InterpMethodInfo* imi = (const InterpMethodInfo*)method->interpData;
@@ -43,7 +43,7 @@ namespace interpreter
 
 	InterpFrame* InterpFrameGroup::EnterFrameFromNative(const MethodInfo* method, StackObject* argBase)
 	{
-#if IL2CPP_ENABLE_PROFILER
+#if HYBRIDCLR_ENABLE_PROFILER
 		il2cpp_codegen_profiler_method_enter(method);
 #endif
 		const InterpMethodInfo* imi = (const InterpMethodInfo*)method->interpData;
@@ -67,7 +67,7 @@ namespace interpreter
 		IL2CPP_ASSERT(_machineState.GetFrameTopIdx() > _frameBaseIdx);
 		POP_STACK_FRAME();
 		InterpFrame* frame = _machineState.GetTopFrame();
-#if IL2CPP_ENABLE_PROFILER
+#if HYBRIDCLR_ENABLE_PROFILER
 		il2cpp_codegen_profiler_method_exit(frame->method);
 #endif
 		if (frame->exFlowBase)
