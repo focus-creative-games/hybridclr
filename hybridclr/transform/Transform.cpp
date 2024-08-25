@@ -3389,7 +3389,7 @@ ir->ele = ele.locOffset;
 						else if (conKlass->enumtype && !std::strcmp(shareMethod->name, "GetHashCode"))
 						{
 							Il2CppTypeEnum typeEnum = conKlass->element_class->byval_arg.type;
-
+							self.reduceType = EvalStackReduceDataType::I4;
 							if (typeEnum == IL2CPP_TYPE_I8 || typeEnum == IL2CPP_TYPE_U8)
 							{
 								CreateAddIR(ir, GetEnumHashCode);
