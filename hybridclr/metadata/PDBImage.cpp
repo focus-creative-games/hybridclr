@@ -4,6 +4,7 @@
 
 #include "vm/MetadataLock.h"
 #include "os/Mutex.h"
+#include "Baselib.h"
 
 #include "../interpreter/InterpreterDefs.h"
 
