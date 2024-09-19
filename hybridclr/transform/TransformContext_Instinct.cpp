@@ -75,6 +75,13 @@ namespace transform
 
 	static bool IH_object_ctor(TransformContext& ctx, const MethodInfo* method)
 	{
+#if IL2CPP_DEBUG
+		IRCommon* last = ctx.curbb->insts.back();
+		IL2CPP_ASSERT(last->type == HiOpcodeEnum::LdlocVarVar);
+		IRLdlocVarVar* ldthis = (IRLdlocVarVar*)last;
+		IL2CPP_ASSERT(ldthis->src == 0);
+#endif
+		ctx.curbb->insts.pop_back();
 		ctx.PopStack();
 		return true;
 	}
