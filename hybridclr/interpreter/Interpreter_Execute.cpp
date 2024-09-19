@@ -1536,6 +1536,7 @@ while (true) \
 
 #define THROW_EX(_ex_, _firstHandlerIndex_) { \
 	Il2CppException* ex = _ex_; \
+	il2cpp::vm::Exception::PrepareExceptionForThrow(ex, const_cast<MethodInfo*>(frame->method));\
 	CHECK_NOT_NULL_THROW(ex); \
 	PREPARE_EXCEPTION(ex, _firstHandlerIndex_); \
 	FIND_NEXT_EX_HANDLER_OR_UNWIND(); \
