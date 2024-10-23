@@ -41,7 +41,7 @@ HybridCLR扩充了il2cpp运行时代码，使它由纯[AOT](https://en.wikipedia
 
 ## 支持的版本与平台
 
-- 支持2019.4.x、2020.3.x、2021.3.x、2022.3.x、2023.2.x、**6000.x.y**全系列LTS版本
+- 支持2019.4.x、2020.3.x、2021.3.x、2022.3.x、2023.2.x、6000.0.x全系列LTS版本
 - 支持所有il2cpp支持的平台
 - 支持团结引擎和鸿蒙平台
 
@@ -61,10 +61,9 @@ HybridCLR从mono的 [mixed mode execution](https://www.mono-project.com/news/201
 
 ## 稳定性状况
 
-HybridCLR已经被广泛验证是非常高效、稳定的Unity热更新解决方案。
+HybridCLR已经被广泛验证是非常高效、稳定的Unity热更新解决方案，良好满足大中型商业项目的稳定和性能要求。
 
-当前发布了**极其稳定**的1.x-5.x正式版本，足以满足大中型商业项目的稳定性要求。
-目前有数千个商业游戏项目完成接入，其中有几百款已经双端上线，上线的项目中包括MMORPG、重度卡牌、重度塔防之类的游戏。**绝大多数头部游戏公司**（如腾讯、网易）都已经在使用HybridCLR。
+目前已经有数千个商业游戏项目接入了HybridCLR，其中有超过千个已经在App Store和Google Player上线，仅仅iOS免费榜前500名中就有近百款使用了HybridCLR。上线的项目中包括MMORPG、重度卡牌、重度塔防之类的游戏。国内绝大多数**Top游戏公司**都已经在使用HybridCLR。
 
 可查看我们已知的头部公司中使用HybridCLR并且已经上线的[项目列表](https://hybridclr.doc.code-philosophy.com/docs/other/businesscase)。
 
