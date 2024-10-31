@@ -962,13 +962,23 @@ namespace interpreter
 	{
 		IL2CPP_ASSERT(klass->castClass->size_inited);
 		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
-		std::memmove(GetNulllableDataOffset(nullableValueTypeObj, klass), data, size);
+		void* dataPtr = GetNulllableDataOffset(nullableValueTypeObj, klass);
+		std::memmove(dataPtr, data, size);
+#if HYBRIDCLR_ENABLE_WRITE_BARRIERS
+		if (klass->castClass->has_references)
+		{
+			HYBRIDCLR_SET_WRITE_BARRIER((void**)dataPtr, size);
+		}
+#endif
 		*GetNulllableHasValueOffset(nullableValueTypeObj, klass) = 1;
 	}
 
 	inline void NewNullableValueType(void* nullableValueTypeObj, void* data, Il2CppClass* klass)
 	{
-		InitNullableValueType(nullableValueTypeObj, data, klass);
+		IL2CPP_ASSERT(klass->castClass->size_inited);
+		uint32_t size = klass->castClass->instance_size - sizeof(Il2CppObject);
+		std::memmove(GetNulllableDataOffset(nullableValueTypeObj, klass), data, size);
+		*GetNulllableHasValueOffset(nullableValueTypeObj, klass) = 1;
 	}
 
 	inline bool IsNullableHasValue(void* nullableValueObj, Il2CppClass* klass)
