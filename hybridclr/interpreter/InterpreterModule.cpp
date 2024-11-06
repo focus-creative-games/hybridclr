@@ -595,20 +595,7 @@ namespace interpreter
 		}
 		IL2CPP_ASSERT(methodInfo->isInterpterImpl);
 
-		metadata::Image* image = metadata::IsInterpreterMethod(methodInfo) ? hybridclr::metadata::MetadataModule::GetImage(methodInfo->klass)
-			: (metadata::Image*)hybridclr::metadata::AOTHomologousImage::FindImageByAssembly(
-				methodInfo->klass->rank ? il2cpp_defaults.corlib->assembly : methodInfo->klass->image->assembly);
-		IL2CPP_ASSERT(image);
-
-		metadata::MethodBody tempMethodBody = {};
-		metadata::MethodBody* methodBody = image->GetMethodBody(methodInfo->token, tempMethodBody);
-		if (methodBody == nullptr || methodBody->ilcodes == nullptr)
-		{
-			TEMP_FORMAT(errMsg, "Method body is null. %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
-			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
-		}
-		InterpMethodInfo* imi = new (HYBRIDCLR_METADATA_MALLOC(sizeof(InterpMethodInfo))) InterpMethodInfo;
-		transform::HiTransform::Transform(image, methodInfo, *methodBody, *imi);
+		InterpMethodInfo* imi = transform::HiTransform::Transform(methodInfo);
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		const_cast<MethodInfo*>(methodInfo)->interpData = imi;
 		return imi;

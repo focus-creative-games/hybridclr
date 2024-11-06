@@ -1353,7 +1353,7 @@ namespace metadata
 			if (exc != NULL)
 			{
 				il2cpp::gc::GarbageCollector::FreeFixed(cache->attributes);
-				IL2CPP_FREE(cache);
+				HYBRIDCLR_FREE(cache);
 				il2cpp::vm::Exception::Raise(exc);
 			}
 		}
@@ -1366,7 +1366,7 @@ namespace metadata
 			// A non-NULL return value indicates some other thread already generated this cache.
 			// We need to cleanup the resources we allocated
 			il2cpp::gc::GarbageCollector::FreeFixed(cache->attributes);
-			IL2CPP_FREE(cache);
+			HYBRIDCLR_FREE(cache);
 			return original;
 		}
 		il2cpp::os::Atomic::FullMemoryBarrier();

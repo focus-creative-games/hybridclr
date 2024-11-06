@@ -9,6 +9,8 @@ namespace hybridclr
 		InterpreterThreadObjectStackSize = 1,
 		InterpreterThreadFrameStackSize = 2,
 		InterpreterThreadExceptionFlowSize = 3,
+		MaxMethodBodyCacheSize = 4,
+		MaxMethodInlineDepth = 5,
 	};
 
 	class RuntimeConfig
@@ -19,20 +21,11 @@ namespace hybridclr
 		static int32_t GetRuntimeOption(RuntimeOptionId optionId);
 		static void SetRuntimeOption(RuntimeOptionId optionId, int32_t value);
 
-		static uint32_t GetInterpreterThreadObjectStackSize()
-		{
-			return (uint32_t)GetRuntimeOption(RuntimeOptionId::InterpreterThreadObjectStackSize);
-		}
-
-		static uint32_t GetInterpreterThreadFrameStackSize()
-		{
-			return (uint32_t)GetRuntimeOption(RuntimeOptionId::InterpreterThreadFrameStackSize);
-		}
-
-		static uint32_t GetInterpreterThreadExceptionFlowSize()
-		{
-			return (uint32_t)GetRuntimeOption(RuntimeOptionId::InterpreterThreadExceptionFlowSize);
-		}
+		static uint32_t GetInterpreterThreadObjectStackSize();
+		static uint32_t GetInterpreterThreadFrameStackSize();
+		static uint32_t GetInterpreterThreadExceptionFlowSize();
+		static int32_t GetMaxMethodBodyCacheSize();
+		static int32_t GetMaxMethodInlineDepth();
 	};
 }
 

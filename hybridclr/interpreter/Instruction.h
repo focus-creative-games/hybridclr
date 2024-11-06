@@ -26,6 +26,8 @@ namespace interpreter
 		//!!!{{OPCODE
 		InitLocals_n_2,
 		InitLocals_n_4,
+		InitInlineLocals_n_2,
+		InitInlineLocals_n_4,
 		LdlocVarVar,
 		LdlocExpandVarVar_i1,
 		LdlocExpandVarVar_u1,
@@ -751,6 +753,8 @@ namespace interpreter
 		StthreadlocalVarVar_n_4,
 		StthreadlocalVarVar_WriteBarrier_n_2,
 		StthreadlocalVarVar_WriteBarrier_n_4,
+		CheckThrowIfNullVar,
+		InitClassStaticCtor,
 		NewArrVarVar,
 		GetArrayLengthVarVar,
 		GetArrayElementAddressAddrVarVar,
@@ -878,6 +882,26 @@ namespace interpreter
 		uint8_t __pad2;
 		uint8_t __pad3;
 		uint32_t size;
+	};
+
+
+	struct IRInitInlineLocals_n_2 : IRCommon
+	{
+		uint16_t size;
+		uint32_t offset;
+	};
+
+
+	struct IRInitInlineLocals_n_4 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t size;
+		uint32_t offset;
+		uint8_t __pad12;
+		uint8_t __pad13;
+		uint8_t __pad14;
+		uint8_t __pad15;
 	};
 
 
@@ -8735,6 +8759,28 @@ namespace interpreter
 		uint8_t __pad7;
 		uint32_t klass;
 		uint32_t size;
+	};
+
+
+	struct IRCheckThrowIfNullVar : IRCommon
+	{
+		uint16_t obj;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+	};
+
+
+	struct IRInitClassStaticCtor : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint64_t klass;
 	};
 
 

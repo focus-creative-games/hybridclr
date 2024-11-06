@@ -47,7 +47,6 @@ namespace hybridclr
 			//const Il2CppClass* declaringKlass;
 			//const char* name;
 			const Il2CppMethodDefinition* aotMethodDef;
-			MethodBody* body;
 		};
 
 		struct SuperSetFieldDefDetail
@@ -68,7 +67,7 @@ namespace hybridclr
 			void InitRuntimeMetadatas() override;
 
 			const Il2CppType* ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName) override;
-			MethodBody* GetMethodBody(uint32_t token, MethodBody& tempMethodBody) override;
+			MethodBody* GetMethodBody(uint32_t token) override;
 			const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
 			Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
 			Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;

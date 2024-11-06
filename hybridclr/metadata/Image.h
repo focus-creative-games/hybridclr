@@ -124,7 +124,7 @@ namespace metadata
 		virtual Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) = 0;
 		virtual const Il2CppMethodDefinition* GetMethodDefinitionFromRawIndex(uint32_t index) = 0;
 
-		virtual MethodBody* GetMethodBody(uint32_t token, MethodBody& tempMethodBody) = 0;
+		virtual MethodBody* GetMethodBody(uint32_t token) = 0;
 		virtual void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) = 0;
 		virtual void InitRuntimeMetadatas() = 0;
 	protected:

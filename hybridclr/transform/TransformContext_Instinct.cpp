@@ -70,18 +70,18 @@ namespace transform
 	typedef Il2CppHashMap<NamespaceAndName, InstinctHandler, NamespaceAndNameHash, NamespaceAndNameEquals> CtorInstinctHandlerMap;
 	static CtorInstinctHandlerMap s_ctorInstinctHandlerMap;
 
-#define IHCreateAddIR(varName, typeName) IR##typeName* varName = ctx.pool.AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName; ctx.AddInst(varName);
+#define IHCreateAddIR(varName, typeName) IR##typeName* varName = ctx.GetPool().AllocIR<IR##typeName>(); varName->type = HiOpcodeEnum::typeName; ctx.AddInst(varName);
 
 
 	static bool IH_object_ctor(TransformContext& ctx, const MethodInfo* method)
 	{
 #if IL2CPP_DEBUG
-		IRCommon* last = ctx.curbb->insts.back();
+		IRCommon* last = ctx.GetCurbb()->insts.back();
 		IL2CPP_ASSERT(last->type == HiOpcodeEnum::LdlocVarVar);
 		IRLdlocVarVar* ldthis = (IRLdlocVarVar*)last;
-		IL2CPP_ASSERT(ldthis->src == 0);
+		IL2CPP_ASSERT(ldthis->dst == ctx.GetEvalStackTopOffset());
 #endif
-		ctx.curbb->insts.pop_back();
+		ctx.GetCurbb()->insts.pop_back();
 		ctx.PopStack();
 		return true;
 	}
@@ -96,7 +96,7 @@ namespace transform
 		il2cpp::vm::Class::SetupFields(klass);
 		il2cpp::vm::Class::SetupFields(klass->castClass);
 
-		IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 		IHCreateAddIR(ir, NullableCtorVarVar);
 		ir->dst = ctx.GetEvalStackOffset_2();
 		ir->data = ctx.GetEvalStackOffset_1();
@@ -115,7 +115,7 @@ namespace transform
 		uint16_t topOffset = ctx.GetEvalStackTopOffset();
 		if (method->parameters_count == 0)
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 1);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
 			IHCreateAddIR(ir, NullableGetValueOrDefaultVarVar);
 			ir->dst = topOffset;
 			ir->obj = topOffset;
@@ -128,7 +128,7 @@ namespace transform
 		}
 		else if (method->parameters_count == 1)
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 			IHCreateAddIR(ir, NullableGetValueOrDefaultVarVar_1);
 			ir->dst = ir->obj = ctx.GetEvalStackOffset_2();
 			ir->defaultValue = topOffset;
@@ -144,7 +144,7 @@ namespace transform
 
 	static bool IH_Nullable_get_HasValue(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 1);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
 		Il2CppClass* klass = method->klass;
 		il2cpp::vm::Class::SetupFields(klass);
 		il2cpp::vm::Class::SetupFields(klass->castClass);
@@ -164,7 +164,7 @@ namespace transform
 
 	static bool IH_Nullable_get_Value(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 1);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
 		Il2CppClass* klass = method->klass;
 		il2cpp::vm::Class::SetupFields(klass);
 		il2cpp::vm::Class::SetupFields(klass->castClass);
@@ -184,7 +184,7 @@ namespace transform
 
 	static bool IH_Array_GetGenericValueImpl(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 		uint16_t topOffset = ctx.GetEvalStackTopOffset();
 		IHCreateAddIR(ir, ArrayGetGenericValueImpl);
 		ir->arr = ctx.GetEvalStackOffset_3();
@@ -196,7 +196,7 @@ namespace transform
 
 	static bool IH_Array_SetGenericValueImpl(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 		uint16_t topOffset = ctx.GetEvalStackTopOffset();
 		IHCreateAddIR(ir, ArraySetGenericValueImpl);
 		ir->arr = ctx.GetEvalStackOffset_3();
@@ -208,7 +208,7 @@ namespace transform
 
 	static bool IH_Interlocked_CompareExchange(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 		uint16_t retIdx = ctx.GetEvalStackOffset_3();
 		uint16_t locationIdx = retIdx;
 		uint16_t valueIdx = ctx.GetEvalStackOffset_2();
@@ -249,7 +249,7 @@ namespace transform
 
 	static bool IH_Interlocked_Exchange(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 		uint16_t retIdx = ctx.GetEvalStackOffset_2();
 		uint16_t locationIdx = retIdx;
 		uint16_t valueIdx = ctx.GetEvalStackOffset_1();
@@ -287,7 +287,7 @@ namespace transform
 
 	static bool IH_JitHelpers_UnsafeEnumCast(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 1);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
 		IHCreateAddIR(ir, UnsafeEnumCast);
 		ir->dst = ctx.GetEvalStackTopOffset();
 		ir->src = ctx.GetEvalStackTopOffset();
@@ -322,7 +322,7 @@ namespace transform
 
 	static bool IH_Assembly_GetExecutingAssembly(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 0);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 0);
 		IHCreateAddIR(ir, AssemblyGetExecutingAssembly);
 		ir->ret = ctx.GetEvalStackNewTopOffset();
 		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -331,7 +331,7 @@ namespace transform
 
 	static bool IH_MethodBase_GetCurrentMethod(TransformContext& ctx, const MethodInfo* method)
 	{
-		IL2CPP_ASSERT(ctx.evalStackTop >= 0);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 0);
 		IHCreateAddIR(ir, MethodBaseGetCurrentMethod);
 		ir->ret = ctx.GetEvalStackNewTopOffset();
 		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -344,7 +344,7 @@ namespace transform
 		{
 			return false;
 		}
-		IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 		IHCreateAddIR(ir, CtorVector2);
 		ir->obj = ctx.GetEvalStackOffset_3();
 		ir->x = ctx.GetEvalStackOffset_2();
@@ -359,7 +359,7 @@ namespace transform
 		{
 		case 2:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 			IHCreateAddIR(ir, CtorVector3_2);
 			ir->obj = ctx.GetEvalStackOffset_3();
 			ir->x = ctx.GetEvalStackOffset_2();
@@ -369,7 +369,7 @@ namespace transform
 		}
 		case 3:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 4);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 4);
 			IHCreateAddIR(ir, CtorVector3_3);
 			ir->obj = ctx.GetEvalStackOffset_4();
 			ir->x = ctx.GetEvalStackOffset_3();
@@ -388,7 +388,7 @@ namespace transform
 		{
 		case 2:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 			IHCreateAddIR(ir, CtorVector4_2);
 			ir->obj = ctx.GetEvalStackOffset_3();
 			ir->x = ctx.GetEvalStackOffset_2();
@@ -398,7 +398,7 @@ namespace transform
 		}
 		case 3:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 4);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 4);
 			IHCreateAddIR(ir, CtorVector4_3);
 			ir->obj = ctx.GetEvalStackOffset_4();
 			ir->x = ctx.GetEvalStackOffset_3();
@@ -409,7 +409,7 @@ namespace transform
 		}
 		case 4:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 5);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 5);
 			IHCreateAddIR(ir, CtorVector4_4);
 			ir->obj = ctx.GetEvalStackOffset_5();
 			ir->x = ctx.GetEvalStackOffset_4();
@@ -426,18 +426,10 @@ namespace transform
 	static bool IH_ByReference_get_Value(TransformContext& ctx, const MethodInfo* method)
 	{
 		// ByReference<T>.Value equals to *this
-		IL2CPP_ASSERT(ctx.evalStackTop >= 1);
-		TemporaryMemoryArena& pool = ctx.pool;
-		IRBasicBlock*& curbb = ctx.curbb;
-		IR2OffsetMap* ir2offsetMap = ctx.ir2offsetMap;
-		uint32_t ipOffset = ctx.ipOffset;
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
 
-		CreateAddIR(ir, LdindVarVar_i1);
-#if HYBRIDCLR_ARCH_64
-		ir->type = HiOpcodeEnum::LdindVarVar_i8;
-#else
-		ir->type = HiOpcodeEnum::LdindVarVar_i4;
-#endif
+		IHCreateAddIR(ir, LdindVarVar_i1);
+		ir->type = ARCH_ARGUMENT(HiOpcodeEnum::LdindVarVar_i4, HiOpcodeEnum::LdindVarVar_i8);
 		ir->dst = ir->src = ctx.GetEvalStackTopOffset();
 		ctx.PopStack();
 		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
@@ -550,7 +542,7 @@ namespace transform
 	{
 		Il2CppClass* klass = method->klass;
 		IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-		IL2CPP_ASSERT(ctx.evalStackTop > 0);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() > 0);
 		il2cpp::vm::Class::SetupFields(klass);
 		il2cpp::vm::Class::SetupFields(klass->castClass);
 		IHCreateAddIR(ir, NullableNewVarVar);
@@ -568,7 +560,7 @@ namespace transform
 		if (klass->rank == paramCount)
 		{
 			IHCreateAddIR(ir, NewMdArrVarVar_length);
-			ir->lengthIdxs = ctx.GetEvalStackOffset(ctx.evalStackTop - paramCount);
+			ir->lengthIdxs = ctx.GetEvalStackOffset(ctx.GetEvalStackTop() - paramCount);
 			ctx.PopStackN(paramCount);
 			ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 			ir->arr = ctx.GetEvalStackTopOffset();
@@ -577,8 +569,8 @@ namespace transform
 		else if (klass->rank * 2 == paramCount)
 		{
 			IHCreateAddIR(ir, NewMdArrVarVar_length_bound);
-			ir->lengthIdxs = ctx.GetEvalStackOffset(ctx.evalStackTop - paramCount);
-			ir->lowerBoundIdxs = ctx.GetEvalStackOffset(ctx.evalStackTop - klass->rank);
+			ir->lengthIdxs = ctx.GetEvalStackOffset(ctx.GetEvalStackTop() - paramCount);
+			ir->lowerBoundIdxs = ctx.GetEvalStackOffset(ctx.GetEvalStackTop() - klass->rank);
 			ctx.PopStackN(paramCount);
 			ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 			ir->arr = ctx.GetEvalStackTopOffset();
@@ -595,7 +587,7 @@ namespace transform
 	{
 		uint8_t paramCount = method->parameters_count;
 		Il2CppClass* klass = method->klass;
-		IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 #if HYBRIDCLR_UNITY_2021_OR_NEW
 		const MethodInfo* ctor = il2cpp::vm::Class::GetMethodFromName(method->klass, ".ctor", 2);
 		if (ctor && ctor->methodPointer && !ctor->isInterpterImpl)
@@ -629,7 +621,7 @@ namespace transform
 		{
 			return false;
 		}
-		IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 		IHCreateAddIR(ir, NewVector2);
 		ir->obj = ir->x = ctx.GetEvalStackOffset_2();
 		ir->y = ctx.GetEvalStackOffset_1();
@@ -644,7 +636,7 @@ namespace transform
 		{
 		case 2:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 			IHCreateAddIR(ir, NewVector3_2);
 			ir->obj = ir->x = ctx.GetEvalStackOffset_2();
 			ir->y = ctx.GetEvalStackOffset_1();
@@ -654,7 +646,7 @@ namespace transform
 		}
 		case 3:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 			IHCreateAddIR(ir, NewVector3_3);
 			ir->obj = ir->x = ctx.GetEvalStackOffset_3();
 			ir->y = ctx.GetEvalStackOffset_2();
@@ -673,7 +665,7 @@ namespace transform
 		{
 		case 2:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 2);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 			IHCreateAddIR(ir, NewVector4_2);
 			ir->obj = ir->x = ctx.GetEvalStackOffset_2();
 			ir->y = ctx.GetEvalStackOffset_1();
@@ -683,7 +675,7 @@ namespace transform
 		}
 		case 3:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 3);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 3);
 			IHCreateAddIR(ir, NewVector4_3);
 			ir->obj = ir->x = ctx.GetEvalStackOffset_3();
 			ir->y = ctx.GetEvalStackOffset_2();
@@ -694,7 +686,7 @@ namespace transform
 		}
 		case 4:
 		{
-			IL2CPP_ASSERT(ctx.evalStackTop >= 4);
+			IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 4);
 			IHCreateAddIR(ir, NewVector4_4);
 			ir->obj = ir->x = ctx.GetEvalStackOffset_4();
 			ir->y = ctx.GetEvalStackOffset_3();
@@ -712,7 +704,7 @@ namespace transform
 	{
 		// new ByReference<T>(ref T value) don't need to do anything
 		Il2CppClass* klass = method->klass;
-		IL2CPP_ASSERT(ctx.evalStackTop > 0);
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() > 0);
 		ctx.PopStack();
 		ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
 		return true;

@@ -1702,6 +1702,22 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    ip += 8;
 				    continue;
 				}
+				case HiOpcodeEnum::InitInlineLocals_n_2:
+				{
+					uint16_t __size = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					InitDefaultN(localVarBase + __offset, __size);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitInlineLocals_n_4:
+				{
+					uint32_t __size = *(uint32_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					InitDefaultN(localVarBase + __offset, __size);
+				    ip += 16;
+				    continue;
+				}
 				case HiOpcodeEnum::LdlocVarVar:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
@@ -10290,6 +10306,20 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    std::memmove(_fieldAddr_, (void*)(localVarBase + __data), __size);
 				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_fieldAddr_, (size_t)__size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CheckThrowIfNullVar:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitClassStaticCtor:
+				{
+					uint64_t __klass = *(uint64_t*)(ip + 8);
+				    RuntimeInitClassCCtorWithoutInitClass((Il2CppClass*)(__klass));
 				    ip += 16;
 				    continue;
 				}

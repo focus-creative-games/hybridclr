@@ -121,19 +121,13 @@ namespace metadata
 		}
 	}
 
-	MethodBody* ConsistentAOTHomologousImage::GetMethodBody(uint32_t token, MethodBody& tempMethodBody)
+	MethodBody* ConsistentAOTHomologousImage::GetMethodBody(uint32_t token)
 	{
-		auto it = _token2MethodBodies.find(token);
-		if (it != _token2MethodBodies.end())
-		{
-			return it->second;
-		}
 		uint32_t rowIndex = DecodeTokenRowIndex(token);
 		IL2CPP_ASSERT(rowIndex > 0);
 		TbMethod methodData = _rawImage->ReadMethod(rowIndex);
-		MethodBody* body = new (HYBRIDCLR_METADATA_MALLOC(sizeof(MethodBody))) MethodBody();
+		MethodBody* body = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
 		ReadMethodBody(*_methodDefs[rowIndex - 1], methodData, *body);
-		_token2MethodBodies.insert({ token, body });
 		return body;
 	}
 

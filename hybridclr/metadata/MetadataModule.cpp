@@ -39,6 +39,12 @@ namespace metadata
         Assembly::InitializePlaceHolderAssemblies();
     }
 
+    Image* MetadataModule::GetUnderlyingInterpreterImage(const MethodInfo* methodInfo)
+    {
+        return metadata::IsInterpreterMethod(methodInfo) ? hybridclr::metadata::MetadataModule::GetImage(methodInfo->klass)
+            : (metadata::Image*)hybridclr::metadata::AOTHomologousImage::FindImageByAssembly(
+                methodInfo->klass->rank ? il2cpp_defaults.corlib->assembly : methodInfo->klass->image->assembly);
+    }
 
     LoadImageErrorCode MetadataModule::LoadMetadataForAOTAssembly(const void* dllBytes, uint32_t dllSize, HomologousImageMode mode)
     {

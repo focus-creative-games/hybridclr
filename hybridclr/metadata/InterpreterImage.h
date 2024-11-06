@@ -167,32 +167,18 @@ namespace metadata
 			return rawIndex != 0 ? EncodeImageAndMetadataIndex(_index, rawIndex) : 0;
 		}
 
-		MethodBody* GetMethodBody(uint32_t token, MethodBody& tempMethodBody) override
+		MethodBody* GetMethodBody(uint32_t token) override
 		{
 			IL2CPP_ASSERT(DecodeTokenTableType(token) == TableType::METHOD);
 			uint32_t rowIndex = DecodeTokenRowIndex(token);
 			IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= (uint32_t)_methodDefines.size());
 
-			auto it = _methodBodyCache.find(rowIndex);
-			if (it != _methodBodyCache.end())
-			{
-				return it->second;
-			}
+
 			const Il2CppMethodDefinition* methodDef = &_methodDefines[rowIndex - 1];
 			bool isGenericMethod = methodDef->genericContainerIndex != kGenericContainerIndexInvalid || _typesDefines[DecodeMetadataIndex(methodDef->declaringType)].genericContainerIndex != kGenericContainerIndexInvalid;
 
 			TbMethod methodData = _rawImage->ReadMethod(rowIndex);
-			MethodBody* resultMethodBody = nullptr;
-			// only cache generic method
-			if (isGenericMethod)
-			{
-				resultMethodBody = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
-				_methodBodyCache.insert({ rowIndex, resultMethodBody });
-			}
-			else
-			{
-				resultMethodBody = &tempMethodBody;
-			}
+			MethodBody* resultMethodBody = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
 			ReadMethodBody(*methodDef, methodData, *resultMethodBody);
 			return resultMethodBody;
 		}
@@ -710,7 +696,6 @@ namespace metadata
 		std::vector<InterfaceOffsetInfo> _interfaceOffsets;
 
 		std::vector<Il2CppMethodDefinition> _methodDefines;
-		Il2CppHashMap<uint32_t, MethodBody*, il2cpp::utils::PassThroughHash<uint32_t>> _methodBodyCache;
 
 		std::vector<ParamDetail> _params;
 		std::vector<int32_t>* _paramRawIndex2ActualParamIndex; // rawIindex = rowIndex - 1; because local function, param list count maybe less than actual method param count

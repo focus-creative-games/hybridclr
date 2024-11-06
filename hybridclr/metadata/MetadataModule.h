@@ -49,6 +49,9 @@ namespace metadata
 		{
 			return GetImage(DecodeImageIndex(encodedIndex));
 		}
+		
+		static Image* GetUnderlyingInterpreterImage(const MethodInfo* method);
+
 
 		static const char* GetStringFromEncodeIndex(StringIndex index)
 		{
