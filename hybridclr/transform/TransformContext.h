@@ -123,9 +123,6 @@ namespace transform
 
 		TemporaryMemoryArena& pool;
 
-		const Il2CppGenericContext* genericContext;
-		const Il2CppGenericContainer* klassContainer;
-		const Il2CppGenericContainer* methodContainer;
 		int32_t actualParamCount;
 
 		std::set<uint32_t> splitOffsets;
