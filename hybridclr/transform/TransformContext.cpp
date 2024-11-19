@@ -2219,7 +2219,7 @@ else \
 			for (uint32_t i = 0; i < methodInfo->parameters_count; i++)
 			{
 				ArgVarInfo& arg = args[idx + i];
-				arg.type = InflateIfNeeded((Il2CppType*)(GET_METHOD_PARAMETER_TYPE(methodInfo->parameters[i])), genericContext, true);
+				arg.type = GET_METHOD_PARAMETER_TYPE(methodInfo->parameters[i]);
 				arg.klass = il2cpp::vm::Class::FromIl2CppType(arg.type);
 				arg.argOffset = idx + i;
 				arg.argLocOffset = localVarOffset + totalArgSize;
