@@ -153,9 +153,6 @@ namespace metadata
 		return true;
 	}
 
-	const int32_t kMaxInlineableCodeLength = 16;
-
-
 	static bool ComputeInlinable(metadata::Image* image, uint32_t token)
 	{
 		metadata::MethodBody* methodBody = MethodBodyCache::GetMethodBody(image, token);
@@ -164,7 +161,7 @@ namespace metadata
 			return false;
 		}
 
-		if (methodBody->codeSize > kMaxInlineableCodeLength || !methodBody->exceptionClauses.empty())
+		if (methodBody->codeSize > RuntimeConfig::GetMaxInlineableMethodBodySize() || !methodBody->exceptionClauses.empty())
 		{
 			return false;
 		}

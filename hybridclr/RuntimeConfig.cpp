@@ -9,6 +9,7 @@ namespace hybridclr
 	static int32_t s_threadExceptionFlowSize = 512;
 	static int32_t s_maxMethodBodyCacheSize = 1024;
 	static int32_t s_maxMethodInlineDepth = 3;
+	static int32_t s_maxInlineableMethodBodySize = 16;
 
 
 
@@ -86,6 +87,11 @@ namespace hybridclr
 	int32_t RuntimeConfig::GetMaxMethodInlineDepth()
 	{
 		return s_maxMethodInlineDepth;
+	}
+
+	int32_t RuntimeConfig::GetMaxInlineableMethodBodySize()
+	{
+		return s_maxInlineableMethodBodySize;
 	}
 
 }

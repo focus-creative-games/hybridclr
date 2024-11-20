@@ -11,6 +11,7 @@ namespace hybridclr
 		InterpreterThreadExceptionFlowSize = 3,
 		MaxMethodBodyCacheSize = 4,
 		MaxMethodInlineDepth = 5,
+		MaxInlineableMethodBodySize = 6,
 	};
 
 	class RuntimeConfig
@@ -26,6 +27,7 @@ namespace hybridclr
 		static uint32_t GetInterpreterThreadExceptionFlowSize();
 		static int32_t GetMaxMethodBodyCacheSize();
 		static int32_t GetMaxMethodInlineDepth();
+		static int32_t GetMaxInlineableMethodBodySize();
 	};
 }
 
