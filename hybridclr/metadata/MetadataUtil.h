@@ -377,6 +377,9 @@ namespace metadata
 
     const Il2CppGenericInst* TryInflateGenericInst(const Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext);
 
+	bool HasNotInstantiatedGenericType(const Il2CppType* type);
+    bool HasNotInstantiatedGenericType(const Il2CppGenericInst* inst);
+
 #pragma endregion
 
 

@@ -14,5 +14,8 @@ namespace hybridclr
 
 		static int32_t GetRuntimeOption(int32_t optionId);
 		static void SetRuntimeOption(int32_t optionId, int32_t value);
+
+		static int32_t PreJitClass(Il2CppReflectionType* type);
+		static int32_t PreJitMethod(Il2CppReflectionMethod* method);
 	};
 }
