@@ -4746,7 +4746,6 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    StackObject* _frameBasePtr = (StackObject*)(void*)(localVarBase + __ctorFrameBase);
 				    std::memmove(_frameBasePtr + 1, (void*)(localVarBase + __argBase), __argStackObjectNum * sizeof(StackObject)); // move arg
 				    _frameBasePtr->ptr = (StackObject*)(void*)(localVarBase + __obj);
-				    int32_t _typeSize = GetTypeValueSize(__method->klass);
 				    CALL_INTERP_VOID((ip + 16), __method, _frameBasePtr);
 				    continue;
 				}
