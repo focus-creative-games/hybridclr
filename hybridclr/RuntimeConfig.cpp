@@ -9,7 +9,7 @@ namespace hybridclr
 	static int32_t s_threadExceptionFlowSize = 512;
 	static int32_t s_maxMethodBodyCacheSize = 1024;
 	static int32_t s_maxMethodInlineDepth = 3;
-	static int32_t s_maxInlineableMethodBodySize = 16;
+	static int32_t s_maxInlineableMethodBodySize = 32;
 
 
 
