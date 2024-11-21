@@ -2273,8 +2273,11 @@ else \
 		{
 			if (instanceCall)
 			{
-				CreateAddIR(irCheckNull, CheckThrowIfNullVar);
-				irCheckNull->obj = args[0].argLocOffset;
+				if (std::strcmp(methodInfo->name, ".ctor"))
+				{
+					CreateAddIR(irCheckNull, CheckThrowIfNullVar);
+					irCheckNull->obj = args[0].argLocOffset;
+				}
 			}
 			else
 			{
