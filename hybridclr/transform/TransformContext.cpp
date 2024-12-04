@@ -1102,9 +1102,25 @@ namespace transform
 	}
 
 	TransformContext::TransformContext(hybridclr::metadata::Image* image, const MethodInfo* methodInfo, metadata::MethodBody& body, TemporaryMemoryArena& pool, il2cpp::utils::dynamic_array<uint64_t>& resolveDatas)
-		: image(image), methodInfo(methodInfo), body(body), pool(pool), resolveDatas(resolveDatas)
+		: image(image), methodInfo(methodInfo), body(body), pool(pool), resolveDatas(resolveDatas),
+		actualParamCount(0), ip2bb(nullptr), curbb(nullptr), args(nullptr), locals(nullptr), evalStack(nullptr),
+		evalStackTop(0), evalStackBaseOffset(0), curStackSize(0), maxStackSize(0),
+		nextFlowIdx(0), ipBase(nullptr), ip(nullptr), ipOffset(0), ir2offsetMap(nullptr),
+		prefixFlags(0), shareMethod(nullptr), totalIRSize(0), totalArgSize(0), totalArgLocalSize(0), initLocals(false)
 	{
 
+	}
+
+	TransformContext::~TransformContext()
+	{
+		for (IRBasicBlock* bb : irbbs)
+		{
+			bb->~IRBasicBlock();
+		}
+		if (ir2offsetMap)
+		{
+			delete ir2offsetMap;
+		}
 	}
 
 	uint32_t TransformContext::GetOrAddResolveDataIndex(const void* ptr)
@@ -2188,6 +2204,7 @@ else \
 		IRBasicBlock* endBb = pool.NewAny<IRBasicBlock>();
 		*endBb = { true, false, body.codeSize, 0 };
 		ip2bb[body.codeSize] = endBb;
+		irbbs.push_back(endBb);
 
 		curbb = irbbs[0];
 
@@ -5605,7 +5622,6 @@ ir->ele = ele.locOffset;
 				std::memcpy(tranCodes + tranOffset, &ir->type, irSize);
 				tranOffset += irSize;
 			}
-			bb->~IRBasicBlock();
 		}
 		IL2CPP_ASSERT(tranOffset == totalIRSize);
 

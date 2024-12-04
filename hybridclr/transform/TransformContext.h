@@ -134,6 +134,9 @@ namespace transform
 		EvalStackVarInfo* evalStack;
 		int32_t evalStackTop;
 		int32_t evalStackBaseOffset;
+		int32_t maxStackSize;
+		int32_t curStackSize;
+
 		il2cpp::utils::dynamic_array<uint64_t>& resolveDatas;
 		Il2CppHashMap<uint32_t, uint32_t, il2cpp::utils::PassThroughHash<uint32_t>> token2DataIdxs;
 		Il2CppHashMap<const void*, uint32_t, il2cpp::utils::PassThroughHash<const void*>> ptr2DataIdxs;
@@ -142,8 +145,6 @@ namespace transform
 		std::vector<FlowInfo*> pendingFlows;
 		int32_t nextFlowIdx;
 
-		int32_t maxStackSize;
-		int32_t curStackSize;
 		const byte* ipBase;
 		const byte* ip;
 		uint32_t ipOffset;
@@ -164,6 +165,7 @@ namespace transform
 	public:
 
 		TransformContext(hybridclr::metadata::Image* image, const MethodInfo* methodInfo, metadata::MethodBody& body, TemporaryMemoryArena& pool, il2cpp::utils::dynamic_array<uint64_t>& resolveDatas);
+		~TransformContext();
 
 		static void InitializeInstinctHandlers();
 
