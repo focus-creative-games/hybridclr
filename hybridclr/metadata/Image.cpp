@@ -142,7 +142,7 @@ namespace metadata
         type.numsizes = reader.ReadCompressedUint32();
         if (type.numsizes > 0)
         {
-            type.sizes = (int*)alloca(type.numsizes * sizeof(int));
+            type.sizes = (int*)HYBRIDCLR_CALLOC(type.numsizes, sizeof(int));
             for (uint8_t i = 0; i < type.numsizes; i++)
             {
                 type.sizes[i] = reader.ReadCompressedUint32();
@@ -155,7 +155,7 @@ namespace metadata
         type.numlobounds = reader.ReadCompressedUint32();
         if (type.numlobounds > 0)
         {
-            type.lobounds = (int*)alloca(type.numlobounds * sizeof(int));
+            type.lobounds = (int*)HYBRIDCLR_CALLOC(type.numlobounds, sizeof(int));
             for (uint8_t i = 0; i < type.numlobounds; i++)
             {
                 type.lobounds[i] = reader.ReadCompressedInt32();
