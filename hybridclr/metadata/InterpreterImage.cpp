@@ -1247,31 +1247,19 @@ namespace metadata
 	CustomAttributesCache* InterpreterImage::GenerateCustomAttributesCacheInternal(CustomAttributeIndex index)
 	{
 		IL2CPP_ASSERT(index != kCustomAttributeIndexInvalid);
+		IL2CPP_ASSERT(index < (CustomAttributeIndex)_customAttributeHandles.size());
 		CustomAttributesCache* cache = _customAttribtesCaches[index];
 		if (cache)
 		{
 			return cache;
 		}
-		IL2CPP_ASSERT(index < (CustomAttributeIndex)_customAttributeHandles.size());
 
 		Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[index];
-
-		il2cpp::os::FastAutoLock metaLock(&il2cpp::vm::g_MetadataLock);
-		cache = _customAttribtesCaches[index];
-		if (cache)
-		{
-			return cache;
-		}
 
 		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
 
 		cache = (CustomAttributesCache*)IL2CPP_CALLOC(1, sizeof(CustomAttributesCache));
-		int32_t count;
-#ifdef HYBRIDCLR_UNITY_2021_OR_NEW
-		count = (int32_t)(_customAttributeHandles[index + 1].startOffset - typeRange.startOffset);
-#else
-		count = (int32_t)typeRange.count;
-#endif
+		int32_t count= (int32_t)typeRange.count;
 		cache->count = count;
 		cache->attributes = (Il2CppObject**)il2cpp::gc::GarbageCollector::AllocateFixed(sizeof(Il2CppObject*) * count, 0);
 
@@ -1303,6 +1291,16 @@ namespace metadata
 			HYBRIDCLR_SET_WRITE_BARRIER((void**)cache->attributes + i);
 		}
 
+		il2cpp::os::FastAutoLock metaLock(&il2cpp::vm::g_MetadataLock);
+		CustomAttributesCache* original = _customAttribtesCaches[index];
+		if (original)
+		{
+			// A non-NULL return value indicates some other thread already generated this cache.
+			// We need to cleanup the resources we allocated
+			il2cpp::gc::GarbageCollector::FreeFixed(cache->attributes);
+			HYBRIDCLR_FREE(cache);
+			return original;
+		}
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		_customAttribtesCaches[index] = cache;
 		return cache;
@@ -1311,16 +1309,8 @@ namespace metadata
 	CustomAttributesCache* InterpreterImage::GenerateCustomAttributesCacheInternal(CustomAttributeIndex index)
 	{
 		IL2CPP_ASSERT(index != kCustomAttributeIndexInvalid);
-		CustomAttributesCache* cache = _customAttribtesCaches[index];
-		if (cache)
-		{
-			return cache;
-		}
 		IL2CPP_ASSERT(index < (CustomAttributeIndex)_customAttributeHandles.size());
-
-		Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[index];
-
-		cache = _customAttribtesCaches[index];
+		CustomAttributesCache* cache = _customAttribtesCaches[index];
 		if (cache)
 		{
 			return cache;
@@ -1328,6 +1318,7 @@ namespace metadata
 
 		hybridclr::interpreter::ExecutingInterpImageScope scope(hybridclr::interpreter::InterpreterModule::GetCurrentThreadMachineState(), this->_il2cppImage);
 
+		Il2CppCustomAttributeTypeRange& typeRange = _customAttributeHandles[index];
 		void* start;
 		void* end;
 		std::tie(start, end) = CreateCustomAttributeDataTuple(&typeRange);
