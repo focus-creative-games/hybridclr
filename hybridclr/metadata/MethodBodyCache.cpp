@@ -161,7 +161,7 @@ namespace metadata
 			return false;
 		}
 
-		if (methodBody->codeSize > RuntimeConfig::GetMaxInlineableMethodBodySize() || !methodBody->exceptionClauses.empty())
+		if ((int32_t)methodBody->codeSize > RuntimeConfig::GetMaxInlineableMethodBodySize() || !methodBody->exceptionClauses.empty())
 		{
 			return false;
 		}
