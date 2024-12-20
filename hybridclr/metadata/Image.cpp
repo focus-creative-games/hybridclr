@@ -957,11 +957,9 @@ namespace metadata
             IL2CPP_ASSERT(genericInstantiation == nullptr);
             Il2CppClass* arrayKlass = il2cpp::vm::Class::FromIl2CppType(type);
             il2cpp::vm::Class::SetupMethods(arrayKlass);
-            //const Il2CppType* genericClassInstArgv[] = { &arrayKlass->element_class->byval_arg };
             const Il2CppType** genericClassInstArgv = genericContext && genericContext->class_inst ? genericContext->class_inst->type_argv : nullptr;
             const Il2CppType** genericMethodInstArgv = genericContext && genericContext->method_inst ? genericContext->method_inst->type_argv : nullptr;
 
-            // FIXME MEMORY LEAK
             for (uint16_t i = 0; i < arrayKlass->method_count; i++)
             {
                 const MethodInfo* method = arrayKlass->methods[i];

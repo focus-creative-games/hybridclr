@@ -961,8 +961,6 @@ namespace metadata
 		case IL2CPP_TYPE_OBJECT:
 		{
 			ConvertBoxedValue(writer, reader, writeType);
-			//*(Il2CppObject**)data = ReadBoxedValue(reader);
-			// FIXME memory barrier
 			break;
 		}
 		case IL2CPP_TYPE_CLASS:
@@ -1215,12 +1213,8 @@ namespace metadata
 					TEMP_FORMAT(errMsg, "CustomAttribute field missing. klass:%s.%s field:%s", klass->namespaze, klass->name, cstrName);
 					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeInitializationException(errMsg, nullptr));
 				}
-				Il2CppReflectionField* refField = il2cpp::vm::Reflection::GetFieldObject(klass, field);
 				IL2CPP_ASSERT(IsTypeEqual(&fieldOrPropType, field->type));
-				uint32_t fieldSize = GetTypeValueSize(&fieldOrPropType);
-				std::memcpy((byte*)obj + field->offset, &value, fieldSize);
-				//fixme MEMORY BARRIER
-				IL2CPP_ASSERT(refField);
+				il2cpp::vm::Field::SetValue(obj, field, &value);
 			}
 			else
 			{

@@ -2034,7 +2034,6 @@ namespace transform
 		}
 		else
 		{
-			// FIXME memory leak
 			return il2cpp::metadata::GenericMetadata::InflateIfNeeded(type, context, inflateMethodVars);
 		}
 	}
@@ -2249,7 +2248,6 @@ else \
 		for (size_t i = 0; i < body.localVars.size(); i++)
 		{
 			LocVarInfo& local = locals[i];
-			// FIXME memory leak
 			local.type = InflateIfNeeded(body.localVars[i], genericContext, true);
 			local.klass = il2cpp::vm::Class::FromIl2CppType(local.type);
 			il2cpp::vm::Class::SetupFields(local.klass);
@@ -5432,7 +5430,6 @@ ir->ele = ele.locOffset;
 					}
 					else
 					{
-						// deref object. FIXME gc memory barrier
 #if HYBRIDCLR_ARCH_64
 						CreateAddIR(ir, LdindVarVar_i8);
 #else

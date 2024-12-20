@@ -263,7 +263,6 @@ namespace metadata
 			if (!IsSameOverrideType(t1->data.generic_class->type, t2->data.generic_class->type))
 				return false;
 
-			/* FIXME: we should probably just compare the instance pointers directly.  */
 			for (uint32_t i = 0; i < i1->type_argc; ++i)
 			{
 				if (!IsSameOverrideType(i1->type_argv[i], i2->type_argv[i]))
@@ -407,7 +406,6 @@ namespace metadata
 			if (!IsMatchSigType(dstType->data.generic_class->type, sigType->data.generic_class->type, klassGenericContainer, methodGenericContainer))
 				return false;
 
-			/* FIXME: we should probably just compare the instance pointers directly.  */
 			for (uint32_t i = 0; i < i1->type_argc; ++i)
 			{
 				if (!IsMatchSigType(i1->type_argv[i], i2->type_argv[i], klassGenericContainer, methodGenericContainer))
@@ -499,7 +497,6 @@ namespace metadata
 			if (!IsMatchSigType(dstType->data.generic_class->type, sigType->data.generic_class->type, klassInstArgv, methodInstArgv))
 				return false;
 
-			/* FIXME: we should probably just compare the instance pointers directly.  */
 			for (uint32_t i = 0; i < i1->type_argc; ++i)
 			{
 				if (!IsMatchSigType(i1->type_argv[i], i2->type_argv[i], klassInstArgv, methodInstArgv))

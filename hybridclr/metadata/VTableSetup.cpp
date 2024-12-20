@@ -80,7 +80,6 @@ namespace metadata
 		const char* ns = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->namespaceIndex);
 		const char* name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
 		const Il2CppType* parentType = nullptr;
-		// FIXME. cache 
 		if (typeDef->parentIndex != kInvalidIndex)
 		{
 			parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
