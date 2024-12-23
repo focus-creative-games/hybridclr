@@ -653,6 +653,7 @@ namespace metadata
 		void InitMethodDefs();
 		void InitMethodImpls0();
 		void InitNestedClass();
+		void InitClassLayouts0();
 		void InitClassLayouts();
 		void InitCustomAttributes();
 		void InitProperties();

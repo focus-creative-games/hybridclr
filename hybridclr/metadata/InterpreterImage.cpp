@@ -167,6 +167,7 @@ namespace metadata
 		InitMethodSemantics();
 		InitConsts();
 		InitCustomAttributes();
+		InitClassLayouts0();
 		InitTypeDefs_2();
 		InitClassLayouts();
 		InitInterfaces();
@@ -1727,7 +1728,7 @@ namespace metadata
 		}
 	}
 
-	void InterpreterImage::InitClassLayouts()
+	void InterpreterImage::InitClassLayouts0()
 	{
 		const Table& classLayoutTb = _rawImage->GetTable(TableType::CLASSLAYOUT);
 		for (uint32_t i = 0; i < classLayoutTb.rowNum; i++)
@@ -1740,7 +1741,10 @@ namespace metadata
 				typeSizes.instance_size = data.classSize + sizeof(Il2CppObject);
 			}
 		}
+	}
 
+	void InterpreterImage::InitClassLayouts()
+	{
 		ClassFieldLayoutCalculator calculator(this);
 		for (Il2CppTypeDefinition& type : _typesDefines)
 		{
