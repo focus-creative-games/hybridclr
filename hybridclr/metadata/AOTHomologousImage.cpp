@@ -23,7 +23,7 @@ namespace metadata
 
 	void AOTHomologousImage::RegisterLocked(AOTHomologousImage* image, il2cpp::os::FastAutoLock& lock)
 	{
-		IL2CPP_ASSERT(FindImageByAssemblyLocked(image->_aotAssembly, lock) == nullptr);
+		IL2CPP_ASSERT(FindImageByAssemblyLocked(image->_targetAssembly, lock) == nullptr);
 		s_images.push_back(image);
 	}
 
@@ -31,7 +31,7 @@ namespace metadata
 	{
 		for (AOTHomologousImage* image : s_images)
 		{
-			if (image->_aotAssembly == ass)
+			if (image->_targetAssembly == ass)
 			{
 				return image;
 			}
@@ -60,7 +60,7 @@ namespace metadata
 		{
 			return LoadImageErrorCode::HOMOLOGOUS_ONLY_SUPPORT_AOT_ASSEMBLY;
 		}
-		_aotAssembly = aotAss;
+		_targetAssembly = aotAss;
 
 		return LoadImageErrorCode::OK;
 	}
@@ -71,7 +71,7 @@ namespace metadata
 		const char* typeNameStr = _rawImage->GetStringFromRawIndex(typeName);
 		const char* typeNamespaceStr = _rawImage->GetStringFromRawIndex(typeNamespace);
 
-		const Il2CppImage* aotImage = il2cpp::vm::Assembly::GetImage(_aotAssembly);
+		const Il2CppImage* aotImage = il2cpp::vm::Assembly::GetImage(_targetAssembly);
 		Il2CppClass* klass = il2cpp::vm::Class::FromName(aotImage, typeNamespaceStr, typeNameStr);
 		if (klass)
 		{

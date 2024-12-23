@@ -246,8 +246,6 @@ namespace metadata
 				return strcmp(method->name, "Invoke") == 0;
 			}
 		}
-
-		static LoadImageErrorCode LoadMetadataForAOTAssembly(const void* dllBytes, uint32_t dllSize, HomologousImageMode mode);
 	private:
 
 	};

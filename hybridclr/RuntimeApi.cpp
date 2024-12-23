@@ -28,7 +28,7 @@ namespace hybridclr
 		{
 			il2cpp::vm::Exception::RaiseNullReferenceException();
 		}
-		return (int32_t)hybridclr::metadata::MetadataModule::LoadMetadataForAOTAssembly(il2cpp::vm::Array::GetFirstElementAddress(dllBytes), il2cpp::vm::Array::GetByteLength(dllBytes), (hybridclr::metadata::HomologousImageMode)mode);
+		return (int32_t)hybridclr::metadata::Assembly::LoadMetadataForAOTAssembly(il2cpp::vm::Array::GetFirstElementAddress(dllBytes), il2cpp::vm::Array::GetByteLength(dllBytes), (hybridclr::metadata::HomologousImageMode)mode);
 	}
 
 	int32_t RuntimeApi::GetRuntimeOption(int32_t optionId)

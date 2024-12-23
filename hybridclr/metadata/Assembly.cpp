@@ -16,6 +16,8 @@
 #include "Image.h"
 #include "MetadataModule.h"
 #include "MetadataUtil.h"
+#include "ConsistentAOTHomologousImage.h"
+#include "SuperSetAOTHomologousImage.h"
 
 namespace hybridclr
 {
@@ -171,6 +173,52 @@ namespace metadata
         image->InitRuntimeMetadatas();
         return ass;
     }
+
+    LoadImageErrorCode Assembly::LoadMetadataForAOTAssembly(const void* dllBytes, uint32_t dllSize, HomologousImageMode mode)
+    {
+        il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
+
+        AOTHomologousImage* image = nullptr;
+        switch (mode)
+        {
+        case HomologousImageMode::CONSISTENT: image = new ConsistentAOTHomologousImage(); break;
+        case HomologousImageMode::SUPERSET: image = new SuperSetAOTHomologousImage(); break;
+        default: return LoadImageErrorCode::INVALID_HOMOLOGOUS_MODE;
+        }
+
+        LoadImageErrorCode err = image->Load((byte*)CopyBytes(dllBytes, dllSize), dllSize);
+        if (err != LoadImageErrorCode::OK)
+        {
+            delete image;
+            return err;
+        }
+
+        RawImageBase* rawImage = &image->GetRawImage();
+        TbAssembly data = rawImage->ReadAssembly(1);
+        const char* assName = rawImage->GetStringFromRawIndex(data.name);
+        const Il2CppAssembly* aotAss = il2cpp::vm::Assembly::GetLoadedAssembly(assName);
+        // FIXME. not free memory.
+        if (!aotAss)
+        {
+            delete image;
+            return LoadImageErrorCode::AOT_ASSEMBLY_NOT_FIND;
+        }
+        if (hybridclr::metadata::IsInterpreterImage(aotAss->image))
+        {
+            delete image;
+            return LoadImageErrorCode::HOMOLOGOUS_ONLY_SUPPORT_AOT_ASSEMBLY;
+        }
+        image->SetTargetAssembly(aotAss);
+        if (AOTHomologousImage::FindImageByAssemblyLocked(image->GetTargetAssembly(), lock))
+        {
+            return LoadImageErrorCode::HOMOLOGOUS_ASSEMBLY_HAS_BEEN_LOADED;
+        }
+        image->InitRuntimeMetadatas();
+        AOTHomologousImage::RegisterLocked(image, lock);
+        return LoadImageErrorCode::OK;
+    }
+
+
 }
 }
 

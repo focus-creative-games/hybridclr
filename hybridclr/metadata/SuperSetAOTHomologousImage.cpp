@@ -135,7 +135,7 @@ namespace metadata
 		}
 		else
 		{
-			const Il2CppTypeDefinition* aotTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::Image::TypeHandleFromName(_aotAssembly->image, namespaze, name);
+			const Il2CppTypeDefinition* aotTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::Image::TypeHandleFromName(_targetAssembly->image, namespaze, name);
 			if (aotTypeDef)
 			{
 				type.aotTypeDef = aotTypeDef;
@@ -146,7 +146,7 @@ namespace metadata
 		}
 		labelInitDefault:
 		type.aotIl2CppType = _defaultIl2CppType;
-		//TEMP_FORMAT(msg, "type: %s::%s can't find homologous type in assembly:%s", type.namespaze, type.name, _aotAssembly->aname.name);
+		//TEMP_FORMAT(msg, "type: %s::%s can't find homologous type in assembly:%s", type.namespaze, type.name, _targetAssembly->aname.name);
 		//RaiseExecutionEngineException(msg);
 	}
 

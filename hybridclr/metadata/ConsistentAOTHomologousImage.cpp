@@ -27,7 +27,7 @@ namespace metadata
 		_il2cppTypeForTypeDefs.resize(typeCount);
 		_typeDefs.resize(typeCount);
 
-		Il2CppImage* image = _aotAssembly->image;
+		Il2CppImage* image = _targetAssembly->image;
 		//if (image->typeCount != typeCount)
 		//{
 		//	RaiseExecutionEngineException("image metadata not match");
