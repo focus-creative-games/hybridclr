@@ -194,8 +194,8 @@ namespace metadata
             // is less than the compiler's minimum alignment (4 bytes), lets use the natural alignment if we have it.
             uint8_t alignment = sa.alignment;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
-            if (alignment < 4 && sa.naturalAlignment != 0)
-                alignment = sa.naturalAlignment;
+            //if (alignment < 4 && sa.naturalAlignment != 0)
+            //    alignment = sa.naturalAlignment;
 #endif
             if (packing != 0)
                 alignment = std::min(sa.alignment, packing);
