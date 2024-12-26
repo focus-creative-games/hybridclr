@@ -37,6 +37,7 @@ Welcome to embrace modern native C# hot update technology!
 - Supports some features not supported by il2cpp, such as __makeref, __reftype, __refvalue instructions.
 - Supports the unique **Differential Hybrid Execution (DHE)** technology, which allows for arbitrary additions, deletions, and modifications to AOT DLLs. It intelligently runs unchanged functions in AOT mode and changed or newly added functions in interpreter mode, bringing the performance of hot-updated game logic close to that of native AOT.
 - Supports **hot reload** technology, allowing 100% unloading of assemblies.
+- Supports **Hotfix** technology, allowing for bug fixes without the need to restart the game, resulting in a seamless repair experience.
 - Supports modern DLL encryption technology to effectively protect code security.
 
 ## Supported Versions and Platforms

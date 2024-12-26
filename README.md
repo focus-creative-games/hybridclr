@@ -37,6 +37,7 @@ HybridCLR扩充了il2cpp运行时代码，使它由纯[AOT](https://en.wikipedia
 - 支持一些il2cpp不支持的特性，如__makeref、 __reftype、__refvalue指令
 - 支持独创的 **Differential Hybrid Execution(DHE)** 差分混合执行技术，即可以对AOT dll任意增删改，会智能地让未改动的函数以AOT方式运行，变化或者新增的函数以interpreter模式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平
 - 支持 **热重载** 技术，可以100%卸载程序集
+- 支持 **热修复** 技术，不需要重启游戏即可无感修复bug
 - 支持现代的dll加密技术，有效保障代码安全
 
 ## 支持的版本与平台
