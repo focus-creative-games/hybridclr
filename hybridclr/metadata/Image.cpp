@@ -985,16 +985,14 @@ namespace metadata
             {
                 RaiseMissingFieldException(rmr.parent.type, rmr.name);
             }
-            const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(*rmr.parent.type, fieldDef);
+            const Il2CppType* parentType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(rmr.parent.type, genericContext, true) : rmr.parent.type;
+            const FieldInfo* fieldInfo = GetFieldInfoFromFieldRef(*parentType, fieldDef);
             return fieldInfo;
         }
         else if (rmr.signature.memberType == TableType::METHOD_POINTER)
         {
-            if (genericContext)
-            {
-                rmr.parent.type = TryInflateIfNeed(rmr.parent.type, genericContext, true);
-            }
-            return ResolveMethodInfo(rmr.parent.type, rmr.name, rmr.signature.method, nullptr, genericContext);
+            const Il2CppType* parentType = genericContext != nullptr ? il2cpp::metadata::GenericMetadata::InflateIfNeeded(rmr.parent.type, genericContext, true) : rmr.parent.type;
+            return ResolveMethodInfo(parentType, rmr.name, rmr.signature.method, nullptr, genericContext);
         }
         else
         {
