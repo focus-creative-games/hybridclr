@@ -65,6 +65,15 @@ namespace interpreter
 		PInvokeMethodPointer methodPointer;
 	};
 	extern const PInvokeMethodData g_PInvokeMethodStub[];
+
+
+	typedef void (*Managed2NativeFunctionPointerCallMethod)(const void* methodPointer, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
+	struct Managed2NativeFunctionPointerCallData
+	{
+		const char* methodSig;
+		Managed2NativeFunctionPointerCallMethod methodPointer;
+	};
+	extern const Managed2NativeFunctionPointerCallData g_managed2NativeFunctionPointerCallStub[];
 	
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args);
 

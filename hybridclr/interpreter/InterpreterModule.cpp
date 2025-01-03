@@ -3,6 +3,7 @@
 #include "Interpreter.h"
 
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Baselib.h"
 #include "vm/GlobalMetadata.h"
@@ -35,6 +36,10 @@ namespace interpreter
 	static Il2CppHashMap<Il2CppMethodPointer, const ReversePInvokeInfo*, il2cpp::utils::PassThroughHash<Il2CppMethodPointer>> s_methodPointer2ReverseInfos;
 	static Il2CppHashMap<const char*, int32_t, CStringHash, CStringEqualTo> s_methodSig2Indexs;
 	static std::vector<ReversePInvokeInfo> s_reverseInfos;
+
+	static Il2CppHashMap<const char*, Managed2NativeFunctionPointerCallMethod, CStringHash, CStringEqualTo> s_managed2nativeFunctionPointers;
+
+	static std::unordered_map<void*, bool> s_functionPointerMap;
 
 	static baselib::ReentrantLock s_reversePInvokeMethodLock;
 
@@ -169,6 +174,15 @@ namespace interpreter
 			}
 			s_fullName2signature.insert({ nameSig.fullName, nameSig.signature });
 		}
+		for (size_t i = 0; ; i++)
+		{
+			const Managed2NativeFunctionPointerCallData& method = g_managed2NativeFunctionPointerCallStub[i];
+			if (!method.methodSig)
+			{
+				break;
+			}
+			s_managed2nativeFunctionPointers.insert({ method.methodSig, method.methodPointer });
+		}
 	}
 
 	void InterpreterModule::Initialize()
@@ -193,6 +207,12 @@ namespace interpreter
 		return it != s_fullName2signature.end() ? it->second : "$";
 	}
 
+	bool InterpreterModule::IsMethodInfoPointer(void* pointer)
+	{
+		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
+		return il2cpp::vm::MetadataContains(pointer);
+	}
+
 	static void* NotSupportInvoke(Il2CppMethodPointer, const MethodInfo* method, void*, void**)
 	{
 		char sigName[1000];
@@ -200,6 +220,11 @@ namespace interpreter
 		TEMP_FORMAT(errMsg, "Invoke method missing. sinature:%s %s.%s::%s", sigName, method->klass->namespaze, method->klass->name, method->name);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 		return nullptr;
+	}
+
+	static void NotSupportManaged2NativeFunctionMethod(const void* methodPointer, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+	{
+		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportManaged2NativeFunctionMethod"));
 	}
 
 	template<typename T>
@@ -358,6 +383,16 @@ namespace interpreter
 		ComputeSignature(method.returnType, method.params, metadata::IsPrologHasThis(method.flags), sigName, sizeof(sigName) - 1);
 		auto it = s_managed2natives.find(sigName);
 		return it != s_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
+	}
+
+	Managed2NativeFunctionPointerCallMethod InterpreterModule::GetManaged2NativeFunctionPointerMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
+	{
+		int32_t callConvention = method.flags & 0x7;
+		char sigName[1000];
+		sigName[0] = 'A' + callConvention;
+		ComputeSignature(method.returnType, method.params, metadata::IsPrologHasThis(method.flags), sigName + 1, sizeof(sigName) - 1);
+		auto it = s_managed2nativeFunctionPointers.find(sigName);
+		return it != s_managed2nativeFunctionPointers.end() ? it->second : NotSupportManaged2NativeFunctionMethod;
 	}
 
 	static void RaiseExecutionEngineExceptionMethodIsNotFound(const MethodInfo* method)

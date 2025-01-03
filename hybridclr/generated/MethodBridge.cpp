@@ -55,4 +55,8 @@ const ReversePInvokeMethodData hybridclr::interpreter::g_reversePInvokeMethodStu
     {nullptr, nullptr},
 };
 
+const Managed2NativeFunctionPointerCallData hybridclr::interpreter::g_managed2NativeFunctionPointerCallStub[]
+{
+    {nullptr, nullptr},
+};
 //!!!}}CODE
