@@ -3851,18 +3851,28 @@ namespace interpreter
 
 	struct IRCallInd_void : IRCommon
 	{
-		uint8_t __pad2;
+		uint8_t isMethodInfoPointer;
 		uint8_t __pad3;
 		uint32_t managed2NativeMethod;
+		uint32_t managed2NativeFunctionPointerMethod;
 		uint32_t methodInfo;
 		uint32_t argIdxs;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
 	};
 
 
 	struct IRCallInd_ret : IRCommon
 	{
+		uint8_t isMethodInfoPointer;
+		uint8_t __pad3;
 		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
 		uint32_t managed2NativeMethod;
+		uint32_t managed2NativeFunctionPointerMethod;
 		uint32_t methodInfo;
 		uint32_t argIdxs;
 	};
@@ -3870,18 +3880,15 @@ namespace interpreter
 
 	struct IRCallInd_ret_expand : IRCommon
 	{
+		uint8_t isMethodInfoPointer;
 		uint8_t retLocationType;
-		uint8_t __pad3;
 		uint16_t ret;
 		uint8_t __pad6;
 		uint8_t __pad7;
 		uint32_t managed2NativeMethod;
+		uint32_t managed2NativeFunctionPointerMethod;
 		uint32_t methodInfo;
 		uint32_t argIdxs;
-		uint8_t __pad20;
-		uint8_t __pad21;
-		uint8_t __pad22;
-		uint8_t __pad23;
 	};
 
 

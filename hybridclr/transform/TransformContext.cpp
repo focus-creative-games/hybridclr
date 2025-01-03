@@ -2998,8 +2998,10 @@ else \
 				int32_t methodIdx = GetEvalStackTopOffset();
 				//uint32_t methodDataIndex = GetOrAddResolveDataIndex(shareMethod);
 				Managed2NativeCallMethod managed2NativeMethod = InterpreterModule::GetManaged2NativeMethodPointer(methodSig);
+				Managed2NativeFunctionPointerCallMethod managed2NativeFunctionPointerMethod = InterpreterModule::GetManaged2NativeFunctionPointerMethodPointer(methodSig);
 				IL2CPP_ASSERT(managed2NativeMethod);
 				uint32_t managed2NativeMethodDataIdx = GetOrAddResolveDataIndex((void*)managed2NativeMethod);
+				uint32_t managed2NativeFunctionPointerMethodDataIdx = GetOrAddResolveDataIndex((void*)managed2NativeFunctionPointerMethod);
 				bool hasThis = metadata::IsPrologHasThis(methodSig.flags);
 
 				int32_t resolvedTotalArgNum = (int32_t)methodSig.params.size() + hasThis;
@@ -3039,6 +3041,7 @@ else \
 					{
 						CreateAddIR(ir, CallInd_ret_expand);
 						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
+						ir->managed2NativeFunctionPointerMethod = managed2NativeFunctionPointerMethodDataIdx;
 						ir->methodInfo = methodIdx;
 						ir->argIdxs = argIdxDataIndex;
 						ir->ret = GetEvalStackTopOffset();
@@ -3048,6 +3051,7 @@ else \
 					{
 						CreateAddIR(ir, CallInd_ret);
 						ir->managed2NativeMethod = managed2NativeMethodDataIdx;
+						ir->managed2NativeFunctionPointerMethod = managed2NativeFunctionPointerMethodDataIdx;
 						ir->methodInfo = methodIdx;
 						ir->argIdxs = argIdxDataIndex;
 						ir->ret = GetEvalStackTopOffset();
@@ -3057,6 +3061,7 @@ else \
 				{
 					CreateAddIR(ir, CallInd_void);
 					ir->managed2NativeMethod = managed2NativeMethodDataIdx;
+					ir->managed2NativeFunctionPointerMethod = managed2NativeFunctionPointerMethodDataIdx;
 					ir->methodInfo = methodIdx;
 					ir->argIdxs = argIdxDataIndex;
 				}
