@@ -194,8 +194,8 @@ namespace metadata
             // is less than the compiler's minimum alignment (4 bytes), lets use the natural alignment if we have it.
             uint8_t alignment = sa.alignment;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
-            //if (alignment < 4 && sa.naturalAlignment != 0)
-            //    alignment = sa.naturalAlignment;
+            if (alignment < 4 && sa.naturalAlignment != 0)
+                alignment = sa.naturalAlignment;
 #endif
             if (packing != 0)
                 alignment = std::min(sa.alignment, packing);
@@ -359,6 +359,8 @@ namespace metadata
             }
             layout.alignment = maxAlignment;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
+            // in unity 2021- version, il2cpp force alignment to 1 for explicit layout
+            layout.alignment = 1;
             layout.naturalAlignment = layout.alignment;
 #endif
             layout.actualSize = layout.instanceSize = AlignTo(instanceSize, layout.alignment);
