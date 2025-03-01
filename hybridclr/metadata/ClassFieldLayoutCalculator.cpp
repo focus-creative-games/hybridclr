@@ -222,6 +222,65 @@ namespace metadata
 #endif
     }
 
+    bool ClassFieldLayoutCalculator::IsBlittable(const Il2CppType* type)
+    {
+        if (type->byref)
+        {
+            return true;
+        }
+
+        switch (type->type)
+        {
+        case IL2CPP_TYPE_I1:
+        case IL2CPP_TYPE_U1:
+        case IL2CPP_TYPE_BOOLEAN:
+        case IL2CPP_TYPE_I2:
+        case IL2CPP_TYPE_U2:
+        case IL2CPP_TYPE_CHAR:
+        case IL2CPP_TYPE_I4:
+        case IL2CPP_TYPE_U4:
+        case IL2CPP_TYPE_I8:
+        case IL2CPP_TYPE_U8:
+        case IL2CPP_TYPE_I:
+        case IL2CPP_TYPE_U:
+        case IL2CPP_TYPE_R4:
+        case IL2CPP_TYPE_R8:
+        case IL2CPP_TYPE_PTR:
+        case IL2CPP_TYPE_FNPTR:
+            return true;
+        case IL2CPP_TYPE_STRING:
+        case IL2CPP_TYPE_SZARRAY:
+        case IL2CPP_TYPE_ARRAY:
+        case IL2CPP_TYPE_CLASS:
+        case IL2CPP_TYPE_OBJECT:
+        case IL2CPP_TYPE_VAR:
+        case IL2CPP_TYPE_MVAR:
+            return false;
+        case IL2CPP_TYPE_VALUETYPE:
+        {
+            CalcClassNotStaticFields(type);
+            ClassLayoutInfo& classLayout = *_classMap[type];
+            return classLayout.blittable;
+        }
+        case IL2CPP_TYPE_GENERICINST:
+        {
+            const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+            if (IsValueType(typeDef))
+            {
+                CalcClassNotStaticFields(type);
+                ClassLayoutInfo& classLayout = *_classMap[type];
+                return classLayout.blittable;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        default:
+            IL2CPP_ASSERT(0);
+            return false;
+        }
+    }
 
 
     inline bool IsRawNormalStaticField(const Il2CppType* type, int32_t offset)
@@ -278,6 +337,7 @@ namespace metadata
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
             layout.naturalAlignment = klass->naturalAligment;
 #endif
+            layout.blittable = il2cpp::vm::Class::IsBlittable(klass);
             return;
         }
 
@@ -318,6 +378,7 @@ namespace metadata
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
             layout.naturalAlignment = 1;
 #endif
+            layout.blittable = false;
             return;
         }
 
@@ -328,14 +389,29 @@ namespace metadata
 
 
         std::vector<FieldLayout*> instanceFields;
+        bool blittable = true;
         for (FieldLayout& field : fields)
         {
             if (IsInstanceField(field.type))
+            {
                 instanceFields.push_back(&field);
+				blittable &= IsBlittable(field.type);
+            }
+        }
+		layout.blittable = blittable;
+
+		// If the type is not blittable, ignore packingSize
+        if (!blittable)
+        {
+            packingSize = 0;
+        }
+		// packingSize is ignored for auto layout types
+        if (!(typeDef->flags & (TYPE_ATTRIBUTE_SEQUENTIAL_LAYOUT | TYPE_ATTRIBUTE_EXPLICIT_LAYOUT)))
+        {
+            packingSize = 0;
         }
 
-        bool isExplictLayout = typeDef->flags & TYPE_ATTRIBUTE_EXPLICIT_LAYOUT;
-        if (isExplictLayout)
+        if (typeDef->flags & TYPE_ATTRIBUTE_EXPLICIT_LAYOUT)
         {
             IL2CPP_ASSERT(IsValueType(typeDef));
             IL2CPP_ASSERT(isCurAssemblyType);
@@ -349,7 +425,18 @@ namespace metadata
             for (FieldLayout* field : instanceFields)
             {
                 SizeAndAlignment sa = GetTypeSizeAndAlignment(field->type);
+				bool fieldBlittable = IsBlittable(field->type);
+                if (!fieldBlittable && field->offset % PTR_SIZE != 0)
+                {
+                    TEMP_FORMAT(errMsg, "Type %s is not blittable and has an invalid layout", typeName);
+					RaiseExecutionEngineException(errMsg);
+                }
                 instanceSize = std::max(instanceSize, field->offset + (int32_t)sa.size);
+
+                // compute size of alignment field
+				uint8_t actualAlignment = packingSize != 0 ? std::min(packingSize, sa.alignment) : sa.alignment;
+				instanceSize = std::max(instanceSize, AlignTo(field->offset, actualAlignment) + (int32_t)sa.size);
+
                 maxAlignment = std::max(maxAlignment, (int32_t)sa.alignment);
                 if (packingSize != 0)
                 {
@@ -360,8 +447,9 @@ namespace metadata
             layout.alignment = maxAlignment;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
             // in unity 2021- version, il2cpp force alignment to 1 for explicit layout
-            layout.alignment = 1;
-            layout.naturalAlignment = layout.alignment;
+            //layout.alignment = 1;
+            //IL2CPP_ASSERT(blittable || layout.alignment == PTR_SIZE);
+            layout.naturalAlignment = !blittable ? PTR_SIZE : layout.alignment;
 #endif
             layout.actualSize = layout.instanceSize = AlignTo(instanceSize, layout.alignment);
             layout.nativeSize = nativeSize;
@@ -409,7 +497,8 @@ namespace metadata
             }
             layout.alignment = layoutData.minimumAlignment;
 #if !HYBRIDCLR_UNITY_2022_OR_NEW
-            layout.naturalAlignment = layoutData.naturalAlignment;
+            //layout.naturalAlignment = layoutData.naturalAlignment;
+            layout.naturalAlignment = blittable ? layout.alignment : PTR_SIZE;
 #endif
             layout.actualSize = layoutData.actualClassSize;
             layout.instanceSize = layoutData.classSize;
