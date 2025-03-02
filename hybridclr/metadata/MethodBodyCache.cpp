@@ -147,6 +147,7 @@ namespace metadata
 			{
 				return false;
 			}
+			default: break;
 			}
 		}
 		IL2CPP_ASSERT(ip == codeEnd);

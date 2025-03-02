@@ -401,6 +401,7 @@ default:\
 			SWTCH_INSTANCE_RET2(f8);
 			break;
 		}
+		default:break;
 		}
 
 		return false;
@@ -661,6 +662,7 @@ default:\
 			SWTCH_STATIC_RET2(f8);
 			break;
 		}
+		default: break;
 		}
 		return false;
 	}
