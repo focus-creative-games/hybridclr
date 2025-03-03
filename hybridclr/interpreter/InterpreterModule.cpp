@@ -479,7 +479,7 @@ namespace interpreter
 			}
 			case 1:
 			{
-				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(curMethod) && curMethod->parameters_count);
+				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(curMethod));
 				curTarget = (Il2CppObject*)__args[0];
 				if (!curTarget)
 				{
@@ -580,7 +580,7 @@ namespace interpreter
 			}
 			case 1:
 			{
-				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(curMethod) && curMethod->parameters_count);
+				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(curMethod));
 				curTarget = (Il2CppObject*)__args[0];
 				if (!curTarget)
 				{
