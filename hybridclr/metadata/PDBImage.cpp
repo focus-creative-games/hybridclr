@@ -143,10 +143,14 @@ namespace metadata
 	void PDBImage::SetMethodDebugInfo(const MethodInfo* method, const il2cpp::utils::dynamic_array<ILMapper>& ilMapper)
 	{
 		IL2CPP_ASSERT(_methodInfos.find(method) == _methodInfos.end());
+		SymbolMethodDefData* methodData = GetMethodDataFromCache(method->token);
+		if (!methodData)
+		{
+			return;
+		}
 
 		SymbolMethodInfoData* methodInfoData = new (HYBRIDCLR_MALLOC_ZERO(sizeof(SymbolMethodInfoData))) SymbolMethodInfoData();
-		methodInfoData->methodData = GetMethodDataFromCache(method->token);
-		IL2CPP_ASSERT(methodInfoData->methodData);
+		methodInfoData->methodData = methodData;
 		methodInfoData->ilMapper = ilMapper;
 		_methodInfos.add(method, methodInfoData);
 	}
