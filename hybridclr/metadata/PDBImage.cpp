@@ -2,10 +2,6 @@
 
 #include <algorithm>
 
-#include "vm/MetadataLock.h"
-#include "os/Mutex.h"
-#include "Baselib.h"
-
 #include "../interpreter/InterpreterDefs.h"
 
 #include "BlobReader.h"
@@ -15,8 +11,6 @@ namespace hybridclr
 namespace metadata
 {
 	constexpr uint32_t kHiddenLine = 0xfeefee;
-
-	baselib::ReentrantLock s_pdbLock;
 
 	LoadImageErrorCode PDBImage::LoadCLIHeader(uint32_t& entryPointToken, uint32_t& metadataRva, uint32_t& metadataSize)
 	{
@@ -71,7 +65,6 @@ namespace metadata
 			return nullptr;
 		}
 
-		il2cpp::os::FastAutoLock lock(&s_pdbLock);
 		auto it = _documents.find(documentToken);
 		if (it != _documents.end())
 		{
@@ -149,7 +142,6 @@ namespace metadata
 
 	void PDBImage::SetMethodDebugInfo(const MethodInfo* method, const il2cpp::utils::dynamic_array<ILMapper>& ilMapper)
 	{
-		il2cpp::os::FastAutoLock lock(&s_pdbLock);
 		IL2CPP_ASSERT(_methodInfos.find(method) == _methodInfos.end());
 
 		SymbolMethodInfoData* methodInfoData = new (HYBRIDCLR_MALLOC_ZERO(sizeof(SymbolMethodInfoData))) SymbolMethodInfoData();
@@ -168,8 +160,6 @@ namespace metadata
 		{
 			return nullptr;
 		}
-
-		il2cpp::os::FastAutoLock lock(&s_pdbLock);
 
 		auto it = _methods.find(methodToken);
 		if (it != _methods.end())
