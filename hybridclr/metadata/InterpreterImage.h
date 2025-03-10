@@ -503,7 +503,7 @@ namespace metadata
 			CustomAttributeIndex nextIndex = DecodeMetadataIndex(GET_CUSTOM_ATTRIBUTE_TYPE_RANGE_START(*(dataRangeCur + 1)));
 			CustomAttribute& curCa = _customAttribues[curIndex];
 			CustomAttribute& nextCa = _customAttribues[nextIndex];
-			return std::make_tuple<void*, void*>((void*)_rawImage->GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage->GetBlobReaderByRawIndex(nextCa.value).GetData());
+			return std::tuple<void*, void*>((void*)_rawImage->GetBlobReaderByRawIndex(curCa.value).GetData(), (void*)_rawImage->GetBlobReaderByRawIndex(nextCa.value).GetData());
 		}
 
 		CustomAttributesCache* GenerateCustomAttributesCacheInternal(const Il2CppCustomAttributeTypeRange* typeRange)
