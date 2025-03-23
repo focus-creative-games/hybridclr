@@ -1267,7 +1267,7 @@ namespace interpreter
 #define LOAD_PREV_FRAME() { \
 	imi = (const InterpMethodInfo*)frame->method->interpData; \
 	ip = frame->ip; \
-	frame->ip = (byte*)&ip; \
+	frame->ip = (byte*)ip; \
 	ipBase = imi->codes; \
 	localVarBase = frame->stackBasePtr; \
 }
@@ -1276,8 +1276,8 @@ namespace interpreter
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
 	frame = interpFrameGroup.EnterFrameFromNative(newMethodInfo, argBasePtr); \
 	frame->ret = retPtr; \
-	frame->ip = (byte*)&ip; \
 	ip = ipBase = imi->codes; \
+	frame->ip = (byte*)ip; \
 	localVarBase = frame->stackBasePtr; \
 }
 
@@ -1285,8 +1285,8 @@ namespace interpreter
 	imi = newMethodInfo->interpData ? (InterpMethodInfo*)newMethodInfo->interpData : InterpreterModule::GetInterpMethodInfo(newMethodInfo); \
 	frame = interpFrameGroup.EnterFrameFromInterpreter(newMethodInfo, argBasePtr); \
 	frame->ret = retPtr; \
-	frame->ip = (byte*)&ip; \
 	ip = ipBase = imi->codes; \
+	frame->ip = (byte*)ip; \
 	localVarBase = frame->stackBasePtr; \
 }
 
