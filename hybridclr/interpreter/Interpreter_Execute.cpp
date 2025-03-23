@@ -1686,6 +1686,11 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 			{
 				switch (*(HiOpcodeEnum*)ip)
 				{
+					// avoid decrement *ip when compute jump table,  boosts about 5% performance
+				case HiOpcodeEnum::None:
+				{
+					continue;
+				}
 #pragma region memory
 					//!!!{{MEMORY
 				case HiOpcodeEnum::InitLocals_n_2:
