@@ -26,8 +26,16 @@ namespace interpreter
 		//!!!{{OPCODE
 		InitLocals_n_2,
 		InitLocals_n_4,
+		InitLocals_size_8,
+		InitLocals_size_16,
+		InitLocals_size_24,
+		InitLocals_size_32,
 		InitInlineLocals_n_2,
 		InitInlineLocals_n_4,
+		InitInlineLocals_size_8,
+		InitInlineLocals_size_16,
+		InitInlineLocals_size_24,
+		InitInlineLocals_size_32,
 		LdlocVarVar,
 		LdlocExpandVarVar_i1,
 		LdlocExpandVarVar_u1,
@@ -885,6 +893,50 @@ namespace interpreter
 	};
 
 
+	struct IRInitLocals_size_8 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+	};
+
+
+	struct IRInitLocals_size_16 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+	};
+
+
+	struct IRInitLocals_size_24 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+	};
+
+
+	struct IRInitLocals_size_32 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint8_t __pad4;
+		uint8_t __pad5;
+		uint8_t __pad6;
+		uint8_t __pad7;
+	};
+
+
 	struct IRInitInlineLocals_n_2 : IRCommon
 	{
 		uint16_t size;
@@ -902,6 +954,38 @@ namespace interpreter
 		uint8_t __pad13;
 		uint8_t __pad14;
 		uint8_t __pad15;
+	};
+
+
+	struct IRInitInlineLocals_size_8 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t offset;
+	};
+
+
+	struct IRInitInlineLocals_size_16 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t offset;
+	};
+
+
+	struct IRInitInlineLocals_size_24 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t offset;
+	};
+
+
+	struct IRInitInlineLocals_size_32 : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t offset;
 	};
 
 

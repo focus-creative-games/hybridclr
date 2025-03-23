@@ -34,17 +34,65 @@ namespace transform
 
 	IRCommon* CreateInitLocals(TemporaryMemoryArena& pool, uint32_t size, int32_t offset)
 	{
+		if (size > 32)
+		{
+			if (offset == 0)
+			{
+				CreateIR(ir, InitLocals_n_4);
+				ir->size = size;
+				return ir;
+			}
+			else
+			{
+				CreateIR(ir, InitInlineLocals_n_4);
+				ir->size = size;
+				ir->offset = offset;
+				return ir;
+			}
+		}
 		if (offset == 0)
 		{
-			CreateIR(ir, InitLocals_n_4);
-			ir->size = size;
+			CreateIR(ir, InitLocals_size_8);
+			if (size <= 8)
+			{
+			}
+			else if (size <= 16)
+			{
+				ir->type == HiOpcodeEnum::InitLocals_size_16;
+			}
+			else if (size <= 24)
+			{
+				ir->type = HiOpcodeEnum::InitLocals_size_24;
+			}
+			else
+			{
+				IL2CPP_ASSERT(size <= 32);
+				ir->type = HiOpcodeEnum::InitLocals_size_32;
+			}
 			return ir;
 		}
 		else
 		{
-			CreateIR(ir, InitInlineLocals_n_4);
-			ir->size = size;
+
+			CreateIR(ir, InitInlineLocals_size_8);
 			ir->offset = offset;
+			if (size <= 8)
+			{
+
+			}
+			else if (size <= 16)
+			{
+				ir->type == HiOpcodeEnum::InitInlineLocals_size_16;
+			}
+			else if (size <= 24)
+			{
+				ir->type = HiOpcodeEnum::InitInlineLocals_size_24;
+			}
+			else
+			{
+				IL2CPP_ASSERT(size <= 32);
+				ir->type = HiOpcodeEnum::InitInlineLocals_size_32;
+			}
 			return ir;
 		}
 	}

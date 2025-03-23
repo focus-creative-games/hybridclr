@@ -1696,14 +1696,38 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::InitLocals_n_2:
 				{
 					uint16_t __size = *(uint16_t*)(ip + 2);
-					InitDefaultN(localVarBase + imi->localVarBaseOffset, __size);
+					InitDefaultN(localVarBase, __size);
 				    ip += 8;
 				    continue;
 				}
 				case HiOpcodeEnum::InitLocals_n_4:
 				{
 					uint32_t __size = *(uint32_t*)(ip + 4);
-					InitDefaultN(localVarBase + imi->localVarBaseOffset, __size);
+					InitDefaultN(localVarBase, __size);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitLocals_size_8:
+				{
+					InitDefault8(localVarBase);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitLocals_size_16:
+				{
+					InitDefault16(localVarBase);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitLocals_size_24:
+				{
+					InitDefault24(localVarBase);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitLocals_size_32:
+				{
+					InitDefault32(localVarBase);
 				    ip += 8;
 				    continue;
 				}
@@ -1721,6 +1745,34 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 					uint32_t __offset = *(uint32_t*)(ip + 8);
 					InitDefaultN(localVarBase + __offset, __size);
 				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::InitInlineLocals_size_8:
+				{
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					InitDefault8(localVarBase + __offset);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitInlineLocals_size_16:
+				{
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					InitDefault16(localVarBase + __offset);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitInlineLocals_size_24:
+				{
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					InitDefault24(localVarBase + __offset);
+				    ip += 8;
+				    continue;
+				}
+				case HiOpcodeEnum::InitInlineLocals_size_32:
+				{
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					InitDefault32(localVarBase + __offset);
+				    ip += 8;
 				    continue;
 				}
 				case HiOpcodeEnum::LdlocVarVar:
