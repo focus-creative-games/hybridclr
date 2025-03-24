@@ -58,7 +58,7 @@ namespace transform
 			}
 			else if (size <= 16)
 			{
-				ir->type == HiOpcodeEnum::InitLocals_size_16;
+				ir->type = HiOpcodeEnum::InitLocals_size_16;
 			}
 			else if (size <= 24)
 			{
@@ -82,7 +82,7 @@ namespace transform
 			}
 			else if (size <= 16)
 			{
-				ir->type == HiOpcodeEnum::InitInlineLocals_size_16;
+				ir->type = HiOpcodeEnum::InitInlineLocals_size_16;
 			}
 			else if (size <= 24)
 			{
