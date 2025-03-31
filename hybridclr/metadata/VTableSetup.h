@@ -36,7 +36,7 @@ namespace metadata
 		uint32_t offset;
 	};
 
-	typedef Il2CppHashMap<const Il2CppType*, VTableSetUp*, Il2CppTypeHash, Il2CppTypeEqualTo> Il2CppType2TypeDeclaringTreeMap;
+	typedef Il2CppHashMap<const Il2CppType*, VTableSetUp*, il2cpp::metadata::Il2CppTypeHash, il2cpp::metadata::Il2CppTypeEqualityComparer> Il2CppType2TypeDeclaringTreeMap;
 
 	class VTableSetUp
 	{

@@ -59,7 +59,7 @@ namespace metadata
 
 	class InterpreterImage;
 
-	typedef Il2CppHashMap<const Il2CppType*, ClassLayoutInfo*, Il2CppTypeHash, Il2CppTypeEqualTo> Il2CppType2ClassLayoutInfoMap;
+	typedef Il2CppHashMap<const Il2CppType*, ClassLayoutInfo*, il2cpp::metadata::Il2CppTypeHash, il2cpp::metadata::Il2CppTypeEqualityComparer> Il2CppType2ClassLayoutInfoMap;
 
 	class ClassFieldLayoutCalculator
 	{

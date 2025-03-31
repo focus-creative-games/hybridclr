@@ -449,19 +449,5 @@ namespace metadata
         }
     };
 
-
-    struct Il2CppTypeHash {
-        size_t operator()(const Il2CppType* x) const noexcept {
-            return il2cpp::metadata::Il2CppTypeHash::Hash(x);
-        }
-    };
-
-    struct Il2CppTypeEqualTo
-    {
-        bool operator()(const Il2CppType* a, const Il2CppType* b) const {
-            return il2cpp::metadata::Il2CppTypeEqualityComparer::AreEqual(a, b);
-        }
-    };
-
 }
 }
