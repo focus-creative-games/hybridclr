@@ -70,9 +70,10 @@ HybridCLR已经被广泛验证是非常高效、稳定的Unity热更新解决方
 
 ## 支持与联系
 
-- 官方1群：651188171（满）
-- 新手1群：428404198（满）
-- 新手2群：**680274677（推荐）**
+- 官方1群（3000人）：651188171（满）
+- 新手1群（3000人）：428404198（满）
+- 新手2群（2000人）：680274677（满）
+- 新手3群（2000人）：**920714552（推荐）**
 - discord频道 https://discord.gg/BATfNfJnm2
 - 商业合作邮箱: business#code-philosophy.com
 - [商业化支持](https://hybridclr.doc.code-philosophy.com/docs/business/intro)
