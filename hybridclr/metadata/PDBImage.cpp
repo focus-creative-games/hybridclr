@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "vm/MetadataLock.h"
+
 #include "../interpreter/InterpreterDefs.h"
 
 #include "BlobReader.h"
@@ -101,6 +103,7 @@ namespace metadata
 
 	void PDBImage::SetupStackFrameInfo(const MethodInfo* method, const void* ip, Il2CppStackFrameInfo& stackFrame)
 	{
+		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 		auto it = _methodInfos.find(method);
 		if (it == _methodInfos.end())
 		{
