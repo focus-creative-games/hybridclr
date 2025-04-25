@@ -1048,7 +1048,7 @@ namespace metadata
 
     const FieldInfo* Image::GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
-        TokenGenericContextType key = { token, genericContext };
+        TokenGenericContextType key(token, genericContext);
         auto it = tokenCache.find(key);
         if (it != tokenCache.end())
         {
