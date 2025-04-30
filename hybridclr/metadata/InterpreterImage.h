@@ -93,6 +93,13 @@ namespace metadata
 	};
 #endif
 
+	struct ImplMapInfo
+	{
+		const char* moduleName;
+		const char* importName;
+		uint32_t mappingFlags;
+	};
+
 	class InterpreterImage : public Image
 	{
 	public:
@@ -608,7 +615,11 @@ namespace metadata
 		void GetPropertyDeclaringTypeIndexAndPropertyIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex);
 #endif
 
-
+		ImplMapInfo* GetImplMapInfo(uint32_t token)
+		{
+			auto it = _implMapInfos.find(token);
+			return it != _implMapInfos.end() ? &it->second : nullptr;
+		}
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
 
@@ -656,6 +667,8 @@ namespace metadata
 		void InitClassLayouts0();
 		void InitClassLayouts();
 		void InitCustomAttributes();
+		void InitModuleRefs();
+		void InitImplMaps();
 		void InitProperties();
 		void InitEvents();
 		void InitMethodSemantics();
@@ -735,6 +748,9 @@ namespace metadata
 
 		std::vector<PropertyDetail> _propeties;
 		std::vector<EventDetail> _events;
+
+		std::vector<const char*> _moduleRefs;
+		std::unordered_map<uint32_t, ImplMapInfo> _implMapInfos;
 	};
 }
 }

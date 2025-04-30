@@ -452,6 +452,13 @@ namespace metadata
 		return codedIndex >> 3;
 	}
 
+	inline uint32_t ConvertMemberForwardedToken2Token(uint32_t memberForwardedToken)
+	{
+		TableType tableType = memberForwardedToken & 0x1 ? TableType::METHOD : TableType::FIELD;
+		uint32_t rowIndex = memberForwardedToken >> 1;
+		return EncodeToken(tableType, rowIndex);
+	}
+
 	enum class UserStringEncoding
 	{
 		ASCII = 0,

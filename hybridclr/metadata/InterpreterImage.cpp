@@ -167,6 +167,8 @@ namespace metadata
 		InitMethodSemantics();
 		InitConsts();
 		InitCustomAttributes();
+		InitModuleRefs();
+		InitImplMaps();
 		InitClassLayouts0();
 		InitTypeDefs_2();
 		InitClassLayouts();
@@ -1360,6 +1362,34 @@ namespace metadata
 		return cache;
 	}
 #endif
+
+	void InterpreterImage::InitModuleRefs()
+	{
+		const Table& moduleRefTb = _rawImage->GetTable(TableType::MODULEREF);
+		_moduleRefs.reserve(moduleRefTb.rowNum);
+		for (uint32_t rid = 1; rid <= moduleRefTb.rowNum; rid++)
+		{
+			TbModuleRef moduleRef = _rawImage->ReadModuleRef(rid);
+			const char* moduleName = _rawImage->GetStringFromRawIndex(moduleRef.name);
+			_moduleRefs.push_back(moduleName);
+		}
+	}
+
+	void InterpreterImage::InitImplMaps()
+	{
+		const Table& implMapTb = _rawImage->GetTable(TableType::IMPLMAP);
+		_implMapInfos.reserve(implMapTb.rowNum);
+		for (uint32_t rid = 1; rid <= implMapTb.rowNum; rid++)
+		{
+			TbImplMap implMap = _rawImage->ReadImplMap(rid);
+			ImplMapInfo info = {};
+			info.moduleName = _moduleRefs[DecodeTokenRowIndex(implMap.importScope) - 1];
+			info.importName = _rawImage->GetStringFromRawIndex(implMap.importName);
+			info.mappingFlags = implMap.mappingFlags;
+			uint32_t memberForwardedToken = hybridclr::metadata::ConvertMemberForwardedToken2Token(implMap.memberForwarded);
+			_implMapInfos.insert({ memberForwardedToken, info });
+		}
+	}
 
 	void InterpreterImage::InitMethodDefs0()
 	{
