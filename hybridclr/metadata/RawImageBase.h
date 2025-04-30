@@ -315,6 +315,8 @@ TABLE_END
 		TABLE3(TypeRef, TableType::TYPEREF, resolutionScope, typeName, typeNamespace)
 		virtual TABLE6(TypeDef, TableType::TYPEDEF, flags, typeName, typeNamespace, extends, fieldList, methodList)
 			TABLE1(TypeSpec, TableType::TYPESPEC, signature);
+		TABLE4(ImplMap, TableType::IMPLMAP, mappingFlags, memberForwarded, importName, importScope);
+		TABLE1(ModuleRef, TableType::MODULEREF, name);
 		TABLE3(Field, TableType::FIELD, flags, name, signature)
 			TABLE4(GenericParam, TableType::GENERICPARAM, number, flags, owner, name)
 			TABLE2(GenericParamConstraint, TableType::GENERICPARAMCONSTRAINT, owner, constraint)
