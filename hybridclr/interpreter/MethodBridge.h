@@ -67,7 +67,7 @@ namespace interpreter
 	extern const PInvokeMethodData g_PInvokeMethodStub[];
 
 
-	typedef void (*Managed2NativeFunctionPointerCallMethod)(const void* methodPointer, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
+	typedef void (*Managed2NativeFunctionPointerCallMethod)(Il2CppMethodPointer methodPointer, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret);
 	struct Managed2NativeFunctionPointerCallData
 	{
 		const char* methodSig;

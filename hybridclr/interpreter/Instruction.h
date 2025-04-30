@@ -346,6 +346,9 @@ namespace interpreter
 		CallInd_void,
 		CallInd_ret,
 		CallInd_ret_expand,
+		CallPInvoke_void,
+		CallPInvoke_ret,
+		CallPInvoke_ret_expand,
 		CallDelegateInvoke_void,
 		CallDelegateInvoke_ret,
 		CallDelegateInvoke_ret_expand,
@@ -3973,6 +3976,42 @@ namespace interpreter
 		uint32_t managed2NativeFunctionPointerMethod;
 		uint32_t methodInfo;
 		uint32_t argIdxs;
+	};
+
+
+	struct IRCallPInvoke_void : IRCommon
+	{
+		uint8_t __pad2;
+		uint8_t __pad3;
+		uint32_t managed2NativeFunctionPointerMethod;
+		uint32_t pinvokeMethodPointer;
+		uint32_t argIdxs;
+	};
+
+
+	struct IRCallPInvoke_ret : IRCommon
+	{
+		uint16_t ret;
+		uint32_t managed2NativeFunctionPointerMethod;
+		uint32_t pinvokeMethodPointer;
+		uint32_t argIdxs;
+	};
+
+
+	struct IRCallPInvoke_ret_expand : IRCommon
+	{
+		uint8_t retLocationType;
+		uint8_t __pad3;
+		uint16_t ret;
+		uint8_t __pad6;
+		uint8_t __pad7;
+		uint32_t managed2NativeFunctionPointerMethod;
+		uint32_t pinvokeMethodPointer;
+		uint32_t argIdxs;
+		uint8_t __pad20;
+		uint8_t __pad21;
+		uint8_t __pad22;
+		uint8_t __pad23;
 	};
 
 

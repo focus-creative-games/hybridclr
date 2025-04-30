@@ -222,7 +222,7 @@ namespace interpreter
 		return nullptr;
 	}
 
-	static void NotSupportManaged2NativeFunctionMethod(const void* methodPointer, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
+	static void NotSupportManaged2NativeFunctionMethod(Il2CppMethodPointer methodPointer, uint16_t* argVarIndexs, StackObject* localVarBase, void* ret)
 	{
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportManaged2NativeFunctionMethod"));
 	}

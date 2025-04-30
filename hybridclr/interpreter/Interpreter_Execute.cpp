@@ -5131,10 +5131,10 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    Managed2NativeFunctionPointerCallMethod _nativeMethodPointer2 = ((Managed2NativeFunctionPointerCallMethod)imi->resolveDatas[__managed2NativeFunctionPointerMethod]);
 					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
 					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
-					void* _methodPointer = (localVarBase + __methodInfo)->ptr;
+					Il2CppMethodPointer _methodPointer = (Il2CppMethodPointer)(localVarBase + __methodInfo)->ptr;
 					if (__isMethodInfoPointer == 0)
 					{
-				        __isMethodInfoPointer = hybridclr::interpreter::InterpreterModule::IsMethodInfoPointer(_methodPointer) ? 1 : 2;
+				        __isMethodInfoPointer = hybridclr::interpreter::InterpreterModule::IsMethodInfoPointer((void*)_methodPointer) ? 1 : 2;
 					}
 					if (__isMethodInfoPointer == 1)
 					{
@@ -5174,10 +5174,10 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    Managed2NativeFunctionPointerCallMethod _nativeMethodPointer2 = ((Managed2NativeFunctionPointerCallMethod)imi->resolveDatas[__managed2NativeFunctionPointerMethod]);
 					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
 					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
-					void* _methodPointer = (localVarBase + __methodInfo)->ptr;
+					Il2CppMethodPointer _methodPointer = (Il2CppMethodPointer)(localVarBase + __methodInfo)->ptr;
 					if (__isMethodInfoPointer == 0)
 					{
-				        __isMethodInfoPointer = hybridclr::interpreter::InterpreterModule::IsMethodInfoPointer(_methodPointer) ? 1 : 2;
+				        __isMethodInfoPointer = hybridclr::interpreter::InterpreterModule::IsMethodInfoPointer((void*)_methodPointer) ? 1 : 2;
 					}
 					if (__isMethodInfoPointer == 1)
 					{
@@ -5218,10 +5218,10 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    Managed2NativeFunctionPointerCallMethod _nativeMethodPointer2 = ((Managed2NativeFunctionPointerCallMethod)imi->resolveDatas[__managed2NativeFunctionPointerMethod]);
 					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
 					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
-					void* _methodPointer = (localVarBase + __methodInfo)->ptr;
+					Il2CppMethodPointer _methodPointer = (Il2CppMethodPointer)(localVarBase + __methodInfo)->ptr;
 					if (__isMethodInfoPointer == 0)
 					{
-				        __isMethodInfoPointer = hybridclr::interpreter::InterpreterModule::IsMethodInfoPointer(_methodPointer) ? 1 : 2;
+				        __isMethodInfoPointer = hybridclr::interpreter::InterpreterModule::IsMethodInfoPointer((void*)_methodPointer) ? 1 : 2;
 					}
 					if (__isMethodInfoPointer == 1)
 					{
@@ -5245,6 +5245,51 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    {
 				        _nativeMethodPointer2(_methodPointer, _argIdxsPtr, localVarBase, _ret);
 				    }
+				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
+				    ip += 24;
+				    continue;
+				}
+				case HiOpcodeEnum::CallPInvoke_void:
+				{
+					uint32_t __managed2NativeFunctionPointerMethod = *(uint32_t*)(ip + 4);
+					uint32_t __pinvokeMethodPointer = *(uint32_t*)(ip + 8);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
+				    Managed2NativeFunctionPointerCallMethod _managed2NativeFuncMethodPointer = ((Managed2NativeFunctionPointerCallMethod)imi->resolveDatas[__managed2NativeFunctionPointerMethod]);
+				    Il2CppMethodPointer _pinvokeMethodPointer = ((Il2CppMethodPointer)imi->resolveDatas[__pinvokeMethodPointer]);
+					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
+					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
+				    _managed2NativeFuncMethodPointer(_pinvokeMethodPointer, _argIdxsPtr, localVarBase, nullptr);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallPInvoke_ret:
+				{
+					uint32_t __managed2NativeFunctionPointerMethod = *(uint32_t*)(ip + 4);
+					uint32_t __pinvokeMethodPointer = *(uint32_t*)(ip + 8);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 12);
+					uint16_t __ret = *(uint16_t*)(ip + 2);
+				    void* _ret = (void*)(localVarBase + __ret);
+				    Managed2NativeFunctionPointerCallMethod _managed2NativeFuncMethodPointer = ((Managed2NativeFunctionPointerCallMethod)imi->resolveDatas[__managed2NativeFunctionPointerMethod]);
+				    Il2CppMethodPointer _pinvokeMethodPointer = ((Il2CppMethodPointer)imi->resolveDatas[__pinvokeMethodPointer]);
+					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
+					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
+				    _managed2NativeFuncMethodPointer(_pinvokeMethodPointer, _argIdxsPtr, localVarBase, _ret);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::CallPInvoke_ret_expand:
+				{
+					uint32_t __managed2NativeFunctionPointerMethod = *(uint32_t*)(ip + 8);
+					uint32_t __pinvokeMethodPointer = *(uint32_t*)(ip + 12);
+					uint32_t __argIdxs = *(uint32_t*)(ip + 16);
+					uint16_t __ret = *(uint16_t*)(ip + 4);
+					uint8_t __retLocationType = *(uint8_t*)(ip + 2);
+				    void* _ret = (void*)(localVarBase + __ret);
+				    Managed2NativeFunctionPointerCallMethod _managed2NativeFuncMethodPointer = ((Managed2NativeFunctionPointerCallMethod)imi->resolveDatas[__managed2NativeFunctionPointerMethod]);
+				    Il2CppMethodPointer _pinvokeMethodPointer = ((Il2CppMethodPointer)imi->resolveDatas[__pinvokeMethodPointer]);
+					uint16_t* _argIdxsPtr = (uint16_t*)&imi->resolveDatas[__argIdxs];
+					StackObject* _argBasePtr = localVarBase + _argIdxsPtr[0];
+				    _managed2NativeFuncMethodPointer(_pinvokeMethodPointer, _argIdxsPtr, localVarBase, _ret);
 				    ExpandLocationData2StackDataByType(_ret, (LocationDataType)__retLocationType);
 				    ip += 24;
 				    continue;
