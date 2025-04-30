@@ -385,6 +385,15 @@ namespace interpreter
 		return it != s_managed2natives.end() ? it->second : Managed2NativeCallByReflectionInvoke;
 	}
 
+	Managed2NativeFunctionPointerCallMethod InterpreterModule::GetManaged2NativeFunctionPointerMethodPointer(const MethodInfo* method, Il2CppCallConvention callConvention)
+	{
+		char sigName[1000];
+		sigName[0] = 'A' + callConvention;
+		ComputeSignature(method, false, sigName + 1, sizeof(sigName) - 1);
+		auto it = s_managed2nativeFunctionPointers.find(sigName);
+		return it != s_managed2nativeFunctionPointers.end() ? it->second : NotSupportManaged2NativeFunctionMethod;
+	}
+
 	Managed2NativeFunctionPointerCallMethod InterpreterModule::GetManaged2NativeFunctionPointerMethodPointer(const metadata::ResolveStandAloneMethodSig& method)
 	{
 		int32_t callConvention = method.flags & 0x7;

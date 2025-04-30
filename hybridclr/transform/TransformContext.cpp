@@ -5,6 +5,13 @@
 #include "vm/Exception.h"
 #include "vm/String.h"
 #include "vm/Field.h"
+#include "vm/PlatformInvoke.h"
+#include "vm/Reflection.h"
+#include "vm/Image.h"
+#include "vm/Type.h"
+#include "vm/GenericClass.h"
+#include "utils/StringUtils.h"
+#include "utils/StringView.h"
 
 #include "../metadata/MethodBodyCache.h"
 #include "../interpreter/InterpreterUtil.h"
@@ -2000,6 +2007,130 @@ namespace transform
 		ip++;
 	}
 
+	static int GetTypeSize(const Il2CppType* type)
+	{
+		if (type->byref)
+		{
+			return PTR_SIZE;
+		}
+
+		switch (type->type)
+		{
+		case IL2CPP_TYPE_I1:
+		case IL2CPP_TYPE_U1:
+		case IL2CPP_TYPE_BOOLEAN:
+			return 1;
+		case IL2CPP_TYPE_I2:
+		case IL2CPP_TYPE_U2:
+		case IL2CPP_TYPE_CHAR:
+			return 2;
+		case IL2CPP_TYPE_I4:
+		case IL2CPP_TYPE_U4:
+			return 4;
+		case IL2CPP_TYPE_I8:
+		case IL2CPP_TYPE_U8:
+			return 8;
+		case IL2CPP_TYPE_I:
+		case IL2CPP_TYPE_U:
+			return PTR_SIZE;
+		case IL2CPP_TYPE_R4:
+			return 4;
+		case IL2CPP_TYPE_R8:
+			return 8;
+		case IL2CPP_TYPE_PTR:
+		case IL2CPP_TYPE_FNPTR:
+		case IL2CPP_TYPE_STRING:
+		case IL2CPP_TYPE_SZARRAY:
+		case IL2CPP_TYPE_ARRAY:
+		case IL2CPP_TYPE_CLASS:
+		case IL2CPP_TYPE_OBJECT:
+		case IL2CPP_TYPE_VAR:
+		case IL2CPP_TYPE_MVAR:
+			return PTR_SIZE;
+		case IL2CPP_TYPE_VALUETYPE:
+			if (il2cpp::vm::Type::IsEnum(type))
+			{
+				return GetTypeSize(il2cpp::vm::Class::GetEnumBaseType(il2cpp::vm::Type::GetClass(type)));
+			}
+			else
+			{
+				Il2CppClass* klass = il2cpp::vm::Type::GetClass(type);
+				return il2cpp::vm::Class::GetValueSize(klass, nullptr);
+			}
+		case IL2CPP_TYPE_GENERICINST:
+		{
+			Il2CppGenericClass* gclass = type->data.generic_class;
+
+			if (gclass->type->type == IL2CPP_TYPE_CLASS)
+			{
+				IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
+				return PTR_SIZE;
+			}
+			else
+			{
+				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+				if (klass->enumtype)
+				{
+					return GetTypeSize(il2cpp::vm::Class::GetEnumBaseType(klass));
+				}
+				else
+				{
+					return il2cpp::vm::Class::GetValueSize(il2cpp::vm::Class::FromIl2CppType(type), nullptr);
+				}
+			}
+		}
+		default:
+			IL2CPP_ASSERT(0);
+			break;
+		}
+		return 0;
+	}
+
+	static int CalculateParameterSize(const MethodInfo* methodInfo)
+	{
+		int totalParameterSize = 0;
+		for (uint8_t i = 0; i < methodInfo->parameters_count; i++)
+		{
+			const Il2CppType* paramType = GET_METHOD_PARAMETER_TYPE(methodInfo->parameters[i]);
+			totalParameterSize += GetTypeSize(paramType);
+		}
+		return totalParameterSize;
+	}
+
+	static Il2CppMethodPointer ResolvePInvokeMethod(const MethodInfo* methodInfo, Il2CppCallConvention& callingConvention)
+	{
+		metadata::InterpreterImage* interpImage = metadata::MetadataModule::GetImage(methodInfo);
+		if (!interpImage)
+		{
+			return nullptr;
+		}
+		hybridclr::metadata::ImplMapInfo* implMap = interpImage->GetImplMapInfo(methodInfo->token);
+		if (!implMap)
+		{
+			return nullptr;
+		}
+
+		uint32_t mappingFlags = implMap->mappingFlags;
+		bool isNotMangle = hybridclr::metadata::IsDllImportNoMangle(mappingFlags);
+		Il2CppCharSet charSet = hybridclr::metadata::GetDllImportCharSet(mappingFlags);
+		callingConvention = hybridclr::metadata::GetDllImportCallConvention(mappingFlags);
+
+		Il2CppNativeString nativeModuleName = il2cpp::utils::StringUtils::Utf8ToNativeString(implMap->moduleName);
+		int parameterSize = CalculateParameterSize(methodInfo);
+
+		const PInvokeArguments pinvokeArgs =
+		{
+			il2cpp::utils::StringView<Il2CppNativeChar>(nativeModuleName.c_str(), nativeModuleName.length()),
+			il2cpp::utils::StringView<char>(implMap->importName, std::strlen(implMap->importName)),
+			callingConvention,
+			charSet,
+			parameterSize,
+			isNotMangle,
+		};
+		Il2CppMethodPointer methodPointer = il2cpp::vm::PlatformInvoke::Resolve(pinvokeArgs);
+		return methodPointer;
+	}
 
 	bool TransformContext::FindFirstLeaveHandlerIndex(const std::vector<ExceptionClause>& exceptionClauses, uint32_t leaveOffset, uint32_t targetOffset, uint16_t& index)
 	{
@@ -2759,7 +2890,60 @@ else \
 				{
 					uint16_t argBaseOffset = (uint16_t)GetEvalStackOffset(callArgEvalStackIdxBase);
 
-					if (ShouldBeInlined(shareMethod, depth) && TransformSubMethodBody(*this, shareMethod, depth + 1, argBaseOffset))
+					if (hybridclr::metadata::IsPInvokeMethod(shareMethod->flags))
+					{
+						Il2CppCallConvention callingConvention;
+						Il2CppMethodPointer pinvokeMethodPointer = ResolvePInvokeMethod(shareMethod, callingConvention);
+						if (!pinvokeMethodPointer)
+						{
+							TEMP_FORMAT(errMsg, "resolve PInvoke method fail. %s.%s::%s", methodInfo->klass->namespaze, methodInfo->klass->name, methodInfo->name);
+							RaiseExecutionEngineException(errMsg);
+						}
+						Managed2NativeFunctionPointerCallMethod managed2NativeFunctionPointerMethod = InterpreterModule::GetManaged2NativeFunctionPointerMethodPointer(shareMethod, callingConvention);
+						uint32_t pinvokeMethodPointerIdx = GetOrAddResolveDataIndex((void*)pinvokeMethodPointer);
+						uint32_t managed2NativeFunctionPointerMethodIdx = GetOrAddResolveDataIndex((void*)managed2NativeFunctionPointerMethod);
+
+						int32_t argIdxDataIndex;
+						uint16_t* __argIdxs;
+						AllocResolvedData(resolveDatas, needDataSlotNum, argIdxDataIndex, __argIdxs);
+
+						IL2CPP_ASSERT(!resolvedIsInstanceMethod);
+
+						for (uint8_t i = 0; i < shareMethod->parameters_count; i++)
+						{
+							int32_t curArgIdx = i;
+							__argIdxs[curArgIdx] = evalStack[callArgEvalStackIdxBase + curArgIdx].locOffset;
+						}
+						if (IsReturnVoidMethod(shareMethod))
+						{
+							CreateAddIR(ir, CallPInvoke_void);
+							ir->pinvokeMethodPointer = pinvokeMethodPointerIdx;
+							ir->managed2NativeFunctionPointerMethod = managed2NativeFunctionPointerMethodIdx;
+							ir->argIdxs = argIdxDataIndex;
+						}
+						else
+						{
+							interpreter::LocationDataType locDataType = GetLocationDataTypeByType(shareMethod->return_type);
+							if (interpreter::IsNeedExpandLocationType(locDataType))
+							{
+								CreateAddIR(ir, CallPInvoke_ret_expand);
+								ir->pinvokeMethodPointer = pinvokeMethodPointerIdx;
+								ir->managed2NativeFunctionPointerMethod = managed2NativeFunctionPointerMethodIdx;
+								ir->argIdxs = argIdxDataIndex;
+								ir->ret = argBaseOffset;
+								ir->retLocationType = (uint8_t)locDataType;
+							}
+							else
+							{
+								CreateAddIR(ir, CallPInvoke_ret);
+								ir->pinvokeMethodPointer = pinvokeMethodPointerIdx;
+								ir->managed2NativeFunctionPointerMethod = managed2NativeFunctionPointerMethodIdx;
+								ir->argIdxs = argIdxDataIndex;
+								ir->ret = argBaseOffset;
+							}
+						}
+					}
+					else if (ShouldBeInlined(shareMethod, depth) && TransformSubMethodBody(*this, shareMethod, depth + 1, argBaseOffset))
 					{
 
 					}

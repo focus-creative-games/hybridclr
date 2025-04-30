@@ -267,6 +267,67 @@ namespace metadata
         return flags & TYPE_ATTRIBUTE_INTERFACE;
     }
 
+	inline bool IsPInvokeMethod(uint32_t flags)
+	{
+		return flags & METHOD_ATTRIBUTE_PINVOKE_IMPL;
+	}
+
+#define IMPLMAP_FLAG_NOT_MANGLE 0x1
+
+#define IMPLMAP_FLAG_CHARSET_MASK 0x6
+#define IMPLMAP_FLAG_CHARSET_NOT_SPECIFIED 0x0
+#define IMPLMAP_FLAG_CHARSET_ANSI 0x2
+#define IMPLMAP_FLAG_CHARSET_UNICODE 0x4
+#define IMPLMAP_FLAG_CHARSET_AUTO 0x6
+
+#define IMPLMAP_FLAG_SUPPORTS_LAST_ERROR 0x40
+
+#define IMPLMAP_FLAG_CALLCONV_MASK 0x700
+#define IMPLMAP_FLAG_CALLCONV_PLATFORMAPI 0x100
+#define IMPLMAP_FLAG_CALLCONV_CDECL 0x200
+#define IMPLMAP_FLAG_CALLCONV_STDCALL 0x300
+#define IMPLMAP_FLAG_CALLCONV_THISCALL 0x400
+#define IMPLMAP_FLAG_CALLCONV_FASTCALL 0x500
+
+
+	inline bool IsDllImportNoMangle(uint32_t mappingFlags)
+	{
+		return mappingFlags & IMPLMAP_FLAG_NOT_MANGLE;
+	}
+
+    inline Il2CppCharSet GetDllImportCharSet(uint32_t mappingFlags)
+    {
+        uint32_t charSet = mappingFlags & IMPLMAP_FLAG_CHARSET_MASK;
+        switch (charSet)
+        {
+		case IMPLMAP_FLAG_CHARSET_NOT_SPECIFIED:
+			return Il2CppCharSet::CHARSET_NOT_SPECIFIED;
+		case IMPLMAP_FLAG_CHARSET_ANSI:
+			return Il2CppCharSet::CHARSET_ANSI;
+		case IMPLMAP_FLAG_CHARSET_UNICODE:
+			return Il2CppCharSet::CHARSET_UNICODE;
+        default:
+            IL2CPP_ASSERT(false);
+			return Il2CppCharSet::CHARSET_NOT_SPECIFIED;
+        }
+    }
+
+    inline Il2CppCallConvention GetDllImportCallConvention(uint32_t mappingFlags)
+    {
+		uint32_t callConv = mappingFlags & IMPLMAP_FLAG_CALLCONV_MASK;
+        switch (callConv)
+        {
+        case IMPLMAP_FLAG_CALLCONV_PLATFORMAPI: return Il2CppCallConvention::IL2CPP_CALL_DEFAULT;
+		case IMPLMAP_FLAG_CALLCONV_CDECL: return Il2CppCallConvention::IL2CPP_CALL_C;
+		case IMPLMAP_FLAG_CALLCONV_STDCALL: return Il2CppCallConvention::IL2CPP_CALL_STDCALL;
+		case IMPLMAP_FLAG_CALLCONV_THISCALL: return Il2CppCallConvention::IL2CPP_CALL_THISCALL;
+		case IMPLMAP_FLAG_CALLCONV_FASTCALL: return Il2CppCallConvention::IL2CPP_CALL_FASTCALL;
+		default:
+			IL2CPP_ASSERT(false);
+			return Il2CppCallConvention::IL2CPP_CALL_DEFAULT;
+        }
+    }
+
     bool IsValueType(const Il2CppType* type);
 
     inline bool IsValueType(const Il2CppTypeDefinition* typeDef)
