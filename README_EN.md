@@ -42,7 +42,7 @@ Welcome to embrace modern native C# hot update technology!
 
 ## Supported Versions and Platforms
 
-- Supports all LTS versions including 2019.4.x, 2020.3.x, 2021.3.x, 2022.3.x, 2023.2.x, 6000.0.x.
+- Supports all LTS versions including 2019.4.x, 2020.3.x, 2021.3.x, 2022.3.x, 2023.2.x, 6000.x.y.
 - Supports all platforms supported by il2cpp.
 - Supports Tuanjie(China) Engine and HarmonyOS platform.
 
@@ -72,7 +72,8 @@ You can view the [list of known top companies using HybridCLR and their launched
 
 - Official Group 1: 651188171 (Full)
 - Beginner Group 1: 428404198 (Full)
-- Beginner Group 2: **680274677 (Recommended)**
+- Beginner Group 2: 680274677 (Full)
+- Beginner Group 3: **920714552 (Recommended)**
 - Discord channel https://discord.gg/BATfNfJnm2
 - Business cooperation email: business#code-philosophy.com
 - [Commercial Support](https://hybridclr.doc.code-philosophy.com/en/docs/business/intro)
