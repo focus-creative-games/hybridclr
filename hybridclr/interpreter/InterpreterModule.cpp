@@ -630,7 +630,6 @@ namespace interpreter
 
 	InterpMethodInfo* InterpreterModule::GetInterpMethodInfo(const MethodInfo* methodInfo)
 	{
-		RuntimeInitClassCCtor(methodInfo);
 		il2cpp::os::FastAutoLock lock(&il2cpp::vm::g_MetadataLock);
 
 		if (methodInfo->interpData)
@@ -639,6 +638,7 @@ namespace interpreter
 		}
 		IL2CPP_ASSERT(methodInfo->isInterpterImpl);
 
+		il2cpp::vm::Class::Init(methodInfo->klass);
 		InterpMethodInfo* imi = transform::HiTransform::Transform(methodInfo);
 		il2cpp::os::Atomic::FullMemoryBarrier();
 		const_cast<MethodInfo*>(methodInfo)->interpData = imi;
