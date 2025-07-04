@@ -772,11 +772,26 @@ namespace metadata
 		case IL2CPP_TYPE_PTR:
 		case IL2CPP_TYPE_SZARRAY: return HasNotInstantiatedGenericType(type->data.type);
 		case IL2CPP_TYPE_ARRAY: return HasNotInstantiatedGenericType(type->data.array->etype);
+		case IL2CPP_TYPE_CLASS:
+		case IL2CPP_TYPE_VALUETYPE:
+		{
+#if HYBRIDCLR_UNITY_2019
+			const Il2CppTypeDefinition* typeDefinition = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromIl2CppType(type);
+#else
+			const Il2CppTypeDefinition* typeDefinition = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromType(type);
+#endif
+			return typeDefinition->genericContainerIndex != kGenericContainerIndexInvalid;
+		}
 		case IL2CPP_TYPE_GENERICINST:
 		{
 			Il2CppGenericClass* genericClass = type->data.generic_class;
 			return HasNotInstantiatedGenericType(genericClass->context.class_inst);
 		}
+		case IL2CPP_TYPE_VAR:
+        case IL2CPP_TYPE_MVAR:
+        {
+            return true;
+        }
 		default: return false;
 		}
 	}

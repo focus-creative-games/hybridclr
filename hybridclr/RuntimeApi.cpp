@@ -78,6 +78,10 @@ namespace hybridclr
 		{
 			return false;
 		}
+		if (methodInfo->klass->is_generic)
+		{
+			return false;
+		}
 		if (!methodInfo->is_inflated)
 		{
 			if (methodInfo->is_generic)
