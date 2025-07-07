@@ -4768,6 +4768,14 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    ip += 16;
 				    continue;
 				}
+				case HiOpcodeEnum::NewValueTypeVar_Ctor_0:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint16_t __size = *(uint16_t*)(ip + 4);
+				    InitDefaultN((void*)(localVarBase + __obj), __size);
+				    ip += 8;
+				    continue;
+				}
 				case HiOpcodeEnum::NewClassInterpVar:
 				{
 					uint16_t __obj = *(uint16_t*)(ip + 2);

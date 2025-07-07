@@ -312,6 +312,7 @@ namespace interpreter
 		NewClassVar_Ctor_0,
 		NewClassVar_NotCtor,
 		NewValueTypeVar,
+		NewValueTypeVar_Ctor_0,
 		NewClassInterpVar,
 		NewClassInterpVar_Ctor_0,
 		NewValueTypeInterpVar,
@@ -3589,6 +3590,15 @@ namespace interpreter
 		uint32_t managed2NativeMethod;
 		uint32_t method;
 		uint32_t argIdxs;
+	};
+
+
+	struct IRNewValueTypeVar_Ctor_0 : IRCommon
+	{
+		uint16_t obj;
+		uint16_t size;
+		uint8_t __pad6;
+		uint8_t __pad7;
 	};
 
 
