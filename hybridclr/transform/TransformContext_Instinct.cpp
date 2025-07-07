@@ -436,6 +436,55 @@ namespace transform
 		return true;
 	}
 
+	static const MethodInfo* FindZeroArgumentCtor(Il2CppClass* klass)
+	{
+		il2cpp::vm::Class::Init(klass);
+		for (uint16_t i = 0; i < klass->method_count; i++)
+		{
+            const MethodInfo* method = klass->methods[i];
+			if (!std::strcmp(method->name, ".ctor") && method->parameters_count == 0)
+			{
+				return method;
+            }
+		}
+		return nullptr;
+    }
+
+	static bool IH_Activator_CreateInstance(TransformContext& ctx, const MethodInfo* method)
+	{
+		if (!method->is_inflated || method->genericMethod->context.method_inst->type_argc != 1 || method->parameters_count != 0)
+		{
+			return false;
+		}
+		const Il2CppType* instType = method->genericMethod->context.method_inst->type_argv[0];
+        Il2CppClass* instanceKlass = il2cpp::vm::Class::FromIl2CppType(instType);
+		if (instanceKlass == nullptr)
+		{
+			return false;
+		}
+		if (IS_CLASS_VALUE_TYPE(instanceKlass))
+		{
+            IHCreateAddIR(ir, NewValueTypeVar_Ctor_0);
+			uint32_t objSize = GetTypeValueSize(instanceKlass);
+			ir->obj = ctx.GetEvalStackTopOffset();
+			ir->size = objSize;
+			ctx.PushStackByType(&instanceKlass->byval_arg);
+		}
+		else
+		{
+            const MethodInfo* ctorMethod = FindZeroArgumentCtor(instanceKlass);
+			if (ctorMethod == nullptr)
+			{
+				return false;
+			}
+			IHCreateAddIR(ir, NewClassVar_Ctor_0);
+			ir->method = ctx.GetOrAddResolveDataIndex(ctorMethod);
+			ir->obj = ctx.GetEvalStackNewTopOffset();
+			ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+		}
+		return true;
+	}
+
 
 	struct InstinctHandlerInfo
 	{
@@ -465,6 +514,7 @@ namespace transform
 		{"UnityEngine", "Vector3", ".ctor", IH_UnityEngine_Vector3_ctor},
 		{"UnityEngine", "Vector4", ".ctor", IH_UnityEngine_Vector4_ctor},
 		{"System", "ByReference`1", "get_Value", IH_ByReference_get_Value},
+		{"System", "Activator", "CreateInstance", IH_Activator_CreateInstance},
 	};
 
 	struct CtorInstinctHandlerInfo
