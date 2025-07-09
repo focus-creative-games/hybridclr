@@ -11,11 +11,11 @@ namespace metadata
         MODULE,
         TYPEREF,
         TYPEDEF,
-        FIELD_POINTER,
+        FIELDPTR,
         FIELD,
-        METHOD_POINTER,
+        METHODPTR,
         METHOD,
-        PARAM_POINTER,
+        PARAMPTR,
         PARAM,
         INTERFACEIMPL,
         MEMBERREF, /* 0xa */
@@ -27,10 +27,10 @@ namespace metadata
         FIELDLAYOUT, /* 0x10 */
         STANDALONESIG,
         EVENTMAP,
-        EVENT_POINTER,
+        EVENTPTR,
         EVENT,
         PROPERTYMAP,
-        PROPERTY_POINTER,
+        PROPERTYPTR,
         PROPERTY,
         METHODSEMANTICS,
         METHODIMPL,
@@ -38,8 +38,8 @@ namespace metadata
         TYPESPEC,
         IMPLMAP,
         FIELDRVA,
-        UNUSED6,
-        UNUSED7,
+        ENCLOG,
+        ENCMAP,
         ASSEMBLY, /* 0x20 */
         ASSEMBLYPROCESSOR,
         ASSEMBLYOS,
@@ -58,7 +58,7 @@ namespace metadata
         UNUSED10,
         /* Portable PDB tables */
         DOCUMENT, /* 0x30 */
-        METHODBODY,
+        METHODDEBUGINFORMATION,
         LOCALSCOPE,
         LOCALVARIABLE,
         LOCALCONSTANT,
@@ -97,7 +97,12 @@ namespace metadata
         uint32_t methodList;
     };
 
-    // 3 FIELD_POINTER
+    // 3 FIELDPTR
+
+    struct TbFieldPtr
+    {
+        uint32_t field;
+    };
 
     // 4
     struct TbField
@@ -107,7 +112,12 @@ namespace metadata
         uint32_t signature;
     };
 
-    // 5 METHOD_POINTER
+    // 5 METHODPTR
+
+    struct TbMethodPtr
+    {
+        uint32_t method;
+    };
         
     // 6
     struct TbMethod
@@ -120,7 +130,11 @@ namespace metadata
         uint32_t paramList;
     };
 
-    // 7 PARAM_POINTER
+    // 7 PARAMPTR
+    struct TbParamPtr
+    {
+        uint32_t param;
+    };
 
     // 8
     struct TbParam
@@ -147,7 +161,8 @@ namespace metadata
 
     struct TbConstant
     {
-        uint8_t type; // 实际上占2字节
+        uint8_t type;
+        uint8_t padding;
         uint32_t parent;
         uint32_t value;
     };
@@ -188,7 +203,7 @@ namespace metadata
 
     struct TbStandAloneSig
     {
-        uint32_t signature; // 指向 blob heap的位置
+        uint32_t signature;
     };
 
     struct TbEventMap
@@ -197,7 +212,11 @@ namespace metadata
         uint32_t eventList;
     };
 
-    // 0x13 EVENT_POINTER
+    // 0x13 EVENTPTR
+    struct TbEventPtr
+    {
+        uint32_t event;
+    };
 
     // 0x14
     struct TbEvent
@@ -213,7 +232,11 @@ namespace metadata
         uint32_t propertyList;
     };
 
-    // PROPERTY_POINTER
+    // PROPERTYPTR
+    struct TbPropertyPtr
+    {
+        uint32_t property;
+    };
 
     struct TbProperty
     {
@@ -260,8 +283,16 @@ namespace metadata
         uint32_t field;
     };
 
-    // UNUSED 6
-    // UNUSED 7
+    struct TbEncLog
+    {
+        uint32_t token;
+        uint32_t funcCode;
+    };
+
+    struct TbEncMap
+    {
+        uint32_t token;
+    };
 
     struct TbAssembly
     {
@@ -273,7 +304,7 @@ namespace metadata
         uint32_t flags;
         uint32_t publicKey;
         uint32_t name;
-        uint32_t culture;
+        uint32_t locale;
     };
 
     struct TbAssemblyProcessor
@@ -283,7 +314,7 @@ namespace metadata
 
     struct TbAssemblyOS
     {
-        uint32_t osPlatformID;
+        uint32_t osPlatformId;
         uint32_t osMajorVersion;
         uint32_t osMinorVersion;
     };
@@ -297,7 +328,7 @@ namespace metadata
         uint32_t flags;
         uint32_t publicKeyOrToken;
         uint32_t name;
-        uint32_t culture;
+        uint32_t locale;
         uint32_t hashValue;
     };
 
@@ -309,7 +340,7 @@ namespace metadata
 
     struct TbAssemblyRefOS
     {
-        uint32_t osPlatformID;
+        uint32_t osPlatformId;
         uint32_t osMajorVersion;
         uint32_t osMinorVersion;
         uint32_t assemblyRef;
@@ -365,10 +396,7 @@ namespace metadata
         uint32_t constraint;
     };
 
-    // 以下这些都不是tables的类型
-    // 但mono特殊处理一下，额外也加到这个表中
-
-    struct TbSymbolDocument
+    struct TbDocument
     {
         uint32_t name;
         uint32_t hashAlgorithm;
@@ -376,13 +404,13 @@ namespace metadata
         uint32_t language;
     };
 
-    struct TbSymbolMethodBody
+    struct TbMethodDebugInformation
     {
         uint32_t document;
         uint32_t sequencePoints;
     };
 
-    struct TbSymbolLocalScope
+    struct TbLocalScope
     {
         uint32_t method;
         uint32_t importScope;
@@ -392,33 +420,33 @@ namespace metadata
         uint32_t length;
     };
 
-    struct TbSymbolLocalVariable
+    struct TbLocalVariable
     {
         uint16_t attributes;
         uint16_t index;
         uint32_t name;
     };
 
-    struct TbSymbolConstant
+    struct TbLocalConstant
     {
         uint32_t name;
         uint32_t signature;
     };
 
-    struct TbSymbolImportScope
+    struct TbImportScope
     {
         uint32_t parent;
         uint32_t imports;
     };
 
 
-    struct TbSymbolStateMachineMethod
+    struct TbStateMachineMethod
     {
         uint32_t moveNextMethod;
         uint32_t kickoffMethod;
     };
 
-    struct TbSymbolCustomDebugInformation
+    struct TbCustomDebugInformation
     {
         uint32_t parent;
 		uint32_t kind;

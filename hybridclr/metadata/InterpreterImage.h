@@ -138,8 +138,12 @@ namespace metadata
 				RaiseExecutionEngineException("image can't be inited again");
 			}
 			_inited = true;
-			_rawImage = new RawImage();
-			LoadImageErrorCode err = _rawImage->Load(imageData, length);
+			LoadImageErrorCode err = InitRawImage(imageData, length);
+			if (err != LoadImageErrorCode::OK)
+			{
+				return err;
+			}
+			err = _rawImage->Load(imageData, length);
 			if (err != LoadImageErrorCode::OK)
 			{
 				delete _rawImage;

@@ -43,10 +43,12 @@ namespace metadata
 	{
 	public:
 
-		RawImage& GetRawImage() const
+		RawImageBase& GetRawImage() const
 		{
 			return *_rawImage;
 		}
+
+		LoadImageErrorCode InitRawImage(const void* imageData, size_t length);
 
 		PDBImage* GetPDBImage() const
 		{
@@ -173,7 +175,7 @@ namespace metadata
 
 		Il2CppClass* FindNetStandardExportedType(const char* namespaceStr, const char* nameStr);
 
-		RawImage* _rawImage;
+		RawImageBase* _rawImage;
 		PDBImage* _pdbImage;
 		Il2CppHashMap<const char*, const Il2CppAssembly*, CStringHash, CStringEqualTo> _nameToAssemblies;
 		il2cpp::gc::AppendOnlyGCHashMap<uint32_t, Il2CppString*, il2cpp::utils::PassThroughHash<uint32_t>> _il2cppStringCache;

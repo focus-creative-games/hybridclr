@@ -29,11 +29,13 @@ namespace metadata
 			return err;
 		}
 
+#if IL2CPP_DEBUG
 		err = ValidateStreams();
 		if (err != LoadImageErrorCode::OK)
 		{
 			return err;
 		}
+#endif
 		err = LoadTables();
 		if (err != LoadImageErrorCode::OK)
 		{
@@ -129,7 +131,7 @@ namespace metadata
 		return LoadImageErrorCode::OK;
 	}
 
-	LoadImageErrorCode RawImageBase::ValidateStreams()
+	LoadImageErrorCode RawImageBase::ValidateStreams() const
 	{
 		{
 			uint32_t stringNum = 0;
@@ -253,7 +255,14 @@ namespace metadata
 			if (ptrTableHeader->valid & mask)
 			{
 				uint32_t rowNum = tableRowNums[curValidTableIndex];
-				uint32_t metaDataRowSize = ComputTableRowMetaDataSize((TableType)i);
+				uint32_t totalSize = 0;
+				auto& table = _tableRowMetas[i];
+				for (auto& col : table)
+				{
+					col.offset = totalSize;
+					totalSize += col.size;
+				}
+				uint32_t metaDataRowSize = totalSize;
 				//uint64_t offset = curTableData - _imageData;
 				_tables[i] = { curTableData, metaDataRowSize, rowNum, true, sorted };
 				curTableData += metaDataRowSize * rowNum;
@@ -296,7 +305,7 @@ namespace metadata
 			table.push_back({ ComputTableIndexByte(TableType::METHOD) });
 		}
 		{
-			auto& table = _tableRowMetas[(int)TableType::FIELD_POINTER];
+			auto& table = _tableRowMetas[(int)TableType::FIELDPTR];
 			table.push_back({ ComputTableIndexByte(TableType::FIELD) });
 		}
 		{
@@ -306,7 +315,7 @@ namespace metadata
 			table.push_back({ ComputBlobIndexByte() });
 		}
 		{
-			auto& table = _tableRowMetas[(int)TableType::METHOD_POINTER];
+			auto& table = _tableRowMetas[(int)TableType::METHODPTR];
 			table.push_back({ ComputTableIndexByte(TableType::METHOD) });
 		}
 		{
@@ -319,7 +328,7 @@ namespace metadata
 			table.push_back({ ComputTableIndexByte(TableType::PARAM) });
 		}
 		{
-			auto& table = _tableRowMetas[(int)TableType::PARAM_POINTER];
+			auto& table = _tableRowMetas[(int)TableType::PARAMPTR];
 			table.push_back({ ComputTableIndexByte(TableType::PARAM) });
 		}
 		{
@@ -341,7 +350,8 @@ namespace metadata
 		}
 		{
 			auto& table = _tableRowMetas[(int)TableType::CONSTANT];
-			table.push_back({ 2 });
+			table.push_back({ 1 });
+			table.push_back({ 1 });
 			table.push_back({ ComputTableIndexByte(TableType::PARAM, TableType::FIELD, TableType::PROPERTY, TagBits::HasConstant) });
 			table.push_back({ ComputBlobIndexByte() });
 		}
@@ -383,7 +393,7 @@ namespace metadata
 			table.push_back({ ComputTableIndexByte(TableType::EVENT) });
 		}
 		{
-			auto& table = _tableRowMetas[(int)TableType::EVENT_POINTER];
+			auto& table = _tableRowMetas[(int)TableType::EVENTPTR];
 			table.push_back({ ComputTableIndexByte(TableType::EVENT) });
 		}
 		{
@@ -398,7 +408,7 @@ namespace metadata
 			table.push_back({ ComputTableIndexByte(TableType::PROPERTY) });
 		}
 		{
-			auto& table = _tableRowMetas[(int)TableType::PROPERTY_POINTER];
+			auto& table = _tableRowMetas[(int)TableType::PROPERTYPTR];
 			table.push_back({ ComputTableIndexByte(TableType::PROPERTY) });
 		}
 		{
@@ -536,7 +546,7 @@ namespace metadata
 			table.push_back({ ComputGUIDIndexByte() });
 		}
 		{
-			auto& table = _tableRowMetas[(int)TableType::METHODBODY];
+			auto& table = _tableRowMetas[(int)TableType::METHODDEBUGINFORMATION];
 			table.push_back({ ComputTableIndexByte(TableType::DOCUMENT) });
 			table.push_back({ ComputBlobIndexByte() });
 		}
@@ -572,7 +582,7 @@ namespace metadata
 		}
 		{
 			auto& table = _tableRowMetas[(int)TableType::CUSTOMDEBUGINFORMATION];
-			table.push_back({ ComputTableIndexByte(HasCustomDebugInformation, sizeof(HasCustomDebugInformation)/sizeof(TableType), TagBits::HasCustomDebugInformation) });
+			table.push_back({ ComputTableIndexByte(HasCustomDebugInformation, sizeof(HasCustomDebugInformation) / sizeof(TableType), TagBits::HasCustomDebugInformation) });
 			table.push_back({ ComputGUIDIndexByte() });
 			table.push_back({ ComputBlobIndexByte() });
 		}
@@ -594,14 +604,10 @@ namespace metadata
 					totalSize += col.size;
 				}
 				uint32_t computSize = ComputTableRowMetaDataSize((TableType)i);
-				if (computSize != totalSize)
-				{
-					IL2CPP_ASSERT(totalSize == computSize);
-				}
+				IL2CPP_ASSERT(totalSize == computSize);
 			}
 		}
 	}
-
 
 	uint32_t RawImageBase::ComputTableRowMetaDataSize(TableType tableIndex) const
 	{
@@ -614,11 +620,11 @@ namespace metadata
 			+ ComputTableIndexByte(TableType::TYPEDEF, TableType::TYPEREF, TableType::TYPESPEC, TagBits::TypeDefOrRef)
 			+ ComputTableIndexByte(TableType::FIELD)
 			+ ComputTableIndexByte(TableType::METHOD);
-		case TableType::FIELD_POINTER: return ComputTableIndexByte(TableType::FIELD);
+		case TableType::FIELDPTR: return ComputTableIndexByte(TableType::FIELD);
 		case TableType::FIELD: return 2 + ComputStringIndexByte() + ComputBlobIndexByte();
-		case TableType::METHOD_POINTER: return ComputTableIndexByte(TableType::METHOD);
+		case TableType::METHODPTR: return ComputTableIndexByte(TableType::METHOD);
 		case TableType::METHOD: return 4 + 2 + 2 + ComputStringIndexByte() + ComputBlobIndexByte() + ComputTableIndexByte(TableType::PARAM);
-		case TableType::PARAM_POINTER: return ComputTableIndexByte(TableType::PARAM);
+		case TableType::PARAMPTR: return ComputTableIndexByte(TableType::PARAM);
 		case TableType::PARAM: return 2 + 2 + ComputStringIndexByte();
 		case TableType::INTERFACEIMPL: return ComputTableIndexByte(TableType::TYPEDEF)
 			+ ComputTableIndexByte(TableType::TYPEDEF, TableType::TYPEREF, TableType::TYPESPEC, TagBits::TypeDefOrRef);
@@ -638,13 +644,13 @@ namespace metadata
 		case TableType::FIELDLAYOUT: return 4 + ComputTableIndexByte(TableType::FIELD);
 		case TableType::STANDALONESIG: return ComputBlobIndexByte();
 		case TableType::EVENTMAP: return ComputTableIndexByte(TableType::TYPEDEF) + ComputTableIndexByte(TableType::EVENT);
-		case TableType::EVENT_POINTER: return ComputTableIndexByte(TableType::EVENT);
+		case TableType::EVENTPTR: return ComputTableIndexByte(TableType::EVENT);
 		case TableType::EVENT: return 2
 			+ ComputStringIndexByte()
 			+ ComputTableIndexByte(TableType::TYPEDEF, TableType::TYPEREF, TableType::TYPESPEC, TagBits::TypeDefOrRef);
 		case TableType::PROPERTYMAP: return ComputTableIndexByte(TableType::TYPEDEF)
 			+ ComputTableIndexByte(TableType::PROPERTY);
-		case TableType::PROPERTY_POINTER: return ComputTableIndexByte(TableType::PROPERTY);
+		case TableType::PROPERTYPTR: return ComputTableIndexByte(TableType::PROPERTY);
 		case TableType::PROPERTY: return 2 + ComputStringIndexByte() + ComputBlobIndexByte();
 		case TableType::METHODSEMANTICS: return 2
 			+ ComputTableIndexByte(TableType::METHOD)
@@ -659,10 +665,8 @@ namespace metadata
 			+ ComputStringIndexByte()
 			+ ComputTableIndexByte(TableType::MODULEREF);
 		case TableType::FIELDRVA: return 4 + ComputTableIndexByte(TableType::FIELD);
-		case TableType::UNUSED6:
-		case TableType::UNUSED7:
-			LogPanic("unused table type");
-			return 0;
+		case TableType::ENCLOG: return 4 + 4;
+		case TableType::ENCMAP: return 4;
 		case TableType::ASSEMBLY: return 4 + 4 * 2 + 4
 			+ ComputBlobIndexByte()
 			+ ComputStringIndexByte() * 2;
@@ -695,7 +699,7 @@ namespace metadata
 			LogPanic("unused table type");
 			return 0;
 		case TableType::DOCUMENT: return ComputBlobIndexByte() + ComputGUIDIndexByte() + ComputBlobIndexByte() + ComputGUIDIndexByte();
-		case TableType::METHODBODY: return ComputTableIndexByte(TableType::DOCUMENT) + ComputBlobIndexByte();
+		case TableType::METHODDEBUGINFORMATION: return ComputTableIndexByte(TableType::DOCUMENT) + ComputBlobIndexByte();
 		case TableType::LOCALSCOPE:  return ComputTableIndexByte(TableType::METHOD) + ComputTableIndexByte(TableType::IMPORTSCOPE)
 			+ ComputTableIndexByte(TableType::LOCALVARIABLE) + ComputTableIndexByte(TableType::LOCALCONSTANT) + 4 + 4;
 		case TableType::LOCALVARIABLE: return 2 + 2 + ComputStringIndexByte();

@@ -176,6 +176,13 @@ namespace metadata
 		return index & 0xFFFFFF;
 	}
 
+	struct SectionHeader
+	{
+		uint32_t virtualAddressBegin;
+		uint32_t virtualAddressEnd;
+		uint32_t ptrRawDataRelatedToVirtualAddress;
+	};
+
 	struct ColumnOffsetSize
 	{
 		uint32_t size;
@@ -550,7 +557,7 @@ namespace metadata
 
 	struct ResolveMemberRefSig
 	{
-		TableType memberType; // FIELD_POINTER OR METHOD_POINTER
+		TableType memberType; // FIELDPTR OR METHODPTR
 		MethodRefSig method;
 		FieldRefSig field;
 	};

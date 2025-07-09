@@ -73,7 +73,7 @@ namespace metadata
 			return it->second;
 		}
 
-		TbSymbolDocument document = ReadSymbolDocument(rowIndex);
+		TbDocument document = ReadDocument(rowIndex);
 		SymbolDocumentData* documentData = new (HYBRIDCLR_MALLOC_ZERO(sizeof(SymbolDocumentData))) SymbolDocumentData();
 		BlobReader reader = GetBlobReaderByRawIndex(document.name);
 		
@@ -154,7 +154,7 @@ namespace metadata
 
 	PDBImage::SymbolMethodDefData* PDBImage::GetMethodDataFromCache(uint32_t methodToken)
 	{
-		const Table& tableMeta = GetTable(TableType::METHODBODY);
+		const Table& tableMeta = GetTable(TableType::METHODDEBUGINFORMATION);
 		uint32_t rowIndex = hybridclr::metadata::DecodeTokenRowIndex(methodToken);
 		if (rowIndex == 0 || rowIndex > tableMeta.rowNum)
 		{
@@ -170,7 +170,7 @@ namespace metadata
 		SymbolMethodDefData* methodData = new (HYBRIDCLR_MALLOC_ZERO(sizeof(SymbolMethodDefData))) SymbolMethodDefData();
 
 		// see https://github.com/dotnet/runtime/blob/main/docs/design/specs/PortablePdb-Metadata.md
-		TbSymbolMethodBody smb = ReadSymbolMethodBody(rowIndex);
+		TbMethodDebugInformation smb = ReadMethodDebugInformation(rowIndex);
 		methodData->document = smb.document;
 		if (smb.sequencePoints > 0)
 		{

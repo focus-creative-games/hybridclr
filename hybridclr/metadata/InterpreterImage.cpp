@@ -111,7 +111,7 @@ namespace metadata
 		aname.flags = data.flags;
 		aname.public_key = _rawImage->GetBlobFromRawIndex(data.publicKey);
 		aname.name = _rawImage->GetStringFromRawIndex(data.name);
-		aname.culture = _rawImage->GetStringFromRawIndex(data.culture);
+		aname.culture = _rawImage->GetStringFromRawIndex(data.locale);
 	}
 
 	void InterpreterImage::BuildIl2CppImage(Il2CppImage* image2)
