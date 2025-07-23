@@ -702,8 +702,7 @@ namespace transform
 
 	interpreter::IRCommon* CreateLdsfld(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo, uint32_t parent)
 	{
-		IL2CPP_ASSERT(fieldInfo->offset < (1 << 16));
-		uint16_t offset = (uint16_t)fieldInfo->offset;
+		uint32_t offset = fieldInfo->offset;
 
 		const Il2CppType* type = fieldInfo->type;
 		LocationDescInfo desc = ComputLocationDescInfo(type);
@@ -805,8 +804,7 @@ namespace transform
 
 	interpreter::IRCommon* CreateStsfld(TemporaryMemoryArena& pool, const FieldInfo* fieldInfo, uint32_t parent, int32_t dataIdx)
 	{
-		IL2CPP_ASSERT(fieldInfo->offset < (1 << 16));
-		uint16_t offset = (uint16_t)fieldInfo->offset;
+		uint32_t offset = fieldInfo->offset;
 
 
 		const Il2CppType* type = fieldInfo->type;

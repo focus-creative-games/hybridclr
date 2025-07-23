@@ -9896,8 +9896,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_i1:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int8_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9906,8 +9906,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_u1:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9916,8 +9916,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_i2:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int16_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9926,8 +9926,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_u2:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9936,8 +9936,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_i4:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(int32_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9946,8 +9946,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_u4:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9956,8 +9956,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_i8:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(int64_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9966,8 +9966,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_u8:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)(((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9976,8 +9976,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_8:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9986,8 +9986,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_12:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -9996,8 +9996,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_16:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -10006,8 +10006,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_20:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -10016,8 +10016,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_24:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -10026,8 +10026,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_28:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -10036,8 +10036,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_size_32:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32((void*)(localVarBase + __dst), ((byte*)__klass->static_fields) + __offset);
 				    ip += 16;
@@ -10047,8 +10047,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __offset = *(uint32_t*)(ip + 12);
+					uint16_t __size = *(uint16_t*)(ip + 4);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((void*)(localVarBase + __dst), (((byte*)__klass->static_fields) + __offset), __size);
 				    ip += 16;
@@ -10057,8 +10057,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldVarVar_n_4:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 					uint32_t __size = *(uint32_t*)(ip + 12);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((void*)(localVarBase + __dst), (((byte*)__klass->static_fields) + __offset), __size);
@@ -10068,8 +10068,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_i1:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(int8_t*)(_fieldAddr_) = (*(int8_t*)(localVarBase + __data));
@@ -10079,8 +10079,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_u1:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(uint8_t*)(_fieldAddr_) = (*(uint8_t*)(localVarBase + __data));
@@ -10090,8 +10090,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_i2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(int16_t*)(_fieldAddr_) = (*(int16_t*)(localVarBase + __data));
@@ -10101,8 +10101,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_u2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(uint16_t*)(_fieldAddr_) = (*(uint16_t*)(localVarBase + __data));
@@ -10112,8 +10112,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_i4:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(int32_t*)(_fieldAddr_) = (*(int32_t*)(localVarBase + __data));
@@ -10123,8 +10123,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_u4:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(uint32_t*)(_fieldAddr_) = (*(uint32_t*)(localVarBase + __data));
@@ -10134,8 +10134,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_i8:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(int64_t*)(_fieldAddr_) = (*(int64_t*)(localVarBase + __data));
@@ -10145,8 +10145,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_u8:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(uint64_t*)(_fieldAddr_) = (*(uint64_t*)(localVarBase + __data));
@@ -10156,8 +10156,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_ref:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    *(Il2CppObject**)(_fieldAddr_) = (*(Il2CppObject**)(localVarBase + __data));HYBRIDCLR_SET_WRITE_BARRIER((void**)_fieldAddr_);
@@ -10167,8 +10167,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_8:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10177,8 +10177,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_12:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10187,8 +10187,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_16:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10197,8 +10197,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_20:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10207,8 +10207,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_24:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10217,8 +10217,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_28:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10227,8 +10227,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_size_32:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10237,9 +10237,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_n_2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __offset = *(uint32_t*)(ip + 12);
+					uint16_t __data = *(uint16_t*)(ip + 2);
+					uint16_t __size = *(uint16_t*)(ip + 4);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
@@ -10247,9 +10247,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				}
 				case HiOpcodeEnum::StsfldVarVar_n_4:
 				{
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 					uint32_t __size = *(uint32_t*)(ip + 12);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove(((byte*)__klass->static_fields) + __offset, (void*)(localVarBase + __data), __size);
@@ -10259,9 +10259,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StsfldVarVar_WriteBarrier_n_2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __offset = *(uint32_t*)(ip + 12);
+					uint16_t __data = *(uint16_t*)(ip + 2);
+					uint16_t __size = *(uint16_t*)(ip + 4);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
 				    std::memmove(_fieldAddr_, (void*)(localVarBase + __data), __size);
@@ -10271,9 +10271,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				}
 				case HiOpcodeEnum::StsfldVarVar_WriteBarrier_n_4:
 				{
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 					uint32_t __size = *(uint32_t*)(ip + 12);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)__klass->static_fields) + __offset;
@@ -10285,8 +10285,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::LdsfldaVarVar:
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    (*(void**)(localVarBase + __dst)) = ((byte*)__klass->static_fields) + __offset;
 				    ip += 16;
@@ -10485,8 +10485,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_i1:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(int8_t*)_fieldAddr_ = (*(int8_t*)(localVarBase + __data));
@@ -10496,8 +10496,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_u1:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(uint8_t*)_fieldAddr_ = (*(uint8_t*)(localVarBase + __data));
@@ -10507,8 +10507,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_i2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(int16_t*)_fieldAddr_ = (*(int16_t*)(localVarBase + __data));
@@ -10518,8 +10518,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_u2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(uint16_t*)_fieldAddr_ = (*(uint16_t*)(localVarBase + __data));
@@ -10529,8 +10529,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_i4:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(int32_t*)_fieldAddr_ = (*(int32_t*)(localVarBase + __data));
@@ -10540,8 +10540,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_u4:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(uint32_t*)_fieldAddr_ = (*(uint32_t*)(localVarBase + __data));
@@ -10551,8 +10551,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_i8:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(int64_t*)_fieldAddr_ = (*(int64_t*)(localVarBase + __data));
@@ -10562,8 +10562,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_u8:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(uint64_t*)_fieldAddr_ = (*(uint64_t*)(localVarBase + __data));
@@ -10573,8 +10573,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_ref:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    *(Il2CppObject**)_fieldAddr_ = (*(Il2CppObject**)(localVarBase + __data));HYBRIDCLR_SET_WRITE_BARRIER((void**)_fieldAddr_);
@@ -10584,8 +10584,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_8:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy8((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10594,8 +10594,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_12:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy12((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10604,8 +10604,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_16:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy16((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10614,8 +10614,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_20:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy20((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10624,8 +10624,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_24:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy24((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10634,8 +10634,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_28:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy28((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10644,8 +10644,8 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_size_32:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 4);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    Copy32((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset)) + __offset, (void*)(localVarBase + __data));
 				    ip += 16;
@@ -10654,9 +10654,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_n_2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __offset = *(uint32_t*)(ip + 12);
+					uint16_t __data = *(uint16_t*)(ip + 2);
+					uint16_t __size = *(uint16_t*)(ip + 4);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, (void*)(localVarBase + __data), __size);
 				    ip += 16;
@@ -10664,9 +10664,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				}
 				case HiOpcodeEnum::StthreadlocalVarVar_n_4:
 				{
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 					uint32_t __size = *(uint32_t*)(ip + 12);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    std::memmove((byte*)il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset) + __offset, (void*)(localVarBase + __data), __size);
@@ -10676,9 +10676,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				case HiOpcodeEnum::StthreadlocalVarVar_WriteBarrier_n_2:
 				{
 					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
-					uint16_t __size = *(uint16_t*)(ip + 6);
+					uint32_t __offset = *(uint32_t*)(ip + 12);
+					uint16_t __data = *(uint16_t*)(ip + 2);
+					uint16_t __size = *(uint16_t*)(ip + 4);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
 				    std::memmove(_fieldAddr_, (void*)(localVarBase + __data), __size);
@@ -10688,9 +10688,9 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				}
 				case HiOpcodeEnum::StthreadlocalVarVar_WriteBarrier_n_4:
 				{
-					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 8)]);
-					uint16_t __offset = *(uint16_t*)(ip + 2);
-					uint16_t __data = *(uint16_t*)(ip + 4);
+					Il2CppClass* __klass = ((Il2CppClass*)imi->resolveDatas[*(uint32_t*)(ip + 4)]);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 2);
 					uint32_t __size = *(uint32_t*)(ip + 12);
 				    RuntimeInitClassCCtorWithoutInitClass(__klass);
 				    void* _fieldAddr_ = ((byte*)(il2cpp::vm::Thread::GetThreadStaticData(__klass->thread_static_fields_offset))) + __offset;
