@@ -249,7 +249,7 @@ namespace interpreter
 			AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 		}
 
-		for (uint8_t i = 0; i < method->parameterCount; i++)
+		for (uint16_t i = 0; i < method->parameterCount; i++)
 		{
 			TypeIndex paramTypeIndex = hybridclr::metadata::MetadataModule::GetParameterDefinitionFromIndex(image, method->parameterStart + i)->typeIndex;
 			AppendSignature(hybridclr::metadata::MetadataModule::GetIl2CppTypeFromEncodeIndex(paramTypeIndex), sigBuf, bufferSize, pos);

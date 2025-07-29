@@ -576,7 +576,7 @@ namespace metadata
 
 	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
 	{
-		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
+		if ((size_t)methodDef->parameters_count != resolveSig.params.size())
 		{
 			return false;
 		}
@@ -615,7 +615,7 @@ namespace metadata
 
 	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv)
 	{
-		if (methodDef->parameters_count != (uint16_t)resolveSig.params.size())
+		if ((size_t)methodDef->parameters_count != resolveSig.params.size())
 		{
 			return false;
 		}

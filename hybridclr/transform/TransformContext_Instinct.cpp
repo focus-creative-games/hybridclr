@@ -635,7 +635,6 @@ namespace transform
 
 	static bool CIH_Delegate(TransformContext& ctx, const MethodInfo* method)
 	{
-		uint8_t paramCount = method->parameters_count;
 		Il2CppClass* klass = method->klass;
 		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 2);
 #if HYBRIDCLR_UNITY_2021_OR_NEW
@@ -835,7 +834,7 @@ namespace transform
 		if (klass->byval_arg.type == IL2CPP_TYPE_ARRAY)
 		{
 			const char* methodName = method->name;
-			uint8_t paramCount = method->parameters_count + 1;
+			int32_t paramCount = method->parameters_count + 1;
 			const Il2CppType* eleType = &klass->element_class->byval_arg;
 			LocationDescInfo desc = ComputLocationDescInfo(eleType);
 			if (strcmp(methodName, "Get") == 0)
