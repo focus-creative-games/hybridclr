@@ -1487,6 +1487,11 @@ namespace metadata
 				uint32_t actualParamCount = (uint32_t)_params.size() - actualParamStart;
 				md.parameterStart = actualParamStart;
 				md.parameterCount = actualParamCount;
+				if (md.parameterCount >= 256)
+				{
+					TEMP_FORMAT(errMsg, "method:%s.%s parameter count:%d is too large", _rawImage->GetStringFromRawIndex(DecodeMetadataIndex(typeDef.nameIndex)), methodName, md.parameterCount);
+                    RaiseExecutionEngineException(errMsg);
+				}
 				for (uint32_t paramRowIndex = namedParamStart + 1; paramRowIndex <= namedParamStart + namedParamCount; paramRowIndex++)
 				{
 					TbParam data = _rawImage->ReadParam(paramRowIndex);
