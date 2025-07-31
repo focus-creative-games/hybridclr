@@ -38,7 +38,7 @@ namespace hybridclr
 			Il2CppObject** ptrObj;
 		};
 
-		static_assert(sizeof(StackObject) == 8, "requrie 8 bytes");
+		static_assert(sizeof(StackObject) == 8, "require 8 bytes");
 
 
 		enum class ExceptionFlowType
