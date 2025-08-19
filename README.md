@@ -20,19 +20,19 @@ HybridCLR扩充了il2cpp运行时代码，使它由纯[AOT](https://en.wikipedia
 
 ## 文档
 
-- [官方文档](https://hybridclr.doc.code-philosophy.com/docs/intro)
-- [快速上手](https://hybridclr.doc.code-philosophy.com/docs/beginner/quickstart)
-- [商业项目案例](https://hybridclr.doc.code-philosophy.com/docs/other/businesscase)
+- [官方文档](https://www.hybridclr.cn/docs/intro)
+- [快速上手](https://www.hybridclr.cn/docs/beginner/quickstart)
+- [商业项目案例](https://www.hybridclr.cn/docs/other/businesscase)
 
 
 ## 特性
 
-- 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，只有极少量的[不支持的特性](https://hybridclr.doc.code-philosophy.com/docs/basic/notsupportedfeatures)。
+- 近乎完整实现了[ECMA-335规范](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/)，只有极少量的[不支持的特性](https://www.hybridclr.cn/docs/basic/notsupportedfeatures)。
 - 零学习和使用成本。对绝大多数开发者来说写代码近乎没有限制。 热更新代码与AOT代码无缝工作，可以随意写继承、**泛型**、**反射**之类的代码。不需要额外写任何特殊代码、没有代码生成
 - 完全支持多线程，包含但不限于 volatile、ThreadStatic、async Task等相关功能和特性。这是其他所有热更新方案都不支持的
 - 几乎完全兼容Unity的工作流。包括且不限于支持热更新**MonoBehaviour**、ScriptableObject、**DOTS**技术，资源上挂载的热更新脚本可以正确实例化，这是其他所有热更新方案都不支持的
-- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://hybridclr.doc.code-philosophy.com/docs/basic/performance)
-- 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://hybridclr.doc.code-philosophy.com/docs/basic/memory)
+- 执行高效。实现了一个极其高效的寄存器解释器，所有指标都大幅优于其他热更新方案。[性能测试报告](https://www.hybridclr.cn/docs/basic/performance)
+- 内存高效。 热更新脚本中定义的类跟普通c#类占用一样的内存空间，远优于其他热更新方案。[内存占用报告](https://www.hybridclr.cn/docs/basic/memory)
 - 支持MonoPInvokeCallback，可以与native代码或者其他语言如lua、javascript、python良好交互
 - 支持一些il2cpp不支持的特性，如__makeref、 __reftype、__refvalue指令
 - 支持独创的 **Differential Hybrid Execution(DHE)** 差分混合执行技术，即可以对AOT dll任意增删改，会智能地让未改动的函数以AOT方式运行，变化或者新增的函数以interpreter模式运行，让热更新的游戏逻辑的运行性能基本达到原生AOT的水平
@@ -66,7 +66,7 @@ HybridCLR已经被广泛验证是非常高效、稳定的Unity热更新解决方
 
 目前已经有数千个商业游戏项目接入了HybridCLR，其中有超过千个已经在App Store和Google Player上线，仅仅iOS免费榜前500名中就有近百款使用了HybridCLR。上线的项目中包括MMORPG、重度卡牌、重度塔防之类的游戏。国内绝大多数**Top游戏公司**都已经在使用HybridCLR。
 
-可查看我们已知的头部公司中使用HybridCLR并且已经上线的[项目列表](https://hybridclr.doc.code-philosophy.com/docs/other/businesscase)。
+可查看我们已知的头部公司中使用HybridCLR并且已经上线的[项目列表](https://www.hybridclr.cn/docs/other/businesscase)。
 
 ## 支持与联系
 
@@ -76,7 +76,7 @@ HybridCLR已经被广泛验证是非常高效、稳定的Unity热更新解决方
 - 新手3群（2000人）：**920714552（推荐）**
 - discord频道 https://discord.gg/BATfNfJnm2
 - 商业合作邮箱: business#code-philosophy.com
-- [商业化支持](https://hybridclr.doc.code-philosophy.com/docs/business/intro)
+- [商业化支持](https://www.hybridclr.cn/docs/business/intro)
 
 ## 关于作者
 

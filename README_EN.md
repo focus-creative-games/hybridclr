@@ -21,18 +21,18 @@ Welcome to embrace modern native C# hot update technology!
 
 ## Documentation
 
-- [Official Documentation](https://hybridclr.doc.code-philosophy.com/en/docs/intro)
-- [Quick Start](https://hybridclr.doc.code-philosophy.com/en/docs/beginner/quickstart)
-- [Business Project Cases](https://hybridclr.doc.code-philosophy.com/en/docs/other/businesscase)
+- [Official Documentation](https://www.hybridclr.cn/en/docs/intro)
+- [Quick Start](https://www.hybridclr.cn/en/docs/beginner/quickstart)
+- [Business Project Cases](https://www.hybridclr.cn/en/docs/other/businesscase)
 
 ## Features
 
-- Nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), with only a very small number of [unsupported features](https://hybridclr.doc.code-philosophy.com/en/docs/basic/notsupportedfeatures).
+- Nearly complete implementation of the [ECMA-335 specification](https://www.ecma-international.org/publications-and-standards/standards/ecma-335/), with only a very small number of [unsupported features](https://www.hybridclr.cn/en/docs/basic/notsupportedfeatures).
 - Zero learning and usage costs. For most developers, writing code is almost unrestricted. Hot update code works seamlessly with AOT code, allowing for inheritance, **generics**, **reflection**, and other code without additional special code or code generation.
 - Full support for multithreading, including but not limited to volatile, ThreadStatic, async Task, and related features and characteristics. This is not supported by any other hot update solution.
 - Almost complete compatibility with Unity's workflow. This includes support for hot updating **MonoBehaviour**, ScriptableObject, **DOTS** technology, and correctly instantiating hot update scripts mounted on resources, which is not supported by any other hot update solution.
-- Efficient execution. A highly efficient register interpreter has been implemented, with all indicators significantly better than other hot update solutions. [Performance Test Report](https://hybridclr.doc.code-philosophy.com/en/docs/basic/performance)
-- Efficient memory usage. Classes defined in hot update scripts occupy the same memory space as ordinary C# classes, far superior to other hot update solutions. [Memory Usage Report](https://hybridclr.doc.code-philosophy.com/en/docs/basic/memory)
+- Efficient execution. A highly efficient register interpreter has been implemented, with all indicators significantly better than other hot update solutions. [Performance Test Report](https://www.hybridclr.cn/en/docs/basic/performance)
+- Efficient memory usage. Classes defined in hot update scripts occupy the same memory space as ordinary C# classes, far superior to other hot update solutions. [Memory Usage Report](https://www.hybridclr.cn/en/docs/basic/memory)
 - Supports MonoPInvokeCallback, enabling good interaction with native code or other languages such as Lua, JavaScript, Python.
 - Supports some features not supported by il2cpp, such as __makeref, __reftype, __refvalue instructions.
 - Supports the unique **Differential Hybrid Execution (DHE)** technology, which allows for arbitrary additions, deletions, and modifications to AOT DLLs. It intelligently runs unchanged functions in AOT mode and changed or newly added functions in interpreter mode, bringing the performance of hot-updated game logic close to that of native AOT.
@@ -66,7 +66,7 @@ HybridCLR has been widely verified as an efficient and stable Unity hot update s
 
 Currently, thousands of commercial game projects have integrated HybridCLR, with over a thousand already launched on the App Store and Google Play. Nearly a hundred of the top 500 free iOS games use HybridCLR, including MMORPGs, heavy card games, and heavy tower defense games. Most of the **Top Game Companies** in China are already using HybridCLR.
 
-You can view the [list of known top companies using HybridCLR and their launched projects](https://hybridclr.doc.code-philosophy.com/en/docs/other/businesscase).
+You can view the [list of known top companies using HybridCLR and their launched projects](https://www.hybridclr.cn/en/docs/other/businesscase).
 
 ## Support and Contact
 
@@ -76,7 +76,7 @@ You can view the [list of known top companies using HybridCLR and their launched
 - Beginner Group 3: **920714552 (Recommended)**
 - Discord channel https://discord.gg/BATfNfJnm2
 - Business cooperation email: business#code-philosophy.com
-- [Commercial Support](https://hybridclr.doc.code-philosophy.com/en/docs/business/intro)
+- [Commercial Support](https://www.hybridclr.cn/en/docs/business/intro)
 
 ## About the Author
 
