@@ -4171,26 +4171,6 @@ else \
 					}
 				}
 
-				// optimize when argv == 0
-				if (shareMethod->parameters_count == 0)
-				{
-					if (IS_CLASS_VALUE_TYPE(klass))
-					{
-						CreateAddIR(ir, NewValueTypeVar_Ctor_0);
-						ir->obj = GetEvalStackNewTopOffset();
-						ir->size = GetTypeValueSize(&klass->byval_arg);
-						PushStackByType(&klass->byval_arg);
-					}
-					else
-					{
-						CreateAddIR(ir, NewClassVar_Ctor_0);
-						ir->method = GetOrAddResolveDataIndex(shareMethod);
-						ir->obj = GetEvalStackNewTopOffset();
-						PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
-					}
-					continue;
-				}
-
 				if (!InitAndGetInterpreterDirectlyCallMethodPointer(shareMethod))
 				{
 					RaiseAOTGenericMethodNotInstantiatedException(shareMethod);
