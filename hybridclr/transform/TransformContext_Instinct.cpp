@@ -466,7 +466,7 @@ namespace transform
 		{
             IHCreateAddIR(ir, NewValueTypeVar_Ctor_0);
 			uint32_t objSize = GetTypeValueSize(instanceKlass);
-			ir->obj = ctx.GetEvalStackTopOffset();
+			ir->obj = ctx.GetEvalStackNewTopOffset();
 			ir->size = objSize;
 			ctx.PushStackByType(&instanceKlass->byval_arg);
 		}
