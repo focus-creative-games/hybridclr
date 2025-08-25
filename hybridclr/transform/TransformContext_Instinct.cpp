@@ -457,32 +457,44 @@ namespace transform
 			return false;
 		}
 		const Il2CppType* instType = method->genericMethod->context.method_inst->type_argv[0];
-        Il2CppClass* instanceKlass = il2cpp::vm::Class::FromIl2CppType(instType);
+		Il2CppClass* instanceKlass = il2cpp::vm::Class::FromIl2CppType(instType);
 		if (instanceKlass == nullptr)
 		{
 			return false;
 		}
 		if (IS_CLASS_VALUE_TYPE(instanceKlass))
 		{
-            IHCreateAddIR(ir, NewValueTypeVar_Ctor_0);
+			if (instanceKlass->castClass->byval_arg.type < IL2CPP_TYPE_I4)
+			{
+				return false;
+			}
+			IHCreateAddIR(ir, NewValueTypeVar_Ctor_0);
 			uint32_t objSize = GetTypeValueSize(instanceKlass);
 			ir->obj = ctx.GetEvalStackNewTopOffset();
 			ir->size = objSize;
 			ctx.PushStackByType(&instanceKlass->byval_arg);
+			return true;
 		}
 		else
 		{
-            const MethodInfo* ctorMethod = FindZeroArgumentCtor(instanceKlass);
+			return false;
+			/*
+			const MethodInfo* ctorMethod = FindZeroArgumentCtor(instanceKlass);
 			if (ctorMethod == nullptr)
 			{
 				return false;
 			}
+			if (!InitAndGetInterpreterDirectlyCallMethodPointer(ctorMethod))
+			{
+				RaiseAOTGenericMethodNotInstantiatedException(ctorMethod);
+			}
+			//return false;
 			IHCreateAddIR(ir, NewClassVar_Ctor_0);
 			ir->method = ctx.GetOrAddResolveDataIndex(ctorMethod);
 			ir->obj = ctx.GetEvalStackNewTopOffset();
 			ctx.PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
+			*/
 		}
-		return true;
 	}
 
 
