@@ -448,6 +448,7 @@ namespace interpreter
 		else
 		{
 			firstSubDel = (Il2CppDelegate**)&del;
+			firstSubDel[0] = &del->delegate;
 			subDelCount = 1;
 		}
 
@@ -549,6 +550,7 @@ namespace interpreter
 		else
 		{
 			firstSubDel = (Il2CppDelegate**)&del;
+			firstSubDel[0] = &del->delegate;
 			subDelCount = 1;
 		}
 		void* ret = nullptr;
