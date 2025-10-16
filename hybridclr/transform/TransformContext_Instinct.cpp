@@ -75,14 +75,22 @@ namespace transform
 
 	static bool IH_object_ctor(TransformContext& ctx, const MethodInfo* method)
 	{
-#if IL2CPP_DEBUG
-		IRCommon* last = ctx.GetCurbb()->insts.back();
-		IL2CPP_ASSERT(last->type == HiOpcodeEnum::LdlocVarVar);
-		IRLdlocVarVar* ldthis = (IRLdlocVarVar*)last;
-		IL2CPP_ASSERT(ldthis->dst == ctx.GetEvalStackTopOffset());
-#endif
-		ctx.GetCurbb()->insts.pop_back();
 		ctx.PopStack();
+		auto& insts = ctx.GetCurbb()->insts;
+		if (!insts.empty())
+		{
+			IRCommon* last = insts.back();
+			if (last->type != HiOpcodeEnum::LdlocVarVar)
+			{
+				return true;
+			}
+			IRLdlocVarVar* ldthis = (IRLdlocVarVar*)last;
+			if (ldthis->dst == ctx.GetEvalStackNewTopOffset())
+			{
+				// pop ldthis
+				insts.pop_back();
+			}
+		}
 		return true;
 	}
 
