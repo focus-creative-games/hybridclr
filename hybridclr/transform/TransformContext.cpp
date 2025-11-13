@@ -386,13 +386,10 @@ namespace transform
 		}
 	}
 
-	interpreter::IRCommon* CreateClassLdfld(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, const FieldInfo* fieldInfo)
+    constexpr uint32_t kMaxShortFieldOffset = 0xFFFF;
+
+	interpreter::IRCommon* CreateClassLdfldSmall(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, uint16_t offset, LocationDescInfo desc)
 	{
-		uint16_t offset = (uint16_t)GetFieldOffset(fieldInfo);
-
-		const Il2CppType* type = fieldInfo->type;
-		LocationDescInfo desc = ComputLocationDescInfo(type);
-
 		CreateIR(ir, LdfldVarVar_i1);
 		ir->dst = dstIdx;
 		ir->obj = objIdx;
@@ -488,13 +485,121 @@ namespace transform
 		}
 	}
 
-	interpreter::IRCommon* CreateValueTypeLdfld(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, const FieldInfo* fieldInfo)
+	interpreter::IRCommon* CreateClassLdfldLarge(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, uint32_t offset, LocationDescInfo desc)
 	{
-		uint16_t offset = (uint16_t)GetFieldOffset(fieldInfo);
+		CreateIR(ir, LdfldLargeVarVar_i1);
+		ir->dst = dstIdx;
+		ir->obj = objIdx;
+		ir->offset = offset;
+		switch (desc.type)
+		{
+		case LocationDescType::I1:
+		{
+			ir->type = HiOpcodeEnum::LdfldLargeVarVar_i1;
+			return ir;
+		}
+		case LocationDescType::U1:
+		{
+			ir->type = HiOpcodeEnum::LdfldLargeVarVar_u1;
+			return ir;
+		}
+		case LocationDescType::I2:
+		{
+			ir->type = HiOpcodeEnum::LdfldLargeVarVar_i2;
+			return ir;
+		}
+		case LocationDescType::U2:
+		{
+			ir->type = HiOpcodeEnum::LdfldLargeVarVar_u2;
+			return ir;
+		}
+		case LocationDescType::I4:
+		{
+			ir->type = HiOpcodeEnum::LdfldLargeVarVar_i4;
+			return ir;
+		}
+		case LocationDescType::I8:
+		{
+			ir->type = HiOpcodeEnum::LdfldLargeVarVar_i8;
+			return ir;
+		}
+		case LocationDescType::Ref:
+		{
+			ir->type = ARCH_ARGUMENT(HiOpcodeEnum::LdfldLargeVarVar_i4, HiOpcodeEnum::LdfldLargeVarVar_i8);
+			return ir;
+		}
+		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
+		{
+			switch (desc.size)
+			{
+			case 12:
+			{
+				ir->type = HiOpcodeEnum::LdfldLargeVarVar_size_12;
+				return ir;
+			}
+			case 16:
+			{
+				ir->type = HiOpcodeEnum::LdfldLargeVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::LdfldLargeVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::LdfldLargeVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::LdfldLargeVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::LdfldLargeVarVar_size_32;
+				return ir;
+			}
+			default:
+			{
+				CreateIR(irn, LdfldLargeVarVar_n_4);
+				irn->dst = dstIdx;
+				irn->obj = objIdx;
+				irn->offset = offset;
+				irn->size = desc.size;
+				return irn;
+			}
+			}
+		}
+		default:
+		{
+			RaiseExecutionEngineException("field");
+			return ir;
+		}
+		}
+	}
 
+
+	interpreter::IRCommon* CreateClassLdfld(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, const FieldInfo* fieldInfo)
+	{
+		uint32_t offset = GetFieldOffset(fieldInfo);
 		const Il2CppType* type = fieldInfo->type;
 		LocationDescInfo desc = ComputLocationDescInfo(type);
+		if (offset <= kMaxShortFieldOffset)
+		{
+			return CreateClassLdfldSmall(pool, dstIdx, objIdx, (uint16_t)offset, desc);
+		}
+		else
+		{
+			return CreateClassLdfldLarge(pool, dstIdx, objIdx, offset, desc);
+		}
+	}
 
+	interpreter::IRCommon* CreateValueTypeLdfldSmall(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, uint16_t offset, LocationDescInfo desc)
+	{
 		CreateIR(ir, LdfldValueTypeVarVar_i1);
 		ir->dst = dstIdx;
 		ir->obj = objIdx;
@@ -590,13 +695,121 @@ namespace transform
 		}
 	}
 
-	interpreter::IRCommon* CreateStfld(TemporaryMemoryArena& pool, int32_t objIdx, const FieldInfo* fieldInfo, int32_t dataIdx)
+	interpreter::IRCommon* CreateValueTypeLdfldLarge(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, uint32_t offset, LocationDescInfo desc)
 	{
-		uint16_t offset = (uint16_t)GetFieldOffset(fieldInfo);
+		CreateIR(ir, LdfldValueTypeLargeVarVar_i1);
+		ir->dst = dstIdx;
+		ir->obj = objIdx;
+		ir->offset = offset;
+		switch (desc.type)
+		{
+		case LocationDescType::I1:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_i1;
+			return ir;
+		}
+		case LocationDescType::U1:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_u1;
+			return ir;
+		}
+		case LocationDescType::I2:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_i2;
+			return ir;
+		}
+		case LocationDescType::U2:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_u2;
+			return ir;
+		}
+		case LocationDescType::I4:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_i4;
+			return ir;
+		}
+		case LocationDescType::I8:
+		{
+			ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_i8;
+			return ir;
+		}
+		case LocationDescType::Ref:
+		{
+			ir->type = ARCH_ARGUMENT(HiOpcodeEnum::LdfldValueTypeLargeVarVar_i4, HiOpcodeEnum::LdfldValueTypeLargeVarVar_i8);
+			return ir;
+		}
+		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
+		{
+			switch (desc.size)
+			{
+			case 12:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_12;
+				return ir;
+			}
+			case 16:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_32;
+				return ir;
+			}
+			default:
+			{
+				CreateIR(irn, LdfldValueTypeLargeVarVar_n_4);
+				irn->dst = dstIdx;
+				irn->obj = objIdx;
+				irn->offset = offset;
+				irn->size = desc.size;
+				return irn;
+			}
+			}
+		}
+		default:
+		{
+			RaiseExecutionEngineException("field");
+			return ir;
+		}
+		}
+	}
+
+	interpreter::IRCommon* CreateValueTypeLdfld(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, const FieldInfo* fieldInfo)
+	{
+		uint32_t offset = GetFieldOffset(fieldInfo);
 
 		const Il2CppType* type = fieldInfo->type;
 		LocationDescInfo desc = ComputLocationDescInfo(type);
+		if (offset <= kMaxShortFieldOffset)
+		{
+			return CreateValueTypeLdfldSmall(pool, dstIdx, objIdx, (uint16_t)offset, desc);
+		}
+		else
+		{
+			return CreateValueTypeLdfldLarge(pool, dstIdx, objIdx, offset, desc);
+        }
+	}
 
+	interpreter::IRCommon* CreateStfldSmall(TemporaryMemoryArena& pool, int32_t objIdx, const FieldInfo* fieldInfo, int32_t dataIdx, uint16_t offset, LocationDescInfo desc)
+	{
 		CreateIR(ir, StfldVarVar_i1);
 		ir->data = dataIdx;
 		ir->obj = objIdx;
@@ -698,6 +911,127 @@ namespace transform
 			return ir;
 		}
 		}
+	}
+
+	interpreter::IRCommon* CreateStfldLarge(TemporaryMemoryArena& pool, int32_t objIdx, const FieldInfo* fieldInfo, int32_t dataIdx, uint32_t offset, LocationDescInfo desc)
+	{
+		CreateIR(ir, StfldLargeVarVar_i1);
+		ir->data = dataIdx;
+		ir->obj = objIdx;
+		ir->offset = offset;
+		switch (desc.type)
+		{
+		case LocationDescType::I1:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_i1;
+			return ir;
+		}
+		case LocationDescType::U1:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_u1;
+			return ir;
+		}
+		case LocationDescType::I2:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_i2;
+			return ir;
+		}
+		case LocationDescType::U2:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_u2;
+			return ir;
+		}
+		case LocationDescType::I4:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_i4;
+			return ir;
+		}
+		case LocationDescType::I8:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_i8;
+			return ir;
+		}
+		case LocationDescType::Ref:
+		{
+			ir->type = HiOpcodeEnum::StfldLargeVarVar_ref;
+			return ir;
+		}
+		case LocationDescType::S:
+		{
+			switch (desc.size)
+			{
+			case 12:
+			{
+				ir->type = HiOpcodeEnum::StfldLargeVarVar_size_12;
+				return ir;
+			}
+			case 16:
+			{
+				ir->type = HiOpcodeEnum::StfldLargeVarVar_size_16;
+				return ir;
+			}
+			case 20:
+			{
+				ir->type = HiOpcodeEnum::StfldLargeVarVar_size_20;
+				return ir;
+			}
+			case 24:
+			{
+				ir->type = HiOpcodeEnum::StfldLargeVarVar_size_24;
+				return ir;
+			}
+			case 28:
+			{
+				ir->type = HiOpcodeEnum::StfldLargeVarVar_size_28;
+				return ir;
+			}
+			case 32:
+			{
+				ir->type = HiOpcodeEnum::StfldLargeVarVar_size_32;
+				return ir;
+			}
+			default:
+			{
+				CreateIR(irn, StfldLargeVarVar_n_4);
+				irn->data = dataIdx;
+				irn->obj = objIdx;
+				irn->offset = offset;
+				irn->size = desc.size;
+				return irn;
+			}
+			}
+		}
+		case LocationDescType::StructContainsRef:
+		{
+			CreateIR(irn, StfldLargeVarVar_WriteBarrier_n_4);
+			irn->data = dataIdx;
+			irn->obj = objIdx;
+			irn->offset = offset;
+			irn->size = desc.size;
+			return irn;
+		}
+		default:
+		{
+			RaiseExecutionEngineException("field");
+			return ir;
+		}
+		}
+	}
+
+	interpreter::IRCommon* CreateStfld(TemporaryMemoryArena& pool, int32_t objIdx, const FieldInfo* fieldInfo, int32_t dataIdx)
+	{
+		uint32_t offset = GetFieldOffset(fieldInfo);
+
+		const Il2CppType* type = fieldInfo->type;
+		LocationDescInfo desc = ComputLocationDescInfo(type);
+		if (offset <= kMaxShortFieldOffset)
+		{
+			return CreateStfldSmall(pool, objIdx, fieldInfo, dataIdx, (uint16_t)offset, desc);
+		}
+		else
+		{
+			return CreateStfldLarge(pool, objIdx, fieldInfo, dataIdx, offset,  desc);
+        }
 	}
 
 	interpreter::IRCommon* CreateLdsfld(TemporaryMemoryArena& pool, int32_t dstIdx, const FieldInfo* fieldInfo, uint32_t parent)
@@ -4385,10 +4719,21 @@ else \
 				IL2CPP_ASSERT(fieldInfo);
 
 				uint16_t topIdx = GetEvalStackTopOffset();
-				CreateAddIR(ir, LdfldaVarVar);
-				ir->dst = topIdx;
-				ir->obj = topIdx;
-				ir->offset = GetFieldOffset(fieldInfo);
+				uint32_t fieldOffset = GetFieldOffset(fieldInfo);
+				if (fieldOffset <= kMaxShortFieldOffset)
+				{
+					CreateAddIR(ir, LdfldaVarVar);
+					ir->dst = topIdx;
+					ir->obj = topIdx;
+					ir->offset = (uint16_t)fieldOffset;
+				}
+				else
+				{
+					CreateAddIR(ir, LdfldaLargeVarVar);
+					ir->dst = topIdx;
+					ir->obj = topIdx;
+					ir->offset = fieldOffset;
+				}
 
 				PopStack();
 				PushStackByReduceType(NATIVE_INT_REDUCE_TYPE);
