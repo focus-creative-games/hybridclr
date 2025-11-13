@@ -10713,6 +10713,560 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				    ip += 16;
 				    continue;
 				}
+				case HiOpcodeEnum::LdfldaLargeVarVar:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(void**)(localVarBase + __dst)) = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_i1:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int32_t*)(localVarBase + __dst)) = *(int8_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_u1:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_i2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int32_t*)(localVarBase + __dst)) = *(int16_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_u2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_i4:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int32_t*)(localVarBase + __dst)) = *(int32_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_u4:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_i8:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int64_t*)(localVarBase + __dst)) = *(int64_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_u8:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    (*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_8:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy8((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_12:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy12((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_16:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy16((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_20:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy20((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_24:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy24((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_28:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy28((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_size_32:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy32((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_n_2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __size = *(uint16_t*)(ip + 6);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    std::memmove((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, __size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldLargeVarVar_n_4:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint32_t __size = *(uint32_t*)(ip + 12);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    std::memmove((void*)(localVarBase + __dst), (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, __size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_i1:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int32_t*)(localVarBase + __dst)) = *(int8_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_u1:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int32_t*)(localVarBase + __dst)) = *(uint8_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_i2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int32_t*)(localVarBase + __dst)) = *(int16_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_u2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int32_t*)(localVarBase + __dst)) = *(uint16_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_i4:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int32_t*)(localVarBase + __dst)) = *(int32_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_u4:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int32_t*)(localVarBase + __dst)) = *(uint32_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_i8:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int64_t*)(localVarBase + __dst)) = *(int64_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_u8:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					(*(int64_t*)(localVarBase + __dst)) = *(uint64_t*)((byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_8:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy8((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_12:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy12((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_16:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy16((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_20:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy20((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_24:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy24((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_28:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy28((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_size_32:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					Copy32((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_n_2:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __size = *(uint16_t*)(ip + 6);
+					std::memmove((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset, __size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::LdfldValueTypeLargeVarVar_n_4:
+				{
+					uint16_t __dst = *(uint16_t*)(ip + 2);
+					uint16_t __obj = *(uint16_t*)(ip + 4);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint32_t __size = *(uint32_t*)(ip + 12);
+					std::memmove((void*)(localVarBase + __dst), (byte*)(void*)(localVarBase + __obj) + __offset, __size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_i1:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(int8_t*)(_fieldAddr_) = (*(int8_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_u1:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(uint8_t*)(_fieldAddr_) = (*(uint8_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_i2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(int16_t*)(_fieldAddr_) = (*(int16_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_u2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(uint16_t*)(_fieldAddr_) = (*(uint16_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_i4:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(int32_t*)(_fieldAddr_) = (*(int32_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_u4:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(uint32_t*)(_fieldAddr_) = (*(uint32_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_i8:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(int64_t*)(_fieldAddr_) = (*(int64_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_u8:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(uint64_t*)(_fieldAddr_) = (*(uint64_t*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_ref:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    *(Il2CppObject**)(_fieldAddr_) = (*(Il2CppObject**)(localVarBase + __data));HYBRIDCLR_SET_WRITE_BARRIER((void**)_fieldAddr_);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_8:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy8((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_12:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy12((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_16:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy16((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_20:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy20((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_24:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy24((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_28:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy28((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_size_32:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    Copy32((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data));
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_n_2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint16_t __size = *(uint16_t*)(ip + 6);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    std::memmove((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data), __size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_n_4:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __size = *(uint32_t*)(ip + 12);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    std::memmove((uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset, (void*)(localVarBase + __data), __size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_WriteBarrier_n_2:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint16_t __size = *(uint16_t*)(ip + 6);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    std::memmove(_fieldAddr_, (void*)(localVarBase + __data), __size);
+				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_fieldAddr_, (size_t)__size);
+				    ip += 16;
+				    continue;
+				}
+				case HiOpcodeEnum::StfldLargeVarVar_WriteBarrier_n_4:
+				{
+					uint16_t __obj = *(uint16_t*)(ip + 2);
+					uint32_t __offset = *(uint32_t*)(ip + 8);
+					uint16_t __data = *(uint16_t*)(ip + 4);
+					uint32_t __size = *(uint32_t*)(ip + 12);
+				    CHECK_NOT_NULL_THROW((*(Il2CppObject**)(localVarBase + __obj)));
+				    void* _fieldAddr_ = (uint8_t*)(*(Il2CppObject**)(localVarBase + __obj)) + __offset;
+				    std::memmove(_fieldAddr_, (void*)(localVarBase + __data), __size);
+				    HYBRIDCLR_SET_WRITE_BARRIER((void**)_fieldAddr_, (size_t)__size);
+				    ip += 16;
+				    continue;
+				}
 
 				//!!!}}OBJECT
 #pragma endregion
