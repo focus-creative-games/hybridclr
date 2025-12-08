@@ -20,7 +20,7 @@ namespace hybridclr
 			//const char* namespaze;
 			//int32_t aotTypeIndex; // il2cpp type index
 			const Il2CppType* aotIl2CppType;
-			const Il2CppTypeDefinition* aotTypeDef;
+			Il2CppMetadataTypeHandle aotTypeHandle;
 			//const Il2CppClass* aotKlass;
 		};
 
@@ -46,7 +46,7 @@ namespace hybridclr
 			//const Il2CppTypeDefinition* declaringTypeDef;
 			//const Il2CppClass* declaringKlass;
 			//const char* name;
-			const Il2CppMethodDefinition* aotMethodDef;
+			Il2CppMetadataMethodDefinitionHandle aotMethodHandle;
 		};
 
 		struct SuperSetFieldDefDetail
@@ -56,7 +56,7 @@ namespace hybridclr
 			//Il2CppType type;
 			//const Il2CppTypeDefinition* declaringTypeDef;
 			const Il2CppType* declaringIl2CppType;
-			const Il2CppFieldDefinition* aotFieldDef;
+            FieldIndex aotFieldIndex;
 		};
 
 		class SuperSetAOTHomologousImage : public AOTHomologousImage
@@ -71,7 +71,7 @@ namespace hybridclr
 			const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
 			Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
 			Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;
-			const Il2CppMethodDefinition* GetMethodDefinitionFromRawIndex(uint32_t index) override;
+			const Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) override;
 			void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 		private:
 

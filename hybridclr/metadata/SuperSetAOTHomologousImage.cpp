@@ -16,48 +16,51 @@ namespace metadata
 
 
 
-	const Il2CppMethodDefinition* FindMatchMethod(const Il2CppTypeDefinition* aotTypeDef, const SuperSetMethodDefDetail& method2, const char* methodName, const MethodRefSig& methodSignature)
+	const Il2CppMetadataMethodDefinitionHandle FindMatchMethod(const Il2CppTypeDefinition& aotTypeDef, const SuperSetMethodDefDetail& method2, const char* methodName, const MethodRefSig& methodSignature)
 	{
-		const Il2CppGenericContainer* klassGenContainer = aotTypeDef->genericContainerIndex != kGenericContainerIndexInvalid ?
-			(const Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef->genericContainerIndex) : nullptr;
-		for (uint16_t i = 0; i < aotTypeDef->method_count; i++)
+		const Il2CppGenericContainer* klassGenContainer = aotTypeDef.genericContainerIndex != kGenericContainerIndexInvalid ?
+			(const Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef.genericContainerIndex) : nullptr;
+		for (uint16_t i = 0; i < aotTypeDef.method_count; i++)
 		{
 			//const MethodInfo* method1 = klass1->methods[i];
-			const Il2CppMethodDefinition* aotMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(aotTypeDef->methodStart + i);
-			const char* aotMethodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(aotMethodDef->nameIndex);
+            MethodIndex methodIndex = aotTypeDef.methodStart + i;
+			const Il2CppMethodDefinition aotMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionDataFromIndex(methodIndex);
+			const char* aotMethodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(aotMethodDef.nameIndex);
 			if (std::strcmp(aotMethodName, methodName))
 			{
 				continue;
 			}
 			if (IsMatchMethodSig(aotMethodDef, methodSignature, klassGenContainer))
 			{
-				return aotMethodDef;
+				return il2cpp::vm::GlobalMetadata::GetMethodHandleFromIndex(methodIndex);
 			}
 		}
 		return nullptr;
 	}
 
 
-	const Il2CppFieldDefinition* FindMatchField(const Il2CppTypeDefinition* aotTypeDef, const SuperSetFieldDefDetail& field2, const char* fieldName, const Il2CppType* fieldType)
+	FieldIndex FindMatchField(const Il2CppTypeDefinition& aotTypeDef, const SuperSetFieldDefDetail& field2, const char* fieldName, const Il2CppType* fieldType)
 	{
-		const Il2CppGenericContainer* klassGenContainer = aotTypeDef->genericContainerIndex != kGenericContainerIndexInvalid ?
-			(const Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef->genericContainerIndex) : nullptr;
-		for (uint16_t i = 0; i < aotTypeDef->field_count; i++)
+		const Il2CppGenericContainer* klassGenContainer = aotTypeDef.genericContainerIndex != kGenericContainerIndexInvalid ?
+			il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef.genericContainerIndex) : nullptr;
+        const Il2CppImage* image = il2cpp::vm::GlobalMetadata::GetImageForTypeDefinition(aotTypeDef);
+		for (uint16_t i = 0; i < aotTypeDef.field_count; i++)
 		{
 			//const FieldInfo* field1 = klass1->fields + i;
-			const Il2CppFieldDefinition* aotField = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromTypeDefAndFieldIndex(aotTypeDef, i);
-			const char* aotFieldName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(aotField->nameIndex);
+            FieldIndex fieldIndex = aotTypeDef.fieldStart + i;
+			const Il2CppFieldDefinition aotField = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromIndex(image, fieldIndex);
+			const char* aotFieldName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(aotField.nameIndex);
 			if (std::strcmp(aotFieldName, fieldName))
 			{
 				continue;
 			}
-			const Il2CppType* aotFieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(aotField->typeIndex);
+			const Il2CppType* aotFieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(aotField.typeIndex);
 			if (IsMatchSigType(aotFieldType, fieldType, klassGenContainer, nullptr))
 			{
-				return aotField;
+				return fieldIndex;
 			}
 		}
-		return nullptr;
+		return kFieldIndexInvalid;
 	}
 
 	void SuperSetAOTHomologousImage::InitRuntimeMetadatas()
@@ -112,22 +115,24 @@ namespace metadata
 		{
 			SuperSetTypeIntermediateInfo& parent = typeIntermediateInfos[type.homoParentRowIndex - 1];
 			InitType(typeIntermediateInfos, parent);
-			const Il2CppTypeDefinition* parentTypeDef = parent.aotTypeDef;
-			if (parentTypeDef == nullptr)
+			const Il2CppMetadataTypeHandle parentTypeHandle = parent.aotTypeHandle;
+			const Il2CppTypeDefinition parentTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(parentTypeHandle);
+			if (parentTypeHandle == nullptr)
 			{
 				goto labelInitDefault;
 			}
 
 			void* iter = nullptr;
-			for (const Il2CppTypeDefinition* nextTypeDef; (nextTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetNestedTypes((Il2CppMetadataTypeHandle)parentTypeDef, &iter));)
+			for (Il2CppMetadataTypeHandle nextTypeHandle; (nextTypeHandle = il2cpp::vm::GlobalMetadata::GetNestedTypes(parentTypeHandle, &iter));)
 			{
-				const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nextTypeDef->nameIndex);
+				const Il2CppTypeDefinition nextTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(nextTypeHandle);
+				const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nextTypeDef.nameIndex);
 				IL2CPP_ASSERT(nestedTypeName);
 				if (!std::strcmp(name, nestedTypeName))
 				{
-					type.aotTypeDef = nextTypeDef;
+					type.aotTypeHandle = nextTypeHandle;
 					//type.aotTypeIndex = nextTypeDef->byvalTypeIndex;
-					type.aotIl2CppType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(nextTypeDef->byvalTypeIndex);
+					type.aotIl2CppType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(nextTypeDef.byvalTypeIndex);
 					//type.aotKlass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)nextTypeDef);
 					return;
 				}
@@ -135,11 +140,12 @@ namespace metadata
 		}
 		else
 		{
-			const Il2CppTypeDefinition* aotTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::Image::TypeHandleFromName(_targetAssembly->image, namespaze, name);
-			if (aotTypeDef)
+			const Il2CppMetadataTypeHandle aotTypeHandle = il2cpp::vm::Image::TypeHandleFromName(_targetAssembly->image, namespaze, name);
+			if (aotTypeHandle)
 			{
-				type.aotTypeDef = aotTypeDef;
-				type.aotIl2CppType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(aotTypeDef->byvalTypeIndex);
+				type.aotTypeHandle = aotTypeHandle;
+                const Il2CppTypeDefinition aotTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(aotTypeHandle);
+				type.aotIl2CppType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(aotTypeDef.byvalTypeIndex);
 				//type.aotTypeIndex = type.aotTypeDef->byvalTypeIndex;
 				return;
 			}
@@ -173,9 +179,9 @@ namespace metadata
 		{
 			SuperSetTypeDefDetail& type = _typeDefs[index++];
 			type.aotIl2CppType = td.aotIl2CppType;
-			if (td.aotTypeDef)
+			if (td.aotTypeHandle)
 			{
-				_aotTypeIndex2TypeDefs[il2cpp::vm::GlobalMetadata::GetIndexForTypeDefinition(td.aotTypeDef)] = &type;
+				_aotTypeIndex2TypeDefs[il2cpp::vm::GlobalMetadata::GetIndexForTypeDefinitionInternal(td.aotTypeHandle)] = &type;
 			}
 		}
 	}
@@ -199,7 +205,7 @@ namespace metadata
 				TbMethod data = _rawImage->ReadMethod(i);
 				//method.declaringTypeDef = type.aotTypeDef;
 				//method.name = _rawImage->GetStringFromRawIndex(data.name);
-				if (type.aotTypeDef == nullptr)
+				if (type.aotTypeHandle == nullptr)
 				{
 					continue;
 				}
@@ -208,12 +214,16 @@ namespace metadata
 				BlobReader methodSigReader = _rawImage->GetBlobReaderByRawIndex(data.signature);
 				ReadMethodDefSig(methodSigReader, signature);
 				const char* methodName = _rawImage->GetStringFromRawIndex(data.name);
-				method.aotMethodDef = FindMatchMethod(type.aotTypeDef, method, methodName, signature);
-				if (method.aotMethodDef &&
-					(type.aotTypeDef->genericContainerIndex != kGenericContainerIndexInvalid
-						|| method.aotMethodDef->genericContainerIndex != kGenericContainerIndexInvalid))
+                const Il2CppTypeDefinition aotTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(type.aotTypeHandle);
+				method.aotMethodHandle = FindMatchMethod(aotTypeDef, method, methodName, signature);
+				if (method.aotMethodHandle)
 				{
-					_token2MethodDefs[method.aotMethodDef->token] = &method;
+					const Il2CppMethodDefinition aotMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(method.aotMethodHandle);
+					bool isGenericMethod = aotTypeDef.genericContainerIndex != kGenericContainerIndexInvalid || aotMethodDef.genericContainerIndex != kGenericContainerIndexInvalid;
+					if (isGenericMethod)
+					{
+						_token2MethodDefs[aotMethodDef.token] = &method;
+					}
 				}
 			}
 		}
@@ -264,7 +274,7 @@ namespace metadata
 
 				//field.declaringTypeDef = type.aotTypeDef;
 				field.declaringIl2CppType = type.aotIl2CppType;
-				if (type.aotTypeDef == nullptr)
+				if (type.aotTypeHandle == nullptr)
 				{
 					continue;
 				}
@@ -280,7 +290,8 @@ namespace metadata
 				}
 
 				const char* fieldName = _rawImage->GetStringFromRawIndex(data.name);
-				field.aotFieldDef = FindMatchField(type.aotTypeDef, field, fieldName, frs.type);
+                const Il2CppTypeDefinition aotTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(type.aotTypeHandle);
+				field.aotFieldIndex = FindMatchField(aotTypeDef, field, fieldName, frs.type);
 			}
 		}
 	}
@@ -296,7 +307,8 @@ namespace metadata
 		uint32_t rowIndex = (uint32_t)(method - &_methodDefs[0] + 1);
 		TbMethod methodData = _rawImage->ReadMethod(rowIndex);
 		MethodBody* body = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
-		ReadMethodBody(*method->aotMethodDef, methodData, *body);
+        const Il2CppMethodDefinition aotMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(method->aotMethodHandle);
+		ReadMethodBody(aotMethodDef, methodData, *body);
 		return body;
 	}
 
@@ -323,21 +335,21 @@ namespace metadata
 		{
 			return nullptr;
 		}
-		const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)(type->data.typeHandle);
-		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef->genericContainerIndex);
+		const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(type->data.typeHandle);
+		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef.genericContainerIndex);
 	}
 
-	const Il2CppMethodDefinition* SuperSetAOTHomologousImage::GetMethodDefinitionFromRawIndex(uint32_t index)
+	const Il2CppMetadataMethodDefinitionHandle SuperSetAOTHomologousImage::GetMethodHandleFromRawIndex(uint32_t index)
 	{
 		IL2CPP_ASSERT((size_t)index < _methodDefs.size());
 		SuperSetMethodDefDetail& method = _methodDefs[index];
-		const Il2CppMethodDefinition* methodDef = method.aotMethodDef;
-		if (!methodDef)
+		const Il2CppMetadataMethodDefinitionHandle methodHandle = method.aotMethodHandle;
+		if (!methodHandle)
 		{
 			TEMP_FORMAT(errMsg, "method not exist. rowIndex:%d", index);
 			RaiseExecutionEngineException(errMsg);
 		}
-		return methodDef;
+		return methodHandle;
 	}
 
 	void SuperSetAOTHomologousImage::ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret)
@@ -345,7 +357,7 @@ namespace metadata
 		IL2CPP_ASSERT(rowIndex > 0);
 		SuperSetFieldDefDetail& fd = _fields[rowIndex - 1];
 		ret.containerType = fd.declaringIl2CppType;
-		ret.field = fd.aotFieldDef;
+		ret.fieldIndex = fd.aotFieldIndex;
 	}
 
 	const Il2CppType* SuperSetAOTHomologousImage::ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName)
@@ -384,20 +396,21 @@ namespace metadata
 				//RaiseExecutionEngineException(errMsg);
 				return _defaultIl2CppType;
 			}
-			for (const Il2CppTypeDefinition* nextTypeDef; (nextTypeDef = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetNestedTypes(enclosingTypeDef, &iter));)
+			for (Il2CppMetadataTypeHandle nextTypeHandle; (nextTypeHandle = il2cpp::vm::GlobalMetadata::GetNestedTypes(enclosingTypeDef, &iter));)
 			{
-				const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nextTypeDef->nameIndex);
+                const Il2CppTypeDefinition nextTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(nextTypeHandle);
+				const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nextTypeDef.nameIndex);
 				IL2CPP_ASSERT(nestedTypeName);
 				if (!std::strcmp(name, nestedTypeName))
 				{
-					return GetIl2CppTypeFromTypeDefinition(nextTypeDef);
+					return GetIl2CppTypeFromTypeHandle(nextTypeDef.typeHandle);
 				}
 			}
 			return _defaultIl2CppType;
 		}
 		default:
 		{
-			RaiseBadImageException("Image::ReadTypeFromResolutionScope invaild TableType");
+			RaiseBadImageException("Image::ReadTypeFromResolutionScope invalid TableType");
 			return nullptr;
 		}
 		}

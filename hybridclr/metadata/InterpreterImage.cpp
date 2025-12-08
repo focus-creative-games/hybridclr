@@ -199,9 +199,9 @@ namespace metadata
 
 			cur = {};
 
+			cur.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.genericContainerIndex = kGenericContainerIndexInvalid;
 			cur.declaringTypeIndex = kTypeDefinitionIndexInvalid;
-			cur.elementTypeIndex = kTypeDefinitionIndexInvalid;
 
 			cur.token = EncodeToken(TableType::TYPEDEF, rowIndex);
 
@@ -267,18 +267,20 @@ namespace metadata
 			{
 				const Il2CppType* parentType = ReadTypeFromToken(GetGenericContainerByTypeDefinition(&cur), nullptr, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.extends), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.extends));
 
+				bool isEnumType = false;
 				if (parentType->type == IL2CPP_TYPE_CLASS || parentType->type == IL2CPP_TYPE_VALUETYPE)
 				{
-					Il2CppTypeDefinition* parentDef = (Il2CppTypeDefinition*)parentType->data.typeHandle;
+					Il2CppTypeDefinition parentDef =  il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(parentType->data.typeHandle);
 					// FIXE ME . check mscorelib
-					const char* parentNs = il2cpp::vm::GlobalMetadata::GetStringFromIndex(parentDef->namespaceIndex);
+					const char* parentNs = il2cpp::vm::GlobalMetadata::GetStringFromIndex(parentDef.namespaceIndex);
 					if (std::strcmp(parentNs, "System") == 0)
 					{
-						const char* parentName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(parentDef->nameIndex);
+						const char* parentName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(parentDef.nameIndex);
 						if (std::strcmp(parentName, "Enum") == 0)
 						{
 							cur.bitfield |= (1 << (il2cpp::vm::kBitIsValueType - 1));
 							cur.bitfield |= (1 << (il2cpp::vm::kBitIsEnum - 1));
+							isEnumType = true;
 						}
 						else if (std::strcmp(parentName, "ValueType") == 0)
 						{
@@ -286,14 +288,12 @@ namespace metadata
 						}
 					}
 				}
-				cur.parentIndex = AddIl2CppTypeCache(parentType);
+				cur.parentIndex = !isEnumType ? AddIl2CppTypeCache(parentType) : kInvalidIndex;
 			}
 			else
 			{
 				cur.parentIndex = kInvalidIndex;
 			}
-
-			cur.elementTypeIndex = kInvalidIndex;
 		}
 	}
 
@@ -308,11 +308,10 @@ namespace metadata
 			Il2CppTypeDefinition& last = _typesDefines[i > 0 ? i - 1 : 0];
 			Il2CppTypeDefinition& cur = _typesDefines[i];
 			uint32_t typeIndex = i; // type index start from 0, diff with field index ...
-
 			// enum element_type == 
-			if (IsEnumType(&cur))
+			if (IsEnumType(cur))
 			{
-				cur.elementTypeIndex = _fieldDetails[DecodeMetadataIndex(cur.fieldStart)].fieldDef.typeIndex;
+				cur.parentIndex = _fieldDetails[DecodeMetadataIndex(cur.fieldStart)].fieldDef.typeIndex;
 			}
 
 			auto classLayoutRow = _classLayouts.find(typeIndex);
@@ -444,17 +443,22 @@ namespace metadata
 
 		for (uint32_t i = 0, n = typeDefTb.rowNum; i < n; i++)
 		{
-			ComputeBlittable(&_typesDefines[i], computFlags);
+			ComputeBlittable((Il2CppMetadataTypeHandle)&_typesDefines[i], computFlags);
 		}
 	}
 
-	void InterpreterImage::ComputeBlittable(Il2CppTypeDefinition* def, std::vector<bool>& computFlags)
+	void InterpreterImage::ComputeBlittable(const Il2CppMetadataTypeHandle typeHandle, std::vector<bool>& computFlags)
 	{
+		if (!IsInterpreterType(typeHandle))
+		{
+			return;
+		}
+		Il2CppTypeDefinition* def = (Il2CppTypeDefinition*)typeHandle;
 		if (DecodeImageIndex(def->byvalTypeIndex) != GetIndex())
 		{
 			return;
 		}
-		uint32_t typeIndex = GetTypeRawIndex(def);
+		uint32_t typeIndex = GetTypeRawIndex(typeHandle);
 		if (computFlags[typeIndex])
 		{
 			return;
@@ -472,8 +476,8 @@ namespace metadata
 			blittable = true;
 			for (int i = 0; i < def->field_count; i++)
 			{
-				const Il2CppFieldDefinition* field = GetFieldDefinitionFromRawIndex(DecodeMetadataIndex(def->fieldStart + i));
-				const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(field->typeIndex);
+				const Il2CppFieldDefinition& field = GetFieldDefinitionFromRawIndex(DecodeMetadataIndex(def->fieldStart + i));
+				const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(field.typeIndex);
 				if (!hybridclr::metadata::IsInstanceField(fieldType))
 				{
 					continue;
@@ -502,9 +506,10 @@ namespace metadata
 				}
 				case IL2CPP_TYPE_VALUETYPE:
 				{
-					Il2CppTypeDefinition* fieldDef = (Il2CppTypeDefinition*)fieldType->data.typeHandle;
-					ComputeBlittable(fieldDef, computFlags);
-					blittable = fieldDef->bitfield & (1 << (il2cpp::vm::kBitIsBlittable - 1));
+					Il2CppMetadataTypeHandle fieldTypeHandle = fieldType->data.typeHandle;
+					ComputeBlittable(fieldTypeHandle, computFlags);
+					Il2CppTypeDefinition fieldTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(fieldTypeHandle);
+					blittable = fieldTypeDef.bitfield & (1 << (il2cpp::vm::kBitIsBlittable - 1));
 					break;
 				}
 				default:
@@ -754,8 +759,8 @@ namespace metadata
 			const CustomAttribute& ca = _customAttribues[attrStartOffset + (int32_t)i];
 			MethodRefInfo mri = {};
 			ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(ca.ctorMethodToken), DecodeTokenRowIndex(ca.ctorMethodToken), mri);
-			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(mri.containerType, mri.methodDef);
-			MethodIndex ctorIndex = il2cpp::vm::GlobalMetadata::GetMethodIndexFromDefinition(mri.methodDef);
+			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(mri.containerType, mri.methodHandle);
+			MethodIndex ctorIndex = il2cpp::vm::GlobalMetadata::GetMethodIndexFromMethodHandle(mri.methodHandle);
 			_il2cppFormatCustomDataBlob.WriteMethodIndex(methodIndexDataOffset, ctorIndex);
 			methodIndexDataOffset += sizeof(int32_t);
 			if (ca.value != 0)
@@ -765,7 +770,6 @@ namespace metadata
 			}
 			else
 			{
-				IL2CPP_ASSERT(mri.methodDef->parameterCount == 0);
 				_il2cppFormatCustomDataBlob.WriteCompressedUint32(0);
 				_il2cppFormatCustomDataBlob.WriteCompressedUint32(0);
 				_il2cppFormatCustomDataBlob.WriteCompressedUint32(0);
@@ -777,14 +781,28 @@ namespace metadata
 		cai.dataEndPtr = (uint8_t*)resultData + _il2cppFormatCustomDataBlob.Size();
 	}
 
+	void InterpreterImage::WriteTypeIndex(CustomAttributeDataWriter& writer, const Il2CppType* type)
+	{
+		int32_t typeIndex;
+		if (type->type == IL2CPP_TYPE_CLASS || type->type == IL2CPP_TYPE_VALUETYPE)
+		{
+			const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(type->data.typeHandle);
+			typeIndex = typeDef.byvalTypeIndex;
+		}
+		else
+		{
+			typeIndex = AddIl2CppTypeCache(type);
+		}
+		writer.WriteCompressedInt32(typeIndex);
+	}
+
 	void InterpreterImage::WriteEncodeTypeEnum(CustomAttributeDataWriter& writer, const Il2CppType* type)
 	{
 		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
 		if (type->type == IL2CPP_TYPE_ENUM || klass->enumtype)
 		{
 			writer.WriteByte((byte)IL2CPP_TYPE_ENUM);
-			int32_t typeIndex = type->type == IL2CPP_TYPE_CLASS || type->type == IL2CPP_TYPE_VALUETYPE ? ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex : AddIl2CppTypeCache(type);
-			writer.WriteCompressedInt32(typeIndex);
+			WriteTypeIndex(writer, type);
 		}
 		else if (klass == il2cpp_defaults.systemtype_class)
 		{
@@ -823,15 +841,7 @@ namespace metadata
 			TEMP_FORMAT(errMsg, "CustomAttribute fixed arg type:System.Type fullName:'%s' not find", stdTypeName.c_str());
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(errMsg));
 		}
-		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type->type);
-		if (!klass->generic_class && (Il2CppTypeDefinition*)klass->typeMetadataHandle)
-		{
-			writer.WriteCompressedInt32(((Il2CppTypeDefinition*)klass->typeMetadataHandle)->byvalTypeIndex);
-		}
-		else
-		{
-			writer.WriteCompressedInt32(AddIl2CppTypeCache(type->type));
-		}
+		WriteTypeIndex(writer, type->type);
 	}
 
 	void InterpreterImage::ConvertFixedArg(CustomAttributeDataWriter& writer, BlobReader& reader, const Il2CppType* type, bool writeType)
@@ -994,9 +1004,7 @@ namespace metadata
 			if (writeType)
 			{
 				writer.WriteByte((byte)IL2CPP_TYPE_ENUM);
-				IL2CPP_ASSERT(klass->enumtype);
-				int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
-				writer.WriteCompressedInt32(typeIndex);
+				WriteTypeIndex(writer, type);
 			}
 			ConvertFixedArg(writer, reader, &klass->element_class->byval_arg, false);
 			break;
@@ -1019,8 +1027,7 @@ namespace metadata
 			IL2CPP_ASSERT(klass->enumtype);
 			if (writeType)
 			{
-				int32_t typeIndex = klass->generic_class ? AddIl2CppTypeCache(type) : ((Il2CppTypeDefinition*)type->data.typeHandle)->byvalTypeIndex;
-				writer.WriteCompressedInt32(typeIndex);
+                WriteTypeIndex(writer, type);
 			}
 			ConvertFixedArg(writer, reader, &klass->element_class->byval_arg, false);
 			break;
@@ -1032,9 +1039,9 @@ namespace metadata
 		}
 	}
 
-	void InterpreterImage::GetFieldDeclaringTypeIndexAndFieldIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex)
+	void InterpreterImage::GetFieldDeclaringTypeIndexAndFieldIndexByName(const Il2CppMetadataTypeHandle declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex)
 	{
-		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)declaringType);
+		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle(declaringType);
 		FieldInfo* field = il2cpp::vm::Class::GetFieldFromName(klass, name);
 		if (!field)
 		{
@@ -1056,7 +1063,7 @@ namespace metadata
 		fieldIndex = (int32_t)(field - klass->fields);
 	}
 
-	void InterpreterImage::GetPropertyDeclaringTypeIndexAndPropertyIndexByName(const Il2CppTypeDefinition* declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex)
+	void InterpreterImage::GetPropertyDeclaringTypeIndexAndPropertyIndexByName(const Il2CppMetadataTypeHandle declaringType, const char* name, int32_t& typeIndex, int32_t& fieldIndex)
 	{
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)declaringType);
 		const PropertyInfo* propertyInfo = il2cpp::vm::Class::GetPropertyFromName(klass, name);
@@ -1112,7 +1119,8 @@ namespace metadata
 		uint32_t propertyCount = 0;
 		_tempFieldBlob.Reset();
 		_tempPropertyBlob.Reset();
-		const Il2CppTypeDefinition* declaringType = GetUnderlyingTypeDefinition(&ctorMethod->klass->byval_arg);
+        const Il2CppMetadataTypeHandle declaringTypeHandle = GetUnderlyingTypeHandle(&ctorMethod->klass->byval_arg);
+		const Il2CppTypeDefinition declaringType = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(declaringTypeHandle);
 		for (uint16_t idx = 0; idx < numNamed; idx++)
 		{
 			byte fieldOrPropTypeTag = reader.ReadByte();
@@ -1128,7 +1136,7 @@ namespace metadata
 			{
 				++fieldCount;
 				ConvertFixedArg(_tempFieldBlob, reader, &fieldOrPropType, true);
-				GetFieldDeclaringTypeIndexAndFieldIndexByName(declaringType, cstrName, fieldOrPropertyDeclaringTypeIndex, fieldOrPropertyIndex);
+				GetFieldDeclaringTypeIndexAndFieldIndexByName(declaringTypeHandle, cstrName, fieldOrPropertyDeclaringTypeIndex, fieldOrPropertyIndex);
 				if (fieldOrPropertyDeclaringTypeIndex == kTypeDefinitionIndexInvalid)
 				{
 					_tempFieldBlob.WriteCompressedInt32(fieldOrPropertyIndex);
@@ -1143,7 +1151,7 @@ namespace metadata
 			{
 				++propertyCount;
 				ConvertFixedArg(_tempPropertyBlob, reader, &fieldOrPropType, true);
-				GetPropertyDeclaringTypeIndexAndPropertyIndexByName(declaringType, cstrName, fieldOrPropertyDeclaringTypeIndex, fieldOrPropertyIndex);
+				GetPropertyDeclaringTypeIndexAndPropertyIndexByName(declaringTypeHandle, cstrName, fieldOrPropertyDeclaringTypeIndex, fieldOrPropertyIndex);
 				if (fieldOrPropertyDeclaringTypeIndex == kTypeDefinitionIndexInvalid)
 				{
 					_tempPropertyBlob.WriteCompressedInt32(fieldOrPropertyIndex);
@@ -1466,7 +1474,7 @@ namespace metadata
 				{
 					typeDef.bitfield |= (1 << (il2cpp::vm::kBitHasFinalizer - 1));
 				}
-				if (isInterface && IsInstanceMethod(&md) && IsVirtualMethod(md.flags))
+				if (isInterface && IsInstanceMethod(md) && IsVirtualMethod(md.flags))
 				{
 					md.slot = slotIdx++;
 				}
@@ -1518,17 +1526,16 @@ namespace metadata
 						// data.sequence == 0  is for returnType.
 						// used for parent of CustomeAttributes of ReturnType
 						// il2cpp not support ReturnType CustomAttributes. so we just ignore it.
-#if SUPPORT_METHOD_RETURN_TYPE_CUSTOM_ATTRIBUTE
 						md.returnParameterToken = EncodeToken(TableType::PARAM, paramRowIndex);
-#endif
 					}
 				}
 			}
 		}
 	}
 
-	const il2cpp::utils::dynamic_array<MethodImpl> InterpreterImage::GetTypeMethodImplByTypeDefinition(const Il2CppTypeDefinition* typeDef)
+	const il2cpp::utils::dynamic_array<MethodImpl> InterpreterImage::GetTypeMethodImplByTypeDefinition(const Il2CppMetadataTypeHandle typeHandle)
 	{
+        const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)typeHandle;
 		uint32_t index = (uint32_t)(typeDef - &_typesDefines[0]);
 		IL2CPP_ASSERT(index < (uint32_t)_typeDetails.size());
 		TypeDefinitionDetail& tdd = _typeDetails[index];
@@ -1600,7 +1607,6 @@ namespace metadata
 		{
 			last->property_count = propertyTb.rowNum - DecodeMetadataIndex(last->propertyStart) + 1;
 		}
-#if HYBRIDCLR_UNITY_2019
 		for (const Il2CppTypeDefinition& typeDef : _typesDefines)
 		{
 			if (typeDef.property_count == 0)
@@ -1612,7 +1618,6 @@ namespace metadata
 				_propeties[start + i - 1].declaringType = &typeDef;
 			}
 		}
-#endif
 	}
 
 	void InterpreterImage::InitEvents()
@@ -1625,10 +1630,8 @@ namespace metadata
 		{
 			TbEvent data = _rawImage->ReadEvent(rowIndex);
 			_events.push_back({ _rawImage->GetStringFromRawIndex(data.name), data.eventFlags, data.eventType, 0, 0, 0
-#if HYBRIDCLR_UNITY_2019
 				, nullptr
 				, { (StringIndex)EncodeWithIndex(data.name), kTypeIndexInvalid, kMethodIndexInvalid, kMethodIndexInvalid, kMethodIndexInvalid, EncodeToken(TableType::EVENT, rowIndex)}
-#endif
 				});
 		}
 
@@ -1648,7 +1651,6 @@ namespace metadata
 		{
 			last->event_count = eventTb.rowNum - DecodeMetadataIndex(last->eventStart) + 1;
 		}
-#if HYBRIDCLR_UNITY_2019
 		for (const Il2CppTypeDefinition& typeDef : _typesDefines)
 		{
 			if (typeDef.event_count == 0)
@@ -1662,7 +1664,6 @@ namespace metadata
 				ed.il2cppDefinition.typeIndex = typeDef.byvalTypeIndex;
 			}
 		}
-#endif
 	}
 
 
@@ -1681,45 +1682,35 @@ namespace metadata
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
 				pd.getterMethodIndex = method;
-#if HYBRIDCLR_UNITY_2019
 				pd.il2cppDefinition.get = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
-#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::Setter)
 			{
 				IL2CPP_ASSERT(tableType == TableType::PROPERTY);
 				PropertyDetail& pd = _propeties[propertyOrEventIndex];
 				pd.setterMethodIndex = method;
-#if HYBRIDCLR_UNITY_2019
 				pd.il2cppDefinition.set = method - DecodeMetadataIndex(pd.declaringType->methodStart) - 1;
-#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::AddOn)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
 				ed.addMethodIndex = method;
-#if HYBRIDCLR_UNITY_2019
 				ed.il2cppDefinition.add = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
-#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::RemoveOn)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
 				ed.removeMethodIndex = method;
-#if HYBRIDCLR_UNITY_2019
 				ed.il2cppDefinition.remove = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
-#endif
 			}
 			if (semantics & (uint16_t)MethodSemanticsAttributes::Fire)
 			{
 				IL2CPP_ASSERT(tableType == TableType::EVENT);
 				EventDetail& ed = _events[propertyOrEventIndex];
 				ed.fireMethodIndex = method;
-#if HYBRIDCLR_UNITY_2019
 				ed.il2cppDefinition.raise = method - DecodeMetadataIndex(ed.declaringType->methodStart) - 1;
-#endif
 			}
 		}
 	}
@@ -1783,14 +1774,14 @@ namespace metadata
 		ClassFieldLayoutCalculator calculator(this);
 		for (Il2CppTypeDefinition& type : _typesDefines)
 		{
-			const Il2CppType* il2cppType = GetIl2CppTypeFromTypeDefinition(&type);
+			const Il2CppType* il2cppType = GetIl2CppTypeFromTypeHandle(type.typeHandle);
 			calculator.CalcClassNotStaticFields(il2cppType);
 		}
 
 		for (TypeDefinitionDetail& type : _typeDetails)
 		{
 			const Il2CppTypeDefinition* typeDef = GetTypeDefinitionByTypeDetail(&type);
-			const Il2CppType* il2cppType = GetIl2CppTypeFromTypeDefinition(typeDef);
+			const Il2CppType* il2cppType = GetIl2CppTypeFromTypeHandle(typeDef->typeHandle);
 			calculator.CalcClassStaticFields(il2cppType);
 			ClassLayoutInfo* layout = calculator.GetClassLayoutInfo(il2cppType);
 
@@ -1879,6 +1870,13 @@ namespace metadata
 		return klass;
 	}
 
+	Il2CppClass* InterpreterImage::GetTypeInfoFromHandle_OnlyCached(const Il2CppMetadataTypeHandle typeHandle)
+	{
+		uint32_t typeIndex = GetTypeRawIndex(typeHandle);
+		IL2CPP_ASSERT(typeIndex < _classList.size());
+		return _classList[typeIndex];
+	}
+
 	const Il2CppType* InterpreterImage::GetInterfaceFromGlobalOffset(TypeInterfaceIndex globalOffset)
 	{
 		IL2CPP_ASSERT((uint32_t)globalOffset < (uint32_t)_interfaceDefines.size());
@@ -1897,26 +1895,23 @@ namespace metadata
 		return _types[typeIndex];
 	}
 
-	const Il2CppType* InterpreterImage::GetInterfaceFromIndex(const Il2CppClass* klass, TypeInterfaceIndex globalOffset)
-	{
-		return GetInterfaceFromGlobalOffset(globalOffset);
-	}
-
 	const Il2CppType* InterpreterImage::GetInterfaceFromOffset(const Il2CppClass* klass, TypeInterfaceIndex offset)
 	{
-		const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)(klass->typeMetadataHandle);
+		const Il2CppMetadataTypeHandle typeDef = klass->typeMetadataHandle;
 		IL2CPP_ASSERT(typeDef);
 		return GetInterfaceFromOffset(typeDef, offset);
 	}
 
-	const Il2CppType* InterpreterImage::GetInterfaceFromOffset(const Il2CppTypeDefinition* typeDef, TypeInterfaceIndex offset)
+	const Il2CppType* InterpreterImage::GetInterfaceFromOffset(const Il2CppMetadataTypeHandle typeHandle, TypeInterfaceIndex offset)
 	{
+        const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)typeHandle;
 		uint32_t globalOffset = typeDef->interfacesStart + offset;
 		return GetInterfaceFromGlobalOffset(globalOffset);
 	}
 
-	Il2CppInterfaceOffsetInfo InterpreterImage::GetInterfaceOffsetInfo(const Il2CppTypeDefinition* typeDefine, TypeInterfaceOffsetIndex index)
+	Il2CppInterfaceOffsetInfo InterpreterImage::GetInterfaceOffsetInfo(const Il2CppMetadataTypeHandle typeHandle, TypeInterfaceOffsetIndex index)
 	{
+        const Il2CppTypeDefinition* typeDefine = (const Il2CppTypeDefinition*)typeHandle;
 		uint32_t globalIndex = DecodeMetadataIndex((uint32_t)(typeDefine->interfaceOffsetsStart + index));
 		IL2CPP_ASSERT(globalIndex < (uint32_t)_interfaceOffsets.size());
 
@@ -1924,8 +1919,9 @@ namespace metadata
 		return { offsetPair.type, (int32_t)offsetPair.offset };
 	}
 
-	Il2CppClass* InterpreterImage::GetNestedTypeFromOffset(const Il2CppTypeDefinition* typeDefine, TypeNestedTypeIndex offset)
+	Il2CppClass* InterpreterImage::GetNestedTypeFromOffset(const Il2CppMetadataTypeHandle typeHandle, TypeNestedTypeIndex offset)
 	{
+        const Il2CppTypeDefinition* typeDefine = (const Il2CppTypeDefinition*)typeHandle;
 		uint32_t globalIndex = typeDefine->nestedTypesStart + offset;
 		IL2CPP_ASSERT(globalIndex < (uint32_t)_nestedTypeDefineIndexs.size());
 		uint32_t typeDefIndex = _nestedTypeDefineIndexs[globalIndex];
@@ -1935,15 +1931,16 @@ namespace metadata
 
 	Il2CppClass* InterpreterImage::GetNestedTypeFromOffset(const Il2CppClass* klass, TypeNestedTypeIndex offset)
 	{
-		return GetNestedTypeFromOffset((Il2CppTypeDefinition*)klass->typeMetadataHandle, offset);
+		return GetNestedTypeFromOffset(klass->typeMetadataHandle, offset);
 	}
 
-	Il2CppTypeDefinition* InterpreterImage::GetNestedTypes(Il2CppTypeDefinition* typeDefinition, void** iter)
+	Il2CppTypeDefinition* InterpreterImage::GetNestedTypes(const Il2CppMetadataTypeHandle typeHandle, void** iter)
 	{
 		if (_nestedTypeDefineIndexs.empty())
 		{
 			return nullptr;
 		}
+		const Il2CppTypeDefinition* typeDefinition = (const Il2CppTypeDefinition*)typeHandle;
 		const TypeDefinitionIndex* nestedTypeIndices = (const TypeDefinitionIndex*)(&_nestedTypeDefineIndexs[typeDefinition->nestedTypesStart]);
 
 		if (!*iter)
@@ -1988,7 +1985,7 @@ namespace metadata
 		IL2CPP_ASSERT(rowIndex > 0);
 		const FieldDetail& fd = GetFieldDetailFromRawIndex(rowIndex - 1);
 		ret.containerType = GetIl2CppTypeFromRawTypeDefIndex(DecodeMetadataIndex(fd.typeDefIndex));
-		ret.field = &fd.fieldDef;
+		ret.fieldIndex = rowIndex - 1;
 	}
 
 	void InterpreterImage::GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc)
@@ -1997,7 +1994,8 @@ namespace metadata
 		IL2CPP_ASSERT(gc);
 		if (gc->is_method)
 		{
-			const Il2CppMethodDefinition* methodDef = GetMethodDefinitionFromRawIndex(DecodeMetadataIndex(gc->ownerIndex));
+			const Il2CppMetadataMethodDefinitionHandle methodHandle = GetMethodHandleFromRawIndex(DecodeMetadataIndex(gc->ownerIndex));
+            const Il2CppMethodDefinition* methodDef = (const Il2CppMethodDefinition*)(methodHandle);
 			klassGc = GetGenericContainerByTypeDefRawIndex(DecodeMetadataIndex(methodDef->declaringType));
 			methodGc = GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef->genericContainerIndex));
 		}
@@ -2139,12 +2137,12 @@ namespace metadata
 
 		if (typeDef.parentIndex != kInvalidIndex)
 		{
-			const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef.parentIndex);
-			const Il2CppTypeDefinition* parentTypeDef = GetUnderlyingTypeDefinition(parentType);
-			if (IsInterpreterType(parentTypeDef) && parentTypeDef->interfaceOffsetsStart == 0)
+			const Il2CppType* parentType = GetParentIl2CppTypeFromTypeDefinition(typeDef);
+			const Il2CppTypeDefinition parentTypeDef = GetUnderlyingTypeDefinition(parentType);
+			if (IsInterpreterType(parentTypeDef) && parentTypeDef.interfaceOffsetsStart == 0)
 			{
-				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef->byvalTypeIndex) == this->GetIndex());
-				int32_t typeDefIndex = GetTypeRawIndexByEncodedIl2CppTypeIndex(parentTypeDef->byvalTypeIndex);
+				IL2CPP_ASSERT(DecodeImageIndex(parentTypeDef.byvalTypeIndex) == this->GetIndex());
+				int32_t typeDefIndex = GetTypeRawIndexByEncodedIl2CppTypeIndex(parentTypeDef.byvalTypeIndex);
 				ComputeVTable(&_typeDetails[typeDefIndex]);
 			}
 		}
@@ -2178,7 +2176,7 @@ namespace metadata
 		typeDef.interfaceOffsetsStart = EncodeWithIndex(offsetsStart);
 		typeDef.interface_offsets_count = (uint16_t)interfaceOffsetInfos.size();
 
-		Il2CppClass* klass = _classList[GetTypeRawIndex(&typeDef)];
+		Il2CppClass* klass = _classList[GetTypeRawIndex((Il2CppMetadataTypeHandle)&typeDef)];
 		IL2CPP_ASSERT(!klass);
 	}
 
@@ -2204,8 +2202,9 @@ namespace metadata
 	const MethodInfo* InterpreterImage::GetMethodInfoFromMethodDefinitionRawIndex(uint32_t index)
 	{
 		IL2CPP_ASSERT((size_t)index <= _methodDefines.size());
-		const Il2CppMethodDefinition* methodDefinition = GetMethodDefinitionFromRawIndex(index);
-		const Il2CppTypeDefinition* typeDefinition = (const Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(methodDefinition->declaringType);
+		const Il2CppMetadataMethodDefinitionHandle methodHandle = GetMethodHandleFromRawIndex(index);
+        const Il2CppMethodDefinition* methodDefinition = (const Il2CppMethodDefinition*)methodHandle;
+		const Il2CppTypeDefinition* typeDefinition = GetTypeFromRawIndex(DecodeMetadataIndex(methodDefinition->declaringType));
 		int32_t indexInClass = index - DecodeMetadataIndex(typeDefinition->methodStart);
 		IL2CPP_ASSERT(indexInClass >= 0 && indexInClass < typeDefinition->method_count);
 		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)typeDefinition);
@@ -2213,17 +2212,18 @@ namespace metadata
 		return klass->methods[indexInClass];
 	}
 
-	const MethodInfo* InterpreterImage::GetMethodInfoFromMethodDefinition(const Il2CppMethodDefinition* methodDef)
+	const MethodInfo* InterpreterImage::GetMethodInfoFromMethodDefinition(const Il2CppMetadataMethodDefinitionHandle methodHandle)
 	{
+        const Il2CppMethodDefinition* methodDef = (const Il2CppMethodDefinition*)methodHandle;
 		uint32_t rawIndex = (uint32_t)(methodDef - &_methodDefines[0]);
 		IL2CPP_ASSERT(rawIndex < (uint32_t)_methodDefines.size());
 		return GetMethodInfoFromMethodDefinitionRawIndex(rawIndex);
 	}
 
 	// typeDef vTableSlot -> type virtual method index -> MethodDefinition*
-	const Il2CppMethodDefinition* InterpreterImage::GetMethodDefinitionFromVTableSlot(const Il2CppTypeDefinition* typeDef, int32_t vTableSlot)
+	const Il2CppMetadataMethodDefinitionHandle InterpreterImage::GetMethodDefinitionFromVTableSlot(const Il2CppMetadataTypeHandle typeHandle, int32_t vTableSlot)
 	{
-		uint32_t typeDefIndex = GetTypeRawIndex(typeDef);
+		uint32_t typeDefIndex = GetTypeRawIndex(typeHandle);
 		IL2CPP_ASSERT(typeDefIndex < (uint32_t)_typeDetails.size());
 		TypeDefinitionDetail& td = _typeDetails[typeDefIndex];
 
@@ -2235,12 +2235,9 @@ namespace metadata
 	const MethodInfo* InterpreterImage::GetMethodInfoFromVTableSlot(const Il2CppClass* klass, int32_t vTableSlot)
 	{
 		IL2CPP_ASSERT(!klass->generic_class);
-		const Il2CppTypeDefinition* typeDef = (Il2CppTypeDefinition*)klass->typeMetadataHandle;
-		//const Il2CppMethodDefinition* methodDef = GetMethodDefinitionFromVTableSlot((Il2CppTypeDefinition*)klass->typeMetadataHandle, vTableSlot);
-		// FIX ME. why return null?
-		//IL2CPP_ASSERT(methodDef);
+		const Il2CppMetadataTypeHandle typeHandle = klass->typeMetadataHandle;
 
-		uint32_t typeDefIndex = GetTypeRawIndex(typeDef);
+		uint32_t typeDefIndex = GetTypeRawIndex(typeHandle);
 		IL2CPP_ASSERT(typeDefIndex < (uint32_t)_typeDetails.size());
 		TypeDefinitionDetail& td = _typeDetails[typeDefIndex];
 
@@ -2248,9 +2245,10 @@ namespace metadata
 		VirtualMethodImpl& vmi = td.vtable[vTableSlot];
 		if (vmi.method)
 		{
-			if (vmi.method->declaringType == EncodeWithIndex(typeDefIndex))
+			const Il2CppMethodDefinition declaringMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(vmi.method);
+			if (declaringMethodDef.declaringType == EncodeWithIndex(typeDefIndex))
 			{
-				return il2cpp::vm::GlobalMetadata::GetMethodInfoFromMethodHandle((Il2CppMetadataMethodDefinitionHandle)vmi.method);
+				return il2cpp::vm::GlobalMetadata::GetMethodInfoFromMethodHandle(vmi.method);
 			}
 			else
 			{
@@ -2260,7 +2258,7 @@ namespace metadata
 				for (uint32_t i = 0; i < implClass->method_count; i++)
 				{
 					const MethodInfo* implMethod = implClass->methods[i];
-					if (implMethod->token == vmi.method->token)
+					if (implMethod->token == declaringMethodDef.token)
 					{
 						return implMethod;
 					}
@@ -2276,7 +2274,7 @@ namespace metadata
 		uint32_t methodIndex = DecodeTokenRowIndex(token) - 1;
 		IL2CPP_ASSERT(methodIndex < (uint32_t)_methodDefines.size());
 		const Il2CppMethodDefinition* methodDef = &_methodDefines[methodIndex];
-		return IsInstanceMethod(methodDef) ? hybridclr::interpreter::InterpreterModule::GetAdjustThunkMethodPointer(methodDef) : nullptr;
+		return IsInstanceMethod(*methodDef) ? hybridclr::interpreter::InterpreterModule::GetAdjustThunkMethodPointer((Il2CppMetadataMethodDefinitionHandle)methodDef) : nullptr;
 	}
 
 	Il2CppMethodPointer InterpreterImage::GetMethodPointer(uint32_t token)
@@ -2284,7 +2282,7 @@ namespace metadata
 		uint32_t methodIndex = DecodeTokenRowIndex(token) - 1;
 		IL2CPP_ASSERT(methodIndex < (uint32_t)_methodDefines.size());
 		const Il2CppMethodDefinition* methodDef = &_methodDefines[methodIndex];
-		return hybridclr::interpreter::InterpreterModule::GetMethodPointer(methodDef);
+		return hybridclr::interpreter::InterpreterModule::GetMethodPointer((Il2CppMetadataMethodDefinitionHandle)methodDef);
 	}
 
 	InvokerMethod InterpreterImage::GetMethodInvoker(uint32_t token)
@@ -2292,7 +2290,7 @@ namespace metadata
 		uint32_t methodIndex = DecodeTokenRowIndex(token) - 1;
 		IL2CPP_ASSERT(methodIndex < (uint32_t)_methodDefines.size());
 		const Il2CppMethodDefinition* methodDef = &_methodDefines[methodIndex];
-		return hybridclr::interpreter::InterpreterModule::GetMethodInvoker(methodDef);
+		return hybridclr::interpreter::InterpreterModule::GetMethodInvoker((Il2CppMetadataMethodDefinitionHandle)methodDef);
 	}
 
 
@@ -2614,7 +2612,7 @@ namespace metadata
 			Il2CppTypeDefinition* typeDef = GetTypeDefinitionByTypeDetail(&type);
 			if (typeDef->namespaceIndex == encodedNamespaceIndex && typeDef->nameIndex == encodedNameIndex)
 			{
-				return GetIl2CppTypeFromTypeDefinition(typeDef);
+				return GetIl2CppTypeFromTypeHandle(typeDef->typeHandle);
 			}
 		}
 		if (!raiseExceptionIfNotFound)

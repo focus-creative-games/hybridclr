@@ -34,8 +34,9 @@ namespace metadata
 		//}
 		for (uint32_t index = 0; index < image->typeCount; index++)
 		{
-			Il2CppTypeDefinition* typeDef = (Il2CppTypeDefinition*)il2cpp::vm::MetadataCache::GetAssemblyTypeHandle(image, index);
-			uint32_t rowIndex = DecodeTokenRowIndex(typeDef->token);
+			Il2CppMetadataTypeHandle typeHandle = il2cpp::vm::MetadataCache::GetAssemblyTypeHandle(image, index);
+            const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+			uint32_t rowIndex = DecodeTokenRowIndex(typeDef.token);
 			IL2CPP_ASSERT(rowIndex > 0);
 			if (rowIndex > typeCount)
 			{
@@ -43,18 +44,18 @@ namespace metadata
 			}
 			TbTypeDef data = _rawImage->ReadTypeDef(rowIndex);
 			uint32_t typeIndex = rowIndex - 1;
-			_typeDefs[typeIndex] = typeDef;
-			const Il2CppType* il2cppType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->byvalTypeIndex);
+			_typeDefs[typeIndex] = typeHandle;
+			const Il2CppType* il2cppType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef.byvalTypeIndex);
 			_il2cppTypeForTypeDefs[typeIndex] = il2cppType;
 
 			const char* name1 = _rawImage->GetStringFromRawIndex(data.typeName);
-			const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
+			const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.nameIndex);
 			if (std::strcmp(name1, name2))
 			{
 				RaiseExecutionEngineException("metadata type not match");
 			}
 			const char* namespaze1 = _rawImage->GetStringFromRawIndex(data.typeNamespace);
-			const char* namespaze2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->namespaceIndex);
+			const char* namespaze2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.namespaceIndex);
 			if (std::strcmp(namespaze1, namespaze2))
 			{
 				RaiseExecutionEngineException("metadata type not match");
@@ -67,20 +68,22 @@ namespace metadata
 		const Table& methodTb = _rawImage->GetTable(TableType::METHOD);
 		_methodDefs.resize(methodTb.rowNum);
 
-		for (Il2CppTypeDefinition* type : _typeDefs)
+		for (Il2CppMetadataTypeHandle typeHandle : _typeDefs)
 		{
-			for (uint16_t i = 0; i < type->method_count; i++)
+            const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+			for (uint16_t i = 0; i < typeDef.method_count; i++)
 			{
-				const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(type->methodStart + i);
-				uint32_t rowIndex = DecodeTokenRowIndex(methodDef->token);
+                MethodIndex encodeMethodIndex = typeDef.methodStart + i;
+				const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionDataFromIndex(encodeMethodIndex);
+				uint32_t rowIndex = DecodeTokenRowIndex(methodDef.token);
 				IL2CPP_ASSERT(rowIndex > 0 && rowIndex <= methodTb.rowNum);
-				uint32_t methodIndex = rowIndex - 1;
-				IL2CPP_ASSERT(_methodDefs[methodIndex] == nullptr);
-				_methodDefs[methodIndex] = methodDef;
+				uint32_t methodRidZeroBase = rowIndex - 1;
+				IL2CPP_ASSERT(_methodDefs[methodRidZeroBase] == nullptr);
+				_methodDefs[methodRidZeroBase] = il2cpp::vm::GlobalMetadata::GetMethodHandleFromIndex(encodeMethodIndex);
 
 				TbMethod methodData = _rawImage->ReadMethod(rowIndex);
 				const char* name1 = _rawImage->GetStringFromRawIndex(methodData.name);
-				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex);
+				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef.nameIndex);
 				if (std::strcmp(name1, name2))
 				{
 					RaiseExecutionEngineException("metadata method not match");
@@ -92,27 +95,30 @@ namespace metadata
 	void ConsistentAOTHomologousImage::InitFields()
 	{
 		const Table& fieldTb = _rawImage->GetTable(TableType::FIELD);
-		_fields.resize(fieldTb.rowNum);
+		_fields.resize(fieldTb.rowNum, {0, kFieldIndexInvalid});
 
+		Il2CppImage* image = _targetAssembly->image;
 		for (size_t i = 0; i < _typeDefs.size(); i++)
 		{
-			Il2CppTypeDefinition* type = _typeDefs[i];
-			for (uint16_t j = 0; j < type->field_count; j++)
+			Il2CppMetadataTypeHandle typeHandle = _typeDefs[i];
+            const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+			for (uint16_t j = 0; j < typeDef.field_count; j++)
 			{
-				const Il2CppFieldDefinition* fieldDef = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromTypeDefAndFieldIndex(type, j);
-				uint32_t rowIndex = DecodeTokenRowIndex(fieldDef->token);
+                FieldIndex fieldIndex = typeDef.fieldStart + j;
+				const Il2CppFieldDefinition fieldDef = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromIndex(image, fieldIndex);
+				uint32_t rowIndex = DecodeTokenRowIndex(fieldDef.token);
 				IL2CPP_ASSERT(rowIndex > 0);
-				uint32_t fieldIndex = rowIndex - 1;
-				IL2CPP_ASSERT(_fields[fieldIndex].fieldDef == nullptr);
+				uint32_t fieldRidZeroBased = rowIndex - 1;
+				IL2CPP_ASSERT(_fields[fieldRidZeroBased].fieldIndex == kFieldIndexInvalid);
 				if (rowIndex >= fieldTb.rowNum)
 				{
 					continue;
 				}
-				_fields[fieldIndex] = { (uint32_t)i, fieldDef };
+				_fields[fieldRidZeroBased] = { (uint32_t)i, fieldIndex };
 
 				TbField fieldData = _rawImage->ReadField(rowIndex);
 				const char* name1 = _rawImage->GetStringFromRawIndex(fieldData.name);
-				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(fieldDef->nameIndex);
+				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(fieldDef.nameIndex);
 				if (std::strcmp(name1, name2))
 				{
 					RaiseExecutionEngineException("metadata field not match");
@@ -127,7 +133,8 @@ namespace metadata
 		IL2CPP_ASSERT(rowIndex > 0);
 		TbMethod methodData = _rawImage->ReadMethod(rowIndex);
 		MethodBody* body = new (HYBRIDCLR_MALLOC_ZERO(sizeof(MethodBody))) MethodBody();
-		ReadMethodBody(*_methodDefs[rowIndex - 1], methodData, *body);
+        const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(_methodDefs[rowIndex - 1]);
+		ReadMethodBody(methodDef, methodData, *body);
 		return body;
 	}
 
@@ -139,16 +146,17 @@ namespace metadata
 
 	Il2CppGenericContainer* ConsistentAOTHomologousImage::GetGenericContainerByRawIndex(uint32_t index)
 	{
-		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(index);
+		return const_cast<Il2CppGenericContainer*>(il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(index));
 	}
 
 	Il2CppGenericContainer* ConsistentAOTHomologousImage::GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex)
 	{
-		Il2CppTypeDefinition* type = (Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(typeDefIndex);
-		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(type->genericContainerIndex);
+		Il2CppMetadataTypeHandle typeHandle = il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(typeDefIndex);
+		const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+		return const_cast<Il2CppGenericContainer*>(il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef.genericContainerIndex));
 	}
 
-	const Il2CppMethodDefinition* ConsistentAOTHomologousImage::GetMethodDefinitionFromRawIndex(uint32_t index)
+	const Il2CppMetadataMethodDefinitionHandle ConsistentAOTHomologousImage::GetMethodHandleFromRawIndex(uint32_t index)
 	{
 		IL2CPP_ASSERT((size_t)index < _methodDefs.size());
 		return _methodDefs[index];
@@ -159,7 +167,7 @@ namespace metadata
 		IL2CPP_ASSERT(rowIndex > 0);
 		AOTFieldData& fd = _fields[rowIndex - 1];
 		ret.containerType = _il2cppTypeForTypeDefs[fd.typeDefIndex];
-		ret.field = fd.fieldDef;
+		ret.fieldIndex = fd.fieldIndex;
 	}
 }
 }

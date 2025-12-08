@@ -8,7 +8,7 @@ namespace metadata
 	struct AOTFieldData
 	{
 		uint32_t typeDefIndex; // rowIndex - 1
-		const Il2CppFieldDefinition* fieldDef;
+		FieldIndex fieldIndex;
 	};
 
 	enum class HomologousImageMode

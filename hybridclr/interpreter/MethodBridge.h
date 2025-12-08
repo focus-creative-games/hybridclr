@@ -78,7 +78,7 @@ namespace interpreter
 	void ConvertInvokeArgs(StackObject* resultArgs, const MethodInfo* method, MethodArgDesc* argDescs, void** args);
 
 	bool ComputeSignature(const MethodInfo* method, bool call, char* sigBuf, size_t bufferSize);
-	bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize);
+	bool ComputeSignature(const Il2CppMetadataMethodDefinitionHandle methodHandle, bool call, char* sigBuf, size_t bufferSize);
 	bool ComputeSignature(const Il2CppType* ret, const il2cpp::utils::dynamic_array<const Il2CppType*>& params, bool instanceCall, char* sigBuf, size_t bufferSize);
 	
 	template<typename T> uint64_t N2MAsUint64ValueOrAddress(T& value)

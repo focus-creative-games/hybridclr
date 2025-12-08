@@ -133,7 +133,7 @@ namespace metadata
         {
             Il2CppGenericClass* gclass = type->data.generic_class;
             //Il2CppClass* container_class = GenericClass::GetTypeDefinition(gclass);
-            const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+            const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(type);
             if (IsValueType(typeDef))
             {
                 CalcClassNotStaticFields(type);
@@ -264,7 +264,7 @@ namespace metadata
         }
         case IL2CPP_TYPE_GENERICINST:
         {
-            const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+            const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(type);
             if (IsValueType(typeDef))
             {
                 CalcClassNotStaticFields(type);
@@ -320,12 +320,13 @@ namespace metadata
 		}
 		ClassLayoutInfo& layout = *(_classMap[type] = new (HYBRIDCLR_MALLOC_ZERO(sizeof(ClassLayoutInfo))) ClassLayoutInfo());
 		layout.type = type;
-		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
-        const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
+        const Il2CppMetadataTypeHandle typeHandle = GetUnderlyingTypeHandle(type);
+		const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+        const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.nameIndex);
 		std::vector<FieldLayout>& fields = layout.fields;
-        fields.resize(typeDef->field_count, {});
+        fields.resize(typeDef.field_count, {});
 
-        bool isCurAssemblyType = DecodeImageIndex(typeDef->byvalTypeIndex) == _image->GetIndex();
+        bool isCurAssemblyType = DecodeImageIndex(typeDef.byvalTypeIndex) == _image->GetIndex();
         if ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) && !isCurAssemblyType)
         {
             Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
@@ -342,10 +343,11 @@ namespace metadata
         }
 
         const Il2CppGenericContext* gc = type->type == IL2CPP_TYPE_GENERICINST ? &type->data.generic_class->context : nullptr;
-		for (uint16_t i = 0; i < typeDef->field_count; i++)
-		{
-			Il2CppFieldDefinition* fieldDef = (Il2CppFieldDefinition*)il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromTypeDefAndFieldIndex(typeDef, i);
-			const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(fieldDef->typeIndex);
+        for (uint16_t i = 0; i < typeDef.field_count; i++)
+        {
+            FieldIndex fieldIndex = typeDef.fieldStart + i;
+            const Il2CppFieldDefinition fieldDef = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromIndex(_image->GetIl2CppImage(), fieldIndex);
+            const Il2CppType* fieldType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(fieldDef.typeIndex);
             const Il2CppType* inflatedFieldType = gc ? TryInflateIfNeed(fieldType, gc, true) : fieldType;
             FieldLayout& fieldLayout = fields[i];
             fieldLayout.type = inflatedFieldType;
@@ -359,7 +361,7 @@ namespace metadata
             else
             {
 
-                Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle((Il2CppMetadataTypeHandle)typeDef);
+                Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromHandle(typeDef.typeHandle);
                 il2cpp::vm::Class::SetupFields(klass);
                 FieldInfo* fieldInfo = klass->fields + i;
                 fieldLayout.offset = fieldInfo->offset;
@@ -369,7 +371,7 @@ namespace metadata
 		}
 
         if (il2cpp::metadata::GenericMetadata::ContainsGenericParameters(type)
-            || ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) && typeDef->genericContainerIndex != kGenericContainerIndexInvalid))
+            || ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) && typeDef.genericContainerIndex != kGenericContainerIndexInvalid))
         {
             layout.instanceSize = 0;
             layout.actualSize = 0;
@@ -383,7 +385,7 @@ namespace metadata
         }
 
 
-        TbClassLayout classLayoutData = _image->GetClassLayout(typeDef);
+        TbClassLayout classLayoutData = _image->GetClassLayout(typeHandle);
         uint8_t packingSize = (uint8_t)classLayoutData.packingSize;
         int32_t classSize = (int32_t)(classLayoutData.classSize + sizeof(Il2CppObject));
 
@@ -406,12 +408,12 @@ namespace metadata
             packingSize = 0;
         }
 		// packingSize is ignored for auto layout types
-        if (!(typeDef->flags & (TYPE_ATTRIBUTE_SEQUENTIAL_LAYOUT | TYPE_ATTRIBUTE_EXPLICIT_LAYOUT)))
+        if (!(typeDef.flags & (TYPE_ATTRIBUTE_SEQUENTIAL_LAYOUT | TYPE_ATTRIBUTE_EXPLICIT_LAYOUT)))
         {
             packingSize = 0;
         }
 
-        if (typeDef->flags & TYPE_ATTRIBUTE_EXPLICIT_LAYOUT)
+        if (typeDef.flags & TYPE_ATTRIBUTE_EXPLICIT_LAYOUT)
         {
             IL2CPP_ASSERT(IsValueType(typeDef));
             IL2CPP_ASSERT(isCurAssemblyType);
@@ -465,7 +467,7 @@ namespace metadata
             uint8_t parentMinimumAligment;
             int32_t parentActualSize = 0;
             bool isValueType = IsValueType(typeDef);
-            if (typeDef->parentIndex != kInvalidIndex)
+            if (typeDef.parentIndex != kInvalidIndex)
             {
                 if (isValueType)
                 {
@@ -474,7 +476,7 @@ namespace metadata
                 }
                 else
                 {
-                    const Il2CppType* parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
+                    const Il2CppType* parentType = GetParentIl2CppTypeFromTypeDefinition(typeDef);
                     parentType = TryInflateIfNeed(parentType, gc, true);
                     CalcClassNotStaticFields(parentType);
                     ClassLayoutInfo* parentLayout = GetClassLayoutInfo(parentType);

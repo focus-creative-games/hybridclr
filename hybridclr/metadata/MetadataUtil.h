@@ -172,9 +172,14 @@ namespace metadata
         return index != kInvalidIndex && ((uint32_t)index & ~kMetadataIndexMaskA) != 0;
     }
 
-    inline bool IsInterpreterType(const Il2CppTypeDefinition* typeDefinition)
+    inline bool IsInterpreterType(const Il2CppTypeDefinition& typeDefinition)
     {
-        return IsInterpreterIndex(typeDefinition->byvalTypeIndex);
+        return IsInterpreterIndex(typeDefinition.byvalTypeIndex);
+    }
+
+    inline bool IsInterpreterType(const Il2CppMetadataTypeHandle typeHandle)
+    {
+        return !il2cpp::vm::GlobalMetadata::IsAOTTypeHandle(typeHandle);
     }
 
     inline bool IsInterpreterType(const Il2CppClass* klass)
@@ -212,9 +217,14 @@ namespace metadata
         return IsInterpreterType(method->klass);
     }
 
-    inline bool IsInterpreterMethod(const Il2CppMethodDefinition* method)
+    inline bool IsInterpreterMethod(const Il2CppMethodDefinition& method)
     {
-        return IsInterpreterIndex(method->declaringType);
+        return IsInterpreterIndex(method.declaringType);
+    }
+
+    inline bool IsInterpreterMethod(const Il2CppMetadataMethodDefinitionHandle methodHandle)
+    {
+        return !il2cpp::vm::GlobalMetadata::IsAOTMethodHandle(methodHandle);
     }
 
     inline bool IsInterpreterImplement(const MethodInfo* method)
@@ -227,9 +237,9 @@ namespace metadata
         return !(method->flags & METHOD_ATTRIBUTE_STATIC);
     }
 
-    inline bool IsInstanceMethod(const Il2CppMethodDefinition* method)
+    inline bool IsInstanceMethod(const Il2CppMethodDefinition& method)
     {
-        return !(method->flags & METHOD_ATTRIBUTE_STATIC);
+        return !(method.flags & METHOD_ATTRIBUTE_STATIC);
     }
 
     inline bool IsStaticMethod(const MethodInfo* method)
@@ -340,29 +350,32 @@ namespace metadata
 
     bool IsValueType(const Il2CppType* type);
 
-    inline bool IsValueType(const Il2CppTypeDefinition* typeDef)
+    inline bool IsValueType(const Il2CppTypeDefinition& typeDef)
     {
-        return typeDef->bitfield & (1 << (il2cpp::vm::kBitIsValueType - 1));
+        return typeDef.bitfield & (1 << (il2cpp::vm::kBitIsValueType - 1)); // updated to match reference type
     }
 
-    inline bool IsEnumType(const Il2CppTypeDefinition* typeDef)
+    inline bool IsEnumType(const Il2CppTypeDefinition& typeDef) // updated to reference type
     {
-        return (typeDef->bitfield >> (il2cpp::vm::kBitIsEnum - 1)) & 0x1;
+        return (typeDef.bitfield >> (il2cpp::vm::kBitIsEnum - 1)) & 0x1;
     }
 
-    inline const Il2CppTypeDefinition* GetUnderlyingTypeDefinition(const Il2CppType* type)
+    inline const Il2CppMetadataTypeHandle GetUnderlyingTypeHandle(const Il2CppType* type)
     {
-        if (IsGenericIns(type))
-        {
-            return (Il2CppTypeDefinition*)type->data.generic_class->type->data.typeHandle;
-        }
-        else
-        {
-            return (Il2CppTypeDefinition*)type->data.typeHandle;
-        }
+        return IsGenericIns(type) ? type->data.generic_class->type->data.typeHandle : (Il2CppMetadataTypeHandle)type->data.typeHandle;
     }
 
-    const Il2CppType* GetIl2CppTypeFromTypeDefinition(const Il2CppTypeDefinition* typeDef);
+    inline const Il2CppTypeDefinition GetUnderlyingTypeDefinition(const Il2CppType* type)
+    {
+        Il2CppMetadataTypeHandle typeHandle = GetUnderlyingTypeHandle(type);
+        return il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+    }
+
+    const Il2CppType* GetIl2CppTypeFromTypeHandle(const Il2CppMetadataTypeHandle typeHandle);
+
+    const Il2CppType* GetEnumElementIl2CppTypeFromTypeDefinition(const Il2CppTypeDefinition& enumTypeDef);
+
+    const Il2CppType* GetParentIl2CppTypeFromTypeDefinition(const Il2CppTypeDefinition& typeDef);
 
     inline uint32_t GetActualArgumentNum(const MethodInfo* method)
     {
@@ -414,16 +427,16 @@ namespace metadata
 
     bool IsTypeGenericCompatible(const Il2CppType* t1, const Il2CppType* t2);
 
-    bool IsOverrideMethod(const Il2CppType* type1, const Il2CppMethodDefinition* method1, const Il2CppType* type2, const Il2CppMethodDefinition* method2);
-    bool IsOverrideMethodIgnoreName(const Il2CppType* type1, const Il2CppMethodDefinition* methodDef1, const Il2CppType* type2, const Il2CppMethodDefinition* methodDef2);
+    bool IsOverrideMethod(const Il2CppType* type1, const Il2CppMethodDefinition& method1, const Il2CppType* type2, const Il2CppMethodDefinition& method2);
+    bool IsOverrideMethodIgnoreName(const Il2CppType* type1, const Il2CppMethodDefinition& methodDef1, const Il2CppType* type2, const Il2CppMethodDefinition& methodDef2);
 
-    const Il2CppMethodDefinition* ResolveMethodDefinition(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig);
+    const Il2CppMetadataMethodDefinitionHandle  ResolveMethodDefinition(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig);
 
-    const MethodInfo* GetMethodInfoFromMethodDef(const Il2CppType* type, const Il2CppMethodDefinition* methodDef);
+    const MethodInfo* GetMethodInfoFromMethodDef(const Il2CppType* type, const Il2CppMetadataMethodDefinitionHandle methodHandle);
 
-    bool ResolveField(const Il2CppType* type, const char* resolveFieldName, const Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef);
+    bool ResolveField(const Il2CppType* type, const char* resolveFieldName, const Il2CppType* resolveFieldType, FieldIndex& retFieldDef);
 
-    inline void ResolveFieldThrow(const Il2CppType* type, const char* resolveFieldName, const Il2CppType* resolveFieldType, const Il2CppFieldDefinition*& retFieldDef)
+    inline void ResolveFieldThrow(const Il2CppType* type, const char* resolveFieldName, const Il2CppType* resolveFieldType, FieldIndex& retFieldDef)
     {
         if (!ResolveField(type, resolveFieldName, resolveFieldType, retFieldDef))
         {
@@ -442,7 +455,7 @@ namespace metadata
 
     bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
 
-    bool IsMatchMethodSig(const Il2CppMethodDefinition* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer);
+    bool IsMatchMethodSig(const Il2CppMethodDefinition& methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer);
     bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer);
     bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv);
 

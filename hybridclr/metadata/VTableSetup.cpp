@@ -28,7 +28,7 @@ namespace metadata
 		IL2CPP_ASSERT(genericType->_type->data.typeHandle == type->data.generic_class->type->data.typeHandle);
 		VTableSetUp* tdt = new (HYBRIDCLR_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
 		tdt->_type = type;
-		tdt->_typeDef = genericType->_typeDef;
+		tdt->_typeHandle = genericType->_typeHandle;
 		tdt->_parent = genericType->_parent ? BuildByType(cache, TryInflateIfNeed(type, genericType->_parent->_type)) : nullptr;
 		tdt->_name = genericType->_name;
 
@@ -76,36 +76,39 @@ namespace metadata
 			return cache[type] = gidt;
 		}
 		VTableSetUp* tdt = new (HYBRIDCLR_MALLOC_ZERO(sizeof(VTableSetUp))) VTableSetUp();
-		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
-		const char* ns = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->namespaceIndex);
-		const char* name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
+		const Il2CppMetadataTypeHandle typeHandle = GetUnderlyingTypeHandle(type);
+		const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(type);
+		const char* ns = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.namespaceIndex);
+		const char* name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.nameIndex);
 		const Il2CppType* parentType = nullptr;
-		if (typeDef->parentIndex != kInvalidIndex)
+		if (typeDef.parentIndex != kInvalidIndex)
 		{
-			parentType = il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->parentIndex);
+			parentType = GetParentIl2CppTypeFromTypeDefinition(typeDef);
 		}
 		tdt->_type = type;
-		tdt->_typeDef = typeDef;
+		tdt->_typeHandle = typeHandle;
+        tdt->_typeDef = typeDef;
 		tdt->_parent = parentType ? BuildByType(cache, parentType) : nullptr;
 		tdt->_name = name;
 
-		for (uint32_t i = 0; i < typeDef->interfaces_count; i++)
+		for (uint32_t i = 0; i < typeDef.interfaces_count; i++)
 		{
-			const Il2CppType* intType = il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(typeDef, i);
+			const Il2CppType* intType = il2cpp::vm::GlobalMetadata::GetInterfaceFromOffset(typeHandle, i);
 			VTableSetUp* intf = BuildByType(cache, intType);
 			tdt->_interfaces.push_back(intf);
 		}
 
-		for (uint32_t i = 0; i < typeDef->method_count; i++)
+		for (uint32_t i = 0; i < typeDef.method_count; i++)
 		{
-			const Il2CppMethodDefinition* methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromIndex(typeDef->methodStart + i);
-			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex);
-			if (hybridclr::metadata::IsVirtualMethod(methodDef->flags))
+			const Il2CppMetadataMethodDefinitionHandle methodHandle = il2cpp::vm::GlobalMetadata::GetMethodHandleFromIndex(typeDef.methodStart + i);
+            const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionDataFromIndex(typeDef.methodStart + i);
+			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef.nameIndex);
+			if (hybridclr::metadata::IsVirtualMethod(methodDef.flags))
 			{
-				tdt->_virtualMethods.push_back({ type, methodDef, methodName });
+				tdt->_virtualMethods.push_back({ type, methodHandle, methodName });
 			}
 		}
-		if (hybridclr::metadata::IsInterface(typeDef->flags))
+		if (hybridclr::metadata::IsInterface(typeDef.flags))
 		{
 			tdt->ComputeInterfaceVtables(cache);
 		}
@@ -120,7 +123,9 @@ namespace metadata
 
 	inline bool IsOverrideMethod(const GenericClassMethod& m1, const GenericClassMethod& m2)
 	{
-		return hybridclr::metadata::IsOverrideMethod(m1.type, m1.method, m2.type, m2.method);
+        const Il2CppMethodDefinition methodDef1 = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(m1.method);
+        const Il2CppMethodDefinition methodDef2 = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(m2.method);
+		return hybridclr::metadata::IsOverrideMethod(m1.type, methodDef1, m2.type, methodDef2);
 	}
 
 
@@ -173,14 +178,14 @@ namespace metadata
 
 	void VTableSetUp::ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
-		IL2CPP_ASSERT(hybridclr::metadata::IsInterface(_typeDef->flags));
+		IL2CPP_ASSERT(hybridclr::metadata::IsInterface(_typeDef.flags));
 
 		if (IsInterType())
 		{
 			uint16_t slotIdx = 0;
 			for (auto& vm : _virtualMethods)
 			{
-				Il2CppMethodDefinition* methodDef = const_cast<Il2CppMethodDefinition*>(vm.method);
+				Il2CppMethodDefinition* methodDef = (Il2CppMethodDefinition*)vm.method;
 				IL2CPP_ASSERT(methodDef->slot == slotIdx);
 				slotIdx++;
 			}
@@ -206,27 +211,28 @@ namespace metadata
 		}
 	}
 
-	const Il2CppType* VTableSetUp::FindImplType(const Il2CppMethodDefinition* methodDef)
+	const Il2CppType* VTableSetUp::FindImplType(const Il2CppMethodDefinition& methodDef)
 	{
-		Il2CppTypeDefinition* declarType = (Il2CppTypeDefinition*)il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(methodDef->declaringType);
+		Il2CppMetadataTypeHandle declaringTypeHandle = il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(methodDef.declaringType);
 		for (VTableSetUp* cur = this; cur; cur = cur->_parent)
 		{
-			if (declarType == cur->_typeDef)
+			if (declaringTypeHandle == cur->_typeHandle)
 			{
 				return cur->_type;
 			}
 			for(VTableSetUp* itf : cur->_interfaces)
 			{
-				if (declarType == itf->_typeDef)
+				if (declaringTypeHandle == itf->_typeHandle)
 				{
 					return itf->_type;
 				}
 			}
 		}
+        const Il2CppTypeDefinition declaringTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(declaringTypeHandle);
 		TEMP_FORMAT(errMsg, "VTableSetUp::FindImplType can't find impl type for method:%s.%s::%s",
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(declarType->namespaceIndex),
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(declarType->nameIndex),
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex)
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(declaringTypeDef.namespaceIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(declaringTypeDef.nameIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef.nameIndex)
 			);
 		RaiseExecutionEngineException(errMsg);
 		return nullptr;
@@ -251,23 +257,25 @@ namespace metadata
 			il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException("type not exists"));
 		}
 
-		const Il2CppTypeDefinition* typeDefinition = GetUnderlyingTypeDefinition(type);
+		const Il2CppTypeDefinition typeDefinition = GetUnderlyingTypeDefinition(type);
 
 		TEMP_FORMAT(errMsg, "VTableSetUp fail. virtual method: %s::%s::%s can't be find in declaring type or parent. It may be stripped by il2cpp",
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition->namespaceIndex), 
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition->nameIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition.namespaceIndex), 
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition.nameIndex),
 			methodName);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(errMsg));
 	}
 
-	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMethodDefinition* methodDef, bool throwExceptionIfNotFind)
+	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMetadataMethodDefinitionHandle methodHandle, bool throwExceptionIfNotFind)
 	{
+        const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(methodHandle);
 		for (VTableSetUp* curTdt = this; curTdt; curTdt = curTdt->_parent)
 		{
 			for (int idx = (int)curTdt->_virtualMethods.size() - 1; idx >= 0; idx--)
 			{
 				GenericClassMethod& pvm = curTdt->_virtualMethods[idx];
-				if (hybridclr::metadata::IsOverrideMethod(containerType, methodDef, pvm.type, pvm.method))
+                const Il2CppMethodDefinition pvmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(pvm.method);
+				if (hybridclr::metadata::IsOverrideMethod(containerType, methodDef, pvm.type, pvmMethodDef))
 				{
 					return &pvm;
 				}
@@ -275,26 +283,26 @@ namespace metadata
 		}
 		if (throwExceptionIfNotFind)
 		{
-			RaiseParentOverridedMethodNotFindException(this->_type, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef->nameIndex));
+			RaiseParentOverridedMethodNotFindException(this->_type, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef.nameIndex));
 		}
 		return nullptr;
 	}
 
 	void VTableSetUp::ComputAotTypeVtables(Il2CppType2TypeDeclaringTreeMap& cache)
 	{
-		for (uint16_t i = 0; i < _typeDef->interface_offsets_count; i++)
+		for (uint16_t i = 0; i < _typeDef.interface_offsets_count; i++)
 		{
-			Il2CppInterfaceOffsetInfo ioi = il2cpp::vm::GlobalMetadata::GetInterfaceOffsetInfo(_typeDef, i);
+			Il2CppInterfaceOffsetInfo ioi = il2cpp::vm::GlobalMetadata::GetInterfaceOffsetInfo(_typeHandle, i);
 			_interfaceOffsetInfos.push_back({ ioi.interfaceType, BuildByType(cache, ioi.interfaceType), (uint16_t)ioi.offset });
 		}
 
 		int nullVtableSlotCount = 0;
-		for (uint16_t i = 0; i < _typeDef->vtable_count; i++)
+		for (uint16_t i = 0; i < _typeDef.vtable_count; i++)
 		{
-			const Il2CppMethodDefinition* overideMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromVTableSlot(_typeDef, i);
-			if (overideMethodDef == nullptr)
+			Il2CppMetadataMethodDefinitionHandle overrideMethodHandle = il2cpp::vm::GlobalMetadata::GetMethodHandleFromVTableSlot(_typeHandle, i);
+			if (overrideMethodHandle == nullptr)
 			{
-				if (_parent && i < _parent->_typeDef->vtable_count)
+				if (_parent && i < _parent->_typeDef.vtable_count)
 				{
 					IL2CPP_ASSERT(_parent->_methodImpls[i].method);
 					_methodImpls.push_back(_parent->_methodImpls[i]);
@@ -306,10 +314,11 @@ namespace metadata
 				}
 				continue;
 			}
-			const Il2CppType* implType = FindImplType(overideMethodDef);
-			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(overideMethodDef->nameIndex);
+			const Il2CppMethodDefinition overrideMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(overrideMethodHandle);
+			const Il2CppType* implType = FindImplType(overrideMethodDef);
+			const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(overrideMethodDef.nameIndex);
 			uint16_t slot = i;
-			_methodImpls.push_back({ overideMethodDef, implType, slot /*, methodName*/});
+			_methodImpls.push_back({ overrideMethodHandle, implType, slot /*, methodName*/});
 		}
 
 		// il2cpp set vtable slot to nullptr if method is abstract, so we fill correct type and method
@@ -317,8 +326,9 @@ namespace metadata
 		{
 			for (GenericClassMethod& gcm : _virtualMethods)
 			{
-				IL2CPP_ASSERT(gcm.method->slot != kInvalidIl2CppMethodSlot);
-				VirtualMethodImpl& vmi = _methodImpls[gcm.method->slot];
+				const Il2CppMethodDefinition overrideMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(gcm.method);
+				IL2CPP_ASSERT(overrideMethodDef.slot != kInvalidIl2CppMethodSlot);
+				VirtualMethodImpl& vmi = _methodImpls[overrideMethodDef.slot];
 				if (vmi.method == nullptr)
 				{
 					vmi.type = _type;
@@ -357,33 +367,34 @@ namespace metadata
 			IL2CPP_ASSERT(nullVtableSlotCount == 0);
 		}
 
-		IL2CPP_ASSERT(_typeDef->vtable_count == (uint16_t)_methodImpls.size());
+		IL2CPP_ASSERT(_typeDef.vtable_count == (uint16_t)_methodImpls.size());
 	}
 
-	void VTableSetUp::ApplyOverrideMethod(const GenericClassMethod* overrideParentMethod, const Il2CppMethodDefinition* overrideMethodDef, uint16_t checkOverrideMaxIdx)
+	void VTableSetUp::ApplyOverrideMethod(const GenericClassMethod* overrideParentMethod, const Il2CppMetadataMethodDefinitionHandle overrideMethodHandle, uint16_t checkOverrideMaxIdx)
 	{
 		IL2CPP_ASSERT(overrideParentMethod);
 		if (overrideParentMethod)
 		{
-			IL2CPP_ASSERT(overrideParentMethod->method->slot != kInvalidIl2CppMethodSlot);
+			Il2CppMethodDefinition overrideParentMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(overrideParentMethod->method);
+			IL2CPP_ASSERT(overrideParentMethodDef.slot != kInvalidIl2CppMethodSlot);
 			//const_cast<Il2CppMethodDefinition*>(vm.method)->slot = overrideParentMethod->method->slot;
-			uint16_t slotIdx = overrideParentMethod->method->slot;
-			const Il2CppMethodDefinition* overrideAncestorMethod = _parent->_methodImpls[slotIdx].method;
-			IL2CPP_ASSERT(overrideAncestorMethod);
+			uint16_t slotIdx = overrideParentMethodDef.slot;
+			Il2CppMetadataMethodDefinitionHandle overrideAncestorMethodHandle = _parent->_methodImpls[slotIdx].method;
+			IL2CPP_ASSERT(overrideAncestorMethodHandle);
 
 			VirtualMethodImpl& curImpl = _methodImpls[slotIdx];
 			curImpl.type = _type;
-			curImpl.method = overrideMethodDef;
+			curImpl.method = overrideMethodHandle;
 			// search hierarchy methods, find match method. 
 
 			// check override parent virtual methods and
 			for (uint16_t idx = 0; idx < checkOverrideMaxIdx; idx++)
 			{
 				VirtualMethodImpl& vmi = _methodImpls[idx];
-				if (vmi.method == overrideAncestorMethod)
+				if (vmi.method == overrideAncestorMethodHandle)
 				{
 					vmi.type = _type;
-					vmi.method = overrideMethodDef;
+					vmi.method = overrideMethodHandle;
 				}
 			}
 		}
@@ -402,7 +413,10 @@ namespace metadata
 					continue;
 				}
 				VirtualMethodImpl& vmi = _methodImpls[idx];
-				if (IsOverrideMethod(_type, gcm.method, vmi.type, vmi.method))
+
+				const Il2CppMethodDefinition declaringMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(gcm.method);
+				const Il2CppMethodDefinition implMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(vmi.method);
+				if (IsOverrideMethod(_type, declaringMethodDef, vmi.type, implMethodDef))
 				{
 					//IL2CPP_ASSERT(impl.body.methodDef->slot == kInvalidIl2CppMethodSlot);
 					vmi.type = _type;
@@ -416,7 +430,8 @@ namespace metadata
 
 	uint16_t VTableSetUp::FindExplicitOverrideInterfaceSlot(GenericClassMethod& gcm, const Int32ToUin16Map& explicitImplSlots)
 	{
-		auto it = explicitImplSlots.find(gcm.method->token);
+        const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(gcm.method);
+		auto it = explicitImplSlots.find(methodDef.token);
 		return it != explicitImplSlots.end() ? it->second : kInvalidIl2CppMethodSlot;
 	}
 
@@ -447,13 +462,13 @@ namespace metadata
 	{
 		// end with .<methodName>
 		std::string fullName;
-		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(targetDeclaringType);
-		if (typeDef->namespaceIndex != kStringLiteralIndexInvalid)
+		const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(targetDeclaringType);
+		if (typeDef.namespaceIndex != kStringLiteralIndexInvalid)
 		{
-			fullName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->namespaceIndex);
+			fullName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.namespaceIndex);
 			fullName += ".";
 		}
-		const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef->nameIndex);
+		const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.nameIndex);
 		const char* genericQualifier = strchr(typeName, '`');
 		if (genericQualifier)
 		{
@@ -483,9 +498,10 @@ namespace metadata
 	}
 
 	void VTableSetUp::ApplyAOTInterfaceExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, Int32ToUin16Map& explicitImplToken2Slots,
-		const Il2CppType* intfType, const Il2CppType* implType, const Il2CppMethodDefinition* implMethod)
+		const Il2CppType* intfType, const Il2CppType* implType, const Il2CppMetadataMethodDefinitionHandle implMethodHandle)
 	{
-		const char* name1 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
+        const Il2CppMethodDefinition implMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(implMethodHandle);
+		const char* name1 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethodDef.nameIndex);
 		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 		{
 			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
@@ -497,19 +513,21 @@ namespace metadata
 			for (uint16_t idx = 0, end = (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
 			{
 				GenericClassMethod& rvm = rioi.tree->_virtualMethods[idx];
-				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
+                const Il2CppMethodDefinition declaringMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(rvm.method);
+				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(declaringMethodDef.nameIndex);
 				if (!IsExpliciteMethodNameMatch(name1, intfType, name2))
 				{
 					continue;
 				}
-				if (IsOverrideMethodIgnoreName(implType, implMethod, rvm.type, rvm.method))
+				
+				if (IsOverrideMethodIgnoreName(implType, implMethodDef, rvm.type, declaringMethodDef))
 				{
 					uint16_t slot = (uint16_t)(idx + rioi.offset);
 					VirtualMethodImpl& ivmi = _methodImpls[slot];
 					_explicitImplSlots.insert(slot);
-					explicitImplToken2Slots.insert({ implMethod->token, slot });
+					explicitImplToken2Slots.insert({ implMethodDef.token, slot });
 					ivmi.type = implType;
-					ivmi.method = implMethod;
+					ivmi.method = implMethodHandle;
 					//ivmi.name = name1;
 					return;
 				}
@@ -518,9 +536,11 @@ namespace metadata
 	}
 
 	void VTableSetUp::ApplyExplicitOverride(const std::vector<uint16_t>& implInterfaceOffsetIdxs, Int32ToUin16Map& explicitImplToken2Slots,
-		const Il2CppType* declaringType, const Il2CppMethodDefinition* decalringMethod, const Il2CppType* implType, const Il2CppMethodDefinition* implMethod)
+		const Il2CppType* declaringType, const Il2CppMetadataMethodDefinitionHandle declaringMethodHandle, const Il2CppType* implType, const Il2CppMetadataMethodDefinitionHandle implMethodHandle)
 	{
-		const char* name1 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(decalringMethod->nameIndex);
+        const Il2CppMethodDefinition declaringMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(declaringMethodHandle);
+        const Il2CppMethodDefinition implMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(implMethodHandle);
+		const char* name1 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(declaringMethodDef.nameIndex);
 		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 		{
 			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
@@ -532,19 +552,20 @@ namespace metadata
 			for (uint16_t idx = 0, end = (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
 			{
 				GenericClassMethod& rvm = rioi.tree->_virtualMethods[idx];
-				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
+                const Il2CppMethodDefinition rvmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(rvm.method);
+				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvmMethodDef.nameIndex);
 				if (std::strcmp(name1, name2))
 				{
 					continue;
 				}
-				if (IsOverrideMethodIgnoreName(declaringType, decalringMethod, rvm.type, rvm.method))
+				if (IsOverrideMethodIgnoreName(declaringType, declaringMethodDef, rvm.type, rvmMethodDef))
 				{
 					uint16_t slot = (uint16_t)(idx + rioi.offset);
 					VirtualMethodImpl& ivmi = _methodImpls[slot];
 					_explicitImplSlots.insert(slot);
-					explicitImplToken2Slots.insert({ implMethod->token, slot});
+					explicitImplToken2Slots.insert({ implMethodDef.token, slot});
 					ivmi.type = implType;
-					ivmi.method = implMethod;
+					ivmi.method = implMethodHandle;
 					//ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
 					return;
 				}
@@ -556,44 +577,46 @@ namespace metadata
 			for (int idx = (int)containerTs->_virtualMethods.size() - 1; idx >= 0; idx--)
 			{
 				const GenericClassMethod& rvm = containerTs->_virtualMethods[idx];
-				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvm.method->nameIndex);
+				const Il2CppMethodDefinition rvmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(rvm.method);
+				const char* name2 = il2cpp::vm::GlobalMetadata::GetStringFromIndex(rvmMethodDef.nameIndex);
 				if (std::strcmp(name1, name2) != 0)
 				{
 					continue;
 				}
-				if (IsOverrideMethodIgnoreName(declaringType, decalringMethod, rvm.type, rvm.method))
+				if (IsOverrideMethodIgnoreName(declaringType, declaringMethodDef, rvm.type, rvmMethodDef))
 				{
-					VirtualMethodImpl& ivmi = _methodImpls[rvm.method->slot];
-					_explicitImplSlots.insert(rvm.method->slot);
-					explicitImplToken2Slots.insert({ implMethod->token, rvm.method->slot });
+					VirtualMethodImpl& ivmi = _methodImpls[rvmMethodDef.slot];
+					_explicitImplSlots.insert(rvmMethodDef.slot);
+					explicitImplToken2Slots.insert({ implMethodDef.token, rvmMethodDef.slot });
 					ivmi.type = implType;
-					ivmi.method = implMethod;
+					ivmi.method = implMethodHandle;
 					//ivmi.name = il2cpp::vm::GlobalMetadata::GetStringFromIndex(implMethod->nameIndex);
 					return;
 				}
 			}
 		}
-		const Il2CppTypeDefinition* typeDefinition = GetUnderlyingTypeDefinition(declaringType);
+		const Il2CppTypeDefinition typeDefinition = GetUnderlyingTypeDefinition(declaringType);
 
 		TEMP_FORMAT(errMsg, "VTableSetUp fail. explicit implemented method: %s::%s::%s can't be find in parent or any interface.",
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition->namespaceIndex),
-			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition->nameIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition.namespaceIndex),
+			il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDefinition.nameIndex),
 			name1);
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
 	void VTableSetUp::ApplyTypeExplicitImpls(const Il2CppType* type, const VTableSetUp* tree, const std::vector<uint16_t>& implInterfaceOffsetIdxs, Int32ToUin16Map& explicitImplToken2Slots)
 	{
-		const Il2CppTypeDefinition* typeDef = GetUnderlyingTypeDefinition(type);
+        const Il2CppMetadataTypeHandle typeHandle = GetUnderlyingTypeHandle(type);
+		const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(type);
 		if (IsInterpreterType(typeDef))
 		{
-			const il2cpp::utils::dynamic_array<MethodImpl> explicitImpls = MetadataModule::GetImage(typeDef)->GetTypeMethodImplByTypeDefinition(typeDef);
+			const il2cpp::utils::dynamic_array<MethodImpl> explicitImpls = MetadataModule::GetImage(typeDef.typeHandle)->GetTypeMethodImplByTypeDefinition(typeHandle);
 			if (type->type != IL2CPP_TYPE_GENERICINST)
 			{
 				for (const MethodImpl& mi : explicitImpls)
 				{
 					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, mi.declaration.containerType,
-						mi.declaration.methodDef, mi.body.containerType, mi.body.methodDef);
+						mi.declaration.methodHandle, mi.body.containerType, mi.body.methodHandle);
 				}
 			}
 			else
@@ -604,19 +627,20 @@ namespace metadata
 					const Il2CppType* containerType = il2cpp::metadata::GenericMetadata::InflateIfNeeded(mi.declaration.containerType, &genericClass->context, true);
 					const Il2CppType* implType = TryInflateIfNeed(type, type->data.generic_class->type, mi.body.containerType);
 					ApplyExplicitOverride(implInterfaceOffsetIdxs, explicitImplToken2Slots, containerType,
-						mi.declaration.methodDef, implType, mi.body.methodDef);
+						mi.declaration.methodHandle, implType, mi.body.methodHandle);
 				}
 			}
 		}
-		else if (IsInterface(typeDef->flags))
+		else if (IsInterface(typeDef.flags))
 		{
 			// we only need process explicit impls in interface.
 			// il2cpp doesn't provider any ways to get explicit impls in class.
 			// so we can only try to find explicit impls by name matching.
 			for (const GenericClassMethod& gcm : tree->_virtualMethods)
 			{
+                const Il2CppMethodDefinition gcmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(gcm.method);
 				// only try to find explicit impls in private methods
-				uint32_t flags = gcm.method->flags;
+				uint32_t flags = gcmMethodDef.flags;
 				if (!IsPrivateMethod(flags) || IsAbstractMethod(flags))
 				{
 					continue;
@@ -647,7 +671,8 @@ namespace metadata
 		for (auto& vm : _virtualMethods)
 		{
 			IL2CPP_ASSERT(vm.type == _type);
-			uint16_t mflags = vm.method->flags;
+            Il2CppMethodDefinition* vmMethodDef = (Il2CppMethodDefinition*)vm.method;
+			uint16_t mflags = vmMethodDef->flags;
 			if (hybridclr::metadata::IsNewSlot(mflags))
 			{
 				uint16_t overrideSlotIdx = kInvalidIl2CppMethodSlot;
@@ -661,13 +686,13 @@ namespace metadata
 				}
 				if (overrideSlotIdx != kInvalidIl2CppMethodSlot)
 				{
-					const_cast<Il2CppMethodDefinition*>(vm.method)->slot = overrideSlotIdx;
+					vmMethodDef->slot = overrideSlotIdx;
 				}
 				else
 				{
 					_methodImpls.push_back({ vm.method, _type, curOffset /*, vm.name*/});
-					IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == curOffset);
-					const_cast<Il2CppMethodDefinition*>(vm.method)->slot = curOffset;
+					IL2CPP_ASSERT(vmMethodDef->slot == kInvalidIl2CppMethodSlot || vmMethodDef->slot == curOffset);
+					vmMethodDef->slot = curOffset;
 					++curOffset;
 				}
 			}
@@ -678,16 +703,17 @@ namespace metadata
 				const GenericClassMethod* overrideParentMethod = _parent->FindImplMethod(_type, vm.method, false);
 				if (overrideParentMethod)
 				{
-					IL2CPP_ASSERT(overrideParentMethod->method->slot != kInvalidIl2CppMethodSlot);
-					const_cast<Il2CppMethodDefinition*>(vm.method)->slot = overrideParentMethod->method->slot;
+                    const Il2CppMethodDefinition overrideParentMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(overrideParentMethod->method);
+					IL2CPP_ASSERT(overrideParentMethodDef.slot != kInvalidIl2CppMethodSlot);
+					vmMethodDef->slot = overrideParentMethodDef.slot;
 					ApplyOverrideMethod(overrideParentMethod, vm.method, startOffset);
 				}
 				else
 				{
 					IL2CPP_ASSERT(metadata::IsPrivateMethod(mflags));
 					_methodImpls.push_back({ vm.method, _type, curOffset /*, vm.name*/});
-					IL2CPP_ASSERT(vm.method->slot == kInvalidIl2CppMethodSlot || vm.method->slot == curOffset);
-					const_cast<Il2CppMethodDefinition*>(vm.method)->slot = curOffset;
+					IL2CPP_ASSERT(vmMethodDef->slot == kInvalidIl2CppMethodSlot || vmMethodDef->slot == curOffset);
+					vmMethodDef->slot = curOffset;
 					++curOffset;
 				}
 			}

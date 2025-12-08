@@ -498,7 +498,7 @@ namespace metadata
 	struct MethodRefInfo
 	{
 		const Il2CppType* containerType; // maybe generic
-		const Il2CppMethodDefinition* methodDef;
+		Il2CppMetadataMethodDefinitionHandle methodHandle;
 		const Il2CppGenericInst* instantiation;
 	};
 
@@ -534,7 +534,12 @@ namespace metadata
 	struct FieldRefInfo
 	{
 		const Il2CppType* containerType; // maybe generic
-		const Il2CppFieldDefinition* field;
+		FieldIndex fieldIndex;
+
+		FieldRefInfo()
+			: containerType(nullptr), fieldIndex(kFieldIndexInvalid)
+		{
+		}
 	};
 
 	struct ResolveModuleRef
@@ -544,7 +549,7 @@ namespace metadata
 
 	struct ResolveMethodDef
 	{
-		const Il2CppMethodDefinition* methodDef;
+        Il2CppMetadataMethodDefinitionHandle methodHandle;
 	};
 
 	struct ResolveMemberRefParent

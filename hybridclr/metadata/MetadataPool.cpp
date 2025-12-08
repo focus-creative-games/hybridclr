@@ -282,19 +282,11 @@ namespace metadata
 		case IL2CPP_TYPE_VALUETYPE:
 		case IL2CPP_TYPE_CLASS:
 		{
-			const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)originalType.data.typeHandle;
-			if (typeDef)
+			const Il2CppMetadataTypeHandle typeHandle = originalType.data.typeHandle;
+			if (typeHandle && !originalType.byref)
 			{
-				if (originalType.byref)
-				{
-#if HYBRIDCLR_UNITY_2019
-					return il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->byrefTypeIndex);
-#endif
-				}
-				else
-				{
-					return il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->byvalTypeIndex);
-				}
+				const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
+				return il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef.byvalTypeIndex);
 			}
 			return nullptr;
 		}

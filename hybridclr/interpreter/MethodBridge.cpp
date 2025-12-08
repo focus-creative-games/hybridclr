@@ -156,10 +156,11 @@ namespace interpreter
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		{
-			const Il2CppTypeDefinition* typeDef = (const Il2CppTypeDefinition*)type->data.typeHandle;
+			const Il2CppMetadataTypeHandle typeHandle = type->data.typeHandle;
+            const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
 			if (hybridclr::metadata::IsEnumType(typeDef))
 			{
-				AppendSignature(il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(typeDef->elementTypeIndex), sigBuf, bufferSize, pos);
+				AppendSignature(metadata::GetEnumElementIl2CppTypeFromTypeDefinition(typeDef), sigBuf, bufferSize, pos);
 				break;
 			}
 			if (hybridclr::metadata::IsInterpreterType(typeDef))
@@ -183,10 +184,11 @@ namespace interpreter
 				AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 				break;
 			}
-			const Il2CppTypeDefinition* underlyingTypeDef = (const Il2CppTypeDefinition*)underlyingGenericType->data.typeHandle;
+			const Il2CppMetadataTypeHandle underlyingTypeHandle = underlyingGenericType->data.typeHandle;
+            const Il2CppTypeDefinition underlyingTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(underlyingTypeHandle);
 			if (hybridclr::metadata::IsEnumType(underlyingTypeDef))
 			{
-				AppendSignature(il2cpp::vm::GlobalMetadata::GetIl2CppTypeFromIndex(underlyingTypeDef->elementTypeIndex), sigBuf, bufferSize, pos);
+				AppendSignature(metadata::GetEnumElementIl2CppTypeFromTypeDefinition(underlyingTypeDef), sigBuf, bufferSize, pos);
 				break;
 			}
 			IL2CPP_ASSERT(underlyingGenericType->type == IL2CPP_TYPE_VALUETYPE);
@@ -231,10 +233,11 @@ namespace interpreter
 		return true;
 	}
 
-	bool ComputeSignature(const Il2CppMethodDefinition* method, bool call, char* sigBuf, size_t bufferSize)
+	bool ComputeSignature(const Il2CppMetadataMethodDefinitionHandle methodHandle, bool call, char* sigBuf, size_t bufferSize)
 	{
 		size_t pos = 0;
-		if (method->genericContainerIndex != kGenericContainerIndexInvalid)
+        const Il2CppMethodDefinition method = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(methodHandle);
+		if (method.genericContainerIndex != kGenericContainerIndexInvalid)
 		{
 			AppendString(sigBuf, bufferSize, pos, "!");
 			return true;
@@ -242,16 +245,16 @@ namespace interpreter
 
 		const Il2CppImage* image = hybridclr::metadata::MetadataModule::GetImage(method)->GetIl2CppImage();
 
-		AppendSignature(hybridclr::metadata::MetadataModule::GetIl2CppTypeFromEncodeIndex(method->returnType), sigBuf, bufferSize, pos);
+		AppendSignature(hybridclr::metadata::MetadataModule::GetIl2CppTypeFromEncodeIndex(method.returnType), sigBuf, bufferSize, pos);
 
 		if (call && metadata::IsInstanceMethod(method))
 		{
 			AppendSignatureObjOrRefOrPointer(sigBuf, bufferSize, pos);
 		}
 
-		for (uint16_t i = 0; i < method->parameterCount; i++)
+		for (uint16_t i = 0; i < method.parameterCount; i++)
 		{
-			TypeIndex paramTypeIndex = hybridclr::metadata::MetadataModule::GetParameterDefinitionFromIndex(image, method->parameterStart + i)->typeIndex;
+			TypeIndex paramTypeIndex = hybridclr::metadata::MetadataModule::GetParameterDefinitionFromIndex(image, method.parameterStart + i).typeIndex;
 			AppendSignature(hybridclr::metadata::MetadataModule::GetIl2CppTypeFromEncodeIndex(paramTypeIndex), sigBuf, bufferSize, pos);
 		}
 		sigBuf[pos] = 0;

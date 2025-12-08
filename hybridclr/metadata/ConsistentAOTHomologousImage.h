@@ -22,13 +22,13 @@ namespace metadata
 		const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
 		Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
 		Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;
-		const Il2CppMethodDefinition* GetMethodDefinitionFromRawIndex(uint32_t index) override;
+		const Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) override;
 		void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 	private:
 		std::vector<const Il2CppType*> _il2cppTypeForTypeDefs;
-		std::vector<Il2CppTypeDefinition*> _typeDefs;
+		std::vector<Il2CppMetadataTypeHandle> _typeDefs;
 
-		std::vector< const Il2CppMethodDefinition*> _methodDefs;
+		std::vector<Il2CppMetadataMethodDefinitionHandle> _methodDefs;
 
 		std::vector<AOTFieldData> _fields;
 	};

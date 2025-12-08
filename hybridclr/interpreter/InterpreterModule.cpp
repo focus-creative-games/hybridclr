@@ -229,8 +229,7 @@ namespace interpreter
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("NotSupportManaged2NativeFunctionMethod"));
 	}
 
-	template<typename T>
-	const Managed2NativeCallMethod GetManaged2NativeMethod(const T* method, bool forceStatic)
+	const Managed2NativeCallMethod GetManaged2NativeMethod(const Il2CppMetadataMethodDefinitionHandle method, bool forceStatic)
 	{
 		char sigName[kMaxSignatureNameLength];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
@@ -238,8 +237,15 @@ namespace interpreter
 		return it != s_managed2natives.end() ? it->second : nullptr;
 	}
 
-	template<typename T>
-	const Il2CppMethodPointer GetNative2ManagedMethod(const T* method, bool forceStatic)
+	const Managed2NativeCallMethod GetManaged2NativeMethod(const MethodInfo* method, bool forceStatic)
+	{
+		char sigName[kMaxSignatureNameLength];
+		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+		auto it = s_managed2natives.find(sigName);
+		return it != s_managed2natives.end() ? it->second : nullptr;
+	}
+
+	const Il2CppMethodPointer GetNative2ManagedMethod(const Il2CppMetadataMethodDefinitionHandle method, bool forceStatic)
 	{
 		char sigName[kMaxSignatureNameLength];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
@@ -247,8 +253,23 @@ namespace interpreter
 		return it != s_native2manageds.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
 	}
 
-	template<typename T>
-	const Il2CppMethodPointer GetNativeAdjustMethodMethod(const T* method, bool forceStatic)
+	const Il2CppMethodPointer GetNative2ManagedMethod(const MethodInfo* method, bool forceStatic)
+	{
+		char sigName[kMaxSignatureNameLength];
+		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
+		auto it = s_native2manageds.find(sigName);
+		return it != s_native2manageds.end() ? it->second : InterpreterModule::NotSupportNative2Managed;
+	}
+
+	const Il2CppMethodPointer GetNativeAdjustMethodMethod(const Il2CppMetadataMethodDefinitionHandle methodHandle, bool forceStatic)
+	{
+		char sigName[kMaxSignatureNameLength];
+		ComputeSignature(methodHandle, !forceStatic, sigName, sizeof(sigName) - 1);
+		auto it = s_adjustThunks.find(sigName);
+		return it != s_adjustThunks.end() ? it->second : InterpreterModule::NotSupportAdjustorThunk;
+	}
+
+	const Il2CppMethodPointer GetNativeAdjustMethodMethod(const MethodInfo* method, bool forceStatic)
 	{
 		char sigName[kMaxSignatureNameLength];
 		ComputeSignature(method, !forceStatic, sigName, sizeof(sigName) - 1);
@@ -269,7 +290,7 @@ namespace interpreter
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException(errMsg));
 	}
 
-	Il2CppMethodPointer InterpreterModule::GetMethodPointer(const Il2CppMethodDefinition* method)
+	Il2CppMethodPointer InterpreterModule::GetMethodPointer(const Il2CppMetadataMethodDefinitionHandle method)
 	{
 		Il2CppMethodPointer ncm = GetNative2ManagedMethod(method, false);
 		return ncm ? ncm : (Il2CppMethodPointer)NotSupportNative2Managed;
@@ -281,7 +302,7 @@ namespace interpreter
 		return ncm ? ncm : (Il2CppMethodPointer)NotSupportNative2Managed;
 	}
 
-	Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const Il2CppMethodDefinition* method)
+	Il2CppMethodPointer InterpreterModule::GetAdjustThunkMethodPointer(const Il2CppMetadataMethodDefinitionHandle method)
 	{
 		return GetNativeAdjustMethodMethod(method, false);
 	}
@@ -613,10 +634,11 @@ namespace interpreter
 	}
 	#endif
 
-	InvokerMethod InterpreterModule::GetMethodInvoker(const Il2CppMethodDefinition* method)
+	InvokerMethod InterpreterModule::GetMethodInvoker(const Il2CppMetadataMethodDefinitionHandle methodHandle)
 	{
-		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(method->declaringType);
-		const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(method->nameIndex);
+        const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(methodHandle);
+		Il2CppClass* klass = il2cpp::vm::GlobalMetadata::GetTypeInfoFromTypeDefinitionIndex(methodDef.declaringType);
+		const char* methodName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef.nameIndex);
 		// special for Delegate::DynamicInvoke
 		return !klass || !metadata::IsChildTypeOfMulticastDelegate(klass) || strcmp(methodName, "Invoke") ? InterpreterInvoke : InterpreterDelegateInvoke;
 	}
