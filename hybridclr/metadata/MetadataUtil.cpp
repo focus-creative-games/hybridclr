@@ -240,7 +240,7 @@ namespace metadata
 
 		case IL2CPP_TYPE_ARRAY:
 		{
-			if (t1->data.array->rank < t2->data.array->rank)
+			if (t1->data.array->rank != t2->data.array->rank)
 			{
 				return false;
 			}
@@ -381,7 +381,7 @@ namespace metadata
 
 		case IL2CPP_TYPE_ARRAY:
 		{
-			if (dstType->data.array->rank < sigType->data.array->rank)
+			if (dstType->data.array->rank != sigType->data.array->rank)
 			{
 				return false;
 			}
@@ -472,7 +472,7 @@ namespace metadata
 
 		case IL2CPP_TYPE_ARRAY:
 		{
-			if (dstType->data.array->rank < sigType->data.array->rank)
+			if (dstType->data.array->rank != sigType->data.array->rank)
 			{
 				return false;
 			}
