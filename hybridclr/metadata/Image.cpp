@@ -866,26 +866,8 @@ namespace metadata
 
     const MethodInfo* Image::FindImplMethod(Il2CppClass* klass, const MethodInfo* method)
     {
-        if (!IsVirtualMethod(method->flags))
-        {
-            return method;
-        }
         il2cpp::vm::Class::Init(klass);
-        const MethodInfo* result;
-        if (hybridclr::metadata::IsInterface(method->klass->flags))
-        {
-            result = il2cpp::vm::ClassInlines::GetInterfaceInvokeDataFromVTable(klass, method->klass, method->slot)->method;
-        }
-        else
-        {
-            result = klass->vtable[method->slot].method;
-        }
-        IL2CPP_ASSERT(!method->genericMethod || method->is_inflated);
-        if (method->genericMethod && method->genericMethod->context.method_inst/* && method->genericMethod*/) // means it's genericInstance method 或generic method
-        {
-            result = GetGenericVirtualMethod(result, method);
-        }
-        return result;
+        return il2cpp::vm::Class::GetVirtualMethod(klass, method);
     }
 
 
