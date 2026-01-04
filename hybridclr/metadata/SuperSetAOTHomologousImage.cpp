@@ -116,11 +116,11 @@ namespace metadata
 			SuperSetTypeIntermediateInfo& parent = typeIntermediateInfos[type.homoParentRowIndex - 1];
 			InitType(typeIntermediateInfos, parent);
 			const Il2CppMetadataTypeHandle parentTypeHandle = parent.aotTypeHandle;
-			const Il2CppTypeDefinition parentTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(parentTypeHandle);
 			if (parentTypeHandle == nullptr)
 			{
 				goto labelInitDefault;
 			}
+			const Il2CppTypeDefinition parentTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(parentTypeHandle);
 
 			void* iter = nullptr;
 			for (Il2CppMetadataTypeHandle nextTypeHandle; (nextTypeHandle = il2cpp::vm::GlobalMetadata::GetNestedTypes(parentTypeHandle, &iter));)
