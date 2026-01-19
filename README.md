@@ -24,6 +24,13 @@ HybridCLR扩充了il2cpp运行时代码，使它由纯[AOT](https://en.wikipedia
 - [快速上手](https://www.hybridclr.cn/docs/beginner/quickstart)
 - [商业项目案例](https://www.hybridclr.cn/docs/other/businesscase)
 
+## LeanCLR项目
+
+hybridclr仅是一个解释器模块，如果你需要一个完整小巧的适合发布到移动和小游戏平台的开源CLR实现，[LeanCLR](https://github.com/focus-creative-games/leanclr) 是当前最合适的方案。
+
+LeanCLR 是一个面向全平台的精益 CLR（Common Language Runtime）实现。LeanCLR 在高度符合 ECMA-335 规范的前提下，提供更紧凑、易嵌入、低内存占用的运行时，实现对移动端、H5 与小游戏等资源受限平台的友好支持。LeanCLR原生支持 AOT + Interpreter 混合执行模式，内置 IL 与 IR 双解释器。
+
+LeanCLR既可以独立嵌入到任何app和游戏项目，发布到任何平台，也可以**替代il2cpp作为Unity（团结引擎）发布到webgl和小游戏平台的运行时**。大幅缩减包体和内存开销。
 
 ## 特性
 
@@ -74,8 +81,8 @@ HybridCLR已经被广泛验证是非常高效、稳定的Unity热更新解决方
 - 新手1群（3000人）：428404198（满）
 - 新手2群（2000人）：680274677（满）
 - 新手3群（2000人）：**920714552（推荐）**
-- discord频道 https://discord.gg/BATfNfJnm2
-- 商业合作邮箱: business#code-philosophy.com
+- discord频道：<https://discord.gg/BATfNfJnm2>
+- 商业合作邮箱： business#code-philosophy.com
 - [商业化支持](https://www.hybridclr.cn/docs/business/intro)
 
 ## 关于作者
