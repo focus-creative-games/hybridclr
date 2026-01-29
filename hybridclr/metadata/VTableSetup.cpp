@@ -725,15 +725,17 @@ namespace metadata
 		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 		{
 			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
-			for (uint16_t idx = rioi.offset, end = rioi.offset + (uint16_t)rioi.tree->_virtualMethods.size(); idx < end; idx++)
+			auto& interfaceVirtualMethods = rioi.tree->_virtualMethods;
+			for (uint16_t idx = 0, end = (uint16_t)interfaceVirtualMethods.size(); idx < end; idx++)
 			{
-				if (isExplicitImplInterfaceSlot(idx))
+				uint16_t slotIdx = (uint16_t)(rioi.offset + idx);
+				if (isExplicitImplInterfaceSlot(slotIdx))
 				{
 					continue;
 				}
-				VirtualMethodImpl& vmi = _methodImpls[idx];
+				VirtualMethodImpl& vmi = _methodImpls[slotIdx];
 				// override by virtual method
-				const GenericClassMethod* implVm = FindImplMethod(vmi.type, vmi.method, false);
+				const GenericClassMethod* implVm = FindImplMethod(rioi.type, interfaceVirtualMethods[idx].method, false);
 				if (implVm)
 				{
 					vmi.type = implVm->type;
