@@ -5053,7 +5053,7 @@ else \
 				Il2CppClass* eleKlass = image->GetClassFromToken(tokenCache, token, klassContainer, methodContainer, genericContext);
 				uint32_t eleKlassIndex = GetOrAddResolveDataIndex(eleKlass);
 
-				if (prefixFlags & (int32_t)PrefixFlags::ReadOnly)
+				if ((prefixFlags & (int32_t)PrefixFlags::ReadOnly) || IS_CLASS_VALUE_TYPE(eleKlass))
 				{
 					CreateAddIR(ir, GetArrayElementAddressAddrVarVar);
 					ir->arr = ir->addr = arr.locOffset;
