@@ -1392,7 +1392,8 @@ inline Il2CppObject* InvokeDelegateBeginInvoke(const MethodInfo* method, uint16_
 	CHECK_NOT_NULL_THROW(del);
 	RuntimeDelegate* callBack = (RuntimeDelegate*)localVarBase[argIdxs[paramCount - 1]].obj;
 	RuntimeObject* ctx = (RuntimeObject*)localVarBase[argIdxs[paramCount]].obj;
-	void* newArgs[256];
+	IL2CPP_ASSERT(paramCount > 0);
+	void** newArgs = (void**)alloca(sizeof(void*) * paramCount);
 	newArgs[paramCount - 1] = {};
 	for (int i = 0; i < paramCount - 2; i++)
 	{
