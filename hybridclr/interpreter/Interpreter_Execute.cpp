@@ -89,12 +89,12 @@ namespace interpreter
 	inline bool CheckMulOverflow(int32_t a, int32_t b)
 	{
 		int64_t c = (int64_t)a * (int64_t)b;
-		return c <= INT32_MIN || c >= INT32_MAX;
+		return c < INT32_MIN || c > INT32_MAX;
 	}
 
 	inline bool CheckMulOverflowUn(uint32_t a, uint32_t b)
 	{
-		return (uint64_t)a * (uint64_t)b >= UINT32_MAX;
+		return (uint64_t)a * (uint64_t)b > UINT32_MAX;
 	}
 
 	inline bool CheckMulOverflow64(int64_t a, int64_t b)
