@@ -57,7 +57,7 @@ namespace hybridclr
 		metadata::Image* image = metadata::MetadataModule::GetImage(klass->image);
 		if (!image)
 		{
-			(metadata::Image*)hybridclr::metadata::AOTHomologousImage::FindImageByAssembly(
+			image = (metadata::Image*)hybridclr::metadata::AOTHomologousImage::FindImageByAssembly(
 				klass->rank ? il2cpp_defaults.corlib->assembly : klass->image->assembly);
 			if (!image)
 			{
