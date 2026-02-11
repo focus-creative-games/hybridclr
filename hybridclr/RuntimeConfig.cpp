@@ -27,6 +27,8 @@ namespace hybridclr
 			return s_maxMethodBodyCacheSize;
 		case RuntimeOptionId::MaxMethodInlineDepth:
 			return s_maxMethodInlineDepth;
+		case RuntimeOptionId::MaxInlineableMethodBodySize:
+			return s_maxInlineableMethodBodySize;
 		default:
 		{
 			TEMP_FORMAT(optionIdStr, "%d", optionId);
@@ -54,6 +56,9 @@ namespace hybridclr
 			break;
 		case RuntimeOptionId::MaxMethodInlineDepth:
 			s_maxMethodInlineDepth = value;
+			break;
+		case RuntimeOptionId::MaxInlineableMethodBodySize:
+			s_maxInlineableMethodBodySize = value;
 			break;
 		default:
 		{
