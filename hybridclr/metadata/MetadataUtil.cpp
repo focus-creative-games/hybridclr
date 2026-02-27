@@ -279,9 +279,9 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_MVAR:
 		{
-			const Il2CppGenericParameter* gp1 = (const Il2CppGenericParameter*)t1->data.genericParameterHandle;
-			const Il2CppGenericParameter* gp2 = (const Il2CppGenericParameter*)t2->data.genericParameterHandle;
-			return gp1->num == gp2->num;
+			const Il2CppGenericParameter gp1 = il2cpp::vm::GlobalMetadata::GetGenericParameterFromHandle(t1->data.genericParameterHandle);
+			const Il2CppGenericParameter gp2 = il2cpp::vm::GlobalMetadata::GetGenericParameterFromHandle(t2->data.genericParameterHandle);
+			return gp1.num == gp2.num;
 		}
 		default:
 			return true;
