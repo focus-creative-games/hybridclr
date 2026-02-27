@@ -293,6 +293,15 @@ namespace transform
 		return true;
 	}
 
+	static bool IH_JitHelpers_Array_UnsafeMov(TransformContext& ctx, const MethodInfo* method)
+	{
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
+		const Il2CppType* dstType = method->genericMethod->context.method_inst->type_argv[1];
+		ctx.PopStack();
+		ctx.PushStackByType(dstType);
+		return true;
+	}
+
 	static bool IH_JitHelpers_UnsafeEnumCast(TransformContext& ctx, const MethodInfo* method)
 	{
 		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
@@ -527,6 +536,7 @@ namespace transform
 		{"System.Threading", "Interlocked", "Exchange", IH_Interlocked_Exchange},
 		{"System.Runtime.CompilerServices", "JitHelpers", "UnsafeEnumCast", IH_JitHelpers_UnsafeEnumCast},
 		{"System.Runtime.CompilerServices", "JitHelpers", "UnsafeCast", IH_JitHelpers_UnsafeCast},
+		{"System", "Array", "UnsafeMov", IH_JitHelpers_Array_UnsafeMov},
 		{"System.Runtime.CompilerServices", "JitHelpers", "UnsafeEnumCastLong", IH_JitHelpers_UnsafeEnumCastLong},
 		{"System.Reflection", "Assembly", "GetExecutingAssembly", IH_Assembly_GetExecutingAssembly},
 		{"System.Reflection", "MethodBase", "GetCurrentMethod", IH_MethodBase_GetCurrentMethod},
