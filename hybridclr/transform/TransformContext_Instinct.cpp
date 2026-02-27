@@ -329,11 +329,17 @@ namespace transform
 
 	static bool IH_JitHelpers_UnsafeCast(TransformContext& ctx, const MethodInfo* method)
 	{
+		const Il2CppType* dstType = method->genericMethod->context.method_inst->type_argv[0];
+		ctx.PopStack();
+		ctx.PushStackByType(dstType);
 		return true;
 	}
 
 	static bool IH_JitHelpers_UnsafeEnumCastLong(TransformContext& ctx, const MethodInfo* method)
 	{
+		IL2CPP_ASSERT(ctx.GetEvalStackTop() >= 1);
+		ctx.PopStack();
+		ctx.PushStackByReduceType(EvalStackReduceDataType::I8);
 		return true;
 	}
 
