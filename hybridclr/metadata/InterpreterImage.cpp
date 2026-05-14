@@ -327,7 +327,9 @@ namespace metadata
 			}
 			if (packingSize != 0)
 			{
-				cur.bitfield |= ((uint32_t)il2cpp::vm::GlobalMetadata::ConvertPackingSizeToEnum((uint8_t)packingSize) << (il2cpp::vm::kPackingSize - 1));
+				il2cpp::vm::PackingSize packingSizeEnum = il2cpp::vm::GlobalMetadata::ConvertPackingSizeToEnum((uint8_t)packingSize);
+				cur.bitfield |= ((uint32_t)packingSizeEnum << (il2cpp::vm::kPackingSize - 1));
+				cur.bitfield |= ((uint32_t)packingSizeEnum << (il2cpp::vm::kSpecifiedPackingSize - 1));
 			}
 			else
 			{
