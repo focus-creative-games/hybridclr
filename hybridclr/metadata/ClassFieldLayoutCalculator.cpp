@@ -3,8 +3,10 @@
 #include "metadata/FieldLayout.h"
 #include "metadata/GenericMetadata.h"
 #include "vm/Field.h"
+#include "vm/GlobalMetadata.h"
 
 #include "InterpreterImage.h"
+#include "MetadataModule.h"
 
 namespace hybridclr
 {
@@ -384,11 +386,21 @@ namespace metadata
             return;
         }
 
+        Il2CppMetadataTypeHandle typeDefHandle = typeDef.typeHandle;
 
-        TbClassLayout classLayoutData = _image->GetClassLayout(typeHandle);
-        uint8_t packingSize = (uint8_t)classLayoutData.packingSize;
-        int32_t classSize = (int32_t)(classLayoutData.classSize + sizeof(Il2CppObject));
-
+        uint8_t packingSize = 0;
+        int32_t layoutClassSize = 0;
+        if (IsInterpreterType(typeDef))
+        {
+            auto classLayoutData = MetadataModule::GetImage(typeDefHandle)->GetClassLayout(typeDefHandle);
+            packingSize = (uint8_t)classLayoutData.packingSize;
+            layoutClassSize = (int32_t)classLayoutData.classSize;
+        }
+        else
+        {
+            packingSize = (uint8_t)il2cpp::vm::GlobalMetadata::StructLayoutPack(typeDefHandle);
+        }
+        int32_t classSizeWithHeader = layoutClassSize + sizeof(Il2CppObject);
 
         std::vector<FieldLayout*> instanceFields;
         bool blittable = true;
@@ -418,9 +430,9 @@ namespace metadata
             IL2CPP_ASSERT(IsValueType(typeDef));
             IL2CPP_ASSERT(isCurAssemblyType);
             int32_t instanceSize = IL2CPP_SIZEOF_STRUCT_WITH_NO_INSTANCE_FIELDS + sizeof(Il2CppObject);
-            if (classLayoutData.classSize > 0)
+            if (layoutClassSize > 0)
 			{
-                instanceSize = std::max(instanceSize, (int32_t)classLayoutData.classSize + (int32_t)sizeof(Il2CppObject));
+                instanceSize = std::max(instanceSize, classSizeWithHeader);
 			}
             int32_t maxAlignment = 1;
             int32_t nativeSize = 1;
@@ -455,11 +467,11 @@ namespace metadata
 #endif
             layout.actualSize = layout.instanceSize = AlignTo(instanceSize, layout.alignment);
             layout.nativeSize = nativeSize;
-            if (classLayoutData.classSize > 0)
+            if (layoutClassSize > 0)
             {
-                layout.actualSize = std::max(layout.actualSize, classSize);
-                layout.instanceSize = std::max(layout.instanceSize, classSize);
-                layout.nativeSize = std::max((int32_t)classLayoutData.classSize, layout.nativeSize);
+                layout.actualSize = std::max(layout.actualSize, classSizeWithHeader);
+                layout.instanceSize = std::max(layout.instanceSize, classSizeWithHeader);
+                layout.nativeSize = std::max((int32_t)layoutClassSize, layout.nativeSize);
             }
         }
         else
@@ -510,11 +522,11 @@ namespace metadata
             {
                 layout.nativeSize = -1;
             }
-            if (classLayoutData.classSize > 0)
+            if (layoutClassSize > 0)
             {
-                layout.actualSize = std::max(layout.actualSize, classSize);
-                layout.instanceSize = std::max(layout.instanceSize, classSize);
-                layout.nativeSize = isValueType ? std::max((int32_t)classLayoutData.classSize, layout.nativeSize) : -1;
+                layout.actualSize = std::max(layout.actualSize, classSizeWithHeader);
+                layout.instanceSize = std::max(layout.instanceSize, classSizeWithHeader);
+                layout.nativeSize = isValueType ? std::max((int32_t)layoutClassSize, layout.nativeSize) : -1;
             }
         }
 	}
