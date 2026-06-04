@@ -104,7 +104,7 @@ namespace transform
 		}
 	}
 
-	IRCommon* CreateLoadExpandDataToStackVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, const Il2CppType* type, int32_t size);
+	IRCommon* CreateLoadExpandDataToStackVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, LocationDescInfo& desc);
 	IRCommon* CreateAssignVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, int32_t size);
 
 	interpreter::IRCommon* CreateClassLdfld(TemporaryMemoryArena& pool, int32_t dstIdx, int32_t objIdx, const FieldInfo* fieldInfo);
@@ -294,73 +294,76 @@ namespace transform
 		}
 	}
 
-	IRCommon* CreateLoadExpandDataToStackVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, const Il2CppType* type, int32_t size)
+	IRCommon* CreateLoadExpandDataToStackVarVar(TemporaryMemoryArena& pool, int32_t dstOffset, int32_t srcOffset, LocationDescInfo& desc)
 	{
-		if (type->byref)
+		switch (desc.type)
 		{
-			CreateIR(ir, LdlocVarVar);
-			ir->dst = dstOffset;
-			ir->src = srcOffset;
-			return ir;
-		}
-		switch (type->type)
-		{
-		case Il2CppTypeEnum::IL2CPP_TYPE_I1:
+		case LocationDescType::I1:
 		{
 			CreateIR(ir, LdlocExpandVarVar_i1);
 			ir->dst = dstOffset;
 			ir->src = srcOffset;
 			return ir;
+			break;
 		}
-		case Il2CppTypeEnum::IL2CPP_TYPE_BOOLEAN:
-		case Il2CppTypeEnum::IL2CPP_TYPE_U1:
+		case LocationDescType::U1:
 		{
 			CreateIR(ir, LdlocExpandVarVar_u1);
 			ir->dst = dstOffset;
 			ir->src = srcOffset;
 			return ir;
+			break;
 		}
-		case Il2CppTypeEnum::IL2CPP_TYPE_I2:
+		case LocationDescType::I2:
 		{
 			CreateIR(ir, LdlocExpandVarVar_i2);
 			ir->dst = dstOffset;
 			ir->src = srcOffset;
 			return ir;
+			break;
 		}
-		case IL2CPP_TYPE_CHAR:
-		case IL2CPP_TYPE_U2:
+		case LocationDescType::U2:
 		{
 			CreateIR(ir, LdlocExpandVarVar_u2);
 			ir->dst = dstOffset;
 			ir->src = srcOffset;
 			return ir;
-		}
-		case IL2CPP_TYPE_VALUETYPE:
-		{
-			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			if (klass->enumtype)
-			{
-				return CreateLoadExpandDataToStackVarVar(pool, dstOffset, srcOffset, &klass->element_class->byval_arg, size);
-			}
 			break;
 		}
-		default: break;
-		}
-		if (size <= 8)
+		case LocationDescType::I4:
+		case LocationDescType::I8:
+		case LocationDescType::Ref:
 		{
 			CreateIR(ir, LdlocVarVar);
 			ir->dst = dstOffset;
 			ir->src = srcOffset;
 			return ir;
 		}
-		else
+		case LocationDescType::S:
+		case LocationDescType::StructContainsRef:
 		{
-			IL2CPP_ASSERT(size <= MAX_VALUE_TYPE_SIZE);
-			CreateIR(ir, LdlocVarVarSize);
-			ir->dst = dstOffset;
-			ir->src = srcOffset;
-			ir->size = size;
-			return ir;
+			if (desc.size <= 8)
+			{
+				CreateIR(ir, LdlocVarVar);
+				ir->dst = dstOffset;
+				ir->src = srcOffset;
+				return ir;
+			}
+			else
+			{
+				IL2CPP_ASSERT(desc.size <= MAX_VALUE_TYPE_SIZE);
+				CreateIR(ir, LdlocVarVarSize);
+				ir->dst = dstOffset;
+				ir->src = srcOffset;
+				ir->size = desc.size;
+				return ir;
+			}
+		}
+		default:
+		{
+			IL2CPP_ASSERT(false && "CreateLoadExpandDataToStackVarVar invalid type");
+			return nullptr;
+		}
 		}
 	}
 
@@ -1696,7 +1699,8 @@ namespace transform
 	void TransformContext::AddInst_ldarg(int32_t argIdx)
 	{
 		ArgVarInfo& __arg = args[argIdx];
-		IRCommon* ir = CreateLoadExpandDataToStackVarVar(pool, GetEvalStackNewTopOffset(), __arg.argLocOffset, __arg.type, GetTypeValueSize(__arg.type));
+		LocationDescInfo desc = ComputLocationDescInfo(__arg.type);
+		IRCommon* ir = CreateLoadExpandDataToStackVarVar(pool, GetEvalStackNewTopOffset(), __arg.argLocOffset, desc);
 		AddInst(ir);
 		PushStackByType(__arg.type);
 	}
@@ -1763,7 +1767,8 @@ namespace transform
 	void TransformContext::CreateAddInst_ldloc(int32_t locIdx)
 	{
 		LocVarInfo& __loc = locals[locIdx];
-		IRCommon* ir = CreateLoadExpandDataToStackVarVar(pool, GetEvalStackNewTopOffset(), __loc.locOffset, __loc.type, GetTypeValueSize(__loc.type));
+		LocationDescInfo desc = ComputLocationDescInfo(__loc.type);
+		IRCommon* ir = CreateLoadExpandDataToStackVarVar(pool, GetEvalStackNewTopOffset(), __loc.locOffset, desc);
 		AddInst(ir);
 		PushStackByType(__loc.type);
 	}
