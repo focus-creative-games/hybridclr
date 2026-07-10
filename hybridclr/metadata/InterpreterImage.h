@@ -702,6 +702,8 @@ namespace metadata
 		void InitVTables();
 
 		void ComputeBlittable(const Il2CppMetadataTypeHandle typeHandle, std::vector<bool>& computFlags);
+		void ComputeHasFinalizer(Il2CppTypeDefinition *def, std::vector<bool> &computFlags);
+		void InitHasFinalizers();
 		void ComputeVTable(TypeDefinitionDetail* tdd);
 
 		void SetIl2CppImage(Il2CppImage* image)
