@@ -170,6 +170,7 @@ namespace metadata
 		InitModuleRefs();
 		InitImplMaps();
 		InitClassLayouts0();
+		InitHasFinalizers();
 		InitTypeDefs_2();
 		InitClassLayouts();
 		InitInterfaces();
@@ -297,10 +298,48 @@ namespace metadata
 		}
 	}
 
+	void InterpreterImage::ComputeHasFinalizer(Il2CppTypeDefinition* def, std::vector<bool>& computFlags)
+	{
+		if (DecodeImageIndex(def->byvalTypeIndex) != GetIndex())
+		{
+			return;
+		}
+		uint32_t typeIndex = GetTypeRawIndex(def);
+		if (computFlags[typeIndex])
+		{
+			return;
+		}
+		computFlags[typeIndex] = true;
+		if (def->bitfield & (1 << (il2cpp::vm::kBitHasFinalizer - 1)))
+		{
+			return;
+		}
+		if (def->parentIndex != kInvalidIndex)
+		{
+			const Il2CppType* parentType = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(def->parentIndex));
+			const Il2CppTypeDefinition* parentDef = metadata::GetUnderlyingTypeDefinition(parentType);
+			ComputeHasFinalizer(const_cast<Il2CppTypeDefinition*>(parentDef), computFlags);
+			if (parentDef->bitfield & (1 << (il2cpp::vm::kBitHasFinalizer - 1)))
+			{
+				def->bitfield |= (1 << (il2cpp::vm::kBitHasFinalizer - 1));
+			}
+		}
+	}
+
+	void InterpreterImage::InitHasFinalizers()
+	{
+		const Table& typeDefTb = _rawImage->GetTable(TableType::TYPEDEF);
+		std::vector<bool> computFlags(typeDefTb.rowNum, false);
+		for (uint32_t i = 0, n = typeDefTb.rowNum; i < n; i++)
+		{
+			Il2CppTypeDefinition& cur = _typesDefines[i];
+			ComputeHasFinalizer(&cur, computFlags);
+		}
+	}
+
 	void InterpreterImage::InitTypeDefs_2()
 	{
 		const Table& typeDefTb = _rawImage->GetTable(TableType::TYPEDEF);
-
 		for (uint32_t i = 0, n = typeDefTb.rowNum; i < n; i++)
 		{
 			TbTypeDef data = _rawImage->ReadTypeDef(i + 1); // token from 1
