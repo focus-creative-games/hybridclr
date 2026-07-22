@@ -265,7 +265,8 @@ namespace transform
 			{
 				return ComputLocationDescInfo(&klass->castClass->byval_arg);
 			}
-			return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr), klass->has_references);
+			int32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+			return ComputValueTypeDescInfo(size, klass->has_references);
 		}
 		case IL2CPP_TYPE_GENERICINST:
 		{
@@ -283,7 +284,8 @@ namespace transform
 				{
 					return ComputLocationDescInfo(&klass->castClass->byval_arg);
 				}
-				return ComputValueTypeDescInfo(il2cpp::vm::Class::GetValueSize(klass, nullptr), klass->has_references);
+				int32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+				return ComputValueTypeDescInfo(size, klass->has_references);
 			}
 		}
 		default:
