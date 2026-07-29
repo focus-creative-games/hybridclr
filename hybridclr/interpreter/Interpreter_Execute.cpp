@@ -1470,6 +1470,7 @@ inline void PopCurExceptionFlowInfo(InterpFrame* frame)
 }
 
 #define PREPARE_EXCEPTION(_ex_, _firstHanlderIndex_)  PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Exception, (int32_t)(ip - ipBase), _ex_, _firstHanlderIndex_, 0});
+#define PREPARE_EXCEPTION_AT(_ex_, _firstHanlderIndex_, ipOffset)  PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Exception, (int32_t)(ipOffset), _ex_, _firstHanlderIndex_, 0});
 
 
 #define FIND_NEXT_EX_HANDLER_OR_UNWIND() \
@@ -1536,7 +1537,7 @@ while (true) \
 	if (frame) \
 	{ \
 		LOAD_PREV_FRAME(); \
-		PREPARE_EXCEPTION(efi->ex, 0); \
+		PREPARE_EXCEPTION_AT(efi->ex, 0, (int32_t)(ip - ipBase - 1 /* ip have move to next instruction when callinterp */)); \
 	}\
 	else \
 	{ \
