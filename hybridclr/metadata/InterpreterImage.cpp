@@ -304,7 +304,7 @@ namespace metadata
 		{
 			return;
 		}
-		uint32_t typeIndex = GetTypeRawIndex(def);
+		uint32_t typeIndex = GetTypeRawIndex((Il2CppMetadataTypeHandle)def);
 		if (computFlags[typeIndex])
 		{
 			return;
@@ -317,9 +317,20 @@ namespace metadata
 		if (def->parentIndex != kInvalidIndex)
 		{
 			const Il2CppType* parentType = GetIl2CppTypeFromRawIndex(DecodeMetadataIndex(def->parentIndex));
-			const Il2CppTypeDefinition* parentDef = metadata::GetUnderlyingTypeDefinition(parentType);
-			ComputeHasFinalizer(const_cast<Il2CppTypeDefinition*>(parentDef), computFlags);
-			if (parentDef->bitfield & (1 << (il2cpp::vm::kBitHasFinalizer - 1)))
+			const Il2CppMetadataTypeHandle parentTypeHandle = metadata::GetUnderlyingTypeHandle(parentType);
+			uint32_t parentBitField = 0;
+			if (!IsInterpreterType(parentTypeHandle))
+			{
+				Il2CppTypeDefinition parentTypeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(parentTypeHandle);
+				parentBitField = parentTypeDef.bitfield;
+			}
+			else
+			{
+				Il2CppTypeDefinition* parentDef = (Il2CppTypeDefinition*)parentTypeHandle;
+				ComputeHasFinalizer(parentDef, computFlags);
+				parentBitField = parentDef->bitfield;
+			}
+			if (parentBitField & (1 << (il2cpp::vm::kBitHasFinalizer - 1)))
 			{
 				def->bitfield |= (1 << (il2cpp::vm::kBitHasFinalizer - 1));
 			}
