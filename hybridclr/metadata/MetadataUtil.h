@@ -444,19 +444,19 @@ namespace metadata
         }
     }
 
-    const Il2CppGenericContainer* GetGenericContainerFromIl2CppType(const Il2CppType* type);
+    Il2CppMetadataGenericContainerHandle GetGenericContainerFromIl2CppType(const Il2CppType* type);
 
-    inline const Il2CppGenericContainer* GetGenericContainer(const MethodInfo* methodDef)
+    inline Il2CppMetadataGenericContainerHandle GetGenericContainer(const MethodInfo* methodDef)
     {
         return methodDef->is_inflated ?
-            (const Il2CppGenericContainer*)methodDef->genericMethod->methodDefinition->genericContainerHandle :
-            (const Il2CppGenericContainer*)methodDef->genericContainerHandle;
+            methodDef->genericMethod->methodDefinition->genericContainerHandle :
+            methodDef->genericContainerHandle;
     }
 
-    bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
+    bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, Il2CppMetadataGenericContainerHandle klassGenericContainer, Il2CppMetadataGenericContainerHandle methodGenericContainer);
 
-    bool IsMatchMethodSig(const Il2CppMethodDefinition& methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer);
-    bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer);
+    bool IsMatchMethodSig(const Il2CppMethodDefinition& methodDef, const MethodRefSig& resolveSig, Il2CppMetadataGenericContainerHandle klassGenericContainer);
+    bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, Il2CppMetadataGenericContainerHandle klassGenericContainer);
     bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppType** klassInstArgv, const Il2CppType** methodInstArgv);
 
     const Il2CppGenericInst* TryInflateGenericInst(const Il2CppGenericInst* inst, const Il2CppGenericContext* genericContext);

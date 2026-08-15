@@ -113,6 +113,15 @@ namespace metadata
 			return GetImage(imageIndex)->GetTypeInfoFromTypeDefinitionRawIndex(rawIndex);
 		}
 
+		static Il2CppClass* GetTypeInfoFromTypeDefinitionEncodeIndex_OnlyCached(TypeDefinitionIndex index)
+		{
+			uint32_t imageIndex = DecodeImageIndex(index);
+			IL2CPP_ASSERT(imageIndex > 0);
+
+			uint32_t rawIndex = DecodeMetadataIndex(index);
+			return GetImage(imageIndex)->GetTypeInfoFromTypeDefinitionRawIndex_OnlyCached(rawIndex);
+		}
+
 		static Il2CppClass* GetTypeInfoFromHandle(const Il2CppMetadataTypeHandle typeHandle)
 		{
 			InterpreterImage* image = GetImage(typeHandle);
@@ -158,6 +167,11 @@ namespace metadata
 		{
 			uint32_t imageIndex = DecodeImageIndex(index);
 			return GetImage(imageIndex)->GetMethodInfoFromMethodDefinitionRawIndex(DecodeMetadataIndex(index));
+		}
+
+		static const MethodInfo* GetMethodInfoFromToken(const Il2CppImage* image, uint32_t token)
+		{
+			return GetImage(image)->GetMethodInfoFromToken(token);
 		}
 
 		static const MethodInfo* GetMethodInfoFromMethodDefinition(const Il2CppMetadataMethodDefinitionHandle methodHandle)
@@ -207,7 +221,7 @@ namespace metadata
 			return GetImage(imageIndex)->GetEventDefinitionFromIndex(DecodeMetadataIndex(index));
 		}
 
-		static const Il2CppPropertyDefinition* GetPropertyDefinitionFromIndex(const Il2CppImage* image, PropertyIndex index)
+		static Il2CppPropertyDefinition GetPropertyDefinitionFromIndex(const Il2CppImage* image, PropertyIndex index)
 		{
 			uint32_t imageIndex = DecodeImageIndex(image->token);
 			return GetImage(imageIndex)->GetPropertyDefinitionFromIndex(DecodeMetadataIndex(index));
@@ -253,9 +267,9 @@ namespace metadata
 			return (Il2CppMetadataTypeHandle)(GetImage(handle)->GetNestedTypes(handle, iter));
 		}
 
-		static const Il2CppGenericContainer* GetGenericContainerFromEncodeIndex(uint32_t index)
+		static Il2CppMetadataGenericContainerHandle GetGenericContainerFromEncodeIndex(uint32_t index)
 		{
-			return GetImage(DecodeImageIndex(index))->GetGenericContainerByRawIndex(DecodeMetadataIndex(index));
+			return (Il2CppMetadataGenericContainerHandle)GetImage(DecodeImageIndex(index))->GetGenericContainerByRawIndex(DecodeMetadataIndex(index));
 
 		}
 
@@ -285,9 +299,10 @@ namespace metadata
             return *(const Il2CppGenericParameter*)handle;
 		}
 
-		static const Il2CppGenericParameter* GetGenericParameterByRawIndex(const Il2CppGenericContainer* container, uint32_t index)
+		static const Il2CppGenericParameter* GetGenericParameterByRawIndex(Il2CppMetadataGenericContainerHandle containerHandle, uint32_t index)
 		{
-			return GetImage(hybridclr::metadata::DecodeImageIndex(container->ownerIndex))->GetGenericParameterByRawIndex(container, index);
+            const Il2CppGenericContainer* container = (const Il2CppGenericContainer*)containerHandle;
+			return GetImage(hybridclr::metadata::DecodeImageIndex(container->ownerIndex))->GetGenericParameterByRawIndex(containerHandle, index);
 		}
 
 		static const Il2CppType* GetGenericParameterConstraintFromIndex(GenericContainerIndex ownerIndex, GenericParameterConstraintIndex index)
@@ -295,18 +310,6 @@ namespace metadata
 			return GetImage(hybridclr::metadata::DecodeImageIndex(ownerIndex))
 				->GetGenericParameterConstraintFromIndex(index);
 		}
-
-#if HYBRIDCLR_UNITY_2020
-		static bool HasAttribute(const Il2CppImage* image, uint32_t token, Il2CppClass* attribute)
-		{
-			return GetImage(image)->HasAttributeByToken(token, attribute);
-		}
-
-		static std::tuple<void*, void*> GetCustomAttributeDataRange(const Il2CppImage* image, uint32_t token)
-		{
-			return GetImage(image)->GetCustomAttributeDataRange(token);
-		}
-#endif
 
 		static bool IsImplementedByInterpreter(MethodInfo* method)
 		{

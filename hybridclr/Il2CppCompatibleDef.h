@@ -263,7 +263,8 @@ namespace hybridclr
 
 	inline Il2CppReflectionType* GetReflectionTypeFromName(Il2CppString* name)
 	{
-		return il2cpp::icalls::mscorlib::System::RuntimeTypeHandle::internal_from_name(name, nullptr, nullptr, true, false, false);
+		int32_t stackMark = 0;
+		return il2cpp::icalls::mscorlib::System::RuntimeTypeHandle::internal_from_name(name, &stackMark, nullptr, true, false, false);
 	}
 
 	inline void ConstructDelegate(Il2CppDelegate* delegate, Il2CppObject* target, const MethodInfo* method)

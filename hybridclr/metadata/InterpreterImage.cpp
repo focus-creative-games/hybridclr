@@ -212,12 +212,6 @@ namespace metadata
 			SET_IL2CPPTYPE_VALUE_TYPE(*cppType, isValueType);
 			cppType->data.typeHandle = (Il2CppMetadataTypeHandle)&cur;
 			cur.byvalTypeIndex = AddIl2CppTypeCache(cppType);
-#if HYBRIDCLR_UNITY_2019
-			Il2CppType* byRefType = MetadataMallocT<Il2CppType>();
-			*byRefType = *cppType;
-			byRefType->byref = 1;
-			cur.byrefTypeIndex = AddIl2CppTypeCache(byRefType);
-#endif
 
 			if (IsInterface(cur.flags))
 			{
@@ -812,8 +806,8 @@ namespace metadata
 			MethodRefInfo mri = {};
 			ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(ca.ctorMethodToken), DecodeTokenRowIndex(ca.ctorMethodToken), mri);
 			const MethodInfo* ctorMethod = GetMethodInfoFromMethodDef(mri.containerType, mri.methodHandle);
-			MethodIndex ctorIndex = il2cpp::vm::GlobalMetadata::GetMethodIndexFromMethodHandle(mri.methodHandle);
-			_il2cppFormatCustomDataBlob.WriteMethodIndex(methodIndexDataOffset, ctorIndex);
+			// MethodIndex ctorIndex = il2cpp::vm::GlobalMetadata::GetMethodIndexFromMethodHandle(mri.methodHandle);
+			_il2cppFormatCustomDataBlob.WriteMethodIndex(methodIndexDataOffset, ca.ctorMethodToken);
 			methodIndexDataOffset += sizeof(int32_t);
 			if (ca.value != 0)
 			{
@@ -1136,20 +1130,7 @@ namespace metadata
 			}
 			typeIndex = il2cpp::vm::GlobalMetadata::GetIndexForTypeDefinition(klass);
 		}
-#if UNITY_ENGINE_TUANJIE
-		fieldIndex = -1;
-		for (int32_t i = 0; i < klass->property_count; i++)
-		{
-			if (klass->properties[i] == propertyInfo)
-			{
-				fieldIndex = i;
-				break;;
-			}
-		}
-		IL2CPP_ASSERT(fieldIndex != -1);
-#else
-		fieldIndex = (int32_t)(propertyInfo - klass->properties);
-#endif
+		fieldIndex = (int32_t)(propertyInfo - (const PropertyInfo*)klass->properties);
 	}
 
 	void InterpreterImage::ConvertILCustomAttributeData2Il2CppFormat(const MethodInfo* ctorMethod, BlobReader& reader)
@@ -1598,7 +1579,7 @@ namespace metadata
 			uint32_t index = tdd.methodImplStart + i;
 			TbMethodImpl data = _rawImage->ReadMethodImpl(index + 1);
 			Il2CppTypeDefinition& typeDef = _typesDefines[data.classIdx - 1];
-			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(&typeDef);
+			Il2CppMetadataGenericContainerHandle gc = GetGenericContainerByTypeDefinition(&typeDef);
 			MethodImpl& impl = methodImpls[i];
 			ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodBody), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodBody), impl.body);
 			ReadMethodRefInfoFromToken(gc, nullptr, DecodeMethodDefOrRefCodedIndexTableType(data.methodDeclaration), DecodeMethodDefOrRefCodedIndexRowIndex(data.methodDeclaration), impl.declaration);
@@ -1615,7 +1596,7 @@ namespace metadata
 			uint32_t typeIndex = data.classIdx - 1;
 			TypeDefinitionDetail& tdd = _typeDetails[typeIndex];
 			Il2CppTypeDefinition& typeDef = _typesDefines[typeIndex];
-			Il2CppGenericContainer* gc = GetGenericContainerByTypeDefinition(&typeDef);
+			//Il2CppGenericContainer* gc = (Il2CppGenericContainer*)GetGenericContainerByTypeDefinition(&typeDef);
 			if (tdd.methodImplCount == 0)
 			{
 				tdd.methodImplStart = i;
@@ -1922,6 +1903,12 @@ namespace metadata
 		return klass;
 	}
 
+	Il2CppClass* InterpreterImage::GetTypeInfoFromTypeDefinitionRawIndex_OnlyCached(uint32_t index)
+	{
+		IL2CPP_ASSERT(index < _classList.size());
+		return _classList[index];
+	}
+
 	Il2CppClass* InterpreterImage::GetTypeInfoFromHandle_OnlyCached(const Il2CppMetadataTypeHandle typeHandle)
 	{
 		uint32_t typeIndex = GetTypeRawIndex(typeHandle);
@@ -2040,10 +2027,11 @@ namespace metadata
 		ret.fieldIndex = rowIndex - 1;
 	}
 
-	void InterpreterImage::GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc)
+	void InterpreterImage::GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, Il2CppMetadataGenericContainerHandle& klassGc, Il2CppMetadataGenericContainerHandle& methodGc)
 	{
-		Il2CppGenericContainer* gc = GetGenericContainerByRawIndex(DecodeMetadataIndex(idx));
-		IL2CPP_ASSERT(gc);
+		Il2CppMetadataGenericContainerHandle handle = GetGenericContainerByRawIndex(DecodeMetadataIndex(idx));
+		IL2CPP_ASSERT(handle);
+		const Il2CppGenericContainer* gc = (const Il2CppGenericContainer*)handle;
 		if (gc->is_method)
 		{
 			const Il2CppMetadataMethodDefinitionHandle methodHandle = GetMethodHandleFromRawIndex(DecodeMetadataIndex(gc->ownerIndex));
@@ -2053,7 +2041,7 @@ namespace metadata
 		}
 		else
 		{
-			klassGc = gc;
+			klassGc = handle;
 			methodGc = nullptr;
 		}
 	}
@@ -2077,8 +2065,8 @@ namespace metadata
 
 			//Il2CppType paramCons = {};
 
-			//const Il2CppGenericContainer* klassGc;
-			//const Il2CppGenericContainer* methodGc;
+			//Il2CppMetadataGenericContainerHandle klassGc;
+			//Il2CppMetadataGenericContainerHandle methodGc;
 			//GetClassAndMethodGenericContainerFromGenericContainerIndex(genericParam.ownerIndex, klassGc, methodGc);
 
 			//ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint), paramCons);
@@ -2270,6 +2258,13 @@ namespace metadata
 		uint32_t rawIndex = (uint32_t)(methodDef - &_methodDefines[0]);
 		IL2CPP_ASSERT(rawIndex < (uint32_t)_methodDefines.size());
 		return GetMethodInfoFromMethodDefinitionRawIndex(rawIndex);
+	}
+
+	const MethodInfo* InterpreterImage::GetMethodInfoFromToken(uint32_t token)
+	{
+		MethodRefInfo mri = {};
+		ReadMethodRefInfoFromToken(nullptr, nullptr, DecodeTokenTableType(token), DecodeTokenRowIndex(token), mri);
+		return GetMethodInfoFromMethodDef(mri.containerType, mri.methodHandle);
 	}
 
 	// typeDef vTableSlot -> type virtual method index -> MethodDefinition*
@@ -2571,19 +2566,80 @@ namespace metadata
 		switch (type.type)
 		{
 		case IL2CPP_TYPE_BOOLEAN:
+		{
+			type.data = il2cpp_defaults.boolean_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_CHAR:
+		{
+			type.data = il2cpp_defaults.char_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_I1:
+		{
+			type.data = il2cpp_defaults.sbyte_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_U1:
+		{
+			type.data = il2cpp_defaults.byte_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_I2:
+		{
+			type.data = il2cpp_defaults.int16_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_U2:
+		{
+			type.data = il2cpp_defaults.uint16_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_I4:
+		{
+			type.data = il2cpp_defaults.int32_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_U4:
+		{
+			type.data = il2cpp_defaults.uint32_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_I8:
+		{
+			type.data = il2cpp_defaults.int64_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_U8:
+		{
+			type.data = il2cpp_defaults.uint64_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_R4:
+		{
+			type.data = il2cpp_defaults.single_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_R8:
+		{
+			type.data = il2cpp_defaults.double_class->byval_arg.data;
+			SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+			break;
+		}
 		case IL2CPP_TYPE_STRING:
 		{
+			type.data = il2cpp_defaults.string_class->byval_arg.data;
 			break;
 		}
 		case IL2CPP_TYPE_SZARRAY:
@@ -2625,7 +2681,7 @@ namespace metadata
 		}
 	}
 
-	void InterpreterImage::ReadMethodDefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr)
+	void InterpreterImage::ReadMethodDefSig(BlobReader& reader, Il2CppMetadataGenericContainerHandle klassGenericContainer, Il2CppMetadataGenericContainerHandle methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr)
 	{
 		uint8_t rawSigFlags = reader.ReadByte();
 
@@ -2633,7 +2689,7 @@ namespace metadata
 		{
 			//IL2CPP_ASSERT(false);
 			uint32_t genParamCount = reader.ReadCompressedUint32();
-			Il2CppGenericContainer* gc = GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef.genericContainerIndex));
+			Il2CppGenericContainer* gc = (Il2CppGenericContainer*)GetGenericContainerByRawIndex(DecodeMetadataIndex(methodDef.genericContainerIndex));
 			IL2CPP_ASSERT(gc->type_argc == genParamCount);
 		}
 		uint32_t paramCount = reader.ReadCompressedUint32();

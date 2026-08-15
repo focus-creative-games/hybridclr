@@ -358,7 +358,7 @@ namespace metadata
 		return IsOverrideMethodIgnoreName(type1, methodDef1, type2, methodDef2);
 	}
 
-	bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer)
+	bool IsMatchSigType(const Il2CppType* dstType, const Il2CppType* sigType, Il2CppMetadataGenericContainerHandle klassGenericContainer, Il2CppMetadataGenericContainerHandle methodGenericContainer)
 	{
 		if (dstType->type != sigType->type)
 		{
@@ -416,22 +416,24 @@ namespace metadata
 		}
 		case IL2CPP_TYPE_VAR:
 		{
-			if ((int32_t)sigType->data.__genericParameterIndex >= klassGenericContainer->type_argc)
+			Il2CppGenericContainer kgc = il2cpp::vm::GlobalMetadata::GetGenericContainerFromHandle(klassGenericContainer);
+			if ((int32_t)sigType->data.__genericParameterIndex >= kgc.type_argc)
 			{
 				return false;
 			}
 			Il2CppMetadataGenericParameterHandle sigGph = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(
-				(Il2CppMetadataGenericContainerHandle)klassGenericContainer, sigType->data.__genericParameterIndex);
+				klassGenericContainer, sigType->data.__genericParameterIndex);
 			return dstType->data.genericParameterHandle == sigGph;
 		}
 		case IL2CPP_TYPE_MVAR:
 		{
-			if ((int32_t)sigType->data.__genericParameterIndex >= methodGenericContainer->type_argc)
+			Il2CppGenericContainer mgc = il2cpp::vm::GlobalMetadata::GetGenericContainerFromHandle(methodGenericContainer);
+			if ((int32_t)sigType->data.__genericParameterIndex >= mgc.type_argc)
 			{
 				return false;
 			}
 			Il2CppMetadataGenericParameterHandle sigGph = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(
-				(Il2CppMetadataGenericContainerHandle)methodGenericContainer, sigType->data.__genericParameterIndex);
+				methodGenericContainer, sigType->data.__genericParameterIndex);
 			return dstType->data.genericParameterHandle == sigGph;
 		}
 		default:
@@ -527,13 +529,13 @@ namespace metadata
 		return false;
 	}
 
-	bool IsMatchMethodSig(const Il2CppMethodDefinition& methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
+	bool IsMatchMethodSig(const Il2CppMethodDefinition& methodDef, const MethodRefSig& resolveSig, Il2CppMetadataGenericContainerHandle klassGenericContainer)
 	{
 		if (methodDef.parameterCount != (uint16_t)resolveSig.params.size())
 		{
 			return false;
 		}
-		Il2CppGenericContainer* methodGenericContainer = nullptr;
+		Il2CppMetadataGenericContainerHandle methodGenericContainer = nullptr;
 		// if generic param not match. return false
 		if (methodDef.genericContainerIndex == kGenericContainerIndexInvalid)
 		{
@@ -544,8 +546,9 @@ namespace metadata
 		}
 		else
 		{
-			methodGenericContainer = (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(methodDef.genericContainerIndex);
-			if (resolveSig.genericParamCount != methodGenericContainer->type_argc)
+			methodGenericContainer = il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(methodDef.genericContainerIndex);
+			Il2CppGenericContainer mgc = il2cpp::vm::GlobalMetadata::GetGenericContainerFromHandle(methodGenericContainer);
+			if (resolveSig.genericParamCount != mgc.type_argc)
 			{
 				return false;
 			}
@@ -571,16 +574,17 @@ namespace metadata
 	}
 
 
-	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, const Il2CppGenericContainer* klassGenericContainer)
+	bool IsMatchMethodSig(const MethodInfo* methodDef, const MethodRefSig& resolveSig, Il2CppMetadataGenericContainerHandle klassGenericContainer)
 	{
 		if ((size_t)methodDef->parameters_count != resolveSig.params.size())
 		{
 			return false;
 		}
-		const Il2CppGenericContainer* methodGenericContainer = GetGenericContainer(methodDef);
+		Il2CppMetadataGenericContainerHandle methodGenericContainer = GetGenericContainer(methodDef);
 		if (methodGenericContainer)
 		{
-			if (methodGenericContainer->type_argc != resolveSig.genericParamCount)
+			Il2CppGenericContainer mgc = il2cpp::vm::GlobalMetadata::GetGenericContainerFromHandle(methodGenericContainer);
+			if (mgc.type_argc != resolveSig.genericParamCount)
 			{
 				return false;
 			}
@@ -616,10 +620,11 @@ namespace metadata
 		{
 			return false;
 		}
-		const Il2CppGenericContainer* methodGenericContainer = GetGenericContainer(methodDef);
+		Il2CppMetadataGenericContainerHandle methodGenericContainer = GetGenericContainer(methodDef);
 		if (methodGenericContainer)
 		{
-			if (methodGenericContainer->type_argc != resolveSig.genericParamCount)
+			Il2CppGenericContainer mgc = il2cpp::vm::GlobalMetadata::GetGenericContainerFromHandle(methodGenericContainer);
+			if (mgc.type_argc != resolveSig.genericParamCount)
 			{
 				return false;
 			}
@@ -653,7 +658,7 @@ namespace metadata
 	const Il2CppMetadataMethodDefinitionHandle ResolveMethodDefinition(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig)
 	{
 		const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(type);
-		const Il2CppGenericContainer* klassGenericContainer = GetGenericContainerFromIl2CppType(type);
+		Il2CppMetadataGenericContainerHandle klassGenericContainer = GetGenericContainerFromIl2CppType(type);
 		const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.nameIndex);
 		for (uint32_t i = 0; i < typeDef.method_count; i++)
 		{
@@ -701,7 +706,7 @@ namespace metadata
 		const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
         const Il2CppImage* image = il2cpp::vm::GlobalMetadata::GetImageForTypeHandle(typeHandle);
 		
-		const Il2CppGenericContainer* klassGenericContainer = GetGenericContainerFromIl2CppType(type);
+		Il2CppMetadataGenericContainerHandle klassGenericContainer = GetGenericContainerFromIl2CppType(type);
 		for (uint16_t i = 0; i < typeDef.field_count; i++)
 		{
             FieldIndex fieldIndex = typeDef.fieldStart + i;
@@ -718,13 +723,13 @@ namespace metadata
 		return false;
 	}
 
-	const Il2CppGenericContainer* GetGenericContainerFromIl2CppType(const Il2CppType* type)
+	Il2CppMetadataGenericContainerHandle GetGenericContainerFromIl2CppType(const Il2CppType* type)
 	{
 		switch (type->type)
 		{
 		case IL2CPP_TYPE_GENERICINST:
 		{
-			return (const Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromGenericClass(type->data.generic_class);
+			return (Il2CppMetadataGenericContainerHandle)il2cpp::vm::GlobalMetadata::GetGenericContainerFromGenericClass(type->data.generic_class);
 		}
 		case IL2CPP_TYPE_VALUETYPE:
 		case IL2CPP_TYPE_CLASS:

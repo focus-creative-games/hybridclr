@@ -144,19 +144,19 @@ namespace metadata
 		return _il2cppTypeForTypeDefs[index];
 	}
 
-	Il2CppGenericContainer* ConsistentAOTHomologousImage::GetGenericContainerByRawIndex(uint32_t index)
+	Il2CppMetadataGenericContainerHandle ConsistentAOTHomologousImage::GetGenericContainerByRawIndex(uint32_t index)
 	{
-		return const_cast<Il2CppGenericContainer*>(il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(index));
+		return il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(index);
 	}
 
-	Il2CppGenericContainer* ConsistentAOTHomologousImage::GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex)
+	Il2CppMetadataGenericContainerHandle ConsistentAOTHomologousImage::GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex)
 	{
 		Il2CppMetadataTypeHandle typeHandle = il2cpp::vm::GlobalMetadata::GetTypeHandleFromIndex(typeDefIndex);
 		const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(typeHandle);
-		return const_cast<Il2CppGenericContainer*>(il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef.genericContainerIndex));
+		return il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef.genericContainerIndex);
 	}
 
-	const Il2CppMetadataMethodDefinitionHandle ConsistentAOTHomologousImage::GetMethodHandleFromRawIndex(uint32_t index)
+	Il2CppMetadataMethodDefinitionHandle ConsistentAOTHomologousImage::GetMethodHandleFromRawIndex(uint32_t index)
 	{
 		IL2CPP_ASSERT((size_t)index < _methodDefs.size());
 		return _methodDefs[index];

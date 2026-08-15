@@ -1,5 +1,6 @@
 #include "Image.h"
 
+#include "il2cpp-class-internals.h"
 #include "vm/ClassInlines.h"
 #include "vm/Image.h"
 #include "vm/GlobalMetadata.h"
@@ -112,7 +113,7 @@ namespace metadata
         return std::strcmp(strName, "ThreadStaticAttribute") == 0;
     }
 
-    void Image::ReadMemberRefParentFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, ResolveMemberRefParent& ret)
+    void Image::ReadMemberRefParentFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex, ResolveMemberRefParent& ret)
     {
         ret.parentType = tableType;
         switch (tableType)
@@ -142,9 +143,9 @@ namespace metadata
 
 #pragma region type
 
-    const Il2CppType* Image::ReadArrayType(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer)
+    const Il2CppType* Image::ReadArrayType(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer)
     {
-        Il2CppType* arrType = MetadataMallocT<Il2CppType>();;
+        Il2CppType* arrType = MetadataMallocT<Il2CppType>();
         arrType->type = IL2CPP_TYPE_ARRAY;
         Il2CppArrayType& type = *MetadataMallocT<Il2CppArrayType>();
         arrType->data.array = &type;
@@ -181,7 +182,7 @@ namespace metadata
         return arrType;
     }
 
-    const Il2CppGenericClass* Image::ReadGenericClass(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer)
+    const Il2CppGenericClass* Image::ReadGenericClass(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer)
     {
         const Il2CppType* genericBase = ReadType(reader, klassGenericContainer, methodGenericContainer);
         IL2CPP_ASSERT(genericBase->type == IL2CPP_TYPE_CLASS || genericBase->type == IL2CPP_TYPE_VALUETYPE);
@@ -199,7 +200,7 @@ namespace metadata
         return il2cpp::metadata::GenericMetadata::GetGenericClass(genericBase, genericInst);
     }
 
-    const Il2CppType* Image::ReadType(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer)
+    const Il2CppType* Image::ReadType(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer)
     {
         Il2CppType type = {};
         const Il2CppType* underlyingType = nullptr;
@@ -209,28 +210,103 @@ namespace metadata
         switch (etype)
         {
         case IL2CPP_TYPE_VOID:
+        {
+            type.data = il2cpp_defaults.void_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
+        }
         case IL2CPP_TYPE_BOOLEAN:
+        {
+            type.data = il2cpp_defaults.boolean_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_CHAR:
+        {
+            type.data = il2cpp_defaults.char_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_I1:
+        {
+            type.data = il2cpp_defaults.sbyte_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_U1:
+        {
+            type.data = il2cpp_defaults.byte_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_I2:
+        {
+            type.data = il2cpp_defaults.int16_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_U2:
+        {
+            type.data = il2cpp_defaults.uint16_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_I4:
+        {
+            type.data = il2cpp_defaults.int32_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_U4:
+        {
+            type.data = il2cpp_defaults.uint32_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_I8:
+        {
+            type.data = il2cpp_defaults.int64_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_U8:
+        {
+            type.data = il2cpp_defaults.uint64_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_R4:
+        {
+            type.data = il2cpp_defaults.single_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_R8:
+        {
+            type.data = il2cpp_defaults.double_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_TYPEDBYREF:
+        {
+            type.data = il2cpp_defaults.typed_reference_class->byval_arg.data;
+            break;
+        }
         case IL2CPP_TYPE_I:
+        {
+            type.data = il2cpp_defaults.int_class->byval_arg.data;
+            SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
+            break;
+        }
         case IL2CPP_TYPE_U:
         {
+            type.data = il2cpp_defaults.uint_class->byval_arg.data;
             SET_IL2CPPTYPE_VALUE_TYPE(type, 1);
             break;
         }
         case IL2CPP_TYPE_STRING:
         {
+            type.data = il2cpp_defaults.string_class->byval_arg.data;
             break;
         }
         case IL2CPP_TYPE_PTR:
@@ -281,6 +357,7 @@ namespace metadata
         }
         case IL2CPP_TYPE_OBJECT:
         {
+            type.data = il2cpp_defaults.object_class->byval_arg.data;
             break;
         }
         case IL2CPP_TYPE_SZARRAY:
@@ -290,12 +367,12 @@ namespace metadata
         }
         case IL2CPP_TYPE_VAR:
         {
-            IL2CPP_ASSERT(!klassGenericContainer || !klassGenericContainer->is_method);
+            //IL2CPP_ASSERT(!klassGenericContainer || !klassGenericContainer->is_method);
             uint32_t number = reader.ReadCompressedUint32();
             if (klassGenericContainer)
             {
                 //IL2CPP_ASSERT(hybridclr::metadata::IsInterpreterIndex(klassGenericContainer->ownerIndex));
-                type.data.genericParameterHandle = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex((Il2CppMetadataGenericContainerHandle)klassGenericContainer, number);
+                type.data.genericParameterHandle = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(klassGenericContainer, number);
             }
             else
             {
@@ -307,11 +384,11 @@ namespace metadata
         }
         case IL2CPP_TYPE_MVAR:
         {
-            IL2CPP_ASSERT(!methodGenericContainer || methodGenericContainer->is_method);
+            //IL2CPP_ASSERT(!methodGenericContainer || methodGenericContainer->is_method);
             uint32_t number = reader.ReadCompressedUint32();
             if (methodGenericContainer)
             {
-                type.data.genericParameterHandle = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex((Il2CppMetadataGenericContainerHandle)methodGenericContainer, number);
+                type.data.genericParameterHandle = il2cpp::vm::GlobalMetadata::GetGenericParameterFromIndex(methodGenericContainer, number);
             }
             else
             {
@@ -464,14 +541,14 @@ namespace metadata
         return ReadTypeFromResolutionScope(r.resolutionScope, r.typeNamespace, r.typeName);
     }
 
-    const Il2CppType* Image::ReadTypeFromTypeSpec(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex)
+    const Il2CppType* Image::ReadTypeFromTypeSpec(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex)
     {
         TbTypeSpec r = _rawImage->ReadTypeSpec(rowIndex);
         BlobReader reader = _rawImage->GetBlobReaderByRawIndex(r.signature);
         return ReadType(reader, klassGenericContainer, methodGenericContainer);
     }
 
-    const Il2CppType* Image::ReadTypeFromMemberRefParent(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex)
+    const Il2CppType* Image::ReadTypeFromMemberRefParent(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex)
     {
         ResolveMemberRefParent mrp = {};
         ReadMemberRefParentFromToken(klassGenericContainer, methodGenericContainer, tableType, rowIndex, mrp);
@@ -479,7 +556,7 @@ namespace metadata
         return mrp.type;
     }
 
-    const Il2CppType* Image::ReadTypeFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex)
+    const Il2CppType* Image::ReadTypeFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex)
     {
         switch (tableType)
         {
@@ -505,7 +582,7 @@ namespace metadata
 
 #pragma endregion
 
-    void Image::ReadFieldRefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, FieldRefSig& field)
+    void Image::ReadFieldRefSig(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer, FieldRefSig& field)
     {
         field = {};
         uint8_t rawSigType = reader.ReadByte();
@@ -541,7 +618,7 @@ namespace metadata
         }
     }
 
-    void Image::ReadMemberRefSig(const Il2CppGenericContainer* klassGenericContainer, TbMemberRef& data, ResolveMemberRefSig& signature)
+    void Image::ReadMemberRefSig(Il2CppMetadataGenericContainerHandle klassGenericContainer, TbMemberRef& data, ResolveMemberRefSig& signature)
     {
         BlobReader reader = _rawImage->GetBlobReaderByRawIndex(data.signature);
         uint8_t rawSigFlags = reader.PeekByte();
@@ -559,8 +636,8 @@ namespace metadata
     }
 
 
-    void Image::ReadMethodRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer,
-        const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, MethodRefInfo& ret)
+    void Image::ReadMethodRefInfoFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,
+       Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex, MethodRefInfo& ret)
     {
         IL2CPP_ASSERT(rowIndex > 0);
         switch (tableType)
@@ -617,8 +694,8 @@ namespace metadata
         }
     }
 
-    void Image::ReadResolveMemberRefFromMemberRef(const Il2CppGenericContainer* klassGenericContainer,
-        const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, ResolveMemberRef& ret)
+    void Image::ReadResolveMemberRefFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,
+       Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex, ResolveMemberRef& ret)
     {
         TbMemberRef data = _rawImage->ReadMemberRef(rowIndex);
         ret.name = _rawImage->GetStringFromRawIndex(data.name);
@@ -627,8 +704,8 @@ namespace metadata
         ReadMemberRefSig(nullptr, data, ret.signature);
     }
 
-    void Image::ReadMethodRefInfoFromMemberRef(const Il2CppGenericContainer* klassGenericContainer,
-        const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, MethodRefInfo& ret)
+    void Image::ReadMethodRefInfoFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,
+       Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex, MethodRefInfo& ret)
     {
         ResolveMemberRef rmr = {};
         ReadResolveMemberRefFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, rmr);
@@ -638,8 +715,8 @@ namespace metadata
         ret.methodHandle = ResolveMethodDefinition(rmr.parent.type, rmr.name, rmr.signature.method);
     }
 
-    const Il2CppGenericInst* Image::ReadMethodSpecInstantiation(uint32_t signature, const Il2CppGenericContainer* klassGenericContainer,
-        const Il2CppGenericContainer* methodGenericContainer)
+    const Il2CppGenericInst* Image::ReadMethodSpecInstantiation(uint32_t signature,Il2CppMetadataGenericContainerHandle klassGenericContainer,
+       Il2CppMetadataGenericContainerHandle methodGenericContainer)
     {
         BlobReader reader = _rawImage->GetBlobReaderByRawIndex(signature);
         uint8_t rawSigFlags = reader.ReadByte();
@@ -665,7 +742,7 @@ namespace metadata
         return il2cpp::vm::MetadataCache::GetGenericInst(types, argCount);
     }
 
-    void Image::ReadFieldRefInfoFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, FieldRefInfo& ret)
+    void Image::ReadFieldRefInfoFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex, FieldRefInfo& ret)
     {
         ResolveMemberRef rmr = {};
         ReadResolveMemberRefFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, rmr);
@@ -675,7 +752,7 @@ namespace metadata
         ResolveFieldThrow(rmr.parent.type, rmr.name, rmr.signature.field.type, ret.fieldIndex);
     }
 
-    void Image::ReadLocalVarSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, il2cpp::utils::dynamic_array<const Il2CppType*>& vars)
+    void Image::ReadLocalVarSig(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, il2cpp::utils::dynamic_array<const Il2CppType*>& vars)
     {
         uint8_t sig = reader.ReadByte();
         IL2CPP_ASSERT(sig == 0x7);
@@ -688,7 +765,7 @@ namespace metadata
         }
     }
 
-    void Image::ReadStandAloneSig(uint32_t signatureIdx, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, ResolveStandAloneMethodSig& methodSig)
+    void Image::ReadStandAloneSig(uint32_t signatureIdx,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, ResolveStandAloneMethodSig& methodSig)
     {
         BlobReader reader = _rawImage->GetBlobReaderByRawIndex(signatureIdx);
         uint8_t sig = reader.ReadByte();
@@ -894,7 +971,7 @@ namespace metadata
         }
     }
 
-    Il2CppClass* Image::GetClassFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    Il2CppClass* Image::GetClassFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         TokenGenericContextType key(token, genericContext);
         auto it = tokenCache.find(key);
@@ -931,7 +1008,7 @@ namespace metadata
         if (type->type != IL2CPP_TYPE_ARRAY)
         {
             const Il2CppTypeDefinition typeDef = GetUnderlyingTypeDefinition(type);
-            const Il2CppGenericContainer* klassGenericContainer = GetGenericContainerFromIl2CppType(type);
+           Il2CppMetadataGenericContainerHandle klassGenericContainer = GetGenericContainerFromIl2CppType(type);
             const char* typeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(typeDef.nameIndex);
             for (uint32_t i = 0; i < typeDef.method_count; i++)
             {
@@ -966,7 +1043,7 @@ namespace metadata
         return nullptr;
     }
 
-    const void* Image::ReadRuntimeHandleFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, uint32_t rowIndex)
+    const void* Image::ReadRuntimeHandleFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext, uint32_t rowIndex)
     {
         ResolveMemberRef rmr = {};
         ReadResolveMemberRefFromMemberRef(klassGenericContainer, methodGenericContainer, rowIndex, rmr);
@@ -994,7 +1071,7 @@ namespace metadata
         }
     }
 
-    const void* Image::GetRuntimeHandleFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    const void* Image::GetRuntimeHandleFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         TableType ttype = DecodeTokenTableType(token);
         uint32_t rowIndex = DecodeTokenRowIndex(token);
@@ -1039,7 +1116,7 @@ namespace metadata
         return handle;
     }
 
-    const FieldInfo* Image::GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    const FieldInfo* Image::GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         TokenGenericContextType key(token, genericContext);
         auto it = tokenCache.find(key);
@@ -1063,8 +1140,8 @@ namespace metadata
     }
 
 
-    const MethodInfo* Image::ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer,
-        const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, const Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex)
+    const MethodInfo* Image::ReadMethodInfoFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,
+       Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext, const Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex)
     {
         IL2CPP_ASSERT(rowIndex > 0);
         switch (tableType)
@@ -1124,7 +1201,7 @@ namespace metadata
         }
     }
 
-    const MethodInfo* Image::GetMethodInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext)
+    const MethodInfo* Image::GetMethodInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext)
     {
         auto key = std::tuple<uint32_t, const Il2CppGenericContext*>(token, genericContext);
         auto it = tokenCache.find(key);
@@ -1161,7 +1238,7 @@ namespace metadata
         return method;
     }
 
-    void Image::GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig)
+    void Image::GetStandAloneMethodSigFromToken(uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig)
     {
         TbStandAloneSig sas = _rawImage->ReadStandAloneSig(DecodeTokenRowIndex(token));
         ReadStandAloneSig(sas.signature, klassGenericContainer, methodGenericContainer, methodSig);
@@ -1175,7 +1252,7 @@ namespace metadata
         }
     }
 
-    void Image::ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret)
+    void Image::ReadFieldRefInfoFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret)
     {
         IL2CPP_ASSERT(rowIndex > 0);
         if (tableType == TableType::FIELD)

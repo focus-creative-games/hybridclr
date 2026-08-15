@@ -265,7 +265,7 @@ namespace transform
 			{
 				return ComputLocationDescInfo(&klass->castClass->byval_arg);
 			}
-			int32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
+            int32_t size = il2cpp::vm::Class::GetValueSize(klass, nullptr);
 			return ComputValueTypeDescInfo(size, klass->has_references);
 		}
 		case IL2CPP_TYPE_GENERICINST:
@@ -2692,10 +2692,8 @@ else \
 #pragma region header
 
 		const Il2CppGenericContext* genericContext = methodInfo->is_inflated ? &methodInfo->genericMethod->context : nullptr;
-		const Il2CppGenericContainer* klassContainer = GetGenericContainerFromIl2CppType(&methodInfo->klass->byval_arg);
-		const Il2CppGenericContainer* methodContainer = methodInfo->is_inflated ?
-			(const Il2CppGenericContainer*)methodInfo->genericMethod->methodDefinition->genericContainerHandle :
-			(const Il2CppGenericContainer*)methodInfo->genericContainerHandle;
+		Il2CppMetadataGenericContainerHandle klassContainer = GetGenericContainerFromIl2CppType(&methodInfo->klass->byval_arg);
+		Il2CppMetadataGenericContainerHandle methodContainer = methodInfo->is_inflated ? methodInfo->genericMethod->methodDefinition->genericContainerHandle : methodInfo->genericContainerHandle;
 
 		BasicBlockSpliter bbc(body);
 		bbc.SplitBasicBlocks();
@@ -4801,7 +4799,8 @@ else \
 							ldfldFromFieldData = true;
 							CreateAddIR(ir, LdsfldaFromFieldDataVarVar);
 							ir->dst = dstIdx;
-							ir->src = GetOrAddResolveDataIndex(il2cpp::vm::Field::GetData(fieldInfo));
+							size_t size;
+							ir->src = GetOrAddResolveDataIndex(il2cpp::vm::Field::GetData(fieldInfo, &size));
 						}
 					}
 					if (!ldfldFromFieldData)

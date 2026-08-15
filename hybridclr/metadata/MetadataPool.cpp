@@ -1,5 +1,7 @@
 #include "MetadataPool.h"
 
+#include "hybridclr/Il2CppCompatibleDef.h"
+#include "il2cpp-blob.h"
 #include "utils/MemoryPool.h"
 #include "vm/MetadataAlloc.h"
 #include "vm/MetadataLock.h"
@@ -233,17 +235,31 @@ namespace metadata
 		std::memset(s_primitiveTypes, 0, sizeof(s_primitiveTypes));
 		std::memset(s_byRefPrimitiveTypes, 0, sizeof(s_byRefPrimitiveTypes));
 
+		s_primitiveTypes[IL2CPP_TYPE_VOID] = il2cpp_defaults.void_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_BOOLEAN] = il2cpp_defaults.boolean_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_CHAR] = il2cpp_defaults.char_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_I1] = il2cpp_defaults.sbyte_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_U1] = il2cpp_defaults.byte_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_I2] = il2cpp_defaults.int16_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_U2] = il2cpp_defaults.uint16_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_I4] = il2cpp_defaults.int32_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_U4] = il2cpp_defaults.uint32_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_I8] = il2cpp_defaults.int64_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_U8] = il2cpp_defaults.uint64_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_R4] = il2cpp_defaults.single_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_R8] = il2cpp_defaults.double_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_STRING] = il2cpp_defaults.string_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_I] = il2cpp_defaults.int_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_U] = il2cpp_defaults.uint_class->byval_arg;
+		s_primitiveTypes[IL2CPP_TYPE_OBJECT] = il2cpp_defaults.object_class->byval_arg;
+
 		for (int i = 0; i <= kMaxPrimitiveType; i++)
 		{
-			Il2CppType& type = s_primitiveTypes[i];
-			type.type = (Il2CppTypeEnum)i;
-			bool isValueType = i != IL2CPP_TYPE_OBJECT && i != IL2CPP_TYPE_STRING && i != IL2CPP_TYPE_VOID;
-			SET_IL2CPPTYPE_VALUE_TYPE(type, isValueType);
-
 			Il2CppType& byRefType = s_byRefPrimitiveTypes[i];
-			byRefType.type = (Il2CppTypeEnum)i;
+			byRefType = s_primitiveTypes[i];
 			byRefType.byref = 1;
 		}
+
 		s_Il2CppTypePool = new Il2CppTypeHashSet();
 		s_Il2CppArrayTypePool = new Il2CppArrayTypeHashSet();
 	}

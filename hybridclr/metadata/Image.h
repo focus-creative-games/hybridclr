@@ -71,60 +71,60 @@ namespace metadata
 		// misc
 		bool IsValueTypeFromToken(TableType tableType, uint32_t rowIndex);
 		bool IsThreadStaticCtorToken(TableType tableType, uint32_t rowIndex);
-		void ReadMemberRefParentFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, ResolveMemberRefParent& ret);
-		const Il2CppType* ReadTypeFromMemberRefParent(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex);
+		void ReadMemberRefParentFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex, ResolveMemberRefParent& ret);
+		const Il2CppType* ReadTypeFromMemberRefParent(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex);
 
 		const Il2CppType* GetIl2CppType(uint32_t assemblyRefIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound);
 		// type
-		const Il2CppType* ReadType(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
+		const Il2CppType* ReadType(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer);
 
 		const Il2CppType* ReadTypeFromTypeDef(uint32_t rowIndex);
 		const Il2CppType* ReadTypeFromTypeRef(uint32_t rowIndex);
-		const Il2CppType* ReadTypeFromTypeSpec(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex);
-		const Il2CppType* ReadTypeFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex);
+		const Il2CppType* ReadTypeFromTypeSpec(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex);
+		const Il2CppType* ReadTypeFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex);
 
 		virtual const Il2CppType* ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName);
 
-		const Il2CppType* ReadArrayType(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
-		const Il2CppGenericClass* ReadGenericClass(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
+		const Il2CppType* ReadArrayType(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer);
+		const Il2CppGenericClass* ReadGenericClass(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer);
 
 		// signature
-		void ReadMemberRefSig(const Il2CppGenericContainer* klassGenericContainer, TbMemberRef& data, ResolveMemberRefSig& signature);
-		void ReadFieldRefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, FieldRefSig& field);
+		void ReadMemberRefSig(Il2CppMetadataGenericContainerHandle klassGenericContainer, TbMemberRef& data, ResolveMemberRefSig& signature);
+		void ReadFieldRefSig(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer, FieldRefSig& field);
 		void ReadMethodRefSig(BlobReader& reader, MethodRefSig& method);
-		const Il2CppGenericInst* ReadMethodSpecInstantiation(uint32_t signatureIdx, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer);
-		void ReadLocalVarSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, il2cpp::utils::dynamic_array<const Il2CppType*>& vars);
-		void ReadStandAloneSig(uint32_t signatureIdx, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, ResolveStandAloneMethodSig& sig);
+		const Il2CppGenericInst* ReadMethodSpecInstantiation(uint32_t signatureIdx,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer);
+		void ReadLocalVarSig(BlobReader& reader,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, il2cpp::utils::dynamic_array<const Il2CppType*>& vars);
+		void ReadStandAloneSig(uint32_t signatureIdx,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, ResolveStandAloneMethodSig& sig);
 
 		// resolve from token
-		void ReadResolveMemberRefFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, ResolveMemberRef& ret);
-		void ReadMethodRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, MethodRefInfo& ret);
-		void ReadMethodRefInfoFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, MethodRefInfo& ret);
+		void ReadResolveMemberRefFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex, ResolveMemberRef& ret);
+		void ReadMethodRefInfoFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex, MethodRefInfo& ret);
+		void ReadMethodRefInfoFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex, MethodRefInfo& ret);
 		const MethodInfo* ResolveMethodInfo(const Il2CppType* type, const char* resolveMethodName, const MethodRefSig& resolveSig, const Il2CppGenericInst* genericInstantiation, const Il2CppGenericContext* genericContext);
 
-		const void* ReadRuntimeHandleFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, uint32_t rowIndex);
+		const void* ReadRuntimeHandleFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext, uint32_t rowIndex);
 
-		void ReadFieldRefInfoFromMemberRef(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, uint32_t rowIndex, FieldRefInfo& ret);
+		void ReadFieldRefInfoFromMemberRef(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, uint32_t rowIndex, FieldRefInfo& ret);
 		void ReadMethodBody(const Il2CppMethodDefinition& methodDef, const TbMethod& methodData, MethodBody& body);
 
 		Il2CppString* GetIl2CppUserStringFromRawIndex(StringIndex index);
-		Il2CppClass* GetClassFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
+		Il2CppClass* GetClassFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const FieldInfo* GetFieldInfoFromFieldRef(const Il2CppType& type, FieldIndex fieldIndex);
-		const void* GetRuntimeHandleFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
+		const void* GetRuntimeHandleFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext);
 		const MethodInfo* FindImplMethod(Il2CppClass* klass, const MethodInfo* matchMethod);
-		const FieldInfo* GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
-		const MethodInfo* ReadMethodInfoFromToken(const Il2CppGenericContainer* klassGenericContainer,
-			const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, const Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex);
-		const MethodInfo* GetMethodInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext);
-		const MethodInfo* GetMethodInfo(const Il2CppType* containerType, const Il2CppMetadataMethodDefinitionHandle methodHandle, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext);
-		void GetStandAloneMethodSigFromToken(uint32_t token, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig);
-		void ReadFieldRefInfoFromToken(const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret);
+		const FieldInfo* GetFieldInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext);
+		const MethodInfo* ReadMethodInfoFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,
+			Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext, const Il2CppGenericInst* genericInst, TableType tableType, uint32_t rowIndex);
+		const MethodInfo* GetMethodInfoFromToken(Token2RuntimeHandleMap& tokenCache, uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext);
+		const MethodInfo* GetMethodInfo(const Il2CppType* containerType, Il2CppMetadataMethodDefinitionHandle methodHandle, const Il2CppGenericInst* instantiation, const Il2CppGenericContext* genericContext);
+		void GetStandAloneMethodSigFromToken(uint32_t token,Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, const Il2CppGenericContext* genericContext, ResolveStandAloneMethodSig& methodSig);
+		void ReadFieldRefInfoFromToken(Il2CppMetadataGenericContainerHandle klassGenericContainer,Il2CppMetadataGenericContainerHandle methodGenericContainer, TableType tableType, uint32_t rowIndex, FieldRefInfo& ret);
 
 		virtual const Il2CppType* GetModuleIl2CppType(uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound) = 0;
 		virtual const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) = 0;
-		virtual Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) = 0;
-		virtual Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) = 0;
-		virtual const Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) = 0;
+		virtual Il2CppMetadataGenericContainerHandle GetGenericContainerByRawIndex(uint32_t index) = 0;
+		virtual Il2CppMetadataGenericContainerHandle GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) = 0;
+		virtual Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) = 0;
 
 		virtual MethodBody* GetMethodBody(uint32_t token) = 0;
 		virtual void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) = 0;

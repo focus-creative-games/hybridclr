@@ -6,6 +6,7 @@
 #include "vm/Image.h"
 #include "vm/Exception.h"
 #include "vm/MetadataCache.h"
+#include "vm/MetadataDeserialization.h"
 #include "metadata/GenericMetadata.h"
 #include "MetadataPool.h"
 
@@ -18,8 +19,7 @@ namespace metadata
 
 	const Il2CppMetadataMethodDefinitionHandle FindMatchMethod(const Il2CppTypeDefinition& aotTypeDef, const SuperSetMethodDefDetail& method2, const char* methodName, const MethodRefSig& methodSignature)
 	{
-		const Il2CppGenericContainer* klassGenContainer = aotTypeDef.genericContainerIndex != kGenericContainerIndexInvalid ?
-			(const Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef.genericContainerIndex) : nullptr;
+		Il2CppMetadataGenericContainerHandle klassGenContainer = il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef.genericContainerIndex);
 		for (uint16_t i = 0; i < aotTypeDef.method_count; i++)
 		{
 			//const MethodInfo* method1 = klass1->methods[i];
@@ -41,13 +41,12 @@ namespace metadata
 
 	FieldIndex FindMatchField(const Il2CppTypeDefinition& aotTypeDef, const SuperSetFieldDefDetail& field2, const char* fieldName, const Il2CppType* fieldType)
 	{
-		const Il2CppGenericContainer* klassGenContainer = aotTypeDef.genericContainerIndex != kGenericContainerIndexInvalid ?
-			il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef.genericContainerIndex) : nullptr;
+		Il2CppMetadataGenericContainerHandle klassGenContainer = il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(aotTypeDef.genericContainerIndex);
         const Il2CppImage* image = il2cpp::vm::GlobalMetadata::GetImageForTypeDefinition(aotTypeDef);
 		for (uint16_t i = 0; i < aotTypeDef.field_count; i++)
 		{
 			//const FieldInfo* field1 = klass1->fields + i;
-            FieldIndex fieldIndex = aotTypeDef.fieldStart + i;
+			FieldIndex fieldIndex = aotTypeDef.fieldStart + i;
 			const Il2CppFieldDefinition aotField = il2cpp::vm::GlobalMetadata::GetFieldDefinitionFromIndex(image, fieldIndex);
 			const char* aotFieldName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(aotField.nameIndex);
 			if (std::strcmp(aotFieldName, fieldName))
@@ -318,12 +317,12 @@ namespace metadata
 		return _typeDefs[index].aotIl2CppType;
 	}
 
-	Il2CppGenericContainer* SuperSetAOTHomologousImage::GetGenericContainerByRawIndex(uint32_t index)
+	Il2CppMetadataGenericContainerHandle SuperSetAOTHomologousImage::GetGenericContainerByRawIndex(uint32_t index)
 	{
-		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(index);
+		return il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(index);
 	}
 
-	Il2CppGenericContainer* SuperSetAOTHomologousImage::GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex)
+	Il2CppMetadataGenericContainerHandle SuperSetAOTHomologousImage::GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex)
 	{
 		auto it = _aotTypeIndex2TypeDefs.find(typeDefIndex);
 		if (it == _aotTypeIndex2TypeDefs.end())
@@ -336,10 +335,10 @@ namespace metadata
 			return nullptr;
 		}
 		const Il2CppTypeDefinition typeDef = il2cpp::vm::GlobalMetadata::GetTypeDefinitionFromTypeHandle(type->data.typeHandle);
-		return (Il2CppGenericContainer*)il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef.genericContainerIndex);
+		return il2cpp::vm::GlobalMetadata::GetGenericContainerFromIndex(typeDef.genericContainerIndex);
 	}
 
-	const Il2CppMetadataMethodDefinitionHandle SuperSetAOTHomologousImage::GetMethodHandleFromRawIndex(uint32_t index)
+	Il2CppMetadataMethodDefinitionHandle SuperSetAOTHomologousImage::GetMethodHandleFromRawIndex(uint32_t index)
 	{
 		IL2CPP_ASSERT((size_t)index < _methodDefs.size());
 		SuperSetMethodDefDetail& method = _methodDefs[index];

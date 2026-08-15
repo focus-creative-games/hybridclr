@@ -69,9 +69,9 @@ namespace hybridclr
 			const Il2CppType* ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName) override;
 			MethodBody* GetMethodBody(uint32_t token) override;
 			const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
-			Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
-			Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;
-			const Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) override;
+			Il2CppMetadataGenericContainerHandle GetGenericContainerByRawIndex(uint32_t index) override;
+			Il2CppMetadataGenericContainerHandle GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;
+			Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) override;
 			void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 		private:
 

@@ -266,7 +266,7 @@ namespace metadata
 			return _fieldDetails[index];
 		}
 
-		const Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) override
+		Il2CppMetadataMethodDefinitionHandle GetMethodHandleFromRawIndex(uint32_t index) override
 		{
 			IL2CPP_ASSERT((size_t)index < _methodDefines.size());
 			return (Il2CppMetadataMethodDefinitionHandle)&_methodDefines[index];
@@ -284,35 +284,36 @@ namespace metadata
 			return &_genericParams[index];
 		}
 
-		const Il2CppGenericParameter* GetGenericParameterByRawIndex(const Il2CppGenericContainer* container, uint32_t index)
+		const Il2CppGenericParameter* GetGenericParameterByRawIndex(Il2CppMetadataGenericContainerHandle containerHandle, uint32_t index)
 		{
+			const Il2CppGenericContainer* container = (const Il2CppGenericContainer*)containerHandle;
 			uint32_t globalIndex = DecodeMetadataIndex(container->genericParameterStart) + index;
 			IL2CPP_ASSERT(globalIndex < (uint32_t)_genericParams.size());
 			return &_genericParams[globalIndex];
 		}
 
-		Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override
+		Il2CppMetadataGenericContainerHandle GetGenericContainerByRawIndex(uint32_t index) override
 		{
 			if (index != kGenericContainerIndexInvalid)
 			{
 				IL2CPP_ASSERT(index < (uint32_t)_genericContainers.size());
-				return &_genericContainers[index];
+				return (Il2CppMetadataGenericContainerHandle)&_genericContainers[index];
 			}
 			return nullptr;
 		}
 
-		Il2CppGenericContainer* GetGenericContainerByTypeDefinition(const Il2CppTypeDefinition* typeDef)
+		Il2CppMetadataGenericContainerHandle GetGenericContainerByTypeDefinition(const Il2CppTypeDefinition* typeDef)
 		{
 			GenericContainerIndex idx = DecodeMetadataIndex(typeDef->genericContainerIndex);
 			if (idx != kGenericContainerIndexInvalid)
 			{
 				IL2CPP_ASSERT(idx < (GenericContainerIndex)_genericContainers.size());
-				return &_genericContainers[idx];
+				return (Il2CppMetadataGenericContainerHandle)&_genericContainers[idx];
 			}
 			return nullptr;
 		}
 
-		Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override
+		Il2CppMetadataGenericContainerHandle GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override
 		{
 			IL2CPP_ASSERT(typeDefIndex < (int32_t)_typeDetails.size());
 			return GetGenericContainerByTypeDefinition(&_typesDefines[typeDefIndex]);
@@ -330,8 +331,8 @@ namespace metadata
 				TbGenericParamConstraint data = _rawImage->ReadGenericParamConstraint(index + 1);
 				Il2CppGenericParameter& genericParam = _genericParams[data.owner - 1];
 
-				const Il2CppGenericContainer* klassGc;
-				const Il2CppGenericContainer* methodGc;
+				Il2CppMetadataGenericContainerHandle klassGc;
+				Il2CppMetadataGenericContainerHandle methodGc;
 				GetClassAndMethodGenericContainerFromGenericContainerIndex(genericParam.ownerIndex, klassGc, methodGc);
 
 				const Il2CppType* paramCons = ReadTypeFromToken(klassGc, methodGc, DecodeTypeDefOrRefOrSpecCodedIndexTableType(data.constraint), DecodeTypeDefOrRefOrSpecCodedIndexRowIndex(data.constraint));
@@ -345,12 +346,13 @@ namespace metadata
 
 		const MethodInfo* GetMethodInfoFromMethodDefinitionRawIndex(uint32_t index);
 		const MethodInfo* GetMethodInfoFromMethodDefinition(const Il2CppMetadataMethodDefinitionHandle methodHandle);
+		const MethodInfo* GetMethodInfoFromToken(uint32_t token);
 		const Il2CppMetadataMethodDefinitionHandle GetMethodDefinitionFromVTableSlot(const Il2CppMetadataTypeHandle typeDefine, int32_t vTableSlot);
 		const MethodInfo* GetMethodInfoFromVTableSlot(const Il2CppClass* klass, int32_t vTableSlot);
 
 		Il2CppTypeDefinition* GetNestedTypes(const Il2CppMetadataTypeHandle handle, void** iter);
 
-		void GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, const Il2CppGenericContainer*& klassGc, const Il2CppGenericContainer*& methodGc);
+		void GetClassAndMethodGenericContainerFromGenericContainerIndex(GenericContainerIndex idx, Il2CppMetadataGenericContainerHandle& klassGc, Il2CppMetadataGenericContainerHandle& methodGc);
 
 		Il2CppMethodPointer GetAdjustorThunk(uint32_t token);
 		Il2CppMethodPointer GetMethodPointer(uint32_t token);
@@ -448,11 +450,11 @@ namespace metadata
 		DefaultValueDataIndex ConvertConstValue(CustomAttributeDataWriter& writer, uint32_t blobIndex, const Il2CppType* type);
 #endif
 
-		Il2CppPropertyDefinition* GetPropertyDefinitionFromIndex(PropertyIndex index)
+		const Il2CppPropertyDefinition& GetPropertyDefinitionFromIndex(PropertyIndex index)
 		{
 			IL2CPP_ASSERT(index > 0 && index <= (int32_t)_propeties.size());
 			PropertyDetail& pd = _propeties[(uint32_t)index - 1];
-			return &pd.il2cppDefinition;
+			return pd.il2cppDefinition;
 		}
 
 		Il2CppMetadataPropertyInfo GetPropertyInfo(const Il2CppClass* klass, TypePropertyIndex index)
@@ -633,6 +635,7 @@ namespace metadata
 		}
 
 		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex(uint32_t index);
+		Il2CppClass* GetTypeInfoFromTypeDefinitionRawIndex_OnlyCached(uint32_t index);
 		Il2CppClass* GetTypeInfoFromHandle(const Il2CppMetadataTypeHandle typeHandle)
 		{
 			uint32_t typeIndex = GetTypeRawIndex(typeHandle);
@@ -662,7 +665,7 @@ namespace metadata
 
 		const Il2CppType* GetModuleIl2CppType(uint32_t moduleRowIndex, uint32_t typeNamespace, uint32_t typeName, bool raiseExceptionIfNotFound) override;
 		void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
-		void ReadMethodDefSig(BlobReader& reader, const Il2CppGenericContainer* klassGenericContainer, const Il2CppGenericContainer* methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr);
+		void ReadMethodDefSig(BlobReader& reader, Il2CppMetadataGenericContainerHandle klassGenericContainer, Il2CppMetadataGenericContainerHandle methodGenericContainer, Il2CppMethodDefinition& methodDef, std::vector<ParamDetail>& paramArr);
 
 		void InitBasic(Il2CppImage* image);
 		void BuildIl2CppImage(Il2CppImage* image);
