@@ -2050,7 +2050,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2058,7 +2058,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint8_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2066,7 +2066,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2074,7 +2074,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint16_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2082,7 +2082,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2090,7 +2090,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint32_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2098,7 +2098,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2106,7 +2106,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (uint64_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2114,7 +2114,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(float*)(localVarBase + __dst)) = (float)((*(int32_t*)(localVarBase + __src)));
+					(*(float*)(localVarBase + __dst)) = il2cpp_codegen_conv<float, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2122,7 +2122,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(double*)(localVarBase + __dst)) = (double)((*(int32_t*)(localVarBase + __src)));
+					(*(double*)(localVarBase + __dst)) = il2cpp_codegen_conv<double, int32_t, int32_t, false, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2130,7 +2130,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2138,7 +2138,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2146,7 +2146,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2154,7 +2154,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2162,7 +2162,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2170,7 +2170,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2178,7 +2178,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2186,7 +2186,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2194,7 +2194,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(float*)(localVarBase + __dst)) = (float)((*(uint32_t*)(localVarBase + __src)));
+					(*(float*)(localVarBase + __dst)) = il2cpp_codegen_conv<float, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2202,7 +2202,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(double*)(localVarBase + __dst)) = (double)((*(uint32_t*)(localVarBase + __src)));
+					(*(double*)(localVarBase + __dst)) = il2cpp_codegen_conv<double, uint32_t, int32_t, false, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2210,7 +2210,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2218,7 +2218,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint8_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2226,7 +2226,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2234,7 +2234,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint16_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2242,7 +2242,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2250,7 +2250,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint32_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2258,7 +2258,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2266,7 +2266,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (uint64_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2274,7 +2274,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(float*)(localVarBase + __dst)) = (float)((*(int64_t*)(localVarBase + __src)));
+					(*(float*)(localVarBase + __dst)) = il2cpp_codegen_conv<float, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2282,7 +2282,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(double*)(localVarBase + __dst)) = (double)((*(int64_t*)(localVarBase + __src)));
+					(*(double*)(localVarBase + __dst)) = il2cpp_codegen_conv<double, int64_t, int64_t, false, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2290,7 +2290,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2298,7 +2298,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2306,7 +2306,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2314,7 +2314,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2322,7 +2322,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2330,7 +2330,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2338,7 +2338,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2346,7 +2346,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2354,7 +2354,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(float*)(localVarBase + __dst)) = (float)((*(uint64_t*)(localVarBase + __src)));
+					(*(float*)(localVarBase + __dst)) = il2cpp_codegen_conv<float, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2362,7 +2362,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(double*)(localVarBase + __dst)) = (double)((*(uint64_t*)(localVarBase + __src)));
+					(*(double*)(localVarBase + __dst)) = il2cpp_codegen_conv<double, uint64_t, int64_t, false, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2434,7 +2434,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(float*)(localVarBase + __dst)) = (float)((*(float*)(localVarBase + __src)));
+					(*(float*)(localVarBase + __dst)) = il2cpp_codegen_conv<float, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2442,7 +2442,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(double*)(localVarBase + __dst)) = (double)((*(float*)(localVarBase + __src)));
+					(*(double*)(localVarBase + __dst)) = il2cpp_codegen_conv<double, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2514,7 +2514,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(float*)(localVarBase + __dst)) = (float)((*(double*)(localVarBase + __src)));
+					(*(float*)(localVarBase + __dst)) = il2cpp_codegen_conv<float, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2522,7 +2522,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-					(*(double*)(localVarBase + __dst)) = (double)((*(double*)(localVarBase + __src)));
+					(*(double*)(localVarBase + __dst)) = il2cpp_codegen_conv<double, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2530,12 +2530,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_i1(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2543,12 +2538,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_u1(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2556,12 +2546,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_i2(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2569,12 +2554,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_u2(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2582,12 +2562,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_i4(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2595,12 +2570,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_u4(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2608,12 +2578,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_i8(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2621,12 +2586,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int32_t val = (*(int32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i4_u8(*(int32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)(uint32_t)((*(int32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, int32_t, int32_t, true, false>((*(int32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2634,12 +2594,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_i1(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2647,12 +2602,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_u1(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2660,12 +2610,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_i2(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2673,12 +2618,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_u2(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2686,12 +2626,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_i4(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2699,12 +2634,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_u4(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2712,12 +2642,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_i8(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2725,12 +2650,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint32_t val = (*(uint32_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u4_u8(*(uint32_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint32_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, uint32_t, int32_t, true, true>((*(uint32_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2738,12 +2658,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_i1(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2751,12 +2666,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_u1(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2764,12 +2674,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_i2(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2777,12 +2682,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_u2(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2790,12 +2690,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_i4(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2803,12 +2698,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_u4(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2816,12 +2706,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_i8(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2829,12 +2714,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    int64_t val = (*(int64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_i8_u8(*(int64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)(uint64_t)((*(int64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, int64_t, int64_t, true, false>((*(int64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2842,12 +2722,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_i1(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int8_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2855,12 +2730,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_u1(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint8_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2868,12 +2738,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_i2(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int16_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2881,12 +2746,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_u2(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint16_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2894,12 +2754,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_i4(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (int32_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2907,12 +2762,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_u4(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = (uint32_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2920,12 +2770,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_i8(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (int64_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2933,12 +2778,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    uint64_t val = (*(uint64_t*)(localVarBase + __src));
-				    if (CheckConvertOverflow_u8_u8(*(uint64_t*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = (uint64_t)((*(uint64_t*)(localVarBase + __src)));
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, uint64_t, int64_t, true, true>((*(uint64_t*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2946,12 +2786,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_i1(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2959,12 +2794,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_u1(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2972,12 +2802,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_i2(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2985,12 +2810,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_u2(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -2998,12 +2818,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_i4(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3011,12 +2826,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_u4(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3024,12 +2834,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_i8(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3037,12 +2842,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    float val = (*(float*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f4_u8(*(float*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, float, float, false, false>((*(float*)(localVarBase + __src)), NULL);
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, float, float, true, false>((*(float*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3050,12 +2850,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_i1(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int8_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3063,12 +2858,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_u1(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint8_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3076,12 +2866,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_i2(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int16_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3089,12 +2874,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_u2(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint16_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3102,12 +2882,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_i4(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int32_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3115,12 +2890,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_u4(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int32_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint32_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3128,12 +2898,7 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_i8(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<int64_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
@@ -3141,16 +2906,10 @@ const int32_t kMaxRetValueTypeStackObjectSize = 1024;
 				{
 					uint16_t __dst = *(uint16_t*)(ip + 2);
 					uint16_t __src = *(uint16_t*)(ip + 4);
-				    double val = (*(double*)(localVarBase + __src));
-				    if (CheckConvertOverflow_f8_u8(*(double*)(localVarBase + __src)))
-				    {
-				        il2cpp::vm::Exception::RaiseOverflowException();
-				    }
-				    (*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, double, double, false, false>((*(double*)(localVarBase + __src)), NULL);
+					(*(int64_t*)(localVarBase + __dst)) = il2cpp_codegen_conv<uint64_t, double, double, true, false>((*(double*)(localVarBase + __src)), NULL);
 				    ip += 8;
 				    continue;
 				}
-
 				//!!!}}CONVERT
 #pragma endregion
 
