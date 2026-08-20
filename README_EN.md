@@ -24,6 +24,8 @@ Embrace modern native C# hot update technology!
 - [Quick Start](https://www.hybridclr.cn/docs/beginner/quickstart)
 - [Commercial Project Cases](https://www.hybridclr.cn/docs/other/businesscase)
 - [LeanCLR](https://github.com/focus-creative-games/leanclr)
+- HybridCLR native scripting solutions: Lua-[ZLua](https://github.com/focus-creative-games/zlua)/Typescript-[ZenTS](https://github.com/focus-creative-games/zen-ts)
+- Code obfuscation tool [Obfuz](https://github.com/focus-creative-games/obfuz)
 
 ## Features
 

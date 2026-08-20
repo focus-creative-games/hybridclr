@@ -24,6 +24,8 @@ HybridCLR扩充了il2cpp运行时代码，使它由纯[AOT](https://en.wikipedia
 - [快速上手](https://www.hybridclr.cn/docs/beginner/quickstart)
 - [商业项目案例](https://www.hybridclr.cn/docs/other/businesscase)
 - [LeanCLR](https://github.com/focus-creative-games/leanclr)
+- HybridCLR 原生集成脚本方案： Lua-[ZLua](https://github.com/focus-creative-games/zlua)/Typescript-[ZenTS](https://github.com/focus-creative-games/zen-ts)
+- 代码混淆工具 [Obfuz](https://github.com/focus-creative-games/obfuz)
 
 ## 特性
 
