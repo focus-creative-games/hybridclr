@@ -708,14 +708,59 @@ namespace metadata
 					continue;
 				}
 				VirtualMethodImpl& vmi = _methodImpls[slotIdx];
-				// override by virtual method
-				const GenericClassMethod* implVm = FindImplMethod(rioi.type, interfaceVirtualMethods[idx].method, false);
-				if (implVm)
+				// Locate the implementation the way C# maps interfaces: walk from the most derived
+				// class up to the root. At each level an explicit implementation (MethodImpl) wins
+				// immediately; otherwise only a method that is both public and newslot can implicitly
+				// implement the interface member.
+				//   not public : C# forbids a non-public member from implicitly implementing an interface.
+				//   not newslot: an override merely overrides a base virtual method, it does not
+				//                introduce a new interface implementation.
+				// Both checks are required because IsOverrideMethod matches by plain method name, while
+				// an explicit implementation is named "Namespace.IFoo.Bar" and therefore never matches
+				// the interface member name "Bar" - it cannot protect its own slot. Without them a
+				// derived class' same-named protected/override method steals the slot occupied by a
+				// base class' explicit implementation.
+				const GenericClassMethod* declVm = nullptr;
+				bool blockedByExplicitImpl = false;
+				for (VTableSetUp* curTdt = this; curTdt; curTdt = curTdt->_parent)
 				{
-					vmi.type = implVm->type;
-					vmi.method = implVm->method;
-					//vmi.name = implVm->name;
+					if (curTdt->isExplicitImplInterfaceSlot(slotIdx))
+					{
+						blockedByExplicitImpl = true;
+						break;
+					}
+					for (int i = (int)curTdt->_virtualMethods.size() - 1; i >= 0; i--)
+					{
+						GenericClassMethod& pvm = curTdt->_virtualMethods[i];
+						uint32_t mflags = pvm.method->flags;
+						if (!IsPublicMethod(mflags) || !IsNewSlot(mflags))
+						{
+							continue;
+						}
+						if (IsOverrideMethod(rioi.type, interfaceVirtualMethods[idx].method, pvm.type, pvm.method))
+						{
+							declVm = &pvm;
+							break;
+						}
+					}
+					if (declVm)
+					{
+						break;
+					}
 				}
+				if (blockedByExplicitImpl || !declVm)
+				{
+					continue;
+				}
+				// The declaration may live in a base class, resolve it to the most derived override.
+				const GenericClassMethod* implVm = FindImplMethod(declVm->type, declVm->method, false);
+				if (!implVm)
+				{
+					implVm = declVm;
+				}
+				vmi.type = implVm->type;
+				vmi.method = implVm->method;
+				//vmi.name = implVm->name;
 			}
 		}
 	}
