@@ -266,24 +266,42 @@ namespace metadata
 		il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetMissingMethodException(errMsg));
 	}
 
-	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMetadataMethodDefinitionHandle methodHandle, bool throwExceptionIfNotFind)
+	const GenericClassMethod* VTableSetUp::FindImplMethod(const Il2CppType* containerType, const Il2CppMetadataMethodDefinitionHandle methodHandle)
 	{
-        const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(methodHandle);
+		const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(methodHandle);
 		for (VTableSetUp* curTdt = this; curTdt; curTdt = curTdt->_parent)
 		{
 			for (int idx = (int)curTdt->_virtualMethods.size() - 1; idx >= 0; idx--)
 			{
 				GenericClassMethod& pvm = curTdt->_virtualMethods[idx];
-                const Il2CppMethodDefinition pvmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(pvm.method);
-				if (hybridclr::metadata::IsOverrideMethod(containerType, methodDef, pvm.type, pvmMethodDef))
+				const Il2CppMethodDefinition pvmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(pvm.method);
+				if (IsOverrideMethod(containerType, methodDef, pvm.type, pvmMethodDef))
 				{
 					return &pvm;
 				}
 			}
 		}
-		if (throwExceptionIfNotFind)
+		return nullptr;
+	}
+
+	const GenericClassMethod* VTableSetUp::FindPublicImplMethodForInterface(const Il2CppType* containerType, const Il2CppMetadataMethodDefinitionHandle methodHandle, bool searchHierarchy)
+	{
+		const Il2CppMethodDefinition methodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(methodHandle);
+		for (VTableSetUp* curTdt = this; curTdt; curTdt = searchHierarchy ? curTdt->_parent : nullptr)
 		{
-			RaiseParentOverridedMethodNotFindException(this->_type, il2cpp::vm::GlobalMetadata::GetStringFromIndex(methodDef.nameIndex));
+			for (int idx = (int)curTdt->_virtualMethods.size() - 1; idx >= 0; idx--)
+			{
+				GenericClassMethod& pvm = curTdt->_virtualMethods[idx];
+				const Il2CppMethodDefinition pvmMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(pvm.method);
+				if (!IsPublicMethod(pvmMethodDef.flags))
+				{
+					continue;
+				}
+				if (IsOverrideMethod(containerType, methodDef, pvm.type, pvmMethodDef))
+				{
+					return &pvm;
+				}
+			}
 		}
 		return nullptr;
 	}
@@ -700,10 +718,10 @@ namespace metadata
 			{
 				// It's impossible to define private virtual method in c#，but it's possible in cli.
 				// so sometime can't find override in parent
-				const GenericClassMethod* overrideParentMethod = _parent->FindImplMethod(_type, vm.method, false);
+				const GenericClassMethod* overrideParentMethod = _parent->FindImplMethod(_type, vm.method);
 				if (overrideParentMethod)
 				{
-                    const Il2CppMethodDefinition overrideParentMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(overrideParentMethod->method);
+					const Il2CppMethodDefinition overrideParentMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(overrideParentMethod->method);
 					IL2CPP_ASSERT(overrideParentMethodDef.slot != kInvalidIl2CppMethodSlot);
 					vmMethodDef->slot = overrideParentMethodDef.slot;
 					ApplyOverrideMethod(overrideParentMethod, vm.method, startOffset);
@@ -725,6 +743,7 @@ namespace metadata
 		for (uint16_t interfaceIdx : implInterfaceOffsetIdxs)
 		{
 			RawInterfaceOffsetInfo& rioi = _interfaceOffsetInfos[interfaceIdx];
+			const Il2CppType* declContainerType = rioi.type;
 			auto& interfaceVirtualMethods = rioi.tree->_virtualMethods;
 			for (uint16_t idx = 0, end = (uint16_t)interfaceVirtualMethods.size(); idx < end; idx++)
 			{
@@ -733,15 +752,41 @@ namespace metadata
 				{
 					continue;
 				}
+				// check interface method is override by self virtual method
 				VirtualMethodImpl& vmi = _methodImpls[slotIdx];
-				// override by virtual method
-				const GenericClassMethod* implVm = FindImplMethod(rioi.type, interfaceVirtualMethods[idx].method, false);
-				if (implVm)
+				const Il2CppMetadataMethodDefinitionHandle declMethod = interfaceVirtualMethods[idx].method;
+				// find implement method in self virtual methods
+				const GenericClassMethod* implMethod = FindPublicImplMethodForInterface(declContainerType, declMethod, false);
+				if (implMethod)
 				{
-					vmi.type = implVm->type;
-					vmi.method = implVm->method;
-					//vmi.name = implVm->name;
+					vmi.type = implMethod->type;
+					vmi.method = implMethod->method;
+					continue;
 				}
+				// if not found and has implement in parent, then use parent implement method
+				if (vmi.method && vmi.type != declContainerType)
+				{
+					continue;
+				}
+				if (_parent)
+				{
+					implMethod = _parent->FindPublicImplMethodForInterface(declContainerType, declMethod, true);
+				}
+				// try find implement method in parent virtual methods
+				if (!implMethod)
+				{
+					const Il2CppMethodDefinition declMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(declMethod);
+					if (!IsAbstractMethod(declMethodDef.flags))
+					{
+						// if interface method is not abstract, then we can use default implement method in interface
+						vmi.type = declContainerType;
+						vmi.method = declMethod;
+						continue;
+					}
+					RaiseParentOverridedMethodNotFindException(this->_type, il2cpp::vm::GlobalMetadata::GetStringFromIndex(declMethodDef.nameIndex));
+				}
+				vmi.type = implMethod->type;
+				vmi.method = implMethod->method;
 			}
 		}
 	}
