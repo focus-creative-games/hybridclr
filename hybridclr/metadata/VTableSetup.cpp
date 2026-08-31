@@ -759,9 +759,19 @@ namespace metadata
 				const GenericClassMethod* implMethod = FindPublicImplMethodForInterface(declContainerType, declMethod, false);
 				if (implMethod)
 				{
-					vmi.type = implMethod->type;
-					vmi.method = implMethod->method;
-					continue;
+					// the implementation of interface method override in mono and il2cpp is different with coreclr.
+					// in coreclr, virtual methods override explicit interface method.
+					// in mono and il2cpp, only new-slot virtual methods override explicit interface method
+#if !HYBRIDCLR_USE_CORECLR_OVERRIDE_EXPLICIT_IMPL
+					const Il2CppMethodDefinition implMethodDef = il2cpp::vm::GlobalMetadata::GetMethodDefinitionFromHandle(implMethod->method);
+					bool isExplicitImplInParent = _parent && _parent->isExplicitImplInterfaceSlotHierarchy(slotIdx);
+					if (!isExplicitImplInParent || IsNewSlot(implMethodDef.flags))
+#endif
+					{
+						vmi.type = implMethod->type;
+						vmi.method = implMethod->method;
+						continue;
+					}
 				}
 				// if not found and has implement in parent, then use parent implement method
 				if (vmi.method && vmi.type != declContainerType)

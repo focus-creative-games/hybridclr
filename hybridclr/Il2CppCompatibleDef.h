@@ -86,6 +86,7 @@
 #define HYBRIDCLR_METADATA_CALLOC(count, size) il2cpp::vm::MetadataCalloc(count, size)
 #endif
 
+#define HYBRIDCLR_USE_CORECLR_OVERRIDE_EXPLICIT_IMPL 0
 
 namespace hybridclr
 {
