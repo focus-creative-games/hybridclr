@@ -75,6 +75,18 @@ namespace metadata
 		void ComputeInterfaceVtables(Il2CppType2TypeDeclaringTreeMap& cache);
 
 		bool isExplicitImplInterfaceSlot(uint16_t slot) const { return _explicitImplSlots.find(slot) != _explicitImplSlots.end(); }
+		bool isExplicitImplInterfaceSlotHierarchy(uint16_t slot) const
+		{
+			if (isExplicitImplInterfaceSlot(slot))
+			{
+				return true;
+			}
+			if (_parent)
+			{
+				return _parent->isExplicitImplInterfaceSlotHierarchy(slot);
+			}
+			return false;
+		}
 		uint16_t FindDefaultOverrideExplicitInterfaceSlot(GenericClassMethod& gcm, const Uin16Set& explicitImplSlots, const std::vector<uint16_t>& implInterfaceOffsetIdxs);
 		uint16_t FindExplicitOverrideInterfaceSlot(GenericClassMethod& gcm, const Int32ToUin16Map& explicitImplSlots);
 		void ApplyOverrideMethod(const GenericClassMethod* beOverrideParentMethod, const Il2CppMethodDefinition* overrideMethodDef, uint16_t checkOverrideMaxIdx);
