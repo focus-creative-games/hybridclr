@@ -370,8 +370,7 @@ namespace metadata
             } 
 		}
 
-        if (il2cpp::metadata::GenericMetadata::ContainsGenericParameters(type)
-            || ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) && typeDef->genericContainerIndex != kGenericContainerIndexInvalid))
+        if (IsNotFullyInstantiatedType(type))
         {
             layout.instanceSize = 0;
             layout.actualSize = 0;

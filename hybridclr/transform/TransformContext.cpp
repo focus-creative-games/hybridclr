@@ -2437,6 +2437,20 @@ namespace transform
 		return totalParameterSize;
 	}
 
+	static void RaiseIfNotFullyInstantiatedDeclaringType(const Il2CppType* type)
+	{
+		if (IsNotFullyInstantiatedType(type))
+		{
+			TEMP_FORMAT(errMsg, "Declaring type is not fully instantiated. type:%s", GetKlassCStringFullName(type).c_str());
+			RaiseExecutionEngineException(errMsg);
+		}
+	}
+
+	static void RaiseIfNotFullyInstantiatedDeclaringType(Il2CppClass* klass)
+	{
+		RaiseIfNotFullyInstantiatedDeclaringType(&klass->byval_arg);
+	}
+
 	static Il2CppMethodPointer ResolvePInvokeMethod(const MethodInfo* methodInfo, Il2CppCallConvention& callingConvention)
 	{
 		metadata::InterpreterImage* interpImage = metadata::MetadataModule::GetImage(methodInfo);
@@ -2767,6 +2781,11 @@ else \
 		{
 			LocVarInfo& local = locals[i];
 			local.type = InflateIfNeeded(body.localVars[i], genericContext, true);
+			if (IsNotFullyInstantiatedType(local.type))
+			{
+				TEMP_FORMAT(errMsg, "Local variable type is not fully instantiated. type:%s", GetKlassCStringFullName(local.type).c_str());
+				RaiseExecutionEngineException(errMsg);
+			}
 			local.klass = il2cpp::vm::Class::FromIl2CppType(local.type);
 			il2cpp::vm::Class::SetupFields(local.klass);
 			local.locOffset = localVarOffset + totalArgLocalSize;
@@ -3204,6 +3223,7 @@ else \
 
 		LabelCall:
 			{
+				RaiseIfNotFullyInstantiatedDeclaringType(shareMethod->klass);
 				if (TryAddInstinctInstruments(shareMethod))
 				{
 					continue;
@@ -3390,6 +3410,7 @@ else \
 				{
 					goto LabelCall;
 				}
+				RaiseIfNotFullyInstantiatedDeclaringType(shareMethod->klass);
 
 				int32_t resolvedTotalArgNum = shareMethod->parameters_count + 1;
 				int32_t callArgEvalStackIdxBase = evalStackTop - resolvedTotalArgNum;
@@ -3561,6 +3582,19 @@ else \
 
 				ResolveStandAloneMethodSig methodSig;
 				image->GetStandAloneMethodSigFromToken(token, klassContainer, methodContainer, genericContext, methodSig);
+				if (IsNotFullyInstantiatedType(methodSig.returnType))
+				{
+					TEMP_FORMAT(errMsg, "CALLI return type is not fully instantiated. type:%s", GetKlassCStringFullName(methodSig.returnType).c_str());
+					RaiseExecutionEngineException(errMsg);
+				}
+				for (const Il2CppType* paramType : methodSig.params)
+				{
+					if (IsNotFullyInstantiatedType(paramType))
+					{
+						TEMP_FORMAT(errMsg, "CALLI parameter type is not fully instantiated. type:%s", GetKlassCStringFullName(paramType).c_str());
+						RaiseExecutionEngineException(errMsg);
+					}
+				}
 				if (IsPrologExplicitThis(methodSig.flags))
 				{
 					RaiseNotSupportedException("not support StandAloneMethodSig flags:EXPLICITTHIS");
@@ -4487,6 +4521,7 @@ else \
 				IL2CPP_ASSERT(shareMethod);
 				IL2CPP_ASSERT(!std::strcmp(shareMethod->name, ".ctor"));
 				IL2CPP_ASSERT(hybridclr::metadata::IsInstanceMethod(shareMethod));
+				RaiseIfNotFullyInstantiatedDeclaringType(shareMethod->klass);
 				if (TryAddInstinctCtorInstruments(shareMethod))
 				{
 					continue;
@@ -4704,6 +4739,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
+				RaiseIfNotFullyInstantiatedDeclaringType(fieldInfo->parent);
 				// ldfld obj may be obj or or valuetype or ref valuetype....
 				EvalStackVarInfo& obj = evalStack[evalStackTop - 1];
 				uint16_t topIdx = GetEvalStackTopOffset();
@@ -4724,6 +4760,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
+				RaiseIfNotFullyInstantiatedDeclaringType(fieldInfo->parent);
 
 				uint16_t topIdx = GetEvalStackTopOffset();
 				uint32_t fieldOffset = GetFieldOffset(fieldInfo);
@@ -4756,6 +4793,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
+				RaiseIfNotFullyInstantiatedDeclaringType(fieldInfo->parent);
 
 				IRCommon* ir = CreateStfld(pool, GetEvalStackOffset_2(), fieldInfo, GetEvalStackOffset_1());
 				AddInst(ir);
@@ -4768,6 +4806,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
+				RaiseIfNotFullyInstantiatedDeclaringType(fieldInfo->parent);
 				uint32_t parentIndex = GetOrAddResolveDataIndex(fieldInfo->parent);
 				uint16_t dstIdx = GetEvalStackNewTopOffset();
 				IRCommon* ir = fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET ?
@@ -4787,6 +4826,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
+				RaiseIfNotFullyInstantiatedDeclaringType(fieldInfo->parent);
 
 				uint16_t dstIdx = GetEvalStackNewTopOffset();
 				if (fieldInfo->offset != THREAD_STATIC_FIELD_OFFSET)
@@ -4832,6 +4872,7 @@ else \
 				uint32_t token = (uint32_t)GetI4LittleEndian(ip + 1);
 				FieldInfo* fieldInfo = const_cast<FieldInfo*>(image->GetFieldInfoFromToken(tokenCache, token, klassContainer, methodContainer, genericContext));
 				IL2CPP_ASSERT(fieldInfo);
+				RaiseIfNotFullyInstantiatedDeclaringType(fieldInfo->parent);
 
 				uint32_t klassIndex = GetOrAddResolveDataIndex(fieldInfo->parent);
 				uint16_t dataIdx = GetEvalStackTopOffset();

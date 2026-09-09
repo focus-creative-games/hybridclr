@@ -6,6 +6,7 @@
 #include "utils/HashUtils.h"
 #include "metadata/Il2CppTypeHash.h"
 #include "metadata/Il2CppTypeCompare.h"
+#include "metadata/GenericMetadata.h"
 
 #include "../CommonDef.h"
 #include "MetadataDef.h"
@@ -360,6 +361,13 @@ namespace metadata
         {
             return (Il2CppTypeDefinition*)type->data.typeHandle;
         }
+    }
+
+    static inline bool IsNotFullyInstantiatedType(const Il2CppType* type)
+    {
+        return il2cpp::metadata::GenericMetadata::ContainsGenericParameters(type) ||
+               ((type->type == IL2CPP_TYPE_VALUETYPE || type->type == IL2CPP_TYPE_CLASS) &&
+                ((const Il2CppTypeDefinition*)type->data.typeHandle)->genericContainerIndex != kGenericContainerIndexInvalid);
     }
 
     const Il2CppType* GetIl2CppTypeFromTypeDefinition(const Il2CppTypeDefinition* typeDef);
