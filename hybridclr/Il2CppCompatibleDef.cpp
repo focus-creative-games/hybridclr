@@ -11,7 +11,7 @@ namespace hybridclr
 	Il2CppMethodPointer InitAndGetInterpreterDirectlyCallMethodPointerSlow(MethodInfo* method)
 	{
 		IL2CPP_ASSERT(!method->initInterpCallMethodPointer);
-		method->initInterpCallMethodPointer = true;
+		method->initInterpCallMethodPointer = 1;
 		bool isAdjustorThunkMethod = IS_CLASS_VALUE_TYPE(method->klass) && hybridclr::metadata::IsInstanceMethod(method);
 		if (hybridclr::metadata::MetadataModule::IsImplementedByInterpreter(method))
 		{
@@ -48,7 +48,7 @@ namespace hybridclr
 				method->methodPointer = method->virtualMethodPointerCallByInterp;
 			}
 #endif
-			method->isInterpterImpl = true;
+			method->isInterpterImpl = 1;
 		}
 		return method->methodPointerCallByInterp;
 	}
