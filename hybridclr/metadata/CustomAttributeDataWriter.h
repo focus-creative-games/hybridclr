@@ -1,3 +1,23 @@
+// Copyright 2026 Code Philosophy
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #pragma once
 
 #include "BlobReader.h"
@@ -10,191 +30,203 @@ namespace hybridclr
 {
 namespace metadata
 {
-	class CustomAttributeDataWriter
-	{
-	private:
-		uint8_t* _data;
-		uint32_t _capacity;
-		uint32_t _size;
+class CustomAttributeDataWriter
+{
+  private:
+    uint8_t* _data;
+    uint32_t _capacity;
+    uint32_t _size;
 
-	public:
-		CustomAttributeDataWriter(uint32_t capacity) : _capacity(Round2Exp(capacity)), _size(0)
-		{
-			_data = (uint8_t*)HYBRIDCLR_MALLOC_ZERO(_capacity);
-		}
+  public:
+    CustomAttributeDataWriter(uint32_t capacity) : _capacity(Round2Exp(capacity)), _size(0)
+    {
+        _data = (uint8_t*)HYBRIDCLR_MALLOC_ZERO(_capacity);
+    }
 
-		~CustomAttributeDataWriter()
-		{
-			HYBRIDCLR_FREE(_data);
-			_data = nullptr;
-		}
+    ~CustomAttributeDataWriter()
+    {
+        HYBRIDCLR_FREE(_data);
+        _data = nullptr;
+    }
 
-		uint32_t Size() const { return _size; }
+    uint32_t Size() const
+    {
+        return _size;
+    }
 
-		bool Empty() const { return _size == 0; }
+    bool Empty() const
+    {
+        return _size == 0;
+    }
 
-		const uint8_t* Data() const { return _data; }
+    const uint8_t* Data() const
+    {
+        return _data;
+    }
 
-		const uint8_t* DataAt(uint32_t offset) { return _data + offset; }
+    const uint8_t* DataAt(uint32_t offset)
+    {
+        return _data + offset;
+    }
 
-		void Reset()
-		{
-			_size = 0;
-		}
+    void Reset()
+    {
+        _size = 0;
+    }
 
-		void WriteAttributeCount(uint32_t count)
-		{
-			WriteCompressedUint32(count);
-		}
+    void WriteAttributeCount(uint32_t count)
+    {
+        WriteCompressedUint32(count);
+    }
 
-		void Skip(int32_t skipBytes)
-		{
-			SureRemainSize(skipBytes);
-			_size += skipBytes;
-		}
+    void Skip(int32_t skipBytes)
+    {
+        SureRemainSize(skipBytes);
+        _size += skipBytes;
+    }
 
-		void WriteMethodIndex(int32_t offset, int32_t methodIndex)
-		{
-			*(int32_t*)(_data + offset) = methodIndex;
-		}
+    void WriteMethodIndex(int32_t offset, int32_t methodIndex)
+    {
+        *(int32_t*)(_data + offset) = methodIndex;
+    }
 
-		void WriteByte(uint8_t n)
-		{
-			SureRemainSize(1);
-			_data[_size++] = n;
-		}
+    void WriteByte(uint8_t n)
+    {
+        SureRemainSize(1);
+        _data[_size++] = n;
+    }
 
-		void WriteCompressedUint32(uint32_t n)
-		{
-			SureRemainSize(5);
-			uint8_t* buf = _data + _size;
-			if (n < 0x80)
-			{
-				buf[0] = (uint8_t)n;
-				++_size;
-			}
-			else if (n < 0x4000)
-			{
-				uint32_t v = n | 0x8000;
-				buf[0] = uint8_t(v >> 8);
-				buf[1] = uint8_t(v);
-				_size += 2;
-			}
-			else if (n < 0x20000000)
-			{
-				uint32_t v = n | 0xC0000000;
-				buf[0] = uint8_t(v >> 24);
-				buf[1] = uint8_t(v >> 16);
-				buf[2] = uint8_t(v >> 8);
-				buf[3] = uint8_t(v);
-				_size += 4;
-			}
-			else if (n < UINT32_MAX - 1)
-			{
-				buf[0] = 0xF0;
-				buf[1] = uint8_t(n);
-				buf[2] = uint8_t(n >> 8);
-				buf[3] = uint8_t(n >> 16);
-				buf[4] = uint8_t(n >> 24);
-				_size += 5;
-			}
-			else if (n == UINT32_MAX - 1)
-			{
-				buf[0] = 0xFE;
-				++_size;
-			}
-			else
-			{
-				buf[0] = 0xFF;
-				++_size;
-			}
-		}
+    void WriteCompressedUint32(uint32_t n)
+    {
+        SureRemainSize(5);
+        uint8_t* buf = _data + _size;
+        if (n < 0x80)
+        {
+            buf[0] = (uint8_t)n;
+            ++_size;
+        }
+        else if (n < 0x4000)
+        {
+            uint32_t v = n | 0x8000;
+            buf[0] = uint8_t(v >> 8);
+            buf[1] = uint8_t(v);
+            _size += 2;
+        }
+        else if (n < 0x20000000)
+        {
+            uint32_t v = n | 0xC0000000;
+            buf[0] = uint8_t(v >> 24);
+            buf[1] = uint8_t(v >> 16);
+            buf[2] = uint8_t(v >> 8);
+            buf[3] = uint8_t(v);
+            _size += 4;
+        }
+        else if (n < UINT32_MAX - 1)
+        {
+            buf[0] = 0xF0;
+            buf[1] = uint8_t(n);
+            buf[2] = uint8_t(n >> 8);
+            buf[3] = uint8_t(n >> 16);
+            buf[4] = uint8_t(n >> 24);
+            _size += 5;
+        }
+        else if (n == UINT32_MAX - 1)
+        {
+            buf[0] = 0xFE;
+            ++_size;
+        }
+        else
+        {
+            buf[0] = 0xFF;
+            ++_size;
+        }
+    }
 
-		void WriteUint32(uint32_t n)
-		{
-			WriteData(n);
-		}
+    void WriteUint32(uint32_t n)
+    {
+        WriteData(n);
+    }
 
-		void WriteCompressedInt32(int32_t n)
-		{
-			uint32_t v = n >= 0 ? (n << 1) : (((-(n + 1)) << 1) | 0x1U);
-			WriteCompressedUint32(v);
-		}
+    void WriteCompressedInt32(int32_t n)
+    {
+        uint32_t v = n >= 0 ? (n << 1) : (((-(n + 1)) << 1) | 0x1U);
+        WriteCompressedUint32(v);
+    }
 
-		template<typename T>
-		void WriteData(T x)
-		{
-			int32_t n = sizeof(T);
-			SureRemainSize(n);
-			std::memcpy(_data + _size, &x, n);
-			_size += n;
-		}
+    template <typename T>
+    void WriteData(T x)
+    {
+        int32_t n = sizeof(T);
+        SureRemainSize(n);
+        std::memcpy(_data + _size, &x, n);
+        _size += n;
+    }
 
-		void WriteBytes(const uint8_t* data, uint32_t len)
-		{
-			SureRemainSize(len);
-			std::memcpy(_data + _size, data, len);
-			_size += len;
-		}
+    void WriteBytes(const uint8_t* data, uint32_t len)
+    {
+        SureRemainSize(len);
+        std::memcpy(_data + _size, data, len);
+        _size += len;
+    }
 
-		void Write(const CustomAttributeDataWriter& writer)
-		{
-			SureRemainSize(writer._size);
-			std::memcpy(_data + _size, writer._data, writer._size);
-			_size += writer._size;
-		}
+    void Write(const CustomAttributeDataWriter& writer)
+    {
+        SureRemainSize(writer._size);
+        std::memcpy(_data + _size, writer._data, writer._size);
+        _size += writer._size;
+    }
 
-		void Write(BlobReader& reader, int32_t count)
-		{
-			SureRemainSize(count);
-			std::memcpy(_data + _size, reader.GetDataOfReadPosition(), count);
-			_size += count;
-			reader.SkipBytes(count);
-		}
+    void Write(BlobReader& reader, int32_t count)
+    {
+        SureRemainSize(count);
+        std::memcpy(_data + _size, reader.GetDataOfReadPosition(), count);
+        _size += count;
+        reader.SkipBytes(count);
+    }
 
-		void PopByte()
-		{
-			IL2CPP_ASSERT(_size > 0);
-			--_size;
-		}
+    void PopByte()
+    {
+        IL2CPP_ASSERT(_size > 0);
+        --_size;
+    }
 
-		void ReplaceLastByte(byte x)
-		{
-			IL2CPP_ASSERT(_size > 0);
-			_data[_size - 1] = x;
-		}
+    void ReplaceLastByte(byte x)
+    {
+        IL2CPP_ASSERT(_size > 0);
+        _data[_size - 1] = x;
+    }
 
-	private:
-		uint32_t Round2Exp(uint32_t n)
-		{
-			uint32_t s = 64;
-			for (uint32_t s = 64; ; s *= 2)
-			{
-				if (s >= n)
-				{
-					return s;
-				}
-			}
-			return n;
-		}
+  private:
+    uint32_t Round2Exp(uint32_t n)
+    {
+        uint32_t s = 64;
+        for (uint32_t s = 64;; s *= 2)
+        {
+            if (s >= n)
+            {
+                return s;
+            }
+        }
+        return n;
+    }
 
-		void SureRemainSize(uint32_t remainSize)
-		{
-			uint32_t newSize = _size + remainSize;
-			if (newSize > _capacity)
-			{
-				Resize(newSize);
-			}
-		}
+    void SureRemainSize(uint32_t remainSize)
+    {
+        uint32_t newSize = _size + remainSize;
+        if (newSize > _capacity)
+        {
+            Resize(newSize);
+        }
+    }
 
-		void Resize(uint32_t newSize)
-		{
-			_capacity = newSize = Round2Exp(newSize);
-			uint8_t* oldData = _data;
-			_data = (uint8_t*)HYBRIDCLR_MALLOC(newSize);
-			std::memcpy(_data, oldData, _size);
-			HYBRIDCLR_FREE(oldData);
-		}
-	};
-}
-}
+    void Resize(uint32_t newSize)
+    {
+        _capacity = newSize = Round2Exp(newSize);
+        uint8_t* oldData = _data;
+        _data = (uint8_t*)HYBRIDCLR_MALLOC(newSize);
+        std::memcpy(_data, oldData, _size);
+        HYBRIDCLR_FREE(oldData);
+    }
+};
+} // namespace metadata
+} // namespace hybridclr

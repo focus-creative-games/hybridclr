@@ -1,3 +1,23 @@
+// Copyright 2026 Code Philosophy
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #pragma once
 #include <stdint.h>
 
@@ -6,453 +26,451 @@ namespace hybridclr
 namespace metadata
 {
 
-    enum class TableType
-    {
-        MODULE,
-        TYPEREF,
-        TYPEDEF,
-        FIELDPTR,
-        FIELD,
-        METHODPTR,
-        METHOD,
-        PARAMPTR,
-        PARAM,
-        INTERFACEIMPL,
-        MEMBERREF, /* 0xa */
-        CONSTANT,
-        CUSTOMATTRIBUTE,
-        FIELDMARSHAL,
-        DECLSECURITY,
-        CLASSLAYOUT,
-        FIELDLAYOUT, /* 0x10 */
-        STANDALONESIG,
-        EVENTMAP,
-        EVENTPTR,
-        EVENT,
-        PROPERTYMAP,
-        PROPERTYPTR,
-        PROPERTY,
-        METHODSEMANTICS,
-        METHODIMPL,
-        MODULEREF, /* 0x1a */
-        TYPESPEC,
-        IMPLMAP,
-        FIELDRVA,
-        ENCLOG,
-        ENCMAP,
-        ASSEMBLY, /* 0x20 */
-        ASSEMBLYPROCESSOR,
-        ASSEMBLYOS,
-        ASSEMBLYREF,
-        ASSEMBLYREFPROCESSOR,
-        ASSEMBLYREFOS,
-        FILE,
-        EXPORTEDTYPE,
-        MANIFESTRESOURCE,
-        NESTEDCLASS,
-        GENERICPARAM, /* 0x2a */
-        METHODSPEC,
-        GENERICPARAMCONSTRAINT,
-        UNUSED8,
-        UNUSED9,
-        UNUSED10,
-        /* Portable PDB tables */
-        DOCUMENT, /* 0x30 */
-        METHODDEBUGINFORMATION,
-        LOCALSCOPE,
-        LOCALVARIABLE,
-        LOCALCONSTANT,
-        IMPORTSCOPE,
-        STATEMACHINEMETHOD,
-        CUSTOMDEBUGINFORMATION,
-    };
+enum class TableType
+{
+    MODULE,
+    TYPEREF,
+    TYPEDEF,
+    FIELDPTR,
+    FIELD,
+    METHODPTR,
+    METHOD,
+    PARAMPTR,
+    PARAM,
+    INTERFACEIMPL,
+    MEMBERREF, /* 0xa */
+    CONSTANT,
+    CUSTOMATTRIBUTE,
+    FIELDMARSHAL,
+    DECLSECURITY,
+    CLASSLAYOUT,
+    FIELDLAYOUT, /* 0x10 */
+    STANDALONESIG,
+    EVENTMAP,
+    EVENTPTR,
+    EVENT,
+    PROPERTYMAP,
+    PROPERTYPTR,
+    PROPERTY,
+    METHODSEMANTICS,
+    METHODIMPL,
+    MODULEREF, /* 0x1a */
+    TYPESPEC,
+    IMPLMAP,
+    FIELDRVA,
+    ENCLOG,
+    ENCMAP,
+    ASSEMBLY, /* 0x20 */
+    ASSEMBLYPROCESSOR,
+    ASSEMBLYOS,
+    ASSEMBLYREF,
+    ASSEMBLYREFPROCESSOR,
+    ASSEMBLYREFOS,
+    FILE,
+    EXPORTEDTYPE,
+    MANIFESTRESOURCE,
+    NESTEDCLASS,
+    GENERICPARAM, /* 0x2a */
+    METHODSPEC,
+    GENERICPARAMCONSTRAINT,
+    UNUSED8,
+    UNUSED9,
+    UNUSED10,
+    /* Portable PDB tables */
+    DOCUMENT, /* 0x30 */
+    METHODDEBUGINFORMATION,
+    LOCALSCOPE,
+    LOCALVARIABLE,
+    LOCALCONSTANT,
+    IMPORTSCOPE,
+    STATEMACHINEMETHOD,
+    CUSTOMDEBUGINFORMATION,
+};
 
+// 0
+struct TbModule
+{
+    uint16_t generation;
+    uint32_t name;
+    uint32_t mvid;
+    uint32_t encid;
+    uint32_t encBaseId;
+};
 
-    // 0
-    struct TbModule
-    {
-        uint16_t generation;
-        uint32_t name;
-        uint32_t mvid;
-        uint32_t encid;
-        uint32_t encBaseId;
-    };
+// 1
+struct TbTypeRef
+{
+    uint32_t resolutionScope;
+    uint32_t typeName;
+    uint32_t typeNamespace;
+};
 
-    // 1
-    struct TbTypeRef
-    {
-        uint32_t resolutionScope;
-        uint32_t typeName;
-        uint32_t typeNamespace;
-    };
+// 2
+struct TbTypeDef
+{
+    uint32_t flags;
+    uint32_t typeName;
+    uint32_t typeNamespace;
+    uint32_t extends;
+    uint32_t fieldList;
+    uint32_t methodList;
+};
 
-    // 2
-    struct TbTypeDef
-    {
-        uint32_t flags;
-        uint32_t typeName;
-        uint32_t typeNamespace;
-        uint32_t extends;
-        uint32_t fieldList;
-        uint32_t methodList;
-    };
+// 3 FIELDPTR
 
-    // 3 FIELDPTR
+struct TbFieldPtr
+{
+    uint32_t field;
+};
 
-    struct TbFieldPtr
-    {
-        uint32_t field;
-    };
+// 4
+struct TbField
+{
+    uint32_t flags;
+    uint32_t name;
+    uint32_t signature;
+};
 
-    // 4
-    struct TbField
-    {
-        uint32_t flags;
-        uint32_t name;
-        uint32_t signature;
-    };
+// 5 METHODPTR
 
-    // 5 METHODPTR
+struct TbMethodPtr
+{
+    uint32_t method;
+};
 
-    struct TbMethodPtr
-    {
-        uint32_t method;
-    };
-        
-    // 6
-    struct TbMethod
-    {
-        uint32_t rva;
-        uint16_t implFlags;
-        uint16_t flags;
-        uint32_t name;
-        uint32_t signature;
-        uint32_t paramList;
-    };
+// 6
+struct TbMethod
+{
+    uint32_t rva;
+    uint16_t implFlags;
+    uint16_t flags;
+    uint32_t name;
+    uint32_t signature;
+    uint32_t paramList;
+};
 
-    // 7 PARAMPTR
-    struct TbParamPtr
-    {
-        uint32_t param;
-    };
+// 7 PARAMPTR
+struct TbParamPtr
+{
+    uint32_t param;
+};
 
-    // 8
-    struct TbParam
-    {
-        uint16_t flags;
-        uint16_t sequence;
-        uint32_t name;
-    };
+// 8
+struct TbParam
+{
+    uint16_t flags;
+    uint16_t sequence;
+    uint32_t name;
+};
 
-    // 9
-    struct TbInterfaceImpl
-    {
-        uint32_t classIdx;
-        uint32_t interfaceIdx;
-    };
+// 9
+struct TbInterfaceImpl
+{
+    uint32_t classIdx;
+    uint32_t interfaceIdx;
+};
 
-    // 0xa
-    struct TbMemberRef
-    {
-        uint32_t classIdx;
-        uint32_t name;
-        uint32_t signature;
-    };
+// 0xa
+struct TbMemberRef
+{
+    uint32_t classIdx;
+    uint32_t name;
+    uint32_t signature;
+};
 
-    struct TbConstant
-    {
-        uint8_t type;
-        uint8_t padding;
-        uint32_t parent;
-        uint32_t value;
-    };
+struct TbConstant
+{
+    uint8_t type;
+    uint8_t padding;
+    uint32_t parent;
+    uint32_t value;
+};
 
-    struct TbCustomAttribute
-    {
-        uint32_t parent;
-        uint32_t type;
-        uint32_t value;
-    };
+struct TbCustomAttribute
+{
+    uint32_t parent;
+    uint32_t type;
+    uint32_t value;
+};
 
-    struct TbFieldMarshal
-    {
-        uint32_t parent;
-        uint32_t nativeType;
-    };
+struct TbFieldMarshal
+{
+    uint32_t parent;
+    uint32_t nativeType;
+};
 
-    struct TbDeclSecurity
-    {
-        uint16_t action;
-        uint32_t parent;
-        uint32_t permissionSet;
-    };
+struct TbDeclSecurity
+{
+    uint16_t action;
+    uint32_t parent;
+    uint32_t permissionSet;
+};
 
-    struct TbClassLayout
-    {
-        uint16_t packingSize;
-        uint32_t classSize;
-        uint32_t parent;
-    };
+struct TbClassLayout
+{
+    uint16_t packingSize;
+    uint32_t classSize;
+    uint32_t parent;
+};
 
-    // 0x10
-    struct TbFieldLayout
-    {
-        uint32_t offset;
-        uint32_t field;
-    };
+// 0x10
+struct TbFieldLayout
+{
+    uint32_t offset;
+    uint32_t field;
+};
 
-    struct TbStandAloneSig
-    {
-        uint32_t signature;
-    };
+struct TbStandAloneSig
+{
+    uint32_t signature;
+};
 
-    struct TbEventMap
-    {
-        uint32_t parent;
-        uint32_t eventList;
-    };
+struct TbEventMap
+{
+    uint32_t parent;
+    uint32_t eventList;
+};
 
-    // 0x13 EVENTPTR
-    struct TbEventPtr
-    {
-        uint32_t event;
-    };
+// 0x13 EVENTPTR
+struct TbEventPtr
+{
+    uint32_t event;
+};
 
-    // 0x14
-    struct TbEvent
-    {
-        uint16_t eventFlags;
-        uint32_t name;
-        uint32_t eventType;
-    };
+// 0x14
+struct TbEvent
+{
+    uint16_t eventFlags;
+    uint32_t name;
+    uint32_t eventType;
+};
 
-    struct TbPropertyMap
-    {
-        uint32_t parent;
-        uint32_t propertyList;
-    };
+struct TbPropertyMap
+{
+    uint32_t parent;
+    uint32_t propertyList;
+};
 
-    // PROPERTYPTR
-    struct TbPropertyPtr
-    {
-        uint32_t property;
-    };
+// PROPERTYPTR
+struct TbPropertyPtr
+{
+    uint32_t property;
+};
 
-    struct TbProperty
-    {
-        uint16_t flags;
-        uint32_t name;
-        uint32_t type;
-    };
+struct TbProperty
+{
+    uint16_t flags;
+    uint32_t name;
+    uint32_t type;
+};
 
-    struct TbMethodSemantics
-    {
-        uint16_t semantics;
-        uint32_t method;
-        uint32_t association;
-    };
+struct TbMethodSemantics
+{
+    uint16_t semantics;
+    uint32_t method;
+    uint32_t association;
+};
 
-    struct TbMethodImpl
-    {
-        uint32_t classIdx;
-        uint32_t methodBody;
-        uint32_t methodDeclaration;
-    };
+struct TbMethodImpl
+{
+    uint32_t classIdx;
+    uint32_t methodBody;
+    uint32_t methodDeclaration;
+};
 
-    struct TbModuleRef
-    {
-        uint32_t name;
-    };
+struct TbModuleRef
+{
+    uint32_t name;
+};
 
-    struct TbTypeSpec
-    {
-        uint32_t signature;
-    };
+struct TbTypeSpec
+{
+    uint32_t signature;
+};
 
-    struct TbImplMap
-    {
-        uint16_t mappingFlags;
-        uint32_t memberForwarded;
-        uint32_t importName;
-        uint32_t importScope;
-    };
+struct TbImplMap
+{
+    uint16_t mappingFlags;
+    uint32_t memberForwarded;
+    uint32_t importName;
+    uint32_t importScope;
+};
 
-    struct TbFieldRVA
-    {
-        uint32_t rva;
-        uint32_t field;
-    };
+struct TbFieldRVA
+{
+    uint32_t rva;
+    uint32_t field;
+};
 
-    struct TbEncLog
-    {
-        uint32_t token;
-        uint32_t funcCode;
-    };
+struct TbEncLog
+{
+    uint32_t token;
+    uint32_t funcCode;
+};
 
-    struct TbEncMap
-    {
-        uint32_t token;
-    };
+struct TbEncMap
+{
+    uint32_t token;
+};
 
-    struct TbAssembly
-    {
-        uint32_t hashAlgId;
-        uint16_t majorVersion;
-        uint16_t minorVersion;
-        uint16_t buildNumber;
-        uint16_t revisionNumber;
-        uint32_t flags;
-        uint32_t publicKey;
-        uint32_t name;
-        uint32_t locale;
-    };
+struct TbAssembly
+{
+    uint32_t hashAlgId;
+    uint16_t majorVersion;
+    uint16_t minorVersion;
+    uint16_t buildNumber;
+    uint16_t revisionNumber;
+    uint32_t flags;
+    uint32_t publicKey;
+    uint32_t name;
+    uint32_t locale;
+};
 
-    struct TbAssemblyProcessor
-    {
-        uint32_t processor;
-    };
+struct TbAssemblyProcessor
+{
+    uint32_t processor;
+};
 
-    struct TbAssemblyOS
-    {
-        uint32_t osPlatformId;
-        uint32_t osMajorVersion;
-        uint32_t osMinorVersion;
-    };
+struct TbAssemblyOS
+{
+    uint32_t osPlatformId;
+    uint32_t osMajorVersion;
+    uint32_t osMinorVersion;
+};
 
-    struct TbAssemblyRef
-    {
-        uint16_t majorVersion;
-        uint16_t minorVersion;
-        uint16_t buildNumber;
-        uint16_t revisionNumber;
-        uint32_t flags;
-        uint32_t publicKeyOrToken;
-        uint32_t name;
-        uint32_t locale;
-        uint32_t hashValue;
-    };
+struct TbAssemblyRef
+{
+    uint16_t majorVersion;
+    uint16_t minorVersion;
+    uint16_t buildNumber;
+    uint16_t revisionNumber;
+    uint32_t flags;
+    uint32_t publicKeyOrToken;
+    uint32_t name;
+    uint32_t locale;
+    uint32_t hashValue;
+};
 
-    struct TbAssemblyRefProcessor
-    {
-        uint32_t processor;
-        uint32_t assemblyRef;
-    };
+struct TbAssemblyRefProcessor
+{
+    uint32_t processor;
+    uint32_t assemblyRef;
+};
 
-    struct TbAssemblyRefOS
-    {
-        uint32_t osPlatformId;
-        uint32_t osMajorVersion;
-        uint32_t osMinorVersion;
-        uint32_t assemblyRef;
-    };
+struct TbAssemblyRefOS
+{
+    uint32_t osPlatformId;
+    uint32_t osMajorVersion;
+    uint32_t osMinorVersion;
+    uint32_t assemblyRef;
+};
 
-    struct TbFile
-    {
-        uint32_t flags;
-        uint32_t name;
-        uint32_t hashValue;
-    };
+struct TbFile
+{
+    uint32_t flags;
+    uint32_t name;
+    uint32_t hashValue;
+};
 
-    struct TbExportedType
-    {
-        uint32_t flags;
-        uint32_t typeDefId;
-        uint32_t typeName;
-        uint32_t typeNamespace;
-        uint32_t implementation;
-    };
+struct TbExportedType
+{
+    uint32_t flags;
+    uint32_t typeDefId;
+    uint32_t typeName;
+    uint32_t typeNamespace;
+    uint32_t implementation;
+};
 
-    struct TbManifestResource
-    {
-        uint32_t offset;
-        uint32_t flags;
-        uint32_t name;
-        uint32_t implementation;
-    };
+struct TbManifestResource
+{
+    uint32_t offset;
+    uint32_t flags;
+    uint32_t name;
+    uint32_t implementation;
+};
 
-    struct TbNestedClass
-    {
-        uint32_t nestedClass;
-        uint32_t enclosingClass;
-    };
+struct TbNestedClass
+{
+    uint32_t nestedClass;
+    uint32_t enclosingClass;
+};
 
-    struct TbGenericParam
-    {
-        uint16_t number;
-        uint16_t flags;
-        uint32_t owner;
-        uint32_t name;
-    };
+struct TbGenericParam
+{
+    uint16_t number;
+    uint16_t flags;
+    uint32_t owner;
+    uint32_t name;
+};
 
-    struct TbMethodSpec
-    {
-        uint32_t method;
-        uint32_t instantiation;
-    };
+struct TbMethodSpec
+{
+    uint32_t method;
+    uint32_t instantiation;
+};
 
-    struct TbGenericParamConstraint
-    {
-        uint32_t owner;
-        uint32_t constraint;
-    };
+struct TbGenericParamConstraint
+{
+    uint32_t owner;
+    uint32_t constraint;
+};
 
-    struct TbDocument
-    {
-        uint32_t name;
-        uint32_t hashAlgorithm;
-        uint32_t hash;
-        uint32_t language;
-    };
+struct TbDocument
+{
+    uint32_t name;
+    uint32_t hashAlgorithm;
+    uint32_t hash;
+    uint32_t language;
+};
 
-    struct TbMethodDebugInformation
-    {
-        uint32_t document;
-        uint32_t sequencePoints;
-    };
+struct TbMethodDebugInformation
+{
+    uint32_t document;
+    uint32_t sequencePoints;
+};
 
-    struct TbLocalScope
-    {
-        uint32_t method;
-        uint32_t importScope;
-        uint32_t variables;
-        uint32_t constants;
-        uint32_t startOffset;
-        uint32_t length;
-    };
+struct TbLocalScope
+{
+    uint32_t method;
+    uint32_t importScope;
+    uint32_t variables;
+    uint32_t constants;
+    uint32_t startOffset;
+    uint32_t length;
+};
 
-    struct TbLocalVariable
-    {
-        uint16_t attributes;
-        uint16_t index;
-        uint32_t name;
-    };
+struct TbLocalVariable
+{
+    uint16_t attributes;
+    uint16_t index;
+    uint32_t name;
+};
 
-    struct TbLocalConstant
-    {
-        uint32_t name;
-        uint32_t signature;
-    };
+struct TbLocalConstant
+{
+    uint32_t name;
+    uint32_t signature;
+};
 
-    struct TbImportScope
-    {
-        uint32_t parent;
-        uint32_t imports;
-    };
+struct TbImportScope
+{
+    uint32_t parent;
+    uint32_t imports;
+};
 
+struct TbStateMachineMethod
+{
+    uint32_t moveNextMethod;
+    uint32_t kickoffMethod;
+};
 
-    struct TbStateMachineMethod
-    {
-        uint32_t moveNextMethod;
-        uint32_t kickoffMethod;
-    };
+struct TbCustomDebugInformation
+{
+    uint32_t parent;
+    uint32_t kind;
+    uint32_t value;
+};
 
-    struct TbCustomDebugInformation
-    {
-        uint32_t parent;
-		uint32_t kind;
-		uint32_t value;
-	};
+} // namespace metadata
 
-}
-
-}
+} // namespace hybridclr

@@ -1,3 +1,23 @@
+// Copyright 2026 Code Philosophy
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #pragma once
 
 #include "../CommonDef.h"
@@ -12,412 +32,428 @@ namespace hybridclr
 {
 namespace metadata
 {
-	enum class LoadImageErrorCode
-	{
-		OK = 0,
-		BAD_IMAGE,
-		NOT_IMPLEMENT,
-		AOT_ASSEMBLY_NOT_FIND,
-		HOMOLOGOUS_ONLY_SUPPORT_AOT_ASSEMBLY,
-		HOMOLOGOUS_ASSEMBLY_HAS_BEEN_LOADED,
-		INVALID_HOMOLOGOUS_MODE,
-		PDB_BAD_FILE,
-		UNKNOWN_IMAGE_FORMAT,
-		UNSUPPORT_FORMAT_VERSION,
-		UNMATCH_FORMAT_VARIANT,
-	};
+enum class LoadImageErrorCode
+{
+    OK = 0,
+    BAD_IMAGE,
+    NOT_IMPLEMENT,
+    AOT_ASSEMBLY_NOT_FIND,
+    HOMOLOGOUS_ONLY_SUPPORT_AOT_ASSEMBLY,
+    HOMOLOGOUS_ASSEMBLY_HAS_BEEN_LOADED,
+    INVALID_HOMOLOGOUS_MODE,
+    PDB_BAD_FILE,
+    UNKNOWN_IMAGE_FORMAT,
+    UNSUPPORT_FORMAT_VERSION,
+    UNMATCH_FORMAT_VARIANT,
+};
 
-	class RawImageBase
-	{
-	public:
-		RawImageBase() : _imageData(nullptr), _imageLength(0), _ptrRawDataEnd(nullptr),
-			_streamStringHeap{}, _streamUS{}, _streamBlobHeap{}, _streamGuidHeap{}, _streamTables{},
-			_4byteStringIndex(false), _4byteGUIDIndex(false), _4byteBlobIndex(false)
-		{
+class RawImageBase
+{
+  public:
+    RawImageBase()
+        : _imageData(nullptr), _imageLength(0), _ptrRawDataEnd(nullptr), _streamStringHeap{}, _streamUS{}, _streamBlobHeap{}, _streamGuidHeap{},
+          _streamTables{}, _4byteStringIndex(false), _4byteGUIDIndex(false), _4byteBlobIndex(false)
+    {
+    }
 
-		}
+    virtual ~RawImageBase()
+    {
+        if (_imageData)
+        {
+            HYBRIDCLR_FREE((void*)_imageData);
+            _imageData = nullptr;
+        }
+    }
 
-		virtual ~RawImageBase()
-		{
-			if (_imageData)
-			{
-				HYBRIDCLR_FREE((void*)_imageData);
-				_imageData = nullptr;
-			}
-		}
-		virtual LoadImageErrorCode Load(const void* imageData, size_t length);
-		virtual LoadImageErrorCode PostLoadStreams() { return LoadImageErrorCode::OK; }
-		virtual LoadImageErrorCode PostLoadTables() { return LoadImageErrorCode::OK; }
+    virtual LoadImageErrorCode Load(const void* imageData, size_t length);
 
-		virtual Il2CppString* GetUserStringBlogByIndex(uint32_t index) const
-		{
-			IL2CPP_ASSERT(index >= 0 && (uint32_t)index < _streamUS.size);
-			const byte* str = _streamUS.data + index;
-			uint32_t lengthSize;
-			uint32_t stringLength = BlobReader::ReadCompressedUint32(str, lengthSize);
-			return CreateUserString((const char*)(str + lengthSize), stringLength);
-		}
+    virtual LoadImageErrorCode PostLoadStreams()
+    {
+        return LoadImageErrorCode::OK;
+    }
 
-		const char* GetStringFromRawIndex(StringIndex index) const
-		{
-			IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
-			IL2CPP_ASSERT(index >= 0 && (uint32_t)index < _streamStringHeap.size);
-			return (const char*)(_streamStringHeap.data + index);
-		}
+    virtual LoadImageErrorCode PostLoadTables()
+    {
+        return LoadImageErrorCode::OK;
+    }
 
-		const byte* GetBlobFromRawIndex(StringIndex index) const
-		{
-			IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
-			IL2CPP_ASSERT(index == 0 || (index > 0 && (size_t)index < _streamBlobHeap.size));
-			return _streamBlobHeap.data + index;
-		}
+    virtual Il2CppString* GetUserStringBlogByIndex(uint32_t index) const
+    {
+        IL2CPP_ASSERT(index >= 0 && (uint32_t)index < _streamUS.size);
+        const byte* str = _streamUS.data + index;
+        uint32_t lengthSize;
+        uint32_t stringLength = BlobReader::ReadCompressedUint32(str, lengthSize);
+        return CreateUserString((const char*)(str + lengthSize), stringLength);
+    }
 
-		const uint8_t* GetFieldOrParameterDefalutValueByRawIndex(uint32_t index) const
-		{
-			return _imageData + index;
-		}
+    const char* GetStringFromRawIndex(StringIndex index) const
+    {
+        IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
+        IL2CPP_ASSERT(index >= 0 && (uint32_t)index < _streamStringHeap.size);
+        return (const char*)(_streamStringHeap.data + index);
+    }
 
-		static BlobReader DecodeBlob(const byte* buf)
-		{
-			uint32_t sizeLength;
-			uint32_t length = BlobReader::ReadCompressedUint32(buf, sizeLength);
-			return BlobReader(buf + sizeLength, length);
-		}
+    const byte* GetBlobFromRawIndex(StringIndex index) const
+    {
+        IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
+        IL2CPP_ASSERT(index == 0 || (index > 0 && (size_t)index < _streamBlobHeap.size));
+        return _streamBlobHeap.data + index;
+    }
 
-		BlobReader GetBlobReaderByRawIndex(uint32_t rawIndex) const
-		{
-			IL2CPP_ASSERT(DecodeImageIndex(rawIndex) == 0);
-			const byte* buf = _streamBlobHeap.data + rawIndex;
-			return DecodeBlob(buf);
-		}
+    const uint8_t* GetFieldOrParameterDefalutValueByRawIndex(uint32_t index) const
+    {
+        return _imageData + index;
+    }
 
-		uint32_t GetImageOffsetOfBlob(Il2CppTypeEnum type, uint32_t index) const
-		{
-			if (type != IL2CPP_TYPE_STRING)
-			{
-				return (uint32_t)(GetBlobReaderByRawIndex(index).GetData() - _imageData);
-			}
-			else
-			{
-				return (uint32_t)(_streamBlobHeap.data + index - _imageData);
-			}
-		}
+    static BlobReader DecodeBlob(const byte* buf)
+    {
+        uint32_t sizeLength;
+        uint32_t length = BlobReader::ReadCompressedUint32(buf, sizeLength);
+        return BlobReader(buf + sizeLength, length);
+    }
 
-		const byte* GetDataPtrByImageOffset(uint32_t imageOffset) const
-		{
-			IL2CPP_ASSERT(imageOffset < _imageLength);
-			return _imageData + imageOffset;
-		}
+    BlobReader GetBlobReaderByRawIndex(uint32_t rawIndex) const
+    {
+        IL2CPP_ASSERT(DecodeImageIndex(rawIndex) == 0);
+        const byte* buf = _streamBlobHeap.data + rawIndex;
+        return DecodeBlob(buf);
+    }
 
+    uint32_t GetImageOffsetOfBlob(Il2CppTypeEnum type, uint32_t index) const
+    {
+        if (type != IL2CPP_TYPE_STRING)
+        {
+            return (uint32_t)(GetBlobReaderByRawIndex(index).GetData() - _imageData);
+        }
+        else
+        {
+            return (uint32_t)(_streamBlobHeap.data + index - _imageData);
+        }
+    }
 
-		uint32_t GetEntryPointToken() const
-		{
-			return _entryPointToken;
-		}
+    const byte* GetDataPtrByImageOffset(uint32_t imageOffset) const
+    {
+        IL2CPP_ASSERT(imageOffset < _imageLength);
+        return _imageData + imageOffset;
+    }
 
+    uint32_t GetEntryPointToken() const
+    {
+        return _entryPointToken;
+    }
 
-		const Table& GetTable(TableType type) const
-		{
-			return _tables[(int)type];
-		}
+    const Table& GetTable(TableType type) const
+    {
+        return _tables[(int)type];
+    }
 
-		uint32_t GetTableRowNum(TableType tableIndex) const
-		{
-			return _tables[(int)tableIndex].rowNum;
-		}
+    uint32_t GetTableRowNum(TableType tableIndex) const
+    {
+        return _tables[(int)tableIndex].rowNum;
+    }
 
-		bool TranslateRVAToImageOffset(uint32_t rvaOffset, uint32_t& imageOffset) const
-		{
-			for (const SectionHeader& sh : _sections)
-			{
-				if (sh.virtualAddressBegin <= rvaOffset && rvaOffset < sh.virtualAddressEnd)
-				{
-					imageOffset = sh.ptrRawDataRelatedToVirtualAddress + rvaOffset;
-					return true;
-				}
-			}
-			return false;
-		}
+    bool TranslateRVAToImageOffset(uint32_t rvaOffset, uint32_t& imageOffset) const
+    {
+        for (const SectionHeader& sh : _sections)
+        {
+            if (sh.virtualAddressBegin <= rvaOffset && rvaOffset < sh.virtualAddressEnd)
+            {
+                imageOffset = sh.ptrRawDataRelatedToVirtualAddress + rvaOffset;
+                return true;
+            }
+        }
+        return false;
+    }
 
-		virtual LoadImageErrorCode LoadStreamHeaders(uint32_t metadataRva, uint32_t metadataSize);
-		virtual LoadImageErrorCode ValidateStreams() const;
-		virtual LoadImageErrorCode LoadTables();
+    virtual LoadImageErrorCode LoadStreamHeaders(uint32_t metadataRva, uint32_t metadataSize);
+    virtual LoadImageErrorCode ValidateStreams() const;
+    virtual LoadImageErrorCode LoadTables();
 
-		virtual void BuildTableRowMetas();
+    virtual void BuildTableRowMetas();
 
-		uint32_t ComputTableRowMetaDataSize(TableType tableIndex) const;
+    uint32_t ComputTableRowMetaDataSize(TableType tableIndex) const;
 
-		uint32_t ComputStringIndexByte() const
-		{
-			return _4byteStringIndex ? 4 : 2;
-		}
+    uint32_t ComputStringIndexByte() const
+    {
+        return _4byteStringIndex ? 4 : 2;
+    }
 
-		uint32_t ComputGUIDIndexByte() const
-		{
-			return _4byteGUIDIndex ? 4 : 2;
-		}
+    uint32_t ComputGUIDIndexByte() const
+    {
+        return _4byteGUIDIndex ? 4 : 2;
+    }
 
-		uint32_t ComputBlobIndexByte() const
-		{
-			return _4byteBlobIndex ? 4 : 2;
-		}
+    uint32_t ComputBlobIndexByte() const
+    {
+        return _4byteBlobIndex ? 4 : 2;
+    }
 
-		uint32_t ComputTableIndexByte(TableType tableIndex) const
-		{
-			return _tables[(int)tableIndex].rowNum < 65536 ? 2 : 4;
-		}
+    uint32_t ComputTableIndexByte(TableType tableIndex) const
+    {
+        return _tables[(int)tableIndex].rowNum < 65536 ? 2 : 4;
+    }
 
-		uint32_t ComputIndexByte(uint32_t maxRowNum, uint32_t tagBitNum) const
-		{
-			return (maxRowNum << tagBitNum) < 65536 ? 2 : 4;
-		}
+    uint32_t ComputIndexByte(uint32_t maxRowNum, uint32_t tagBitNum) const
+    {
+        return (maxRowNum << tagBitNum) < 65536 ? 2 : 4;
+    }
 
-		uint32_t ComputTableIndexByte(TableType t1, TableType t2, uint32_t tagBitNum) const
-		{
-			uint32_t n = GetTableRowNum(t1);
-			n = std::max(n, GetTableRowNum(t2));
-			return ComputIndexByte(n, tagBitNum);
-		}
+    uint32_t ComputTableIndexByte(TableType t1, TableType t2, uint32_t tagBitNum) const
+    {
+        uint32_t n = GetTableRowNum(t1);
+        n = std::max(n, GetTableRowNum(t2));
+        return ComputIndexByte(n, tagBitNum);
+    }
 
-		uint32_t ComputTableIndexByte(TableType t1, TableType t2, TableType t3, uint32_t tagBitNum) const
-		{
-			uint32_t n = GetTableRowNum(t1);
-			n = std::max(n, GetTableRowNum(t2));
-			n = std::max(n, GetTableRowNum(t3));
-			return ComputIndexByte(n, tagBitNum);
-		}
+    uint32_t ComputTableIndexByte(TableType t1, TableType t2, TableType t3, uint32_t tagBitNum) const
+    {
+        uint32_t n = GetTableRowNum(t1);
+        n = std::max(n, GetTableRowNum(t2));
+        n = std::max(n, GetTableRowNum(t3));
+        return ComputIndexByte(n, tagBitNum);
+    }
 
-		uint32_t ComputTableIndexByte(TableType t1, TableType t2, TableType t3, TableType t4, uint32_t tagBitNum) const
-		{
-			uint32_t n = GetTableRowNum(t1);
-			n = std::max(n, GetTableRowNum(t2));
-			n = std::max(n, GetTableRowNum(t3));
-			n = std::max(n, GetTableRowNum(t4));
-			return ComputIndexByte(n, tagBitNum);
-		}
+    uint32_t ComputTableIndexByte(TableType t1, TableType t2, TableType t3, TableType t4, uint32_t tagBitNum) const
+    {
+        uint32_t n = GetTableRowNum(t1);
+        n = std::max(n, GetTableRowNum(t2));
+        n = std::max(n, GetTableRowNum(t3));
+        n = std::max(n, GetTableRowNum(t4));
+        return ComputIndexByte(n, tagBitNum);
+    }
 
-		uint32_t ComputTableIndexByte(TableType t1, TableType t2, TableType t3, TableType t4, TableType t5, uint32_t tagBitNum) const
-		{
-			uint32_t n = GetTableRowNum(t1);
-			n = std::max(n, GetTableRowNum(t2));
-			n = std::max(n, GetTableRowNum(t3));
-			n = std::max(n, GetTableRowNum(t4));
-			n = std::max(n, GetTableRowNum(t5));
-			return ComputIndexByte(n, tagBitNum);
-		}
+    uint32_t ComputTableIndexByte(TableType t1, TableType t2, TableType t3, TableType t4, TableType t5, uint32_t tagBitNum) const
+    {
+        uint32_t n = GetTableRowNum(t1);
+        n = std::max(n, GetTableRowNum(t2));
+        n = std::max(n, GetTableRowNum(t3));
+        n = std::max(n, GetTableRowNum(t4));
+        n = std::max(n, GetTableRowNum(t5));
+        return ComputIndexByte(n, tagBitNum);
+    }
 
-		uint32_t ComputTableIndexByte(const TableType* ts, int num, uint32_t tagBitNum) const
-		{
-			uint32_t n = 0;
-			for (int i = 0; i < num; i++)
-			{
-				n = std::max(n, GetTableRowNum(ts[i]));
-			}
-			return ComputIndexByte(n, tagBitNum);
-		}
+    uint32_t ComputTableIndexByte(const TableType* ts, int num, uint32_t tagBitNum) const
+    {
+        uint32_t n = 0;
+        for (int i = 0; i < num; i++)
+        {
+            n = std::max(n, GetTableRowNum(ts[i]));
+        }
+        return ComputIndexByte(n, tagBitNum);
+    }
 
-	protected:
-		virtual LoadImageErrorCode LoadCLIHeader(uint32_t& entryPointToken, uint32_t& metadataRva, uint32_t& metadataSize) = 0;
+  protected:
+    virtual LoadImageErrorCode LoadCLIHeader(uint32_t& entryPointToken, uint32_t& metadataRva, uint32_t& metadataSize) = 0;
 
-		const byte* GetTableRowPtr(TableType type, uint32_t rawIndex) const
-		{
-			auto& tb = _tables[(int)type];
-			IL2CPP_ASSERT(rawIndex > 0 && rawIndex <= tb.rowNum);
-			return tb.data + tb.rowMetaDataSize * (rawIndex - 1);
-		}
+    const byte* GetTableRowPtr(TableType type, uint32_t rawIndex) const
+    {
+        auto& tb = _tables[(int)type];
+        IL2CPP_ASSERT(rawIndex > 0 && rawIndex <= tb.rowNum);
+        return tb.data + tb.rowMetaDataSize * (rawIndex - 1);
+    }
 
-		const std::vector<ColumnOffsetSize>& GetRowSchema(TableType type) const
-		{
-			return _tableRowMetas[(int)type];
-		}
+    const std::vector<ColumnOffsetSize>& GetRowSchema(TableType type) const
+    {
+        return _tableRowMetas[(int)type];
+    }
 
-		uint32_t ReadColumn(const byte* rowPtr, const ColumnOffsetSize& columnMt) const
-		{
-			return ReadColumn(rowPtr, columnMt.offset, columnMt.size);
-		}
+    uint32_t ReadColumn(const byte* rowPtr, const ColumnOffsetSize& columnMt) const
+    {
+        return ReadColumn(rowPtr, columnMt.offset, columnMt.size);
+    }
 
-		uint32_t ReadColumn(const byte* data, uint32_t offset, uint32_t size) const
-		{
-			const byte* dataPtr = data + offset;
-			switch (size)
-			{
-			case 1: return *dataPtr;
-			case 2: return GetU2LittleEndian(dataPtr);
-			case 4: return GetU4LittleEndian(dataPtr);
-			default: IL2CPP_ASSERT(false); return 0;
-			}
-		}
+    uint32_t ReadColumn(const byte* data, uint32_t offset, uint32_t size) const
+    {
+        const byte* dataPtr = data + offset;
+        switch (size)
+        {
+        case 1:
+            return *dataPtr;
+        case 2:
+            return GetU2LittleEndian(dataPtr);
+        case 4:
+            return GetU4LittleEndian(dataPtr);
+        default:
+            IL2CPP_ASSERT(false);
+            return 0;
+        }
+    }
 
-		void ReadColumn(const byte* rowPtr, const ColumnOffsetSize& columnMt, uint8_t& value) const
-		{
-            IL2CPP_ASSERT(columnMt.size == 1);
-			const byte* dataPtr = rowPtr + columnMt.offset;
-			value = *dataPtr;
-		}
+    void ReadColumn(const byte* rowPtr, const ColumnOffsetSize& columnMt, uint8_t& value) const
+    {
+        IL2CPP_ASSERT(columnMt.size == 1);
+        const byte* dataPtr = rowPtr + columnMt.offset;
+        value = *dataPtr;
+    }
 
-		void ReadColumn(const byte* rowPtr, const ColumnOffsetSize& columnMt, uint32_t& value) const
-		{
-			IL2CPP_ASSERT(columnMt.size == 2 || columnMt.size == 4);
-			const byte* dataPtr = rowPtr + columnMt.offset;
-			value = columnMt.size == 2 ? GetU2LittleEndian(dataPtr) : GetU4LittleEndian(dataPtr);
-		}
+    void ReadColumn(const byte* rowPtr, const ColumnOffsetSize& columnMt, uint32_t& value) const
+    {
+        IL2CPP_ASSERT(columnMt.size == 2 || columnMt.size == 4);
+        const byte* dataPtr = rowPtr + columnMt.offset;
+        value = columnMt.size == 2 ? GetU2LittleEndian(dataPtr) : GetU4LittleEndian(dataPtr);
+    }
 
-		static Il2CppString* CreateUserString(const char* str, uint32_t length)
-		{
-			if (length == 0)
-			{
-				return il2cpp::vm::String::Empty();
-			}
-			else
-			{
-				IL2CPP_ASSERT(length % 2 == 1);
-				UserStringEncoding charEncoding = (UserStringEncoding)str[length - 1];
-				return il2cpp::vm::String::NewUtf16((const Il2CppChar*)str, (length - 1) / 2);
-			}
-		}
+    static Il2CppString* CreateUserString(const char* str, uint32_t length)
+    {
+        if (length == 0)
+        {
+            return il2cpp::vm::String::Empty();
+        }
+        else
+        {
+            IL2CPP_ASSERT(length % 2 == 1);
+            UserStringEncoding charEncoding = (UserStringEncoding)str[length - 1];
+            return il2cpp::vm::String::NewUtf16((const Il2CppChar*)str, (length - 1) / 2);
+        }
+    }
 
-	public:
-
-#define TABLE_BEGIN(name, tableType) virtual Tb##name Read##name(uint32_t rawIndex) \
-        { \
+  public:
+#define TABLE_BEGIN(name, tableType)                                           \
+    virtual Tb##name Read##name(uint32_t rawIndex)                             \
+    {                                                                          \
         IL2CPP_ASSERT(rawIndex > 0 && rawIndex <= GetTable(tableType).rowNum); \
-        const byte* rowPtr = GetTableRowPtr(tableType, rawIndex); \
-        auto& rowSchema = GetRowSchema(tableType); \
-        uint32_t __fieldIndex = 0; \
+        const byte* rowPtr = GetTableRowPtr(tableType, rawIndex);              \
+        auto& rowSchema = GetRowSchema(tableType);                             \
+        uint32_t __fieldIndex = 0;                                             \
         Tb##name __r = {};
 
-#define __F(fieldName) const ColumnOffsetSize& col_##fieldName = rowSchema[__fieldIndex++]; \
-        __r.fieldName = ReadColumn(rowPtr, col_##fieldName);
+#define __F(fieldName)                                                   \
+    const ColumnOffsetSize& col_##fieldName = rowSchema[__fieldIndex++]; \
+    __r.fieldName = ReadColumn(rowPtr, col_##fieldName);
 
-#define TABLE_END return __r; \
-        }
+#define TABLE_END \
+    return __r;   \
+    }
 
-#define TABLE1(name, tableType, f1) TABLE_BEGIN(name, tableType) \
-__F(f1) \
-TABLE_END
+#define TABLE1(name, tableType, f1) \
+    TABLE_BEGIN(name, tableType)    \
+    __F(f1)                         \
+    TABLE_END
 
-#define TABLE2(name, tableType, f1, f2) TABLE_BEGIN(name, tableType) \
-__F(f1) \
-__F(f2) \
-TABLE_END
+#define TABLE2(name, tableType, f1, f2) \
+    TABLE_BEGIN(name, tableType)        \
+    __F(f1)                             \
+    __F(f2)                             \
+    TABLE_END
 
-#define TABLE3(name, tableType, f1, f2, f3) TABLE_BEGIN(name, tableType) \
-__F(f1) \
-__F(f2) \
-__F(f3) \
-TABLE_END
+#define TABLE3(name, tableType, f1, f2, f3) \
+    TABLE_BEGIN(name, tableType)            \
+    __F(f1)                                 \
+    __F(f2)                                 \
+    __F(f3)                                 \
+    TABLE_END
 
-#define TABLE4(name, tableType, f1, f2, f3, f4) TABLE_BEGIN(name, tableType) \
-__F(f1) \
-__F(f2) \
-__F(f3) \
-__F(f4) \
-TABLE_END
+#define TABLE4(name, tableType, f1, f2, f3, f4) \
+    TABLE_BEGIN(name, tableType)                \
+    __F(f1)                                     \
+    __F(f2)                                     \
+    __F(f3)                                     \
+    __F(f4)                                     \
+    TABLE_END
 
-#define TABLE5(name, tableType, f1, f2, f3, f4, f5) TABLE_BEGIN(name, tableType) \
-__F(f1) \
-__F(f2) \
-__F(f3) \
-__F(f4) \
-__F(f5) \
-TABLE_END
+#define TABLE5(name, tableType, f1, f2, f3, f4, f5) \
+    TABLE_BEGIN(name, tableType)                    \
+    __F(f1)                                         \
+    __F(f2)                                         \
+    __F(f3)                                         \
+    __F(f4)                                         \
+    __F(f5)                                         \
+    TABLE_END
 
-#define TABLE6(name, tableType, f1, f2, f3, f4, f5, f6) TABLE_BEGIN(name, tableType) \
-__F(f1) \
-__F(f2) \
-__F(f3) \
-__F(f4) \
-__F(f5) \
-__F(f6) \
-TABLE_END
+#define TABLE6(name, tableType, f1, f2, f3, f4, f5, f6) \
+    TABLE_BEGIN(name, tableType)                        \
+    __F(f1)                                             \
+    __F(f2)                                             \
+    __F(f3)                                             \
+    __F(f4)                                             \
+    __F(f5)                                             \
+    __F(f6)                                             \
+    TABLE_END
 
-	TABLE5(Module, TableType::MODULE, generation, name, mvid, encid, encBaseId)
-	TABLE3(TypeRef, TableType::TYPEREF, resolutionScope, typeName, typeNamespace)
-	TABLE6(TypeDef, TableType::TYPEDEF, flags, typeName, typeNamespace, extends, fieldList, methodList)
-	TABLE1(TypeSpec, TableType::TYPESPEC, signature);
-	TABLE4(ImplMap, TableType::IMPLMAP, mappingFlags, memberForwarded, importName, importScope)
-	TABLE1(ModuleRef, TableType::MODULEREF, name)
-	TABLE3(Field, TableType::FIELD, flags, name, signature)
-	TABLE4(GenericParam, TableType::GENERICPARAM, number, flags, owner, name)
-	TABLE2(GenericParamConstraint, TableType::GENERICPARAMCONSTRAINT, owner, constraint)
-	TABLE3(MemberRef, TableType::MEMBERREF, classIdx, name, signature)
-	TABLE1(StandAloneSig, TableType::STANDALONESIG, signature)
-	TABLE3(MethodImpl, TableType::METHODIMPL, classIdx, methodBody, methodDeclaration)
-	TABLE2(FieldRVA, TableType::FIELDRVA, rva, field)
-	TABLE2(FieldLayout, TableType::FIELDLAYOUT, offset, field)
-	TABLE4(Constant, TableType::CONSTANT, type, padding, parent, value)
-	TABLE2(MethodSpec, TableType::METHODSPEC, method, instantiation)
-	TABLE3(CustomAttribute, TableType::CUSTOMATTRIBUTE, parent, type, value)
-	TABLE2(PropertyMap, TableType::PROPERTYMAP, parent, propertyList)
-	TABLE3(Property, TableType::PROPERTY, flags, name, type)
-	TABLE2(EventMap, TableType::EVENTMAP, parent, eventList)
-	TABLE3(Event, TableType::EVENT, eventFlags, name, eventType)
-	TABLE3(MethodSemantics, TableType::METHODSEMANTICS, semantics, method, association)
+    TABLE5(Module, TableType::MODULE, generation, name, mvid, encid, encBaseId)
+    TABLE3(TypeRef, TableType::TYPEREF, resolutionScope, typeName, typeNamespace)
+    TABLE6(TypeDef, TableType::TYPEDEF, flags, typeName, typeNamespace, extends, fieldList, methodList)
+    TABLE1(TypeSpec, TableType::TYPESPEC, signature);
+    TABLE4(ImplMap, TableType::IMPLMAP, mappingFlags, memberForwarded, importName, importScope)
+    TABLE1(ModuleRef, TableType::MODULEREF, name)
+    TABLE3(Field, TableType::FIELD, flags, name, signature)
+    TABLE4(GenericParam, TableType::GENERICPARAM, number, flags, owner, name)
+    TABLE2(GenericParamConstraint, TableType::GENERICPARAMCONSTRAINT, owner, constraint)
+    TABLE3(MemberRef, TableType::MEMBERREF, classIdx, name, signature)
+    TABLE1(StandAloneSig, TableType::STANDALONESIG, signature)
+    TABLE3(MethodImpl, TableType::METHODIMPL, classIdx, methodBody, methodDeclaration)
+    TABLE2(FieldRVA, TableType::FIELDRVA, rva, field)
+    TABLE2(FieldLayout, TableType::FIELDLAYOUT, offset, field)
+    TABLE4(Constant, TableType::CONSTANT, type, padding, parent, value)
+    TABLE2(MethodSpec, TableType::METHODSPEC, method, instantiation)
+    TABLE3(CustomAttribute, TableType::CUSTOMATTRIBUTE, parent, type, value)
+    TABLE2(PropertyMap, TableType::PROPERTYMAP, parent, propertyList)
+    TABLE3(Property, TableType::PROPERTY, flags, name, type)
+    TABLE2(EventMap, TableType::EVENTMAP, parent, eventList)
+    TABLE3(Event, TableType::EVENT, eventFlags, name, eventType)
+    TABLE3(MethodSemantics, TableType::METHODSEMANTICS, semantics, method, association)
 
-	TABLE2(NestedClass, TableType::NESTEDCLASS, nestedClass, enclosingClass)
-	TABLE6(Method, TableType::METHOD, rva, implFlags, flags, name, signature, paramList)
-	TABLE3(Param, TableType::PARAM, flags, sequence, name)
+    TABLE2(NestedClass, TableType::NESTEDCLASS, nestedClass, enclosingClass)
+    TABLE6(Method, TableType::METHOD, rva, implFlags, flags, name, signature, paramList)
+    TABLE3(Param, TableType::PARAM, flags, sequence, name)
 
-	TABLE3(ClassLayout, TableType::CLASSLAYOUT, packingSize, classSize, parent)
-	TABLE2(InterfaceImpl, TableType::INTERFACEIMPL, classIdx, interfaceIdx)
+    TABLE3(ClassLayout, TableType::CLASSLAYOUT, packingSize, classSize, parent)
+    TABLE2(InterfaceImpl, TableType::INTERFACEIMPL, classIdx, interfaceIdx)
 
-	TABLE_BEGIN(Assembly, TableType::ASSEMBLY)
-	__F(hashAlgId)
-	__F(majorVersion)
-	__F(minorVersion)
-	__F(buildNumber)
-	__F(revisionNumber)
-	__F(flags)
-	__F(publicKey)
-	__F(name)
-	__F(locale)
-	TABLE_END
+    TABLE_BEGIN(Assembly, TableType::ASSEMBLY)
+    __F(hashAlgId)
+    __F(majorVersion)
+    __F(minorVersion)
+    __F(buildNumber)
+    __F(revisionNumber)
+    __F(flags)
+    __F(publicKey)
+    __F(name)
+    __F(locale)
+    TABLE_END
 
+    TABLE_BEGIN(AssemblyRef, TableType::ASSEMBLYREF)
+    __F(majorVersion)
+    __F(minorVersion)
+    __F(buildNumber)
+    __F(revisionNumber)
+    __F(flags)
+    __F(publicKeyOrToken)
+    __F(name)
+    __F(locale)
+    __F(hashValue)
+    TABLE_END
 
-	TABLE_BEGIN(AssemblyRef, TableType::ASSEMBLYREF)
-	__F(majorVersion)
-	__F(minorVersion)
-	__F(buildNumber)
-	__F(revisionNumber)
-	__F(flags)
-	__F(publicKeyOrToken)
-	__F(name)
-	__F(locale)
-	__F(hashValue)
-	TABLE_END
+    TABLE4(Document, TableType::DOCUMENT, name, hashAlgorithm, hash, language)
+    TABLE2(MethodDebugInformation, TableType::METHODDEBUGINFORMATION, document, sequencePoints)
+    TABLE6(LocalScope, TableType::LOCALSCOPE, method, importScope, variables, constants, startOffset, length)
+    TABLE3(LocalVariable, TableType::LOCALVARIABLE, attributes, index, name)
+    TABLE2(LocalConstant, TableType::LOCALCONSTANT, name, signature)
+    TABLE2(ImportScope, TableType::IMPORTSCOPE, parent, imports)
+    TABLE2(StateMachineMethod, TableType::STATEMACHINEMETHOD, moveNextMethod, kickoffMethod)
+    TABLE3(CustomDebugInformation, TableType::CUSTOMDEBUGINFORMATION, parent, kind, value)
 
-	TABLE4(Document, TableType::DOCUMENT, name, hashAlgorithm, hash, language)
-	TABLE2(MethodDebugInformation, TableType::METHODDEBUGINFORMATION, document, sequencePoints)
-	TABLE6(LocalScope, TableType::LOCALSCOPE, method, importScope, variables, constants, startOffset, length)
-	TABLE3(LocalVariable, TableType::LOCALVARIABLE, attributes, index, name)
-	TABLE2(LocalConstant, TableType::LOCALCONSTANT, name, signature)
-	TABLE2(ImportScope, TableType::IMPORTSCOPE, parent, imports)
-	TABLE2(StateMachineMethod, TableType::STATEMACHINEMETHOD, moveNextMethod, kickoffMethod)
-	TABLE3(CustomDebugInformation, TableType::CUSTOMDEBUGINFORMATION, parent, kind, value)
+  protected:
+    const byte* _imageData;
+    uint32_t _imageLength;
+    const byte* _ptrRawDataEnd;
 
+    std::vector<SectionHeader> _sections;
 
-	protected:
-		const byte* _imageData;
-		uint32_t _imageLength;
-		const byte* _ptrRawDataEnd;
+    uint32_t _entryPointToken;
 
-		std::vector<SectionHeader> _sections;
+    CliStream _streamStringHeap;
+    CliStream _streamUS;
+    CliStream _streamBlobHeap;
+    CliStream _streamGuidHeap;
+    CliStream _streamTables;
 
+    bool _4byteStringIndex;
+    bool _4byteGUIDIndex;
+    bool _4byteBlobIndex;
 
-		uint32_t _entryPointToken;
-
-		CliStream _streamStringHeap;
-		CliStream _streamUS;
-		CliStream _streamBlobHeap;
-		CliStream _streamGuidHeap;
-		CliStream _streamTables;
-
-		bool _4byteStringIndex;
-		bool _4byteGUIDIndex;
-		bool _4byteBlobIndex;
-
-		Table _tables[TABLE_NUM];
-		std::vector<ColumnOffsetSize> _tableRowMetas[TABLE_NUM];
-	};
-}
-}
+    Table _tables[TABLE_NUM];
+    std::vector<ColumnOffsetSize> _tableRowMetas[TABLE_NUM];
+};
+} // namespace metadata
+} // namespace hybridclr
