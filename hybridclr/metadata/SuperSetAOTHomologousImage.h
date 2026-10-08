@@ -1,3 +1,23 @@
+// Copyright 2026 Code Philosophy
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #pragma once
 
 #include "AOTHomologousImage.h"
@@ -6,92 +26,94 @@
 
 namespace hybridclr
 {
-	namespace metadata
-	{
+namespace metadata
+{
 
-		struct SuperSetTypeIntermediateInfo
-		{
-			bool inited;
-			//uint32_t homoRowIndex;
-			uint32_t homoParentRowIndex;
-			uint32_t homoMethodStartIndex; // start from 1
-			uint32_t homoFieldStartIndex; // start from 1
-			//const char* name;
-			//const char* namespaze;
-			//int32_t aotTypeIndex; // il2cpp type index
-			const Il2CppType* aotIl2CppType;
-			const Il2CppTypeDefinition* aotTypeDef;
-			//const Il2CppClass* aotKlass;
-		};
+struct SuperSetTypeIntermediateInfo
+{
+    bool inited;
+    // uint32_t homoRowIndex;
+    uint32_t homoParentRowIndex;
+    uint32_t homoMethodStartIndex; // start from 1
+    uint32_t homoFieldStartIndex;  // start from 1
+    // const char* name;
+    // const char* namespaze;
+    // int32_t aotTypeIndex; // il2cpp type index
+    const Il2CppType* aotIl2CppType;
+    const Il2CppTypeDefinition* aotTypeDef;
+    // const Il2CppClass* aotKlass;
+};
 
-		struct SuperSetTypeDefDetail
-		{
-			//bool inited;
-			//uint32_t homoRowIndex;
-			//uint32_t homoParentRowIndex;
-			//uint32_t homoMethodStartIndex; // start from 1
-			//uint32_t homoFieldStartIndex; // start from 1
-			//const char* name;
-			//const char* namespaze;
-			//int32_t aotTypeIndex; // il2cpp type index
-			const Il2CppType* aotIl2CppType;
-			//const Il2CppTypeDefinition* aotTypeDef;
-			//const Il2CppClass* aotKlass;
-		};
+struct SuperSetTypeDefDetail
+{
+    // bool inited;
+    // uint32_t homoRowIndex;
+    // uint32_t homoParentRowIndex;
+    // uint32_t homoMethodStartIndex; // start from 1
+    // uint32_t homoFieldStartIndex; // start from 1
+    // const char* name;
+    // const char* namespaze;
+    // int32_t aotTypeIndex; // il2cpp type index
+    const Il2CppType* aotIl2CppType;
+    // const Il2CppTypeDefinition* aotTypeDef;
+    // const Il2CppClass* aotKlass;
+};
 
-		struct SuperSetMethodDefDetail
-		{
-			//uint32_t homoRowIndex; 
-			//MethodRefSig signature;
-			//const Il2CppTypeDefinition* declaringTypeDef;
-			//const Il2CppClass* declaringKlass;
-			//const char* name;
-			const Il2CppMethodDefinition* aotMethodDef;
-		};
+struct SuperSetMethodDefDetail
+{
+    // uint32_t homoRowIndex;
+    // MethodRefSig signature;
+    // const Il2CppTypeDefinition* declaringTypeDef;
+    // const Il2CppClass* declaringKlass;
+    // const char* name;
+    const Il2CppMethodDefinition* aotMethodDef;
+};
 
-		struct SuperSetFieldDefDetail
-		{
-			//uint32_t homoRowIndex;
-			//const char* name;
-			//Il2CppType type;
-			//const Il2CppTypeDefinition* declaringTypeDef;
-			const Il2CppType* declaringIl2CppType;
-			const Il2CppFieldDefinition* aotFieldDef;
-		};
+struct SuperSetFieldDefDetail
+{
+    // uint32_t homoRowIndex;
+    // const char* name;
+    // Il2CppType type;
+    // const Il2CppTypeDefinition* declaringTypeDef;
+    const Il2CppType* declaringIl2CppType;
+    const Il2CppFieldDefinition* aotFieldDef;
+};
 
-		class SuperSetAOTHomologousImage : public AOTHomologousImage
-		{
-		public:
-			SuperSetAOTHomologousImage() : AOTHomologousImage() {}
+class SuperSetAOTHomologousImage : public AOTHomologousImage
+{
+  public:
+    SuperSetAOTHomologousImage() : AOTHomologousImage()
+    {
+    }
 
-			void InitRuntimeMetadatas() override;
+    void InitRuntimeMetadatas() override;
 
-			const Il2CppType* ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName) override;
-			MethodBody* GetMethodBody(uint32_t token) override;
-			const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
-			Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
-			Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;
-			const Il2CppMethodDefinition* GetMethodDefinitionFromRawIndex(uint32_t index) override;
-			void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
-		private:
+    const Il2CppType* ReadTypeFromResolutionScope(uint32_t scope, uint32_t typeNamespace, uint32_t typeName) override;
+    MethodBody* GetMethodBody(uint32_t token) override;
+    const Il2CppType* GetIl2CppTypeFromRawTypeDefIndex(uint32_t index) override;
+    Il2CppGenericContainer* GetGenericContainerByRawIndex(uint32_t index) override;
+    Il2CppGenericContainer* GetGenericContainerByTypeDefRawIndex(int32_t typeDefIndex) override;
+    const Il2CppMethodDefinition* GetMethodDefinitionFromRawIndex(uint32_t index) override;
+    void ReadFieldRefInfoFromFieldDefToken(uint32_t rowIndex, FieldRefInfo& ret) override;
 
-			void InitTypes0(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
-			void InitNestedClass(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
-			void InitType(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos, SuperSetTypeIntermediateInfo& type);
-			void InitTypes1(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
-			void ReadMethodDefSig(BlobReader& reader, MethodRefSig& method);
-			void InitMethods(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
-			void InitFields(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
+  private:
+    void InitTypes0(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
+    void InitNestedClass(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
+    void InitType(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos, SuperSetTypeIntermediateInfo& type);
+    void InitTypes1(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
+    void ReadMethodDefSig(BlobReader& reader, MethodRefSig& method);
+    void InitMethods(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
+    void InitFields(std::vector<SuperSetTypeIntermediateInfo>& typeIntermediateInfos);
 
-			const Il2CppType* _defaultIl2CppType;
+    const Il2CppType* _defaultIl2CppType;
 
-			std::vector<SuperSetTypeDefDetail> _typeDefs;
-			Il2CppHashMap<int32_t, SuperSetTypeDefDetail*, il2cpp::utils::PassThroughHash<int32_t>> _aotTypeIndex2TypeDefs;
+    std::vector<SuperSetTypeDefDetail> _typeDefs;
+    Il2CppHashMap<int32_t, SuperSetTypeDefDetail*, il2cpp::utils::PassThroughHash<int32_t>> _aotTypeIndex2TypeDefs;
 
-			Il2CppHashMap<uint32_t, SuperSetMethodDefDetail*, il2cpp::utils::PassThroughHash<uint32_t>> _token2MethodDefs;
-			std::vector<SuperSetMethodDefDetail> _methodDefs;
+    Il2CppHashMap<uint32_t, SuperSetMethodDefDetail*, il2cpp::utils::PassThroughHash<uint32_t>> _token2MethodDefs;
+    std::vector<SuperSetMethodDefDetail> _methodDefs;
 
-			std::vector<SuperSetFieldDefDetail> _fields;
-		};
-	}
-}
+    std::vector<SuperSetFieldDefDetail> _fields;
+};
+} // namespace metadata
+} // namespace hybridclr

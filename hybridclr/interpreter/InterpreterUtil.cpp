@@ -1,3 +1,23 @@
+// Copyright 2026 Code Philosophy
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #include "InterpreterUtil.h"
 
 #include "vm/Object.h"
@@ -8,98 +28,98 @@ namespace hybridclr
 {
 namespace interpreter
 {
-	TypeDesc GetValueTypeArgDescBySize(uint32_t size)
-	{
-		if (size <= 8)
-		{
-			return { LocationDataType::U8, 1 };
-		}
-		return { LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size) };
-	}
-
-	TypeDesc GetTypeArgDesc(const Il2CppType* type)
-	{
-		if (type->byref)
-		{
-			return { LocationDataType::U8, 1 };
-		}
-		switch (type->type)
-		{
-		case IL2CPP_TYPE_BOOLEAN:
-		case IL2CPP_TYPE_U1:
-			return{ LocationDataType::U1, 1 };
-		case IL2CPP_TYPE_I1:
-			return{ LocationDataType::I1, 1 };
-		case IL2CPP_TYPE_I2:
-			return{ LocationDataType::I2, 1 };
-		case IL2CPP_TYPE_CHAR:
-		case IL2CPP_TYPE_U2:
-			return{ LocationDataType::U2, 1 };
-		case IL2CPP_TYPE_I4:
-		case IL2CPP_TYPE_U4:
-		case IL2CPP_TYPE_R4:
-		case IL2CPP_TYPE_I8:
-		case IL2CPP_TYPE_U8:
-		case IL2CPP_TYPE_R8:
-		case IL2CPP_TYPE_I:
-		case IL2CPP_TYPE_U:
-		case IL2CPP_TYPE_FNPTR:
-		case IL2CPP_TYPE_PTR:
-		case IL2CPP_TYPE_BYREF:
-		case IL2CPP_TYPE_STRING:
-		case IL2CPP_TYPE_ARRAY:
-		case IL2CPP_TYPE_SZARRAY:
-		case IL2CPP_TYPE_OBJECT:
-		case IL2CPP_TYPE_CLASS:
-			return{ LocationDataType::U8, 1 };
-		case IL2CPP_TYPE_TYPEDBYREF:
-			return GetValueTypeArgDescBySize(sizeof(Il2CppTypedRef));
-		case IL2CPP_TYPE_VALUETYPE:
-		{
-			Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-			IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-			if (klass->enumtype)
-			{
-				return GetTypeArgDesc(&klass->castClass->byval_arg);
-			}
-			return GetValueTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
-		}
-		case IL2CPP_TYPE_GENERICINST:
-		{
-			Il2CppGenericClass* genericClass = type->data.generic_class;
-			if (genericClass->type->type == IL2CPP_TYPE_CLASS)
-			{
-				IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
-				return{ LocationDataType::U8, 1 };
-			}
-			else
-			{
-				Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-				IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
-				if (klass->enumtype)
-				{
-					return GetTypeArgDesc(&klass->castClass->byval_arg);
-				}
-				return GetValueTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
-			}
-		}
-		default:
-		{
-			RaiseExecutionEngineException("not support arg type");
-			return{ LocationDataType::U8, 1 };
-		}
-		}
-	}
-
-	Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value)
-	{
-		if (type->byref)
-		{
-			RaiseExecutionEngineException("TranslateNativeValueToBoxValue can't box ref");
-			return nullptr;
-		}
-		Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
-		return il2cpp::vm::Object::Box(klass, value);
-	}
+TypeDesc GetValueTypeArgDescBySize(uint32_t size)
+{
+    if (size <= 8)
+    {
+        return {LocationDataType::U8, 1};
+    }
+    return {LocationDataType::S_N, (uint32_t)metadata::GetStackSizeByByteSize(size)};
 }
+
+TypeDesc GetTypeArgDesc(const Il2CppType* type)
+{
+    if (type->byref)
+    {
+        return {LocationDataType::U8, 1};
+    }
+    switch (type->type)
+    {
+    case IL2CPP_TYPE_BOOLEAN:
+    case IL2CPP_TYPE_U1:
+        return {LocationDataType::U1, 1};
+    case IL2CPP_TYPE_I1:
+        return {LocationDataType::I1, 1};
+    case IL2CPP_TYPE_I2:
+        return {LocationDataType::I2, 1};
+    case IL2CPP_TYPE_CHAR:
+    case IL2CPP_TYPE_U2:
+        return {LocationDataType::U2, 1};
+    case IL2CPP_TYPE_I4:
+    case IL2CPP_TYPE_U4:
+    case IL2CPP_TYPE_R4:
+    case IL2CPP_TYPE_I8:
+    case IL2CPP_TYPE_U8:
+    case IL2CPP_TYPE_R8:
+    case IL2CPP_TYPE_I:
+    case IL2CPP_TYPE_U:
+    case IL2CPP_TYPE_FNPTR:
+    case IL2CPP_TYPE_PTR:
+    case IL2CPP_TYPE_BYREF:
+    case IL2CPP_TYPE_STRING:
+    case IL2CPP_TYPE_ARRAY:
+    case IL2CPP_TYPE_SZARRAY:
+    case IL2CPP_TYPE_OBJECT:
+    case IL2CPP_TYPE_CLASS:
+        return {LocationDataType::U8, 1};
+    case IL2CPP_TYPE_TYPEDBYREF:
+        return GetValueTypeArgDescBySize(sizeof(Il2CppTypedRef));
+    case IL2CPP_TYPE_VALUETYPE:
+    {
+        Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+        IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+        if (klass->enumtype)
+        {
+            return GetTypeArgDesc(&klass->castClass->byval_arg);
+        }
+        return GetValueTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
+    }
+    case IL2CPP_TYPE_GENERICINST:
+    {
+        Il2CppGenericClass* genericClass = type->data.generic_class;
+        if (genericClass->type->type == IL2CPP_TYPE_CLASS)
+        {
+            IL2CPP_ASSERT(!IS_CLASS_VALUE_TYPE(il2cpp::vm::Class::FromIl2CppType(type)));
+            return {LocationDataType::U8, 1};
+        }
+        else
+        {
+            Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+            IL2CPP_ASSERT(IS_CLASS_VALUE_TYPE(klass));
+            if (klass->enumtype)
+            {
+                return GetTypeArgDesc(&klass->castClass->byval_arg);
+            }
+            return GetValueTypeArgDescBySize(il2cpp::vm::Class::GetValueSize(klass, nullptr));
+        }
+    }
+    default:
+    {
+        RaiseExecutionEngineException("not support arg type");
+        return {LocationDataType::U8, 1};
+    }
+    }
 }
+
+Il2CppObject* TranslateNativeValueToBoxValue(const Il2CppType* type, void* value)
+{
+    if (type->byref)
+    {
+        RaiseExecutionEngineException("TranslateNativeValueToBoxValue can't box ref");
+        return nullptr;
+    }
+    Il2CppClass* klass = il2cpp::vm::Class::FromIl2CppType(type);
+    return il2cpp::vm::Object::Box(klass, value);
+}
+} // namespace interpreter
+} // namespace hybridclr

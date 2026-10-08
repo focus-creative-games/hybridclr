@@ -1,3 +1,23 @@
+// Copyright 2026 Code Philosophy
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 #pragma once
 
 #include <stack>
@@ -21,338 +41,338 @@ namespace hybridclr
 namespace interpreter
 {
 
-	class MachineState
-	{
-	public:
-		MachineState()
-		{
-			_stackSize = -1;
-			_stackBase = nullptr;
-			_stackTopIdx = 0;
-			_localPoolBottomIdx = -1;
+class MachineState
+{
+  public:
+    MachineState()
+    {
+        _stackSize = -1;
+        _stackBase = nullptr;
+        _stackTopIdx = 0;
+        _localPoolBottomIdx = -1;
 
-			_frameBase = nullptr;
-			_frameCount = -1;
-			_frameTopIdx = 0;
+        _frameBase = nullptr;
+        _frameCount = -1;
+        _frameTopIdx = 0;
 
-			_exceptionFlowBase = nullptr;
-			_exceptionFlowCount = -1;
-			_exceptionFlowTopIdx = 0;
-		}
+        _exceptionFlowBase = nullptr;
+        _exceptionFlowCount = -1;
+        _exceptionFlowTopIdx = 0;
+    }
 
-		~MachineState()
-		{
-			if (_stackBase)
-			{
-				//il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
-				il2cpp::gc::GarbageCollector::UnregisterDynamicRoot(this);
-				HYBRIDCLR_FREE(_stackBase);
-			}
-			if (_frameBase)
-			{
-				HYBRIDCLR_FREE(_frameBase);
-			}
-			if (_exceptionFlowBase)
-			{
-				HYBRIDCLR_FREE(_exceptionFlowBase);
-			}
-		}
+    ~MachineState()
+    {
+        if (_stackBase)
+        {
+            // il2cpp::gc::GarbageCollector::FreeFixed(_stackBase);
+            il2cpp::gc::GarbageCollector::UnregisterDynamicRoot(this);
+            HYBRIDCLR_FREE(_stackBase);
+        }
+        if (_frameBase)
+        {
+            HYBRIDCLR_FREE(_frameBase);
+        }
+        if (_exceptionFlowBase)
+        {
+            HYBRIDCLR_FREE(_exceptionFlowBase);
+        }
+    }
 
-		static std::pair<char*, size_t> GetGCRootData(void* root)
-		{
-			MachineState* machineState = (MachineState*)root;
-			if (machineState->_stackBase && machineState->_stackTopIdx > 0)
-			{
-				return std::make_pair((char*)machineState->_stackBase, machineState->_stackTopIdx * sizeof(StackObject));
-			}
-			else
-			{
-				return std::make_pair(nullptr, 0);
-			}
-		}
+    static std::pair<char*, size_t> GetGCRootData(void* root)
+    {
+        MachineState* machineState = (MachineState*)root;
+        if (machineState->_stackBase && machineState->_stackTopIdx > 0)
+        {
+            return std::make_pair((char*)machineState->_stackBase, machineState->_stackTopIdx * sizeof(StackObject));
+        }
+        else
+        {
+            return std::make_pair(nullptr, 0);
+        }
+    }
 
-		StackObject* AllocArgments(int32_t argCount)
-		{
-			return AllocStackSlot(argCount);
-		}
+    StackObject* AllocArgments(int32_t argCount)
+    {
+        return AllocStackSlot(argCount);
+    }
 
-		StackObject* GetStackBasePtr() const
-		{
-			return _stackBase;
-		}
+    StackObject* GetStackBasePtr() const
+    {
+        return _stackBase;
+    }
 
-		int32_t GetStackTop() const
-		{
-			return _stackTopIdx;
-		}
+    int32_t GetStackTop() const
+    {
+        return _stackTopIdx;
+    }
 
-		StackObject* AllocStackSlot(int32_t slotNum)
-		{
-			if (_stackTopIdx + slotNum > _localPoolBottomIdx)
-			{
-				if (!_stackBase)
-				{
-					InitEvalStack();
-				}
-				if (_stackTopIdx + slotNum > _localPoolBottomIdx)
-				{
-					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocStackSlot"));
-				}
-			}
-			StackObject* dataPtr = _stackBase + _stackTopIdx;
-			_stackTopIdx += slotNum;
+    StackObject* AllocStackSlot(int32_t slotNum)
+    {
+        if (_stackTopIdx + slotNum > _localPoolBottomIdx)
+        {
+            if (!_stackBase)
+            {
+                InitEvalStack();
+            }
+            if (_stackTopIdx + slotNum > _localPoolBottomIdx)
+            {
+                il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocStackSlot"));
+            }
+        }
+        StackObject* dataPtr = _stackBase + _stackTopIdx;
+        _stackTopIdx += slotNum;
 #if DEBUG
-			std::memset(dataPtr, 0xEA, slotNum * sizeof(StackObject));
+        std::memset(dataPtr, 0xEA, slotNum * sizeof(StackObject));
 #endif
-			return dataPtr;
-		}
+        return dataPtr;
+    }
 
-		void* AllocLocalloc(size_t size)
-		{
-			IL2CPP_ASSERT(size % 8 == 0);
-			int32_t slotNum = (int32_t)(size / 8);
-			IL2CPP_ASSERT(slotNum > 0);
-			if (_stackTopIdx + slotNum > _localPoolBottomIdx)
-			{
-				if (!_stackBase)
-				{
-					InitEvalStack();
-				}
-				if (_stackTopIdx + slotNum > _localPoolBottomIdx)
-				{
-					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocLocalloc"));
-				}
-			}
-			_localPoolBottomIdx -= slotNum;
-			return _stackBase + _localPoolBottomIdx;
-		}
+    void* AllocLocalloc(size_t size)
+    {
+        IL2CPP_ASSERT(size % 8 == 0);
+        int32_t slotNum = (int32_t)(size / 8);
+        IL2CPP_ASSERT(slotNum > 0);
+        if (_stackTopIdx + slotNum > _localPoolBottomIdx)
+        {
+            if (!_stackBase)
+            {
+                InitEvalStack();
+            }
+            if (_stackTopIdx + slotNum > _localPoolBottomIdx)
+            {
+                il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocLocalloc"));
+            }
+        }
+        _localPoolBottomIdx -= slotNum;
+        return _stackBase + _localPoolBottomIdx;
+    }
 
-		void SetStackTop(int32_t oldTop)
-		{
-			_stackTopIdx = oldTop;
-		}
+    void SetStackTop(int32_t oldTop)
+    {
+        _stackTopIdx = oldTop;
+    }
 
-		uint32_t GetFrameTopIdx() const
-		{
-			return _frameTopIdx;
-		}
+    uint32_t GetFrameTopIdx() const
+    {
+        return _frameTopIdx;
+    }
 
-		int32_t GetLocalPoolBottomIdx() const
-		{
-			return _localPoolBottomIdx;
-		}
+    int32_t GetLocalPoolBottomIdx() const
+    {
+        return _localPoolBottomIdx;
+    }
 
-		void SetLocalPoolBottomIdx(int32_t idx)
-		{
-			_localPoolBottomIdx = idx;
-		}
+    void SetLocalPoolBottomIdx(int32_t idx)
+    {
+        _localPoolBottomIdx = idx;
+    }
 
-		InterpFrame* PushFrame()
-		{
-			if (_frameTopIdx >= _frameCount)
-			{
-				if (!_frameBase)
-				{
-					InitFrames();
-				}
-				else
-				{
-					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocFrame"));
-				}
-			}
-			return _frameBase + _frameTopIdx++;
-		}
+    InterpFrame* PushFrame()
+    {
+        if (_frameTopIdx >= _frameCount)
+        {
+            if (!_frameBase)
+            {
+                InitFrames();
+            }
+            else
+            {
+                il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetStackOverflowException("AllocFrame"));
+            }
+        }
+        return _frameBase + _frameTopIdx++;
+    }
 
-		void PopFrame()
-		{
-			IL2CPP_ASSERT(_frameTopIdx > 0);
-			--_frameTopIdx;
-		}
+    void PopFrame()
+    {
+        IL2CPP_ASSERT(_frameTopIdx > 0);
+        --_frameTopIdx;
+    }
 
-		void PopFrameN(int32_t count)
-		{
-			IL2CPP_ASSERT(count > 0 && _frameTopIdx >= count);
-			_frameTopIdx -= count;
-		}
+    void PopFrameN(int32_t count)
+    {
+        IL2CPP_ASSERT(count > 0 && _frameTopIdx >= count);
+        _frameTopIdx -= count;
+    }
 
-		InterpFrame* GetTopFrame() const
-		{
-			if (_frameTopIdx > 0)
-			{
-				return _frameBase + _frameTopIdx - 1;
-			}
-			else
-			{
-				return nullptr;
-			}
-		}
+    InterpFrame* GetTopFrame() const
+    {
+        if (_frameTopIdx > 0)
+        {
+            return _frameBase + _frameTopIdx - 1;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
 
-		ExceptionFlowInfo* AllocExceptionFlow(int32_t count)
-		{
-			if (_exceptionFlowTopIdx + count >= _exceptionFlowCount)
-			{
-				if (!_exceptionFlowBase)
-				{
-					InitExceptionFlows();
-				}
-				if (_exceptionFlowTopIdx + count >= _exceptionFlowCount)
-				{
-					il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("AllocExceptionFlowZero"));
-				}
-			}
-			ExceptionFlowInfo* efi = _exceptionFlowBase + _exceptionFlowTopIdx;
-			_exceptionFlowTopIdx += count;
-			return efi;
-		}
+    ExceptionFlowInfo* AllocExceptionFlow(int32_t count)
+    {
+        if (_exceptionFlowTopIdx + count >= _exceptionFlowCount)
+        {
+            if (!_exceptionFlowBase)
+            {
+                InitExceptionFlows();
+            }
+            if (_exceptionFlowTopIdx + count >= _exceptionFlowCount)
+            {
+                il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetExecutionEngineException("AllocExceptionFlowZero"));
+            }
+        }
+        ExceptionFlowInfo* efi = _exceptionFlowBase + _exceptionFlowTopIdx;
+        _exceptionFlowTopIdx += count;
+        return efi;
+    }
 
-		uint32_t GetExceptionFlowTopIdx() const
-		{
-			return _exceptionFlowTopIdx;
-		}
+    uint32_t GetExceptionFlowTopIdx() const
+    {
+        return _exceptionFlowTopIdx;
+    }
 
-		void SetExceptionFlowTopIdx(uint32_t exTopIdx)
-		{
-			_exceptionFlowTopIdx = exTopIdx;
-		}
+    void SetExceptionFlowTopIdx(uint32_t exTopIdx)
+    {
+        _exceptionFlowTopIdx = exTopIdx;
+    }
 
-		void SetExceptionFlowTop(ExceptionFlowInfo* top)
-		{
-			_exceptionFlowTopIdx = (int32_t)(top - _exceptionFlowBase);
-			IL2CPP_ASSERT(_exceptionFlowTopIdx >= 0 && _exceptionFlowTopIdx <= _exceptionFlowCount);
-		}
+    void SetExceptionFlowTop(ExceptionFlowInfo* top)
+    {
+        _exceptionFlowTopIdx = (int32_t)(top - _exceptionFlowBase);
+        IL2CPP_ASSERT(_exceptionFlowTopIdx >= 0 && _exceptionFlowTopIdx <= _exceptionFlowCount);
+    }
 
-		void PushExecutingImage(const Il2CppImage* image)
-		{
-			_executingImageStack.push(image);
-		}
+    void PushExecutingImage(const Il2CppImage* image)
+    {
+        _executingImageStack.push(image);
+    }
 
-		void PopExecutingImage()
-		{
-			_executingImageStack.pop();
-		}
+    void PopExecutingImage()
+    {
+        _executingImageStack.pop();
+    }
 
-		const Il2CppImage* GetTopExecutingImage() const
-		{
-			if (_executingImageStack.empty())
-			{
-				return nullptr;
-			}
-			else
-			{
-				return _executingImageStack.top();
-			}
-		}
+    const Il2CppImage* GetTopExecutingImage() const
+    {
+        if (_executingImageStack.empty())
+        {
+            return nullptr;
+        }
+        else
+        {
+            return _executingImageStack.top();
+        }
+    }
 
-		void CollectFrames(il2cpp::vm::StackFrames* stackFrames);
-		void SetupFramesDebugInfo(il2cpp::vm::StackFrames* stackFrames);
+    void CollectFrames(il2cpp::vm::StackFrames* stackFrames);
+    void SetupFramesDebugInfo(il2cpp::vm::StackFrames* stackFrames);
 
-	private:
+  private:
+    void InitEvalStack()
+    {
+        _stackSize = (int32_t)RuntimeConfig::GetInterpreterThreadObjectStackSize();
+        _stackBase = (StackObject*)HYBRIDCLR_MALLOC_ZERO(RuntimeConfig::GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
+        _stackTopIdx = 0;
+        _localPoolBottomIdx = _stackSize;
+        il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
+    }
 
+    void InitFrames()
+    {
+        _frameBase = (InterpFrame*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
+        _frameCount = (int32_t)RuntimeConfig::GetInterpreterThreadFrameStackSize();
+        _frameTopIdx = 0;
+    }
 
-		void InitEvalStack()
-		{
-			_stackSize = (int32_t)RuntimeConfig::GetInterpreterThreadObjectStackSize();
-			_stackBase = (StackObject*)HYBRIDCLR_MALLOC_ZERO(RuntimeConfig::GetInterpreterThreadObjectStackSize() * sizeof(StackObject));
-			_stackTopIdx = 0;
-			_localPoolBottomIdx = _stackSize;
-			il2cpp::gc::GarbageCollector::RegisterDynamicRoot(this, GetGCRootData);
-		}
+    void InitExceptionFlows()
+    {
+        _exceptionFlowBase = (ExceptionFlowInfo*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
+        _exceptionFlowCount = (int32_t)RuntimeConfig::GetInterpreterThreadExceptionFlowSize();
+        _exceptionFlowTopIdx = 0;
+    }
 
-		void InitFrames()
-		{
-			_frameBase = (InterpFrame*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadFrameStackSize(), sizeof(InterpFrame));
-			_frameCount = (int32_t)RuntimeConfig::GetInterpreterThreadFrameStackSize();
-			_frameTopIdx = 0;
-		}
+    StackObject* _stackBase;
+    int32_t _stackSize;
+    int32_t _stackTopIdx;
+    int32_t _localPoolBottomIdx;
 
-		void InitExceptionFlows()
-		{
-			_exceptionFlowBase = (ExceptionFlowInfo*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
-			_exceptionFlowCount = (int32_t)RuntimeConfig::GetInterpreterThreadExceptionFlowSize();
-			_exceptionFlowTopIdx = 0;
-		}
+    InterpFrame* _frameBase;
+    int32_t _frameTopIdx;
+    int32_t _frameCount;
 
-		StackObject* _stackBase;
-		int32_t _stackSize;
-		int32_t _stackTopIdx;
-		int32_t _localPoolBottomIdx;
+    ExceptionFlowInfo* _exceptionFlowBase;
+    int32_t _exceptionFlowTopIdx;
+    int32_t _exceptionFlowCount;
 
-		InterpFrame* _frameBase;
-		int32_t _frameTopIdx;
-		int32_t _frameCount;
+    std::stack<const Il2CppImage*> _executingImageStack;
+};
 
-		ExceptionFlowInfo* _exceptionFlowBase;
-		int32_t _exceptionFlowTopIdx;
-		int32_t _exceptionFlowCount;
+class ExecutingInterpImageScope
+{
+  public:
+    ExecutingInterpImageScope(MachineState& state, const Il2CppImage* image) : _state(state)
+    {
+        _state.PushExecutingImage(image);
+    }
 
+    ~ExecutingInterpImageScope()
+    {
+        _state.PopExecutingImage();
+    }
 
-		std::stack<const Il2CppImage*> _executingImageStack;
-	};
+  private:
+    MachineState& _state;
+};
 
-	class ExecutingInterpImageScope
-	{
-	public:
-		ExecutingInterpImageScope(MachineState& state, const Il2CppImage* image) : _state(state)
-		{
-			_state.PushExecutingImage(image);
-		}
+class InterpFrameGroup
+{
+  public:
+    InterpFrameGroup(MachineState& ms) : _machineState(ms), _stackBaseIdx(ms.GetStackTop()), _frameBaseIdx(ms.GetFrameTopIdx())
+    {
+    }
 
-		~ExecutingInterpImageScope()
-		{
-			_state.PopExecutingImage();
-		}
-		
-	private:
-		MachineState& _state;
-	};
+    void CleanUpFrames()
+    {
+        IL2CPP_ASSERT(_machineState.GetFrameTopIdx() >= _frameBaseIdx);
+        uint32_t n = _machineState.GetFrameTopIdx() - _frameBaseIdx;
+        if (n > 0)
+        {
+            for (uint32_t i = 0; i < n; i++)
+            {
+                LeaveFrame();
+            }
+        }
+    }
 
-	class InterpFrameGroup
-	{
-	public:
-		InterpFrameGroup(MachineState& ms) : _machineState(ms), _stackBaseIdx(ms.GetStackTop()), _frameBaseIdx(ms.GetFrameTopIdx())
-		{
+    InterpFrame* EnterFrameFromInterpreter(const MethodInfo* method, StackObject* argBase);
 
-		}
+    InterpFrame* EnterFrameFromNative(const MethodInfo* method, StackObject* argBase);
 
-		void CleanUpFrames()
-		{
-			IL2CPP_ASSERT(_machineState.GetFrameTopIdx() >= _frameBaseIdx);
-			uint32_t n = _machineState.GetFrameTopIdx() - _frameBaseIdx;
-			if (n > 0)
-			{
-				for (uint32_t i = 0; i < n; i++)
-				{
-					LeaveFrame();
-				}
-			}
-		}
+    InterpFrame* LeaveFrame();
 
-		InterpFrame* EnterFrameFromInterpreter(const MethodInfo* method, StackObject* argBase);
+    void* AllocLoc(size_t originSize, bool fillZero)
+    {
+        if (originSize == 0)
+        {
+            return nullptr;
+        }
+        size_t size = (originSize + 7) & ~(size_t)7;
+        void* data = _machineState.AllocLocalloc(size);
+        if (fillZero)
+        {
+            std::memset(data, 0, size);
+        }
+        return data;
+    }
 
-		InterpFrame* EnterFrameFromNative(const MethodInfo* method, StackObject* argBase);
+    size_t GetFrameCount() const
+    {
+        return _machineState.GetFrameTopIdx() - _frameBaseIdx;
+    }
 
-		InterpFrame* LeaveFrame();
-
-		void* AllocLoc(size_t originSize, bool fillZero)
-		{
-			if (originSize == 0)
-			{
-				return nullptr;
-			}
-			size_t size = (originSize + 7) & ~(size_t)7;
-			void* data = _machineState.AllocLocalloc(size);
-			if (fillZero)
-			{
-				std::memset(data, 0, size);
-			}
-			return data;
- 		}
-
-		size_t GetFrameCount() const { return _machineState.GetFrameTopIdx() - _frameBaseIdx; }
-	private:
-		MachineState& _machineState;
-		int32_t _stackBaseIdx;
-		uint32_t _frameBaseIdx;
-	};
-}
-}
+  private:
+    MachineState& _machineState;
+    int32_t _stackBaseIdx;
+    uint32_t _frameBaseIdx;
+};
+} // namespace interpreter
+} // namespace hybridclr

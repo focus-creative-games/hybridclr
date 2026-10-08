@@ -18,33 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
 
-#include "CommonDef.h"
+#include "../CommonDef.h"
 
-namespace hybridclr
-{
-enum class RuntimeOptionId
-{
-    InterpreterThreadObjectStackSize = 1,
-    InterpreterThreadFrameStackSize = 2,
-    InterpreterThreadExceptionFlowSize = 3,
-    MaxMethodBodyCacheSize = 4,
-    MaxMethodInlineDepth = 5,
-    MaxInlineableMethodBodySize = 6,
-};
+#include <codegen/il2cpp-codegen-metadata.h>
 
-class RuntimeConfig
-{
-  public:
-    static int32_t GetRuntimeOption(RuntimeOptionId optionId);
-    static void SetRuntimeOption(RuntimeOptionId optionId, int32_t value);
+#if HYBRIDCLR_UNITY_6000_OR_NEWER
+#include <codegen/il2cpp-codegen.h>
+#else
+#include <codegen/il2cpp-codegen-il2cpp.h>
+#endif
 
-    static uint32_t GetInterpreterThreadObjectStackSize();
-    static uint32_t GetInterpreterThreadFrameStackSize();
-    static uint32_t GetInterpreterThreadExceptionFlowSize();
-    static int32_t GetMaxMethodBodyCacheSize();
-    static int32_t GetMaxMethodInlineDepth();
-    static int32_t GetMaxInlineableMethodBodySize();
-};
-} // namespace hybridclr
+#include "vm/ClassInlines.h"
+#include "vm/Object.h"
+#include "vm/Class.h"
+#include "vm/ScopedThreadAttacher.h"
+
+#include "../metadata/MetadataUtil.h"
+
+
+#include "../interpreter/InterpreterModule.h"
+#include "../interpreter/MethodBridge.h"
+#include "../interpreter/Interpreter.h"
+#include "../interpreter/MemoryUtil.h"
+#include "../interpreter/InstrinctDef.h"
+
+using namespace hybridclr::interpreter;
+using namespace hybridclr::metadata;
+
+#include "../generated/MethodBridge.inc"
