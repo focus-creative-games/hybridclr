@@ -3336,7 +3336,7 @@ void TransformContext::TransformBodyImpl(int32_t depth, int32_t localVarOffset)
                 }
                 continue;
             }
-            if (!shareMethod->has_full_generic_sharing_signature)
+            if (!shareMethod->has_full_generic_sharing_signature && shareMethod->methodPointerCallByInterp != nullptr)
             {
                 if (TryAddCallCommonInstruments(shareMethod, methodDataIndex))
                 {
