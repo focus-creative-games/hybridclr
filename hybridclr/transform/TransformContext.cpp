@@ -3356,9 +3356,7 @@ void TransformContext::TransformBodyImpl(int32_t depth, int32_t localVarOffset)
                 }
                 continue;
             }
-#if HYBRIDCLR_UNITY_2021_OR_NEW
-            if (!shareMethod->has_full_generic_sharing_signature)
-#endif
+            if (!shareMethod->has_full_generic_sharing_signature && shareMethod->methodPointerCallByInterp != nullptr)
             {
                 if (TryAddCallCommonInstruments(shareMethod, methodDataIndex))
                 {
