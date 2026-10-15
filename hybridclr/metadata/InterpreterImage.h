@@ -209,12 +209,7 @@ class InterpreterImage : public Image
         return (Il2CppMetadataTypeHandle)&_typesDefines[index];
     }
 
-    Il2CppMetadataTypeHandle GetAssemblyExportedTypeHandleFromRawIndex(TypeDefinitionIndex index) const
-    {
-        IL2CPP_ASSERT(DecodeImageIndex(index) == 0);
-        IL2CPP_ASSERT(index >= 0 && (size_t)index < _typesDefines.size());
-        return (Il2CppMetadataTypeHandle)&_exportedTypeDefines[index];
-    }
+    Il2CppMetadataTypeHandle GetAssemblyExportedTypeHandleFromRawIndex(AssemblyTypeIndex index);
 
     const Il2CppTypeDefinitionSizes* GetTypeDefinitionSizesFromRawIndex(TypeDefinitionIndex index)
     {
@@ -667,7 +662,6 @@ class InterpreterImage : public Image
 
     std::vector<TypeDefinitionDetail> _typeDetails;
     std::vector<Il2CppTypeDefinition> _typesDefines;
-    std::vector<Il2CppTypeDefinition> _exportedTypeDefines;
 
     std::vector<const Il2CppType*> _types;
     Il2CppHashMap<const Il2CppType*, uint32_t, Il2CppTypeHashShallow, Il2CppTypeEqualityComparerShallow> _type2Indexs;

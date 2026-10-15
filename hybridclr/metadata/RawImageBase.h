@@ -373,6 +373,7 @@ class RawImageBase
     TABLE5(Module, TableType::MODULE, generation, name, mvid, encid, encBaseId)
     TABLE3(TypeRef, TableType::TYPEREF, resolutionScope, typeName, typeNamespace)
     TABLE6(TypeDef, TableType::TYPEDEF, flags, typeName, typeNamespace, extends, fieldList, methodList)
+    TABLE5(ExportedType, TableType::EXPORTEDTYPE, flags, typeDefId, typeName, typeNamespace, implementation)
     TABLE1(TypeSpec, TableType::TYPESPEC, signature);
     TABLE4(ImplMap, TableType::IMPLMAP, mappingFlags, memberForwarded, importName, importScope)
     TABLE1(ModuleRef, TableType::MODULEREF, name)

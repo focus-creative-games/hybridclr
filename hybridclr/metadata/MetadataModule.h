@@ -95,10 +95,9 @@ class MetadataModule
         return GetImage(imageIndex)->GetAssemblyTypeHandleFromRawIndex(DecodeMetadataIndex(index));
     }
 
-    static Il2CppMetadataTypeHandle GetAssemblyExportedTypeHandleFromEncodeIndex(AssemblyTypeIndex index)
+    static Il2CppMetadataTypeHandle GetAssemblyExportedTypeHandleFromEncodeIndex(const Il2CppImage* image, AssemblyTypeIndex index)
     {
-        uint32_t imageIndex = DecodeImageIndex(index);
-        return GetImage(imageIndex)->GetAssemblyExportedTypeHandleFromRawIndex(DecodeMetadataIndex(index));
+        return GetImage(image)->GetAssemblyExportedTypeHandleFromRawIndex(index);
     }
 
     static const Il2CppTypeDefinition& GetTypeDefinitionFromHandle(const Il2CppMetadataTypeHandle typeHandle)
