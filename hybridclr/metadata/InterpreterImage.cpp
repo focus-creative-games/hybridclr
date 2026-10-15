@@ -25,8 +25,8 @@
 #include <iostream>
 #include <algorithm>
 
-#include "il2cpp-class-internals.h"
 #include "vm/GlobalMetadata.h"
+#include "vm/Image.h"
 #include "vm/Type.h"
 #include "vm/Field.h"
 #include "vm/Object.h"
@@ -154,8 +154,6 @@ void InterpreterImage::BuildIl2CppImage(Il2CppImage* image2)
 
 void InterpreterImage::InitRuntimeMetadatas()
 {
-    IL2CPP_ASSERT(_rawImage->GetTable(TableType::EXPORTEDTYPE).rowNum == 0);
-
     InitGenericParamDefs0();
     InitTypeDefs_0();
     InitMethodDefs0();
@@ -2387,6 +2385,52 @@ const Il2CppType* InterpreterImage::GetModuleIl2CppType(uint32_t moduleRowIndex,
     il2cpp::vm::Exception::Raise(il2cpp::vm::Exception::GetTypeLoadException(CStringToStringView(typeNamespaceStr), CStringToStringView(typeNameStr),
                                                                              CStringToStringView(_il2cppImage->nameNoExt)));
     return nullptr;
+}
+
+Il2CppMetadataTypeHandle InterpreterImage::GetAssemblyExportedTypeHandleFromRawIndex(AssemblyTypeIndex index)
+{
+    TbExportedType rowExportedType = _rawImage->ReadExportedType(index + 1);
+    TableType tableType;
+    uint32_t rowIndex;
+    DecodeImplementationCodedIndex(rowExportedType.implementation, tableType, rowIndex);
+    const char* namespaze = _rawImage->GetStringFromRawIndex(rowExportedType.typeNamespace);
+    const char* name = _rawImage->GetStringFromRawIndex(rowExportedType.typeName);
+    switch (tableType)
+    {
+    case TableType::FILE:
+        RaiseNotSupportedException("file not support");
+        break;
+    case TableType::ASSEMBLYREF:
+    {
+        const Il2CppAssembly* assembly = GetReferencedAssembly(rowIndex - 1, nullptr, 0);
+        return il2cpp::vm::Image::TypeHandleFromName(assembly->image, namespaze, name);
+    }
+    case TableType::EXPORTEDTYPE:
+    {
+        Il2CppMetadataTypeHandle typeHandle = GetAssemblyExportedTypeHandleFromRawIndex(rowIndex - 1);
+        if (typeHandle == nullptr)
+        {
+            TEMP_FORMAT(errMsg, "exported type not find. namespace:%s name:%s", namespaze, name);
+            RaiseExecutionEngineException(errMsg);
+        }
+        void* iter = nullptr;
+        while (Il2CppMetadataTypeHandle nestedTypeHandle = il2cpp::vm::GlobalMetadata::GetNestedTypes(typeHandle, &iter))
+        {
+            const Il2CppTypeDefinition* nestedTypeDef = (const Il2CppTypeDefinition*)nestedTypeHandle;
+            const char* nestedTypeName = il2cpp::vm::GlobalMetadata::GetStringFromIndex(nestedTypeDef->nameIndex);
+            if (strcmp(nestedTypeName, name) == 0)
+            {
+                return nestedTypeHandle;
+            }
+        }
+        TEMP_FORMAT(errMsg2, "nested type not find.name:%s", name);
+        RaiseExecutionEngineException(errMsg2);
+        break;
+    }
+    default:
+        RaiseNotSupportedException("not support table type");
+        break;
+    }
 }
 } // namespace metadata
 } // namespace hybridclr

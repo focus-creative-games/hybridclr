@@ -695,5 +695,24 @@ inline uint32_t DecodeHasSemanticsCodedIndexRowIndex(uint32_t codedIndex)
 {
     return codedIndex >> 1;
 }
+
+inline void DecodeImplementationCodedIndex(uint32_t codedIndex, TableType& tableType, uint32_t& rowIndex)
+{
+    rowIndex = codedIndex >> 2;
+    switch (codedIndex & 0x3)
+    {
+    case 0: tableType = TableType::FILE; break;
+    case 1: tableType = TableType::ASSEMBLYREF; break;
+    case 2: tableType = TableType::EXPORTEDTYPE; break;
+    case 3:
+    {
+        IL2CPP_ASSERT(false);
+        tableType = (TableType)-1; break;
+    }
+    default:
+        IL2CPP_ASSERT(false);
+        break;
+    }
+}
 } // namespace metadata
 } // namespace hybridclr
