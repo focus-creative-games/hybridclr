@@ -67,7 +67,7 @@ inline bool CheckAddOverflow(int32_t a, int32_t b)
 
 inline bool CheckSubOverflow(int32_t a, int32_t b)
 {
-    return b >= 0 ? (INT32_MAX - b < a) : (INT32_MIN - b > a);
+    return b < 0 ? (INT32_MAX + b < a) : (INT32_MIN + b > a);
 }
 
 inline bool CheckAddOverflowUn(uint32_t a, uint32_t b)
@@ -307,22 +307,42 @@ inline bool CheckConvertOverflow_u8_u8(uint64_t x)
 
 inline bool CheckConvertOverflow_f4_i1(float x)
 {
-    return x < INT8_MIN || x > INT8_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    float y = truncf(x);
+    return y < INT8_MIN || y > INT8_MAX;
 }
 
 inline bool CheckConvertOverflow_f4_u1(float x)
 {
-    return x < 0 || x > UINT8_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    float y = truncf(x);
+    return y < 0 || y > UINT8_MAX;
 }
 
 inline bool CheckConvertOverflow_f4_i2(float x)
 {
-    return x < INT16_MIN || x > INT16_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    float y = truncf(x);
+    return y < INT16_MIN || y > INT16_MAX;
 }
 
 inline bool CheckConvertOverflow_f4_u2(float x)
 {
-    return x < 0 || x > UINT16_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    float y = truncf(x);
+    return y < 0 || y > UINT16_MAX;
 }
 
 inline bool CheckConvertOverflow_f4_i4(float x)
@@ -367,32 +387,62 @@ inline bool CheckConvertOverflow_f4_u8(float x)
 
 inline bool CheckConvertOverflow_f8_i1(double x)
 {
-    return x < INT8_MIN || x > INT8_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    double y = trunc(x);
+    return y < INT8_MIN || y > INT8_MAX;
 }
 
 inline bool CheckConvertOverflow_f8_u1(double x)
 {
-    return x < 0 || x > UINT8_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    double y = trunc(x);
+    return y < 0 || y > UINT8_MAX;
 }
 
 inline bool CheckConvertOverflow_f8_i2(double x)
 {
-    return x < INT16_MIN || x > INT16_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    double y = trunc(x);
+    return y < INT16_MIN || y > INT16_MAX;
 }
 
 inline bool CheckConvertOverflow_f8_u2(double x)
 {
-    return x < 0 || x > UINT16_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    double y = trunc(x);
+    return y < 0 || y > UINT16_MAX;
 }
 
 inline bool CheckConvertOverflow_f8_i4(double x)
 {
-    return x < INT32_MIN || x > INT32_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    double y = trunc(x);
+    return y < INT32_MIN || y > INT32_MAX;
 }
 
 inline bool CheckConvertOverflow_f8_u4(double x)
 {
-    return x < 0 || x > UINT32_MAX || isnan(x);
+    if (isnan(x))
+    {
+        return true;
+    }
+    double y = trunc(x);
+    return y < 0 || y > UINT32_MAX;
 }
 
 inline bool CheckConvertOverflow_f8_i8(double x)
