@@ -152,14 +152,14 @@ class RawImageBase
         return _tables[(int)tableIndex].rowNum;
     }
 
-    bool TranslateRVAToImageOffset(uint32_t rvaOffset, uint32_t& imageOffset) const
+    bool TranslateRVAToImageOffset(uint32_t rvaOffset, uint32_t& imageOffset, uint32_t size = 1) const
     {
         for (const SectionHeader& sh : _sections)
         {
-            if (sh.virtualAddressBegin <= rvaOffset && rvaOffset < sh.virtualAddressEnd)
+            if (sh.virtualAddressBegin <= rvaOffset && rvaOffset < sh.virtualAddressEnd && size <= sh.virtualAddressEnd - rvaOffset)
             {
                 imageOffset = sh.ptrRawDataRelatedToVirtualAddress + rvaOffset;
-                return true;
+                return IsRangeWithin(_imageLength, imageOffset, size);
             }
         }
         return false;
@@ -243,6 +243,12 @@ class RawImageBase
     }
 
   protected:
+    // Subtraction avoids overflow when validating offsets and sizes from the image.
+    static bool IsRangeWithin(size_t length, size_t offset, size_t size)
+    {
+        return offset <= length && size <= length - offset;
+    }
+
     virtual LoadImageErrorCode LoadCLIHeader(uint32_t& entryPointToken, uint32_t& metadataRva, uint32_t& metadataSize) = 0;
 
     const byte* GetTableRowPtr(TableType type, uint32_t rawIndex) const

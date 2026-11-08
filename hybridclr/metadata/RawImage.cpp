@@ -20,6 +20,7 @@
 
 #include "RawImage.h"
 
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 
@@ -39,24 +40,24 @@ const int kCliHeaderOffset64 = 224;
 LoadImageErrorCode RawImage::LoadCLIHeader(uint32_t& entryPointToken, uint32_t& metadataRva, uint32_t& metadataSize)
 {
     const byte* imageData = _imageData;
+    if (!imageData || !IsRangeWithin(_imageLength, 0x3c, sizeof(uint32_t)))
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
     const byte* ptr_lfanew = imageData + 0x3c;
-    uint32_t lfanew = *(uint32_t*)ptr_lfanew;
-    if (lfanew >= _imageLength)
+    uint32_t lfanew = GetU4LittleEndian(ptr_lfanew);
+    if (!IsRangeWithin(_imageLength, lfanew, 4 + sizeof(PEHeader)))
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
 
     const byte* ptrSig = imageData + lfanew;
-    /*if (ptr_sig[0] != 'P' || ptr_sig[1] != 'E' || ptr_sig[2] != 0 || ptr_sig[3] != 0)*/
-    if (std::strncmp((const char*)ptrSig, "PE\0\0", 4))
+    if (std::memcmp(ptrSig, "PE\0\0", 4))
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
 
-    PEHeader* peHeader = (PEHeader*)(ptrSig + 4);
-
-    bool isDll = (peHeader->characteristics & 0x2000);
-    // std::cout << "load " << (_isDll ? "dll" : "exe") << std::endl;
+    const PEHeader* peHeader = (const PEHeader*)(ptrSig + 4);
 
     // optional size may be 224(32bit matchine) or 240 (64bit)
     if (peHeader->optionalHeadersize != kOptionalHeaderSize32 && peHeader->optionalHeadersize != kOptionalHeaderSize64)
@@ -64,33 +65,53 @@ LoadImageErrorCode RawImage::LoadCLIHeader(uint32_t& entryPointToken, uint32_t& 
         return LoadImageErrorCode::BAD_IMAGE;
     }
     bool is32BitFormat = peHeader->optionalHeadersize == kOptionalHeaderSize32;
-
-    PESectionHeader* _peSectionHeaders = (PESectionHeader*)((byte*)peHeader + 20 + peHeader->optionalHeadersize);
-
-    for (uint16_t secIdx = 0; secIdx < peHeader->sections; secIdx++)
-    {
-        const PESectionHeader* ph = _peSectionHeaders + secIdx;
-        if ((byte*)ph >= _ptrRawDataEnd)
-        {
-            return LoadImageErrorCode::BAD_IMAGE;
-        }
-        _sections.push_back({ph->virtualAddress, ph->virtualAddress + ph->virtualSize, ph->ptrRawData - ph->virtualAddress});
-    }
-
-    const PEDirEntry* ptrCLIHeaderEntry =
-        (PEDirEntry*)(((byte*)peHeader) + 20 /* pe header size */
-                      + (is32BitFormat ? kCliHeaderOffset32 : kCliHeaderOffset64) /* pe optional header -> pe header data directories -> cli header */);
-    uint32_t cLIHeaderOffset;
-    if (!TranslateRVAToImageOffset(ptrCLIHeaderEntry->rva, cLIHeaderOffset))
+    size_t optionalHeaderOffset = (size_t)lfanew + 4 + sizeof(PEHeader);
+    if (!IsRangeWithin(_imageLength, optionalHeaderOffset, peHeader->optionalHeadersize))
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
-    if (cLIHeaderOffset >= _imageLength)
+    const byte* optionalHeader = imageData + optionalHeaderOffset;
+    if (GetU2LittleEndian(optionalHeader) != (is32BitFormat ? 0x10b : 0x20b))
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
+    size_t sectionHeadersOffset = optionalHeaderOffset + peHeader->optionalHeadersize;
+    if (!IsRangeWithin(_imageLength, sectionHeadersOffset, (size_t)peHeader->sections * sizeof(PESectionHeader)))
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
+    const PESectionHeader* peSectionHeaders = (const PESectionHeader*)(imageData + sectionHeadersOffset);
+
+    for (uint16_t secIdx = 0; secIdx < peHeader->sections; secIdx++)
+    {
+        const PESectionHeader* ph = peSectionHeaders + secIdx;
+        if (!IsRangeWithin(_imageLength, ph->ptrRawData, ph->sizeOfRawData))
+        {
+            return LoadImageErrorCode::BAD_IMAGE;
+        }
+        // An RVA must refer to bytes present in the file, not the zero-filled virtual tail.
+        uint32_t mappedSize = ph->virtualSize ? std::min(ph->virtualSize, ph->sizeOfRawData) : ph->sizeOfRawData;
+        if (mappedSize > UINT32_MAX - ph->virtualAddress)
+        {
+            return LoadImageErrorCode::BAD_IMAGE;
+        }
+        _sections.push_back({ph->virtualAddress, ph->virtualAddress + mappedSize, ph->ptrRawData - ph->virtualAddress});
+    }
+
+    const PEDirEntry* ptrCLIHeaderEntry =
+        (const PEDirEntry*)(optionalHeader + (is32BitFormat ? kCliHeaderOffset32 : kCliHeaderOffset64));
+    uint32_t cLIHeaderOffset;
+    if (ptrCLIHeaderEntry->size < sizeof(CLIHeader) ||
+        !TranslateRVAToImageOffset(ptrCLIHeaderEntry->rva, cLIHeaderOffset, ptrCLIHeaderEntry->size))
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
 
     const CLIHeader* ptrCLIHeader = (const CLIHeader*)(imageData + cLIHeaderOffset);
+    if (ptrCLIHeader->cb < sizeof(CLIHeader) || ptrCLIHeader->cb > ptrCLIHeaderEntry->size)
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
     entryPointToken = ptrCLIHeader->entryPointToken;
     metadataRva = ptrCLIHeader->metaData.rva;
     metadataSize = ptrCLIHeader->metaData.size;

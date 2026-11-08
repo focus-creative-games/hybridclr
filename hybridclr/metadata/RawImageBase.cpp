@@ -27,6 +27,10 @@ namespace metadata
 LoadImageErrorCode RawImageBase::Load(const void* rawImageData, size_t length)
 {
     _imageData = (const byte*)rawImageData;
+    if (!rawImageData || length == 0 || length > UINT32_MAX)
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
     _imageLength = uint32_t(length);
     _ptrRawDataEnd = _imageData + length;
 
@@ -72,11 +76,7 @@ LoadImageErrorCode RawImageBase::Load(const void* rawImageData, size_t length)
 LoadImageErrorCode RawImageBase::LoadStreamHeaders(uint32_t metadataRva, uint32_t metadataSize)
 {
     uint32_t metaOffset;
-    if (!TranslateRVAToImageOffset(metadataRva, metaOffset))
-    {
-        return LoadImageErrorCode::BAD_IMAGE;
-    }
-    if (metaOffset >= _imageLength)
+    if (metadataSize < 20 || !TranslateRVAToImageOffset(metadataRva, metaOffset, metadataSize))
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
@@ -86,19 +86,33 @@ LoadImageErrorCode RawImageBase::LoadStreamHeaders(uint32_t metadataRva, uint32_
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
-    // std::cout << "version:" << (const char*)&(ptrMetaRoot->versionFirstByte) << std::endl;
     const byte* ptrMetaData = (const byte*)ptrMetaRoot;
-
-    uint16_t numStreamHeader = *(uint16_t*)(ptrMetaData + 16 + ptrMetaRoot->length + 2);
-    const StreamHeader* ptrStreamHeaders = (const StreamHeader*)(ptrMetaData + 16 + ptrMetaRoot->length + 4);
-
-    const StreamHeader* curSH = ptrStreamHeaders;
+    if (!IsRangeWithin(metadataSize, 16, ptrMetaRoot->length) ||
+        !IsRangeWithin(metadataSize, (size_t)16 + ptrMetaRoot->length, 4))
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
+    size_t streamHeaderOffset = (size_t)16 + ptrMetaRoot->length;
+    uint16_t numStreamHeader = GetU2LittleEndian(ptrMetaData + streamHeaderOffset + 2);
+    streamHeaderOffset += 4;
     const size_t maxStreamNameSize = 16;
     for (int i = 0; i < numStreamHeader; i++)
     {
-        // std::cout << "name:" << (char*)curSH->name << ", offset:" << curSH->offset << ", size:" << curSH->size << std::endl;
-
-        if (curSH->offset >= metadataSize)
+        if (!IsRangeWithin(metadataSize, streamHeaderOffset, 8))
+        {
+            return LoadImageErrorCode::BAD_IMAGE;
+        }
+        const StreamHeader* curSH = (const StreamHeader*)(ptrMetaData + streamHeaderOffset);
+        size_t availableNameSize = std::min(maxStreamNameSize, (size_t)metadataSize - streamHeaderOffset - 8);
+        const char* nameEnd = (const char*)std::memchr(curSH->name, 0, availableNameSize);
+        if (!nameEnd)
+        {
+            return LoadImageErrorCode::BAD_IMAGE;
+        }
+        size_t nameSize = (size_t)(nameEnd - curSH->name) + 1;
+        size_t sizeOfStream = 8 + ((nameSize + 3) & ~(size_t)3);
+        if (!IsRangeWithin(metadataSize, streamHeaderOffset, sizeOfStream) ||
+            !IsRangeWithin(metadataSize, curSH->offset, curSH->size))
         {
             return LoadImageErrorCode::BAD_IMAGE;
         }
@@ -142,81 +156,79 @@ LoadImageErrorCode RawImageBase::LoadStreamHeaders(uint32_t metadataRva, uint32_
             // std::cerr << "unknown stream name:" << curSH->name << std::endl;
             return LoadImageErrorCode::BAD_IMAGE;
         }
+        if (rs == &_streamTables && rs->data)
+        {
+            return LoadImageErrorCode::BAD_IMAGE;
+        }
         rs->data = ptrMetaData + curSH->offset;
         rs->size = curSH->size;
         rs->name = curSH->name;
-        size_t sizeOfStream = 8 + (std::strlen(curSH->name) / 4 + 1) * 4;
-        curSH = (const StreamHeader*)((byte*)curSH + sizeOfStream);
+        streamHeaderOffset += sizeOfStream;
     }
-    return LoadImageErrorCode::OK;
+    return _streamTables.data ? LoadImageErrorCode::OK : LoadImageErrorCode::BAD_IMAGE;
 }
 
 LoadImageErrorCode RawImageBase::ValidateStreams() const
 {
+    size_t position = 0;
+    while (position < _streamStringHeap.size)
     {
-        uint32_t stringNum = 0;
-        const byte* cur;
-        for (cur = _streamStringHeap.data; cur < _streamStringHeap.data + _streamStringHeap.size;)
+        const byte* begin = _streamStringHeap.data + position;
+        const byte* end = (const byte*)std::memchr(begin, 0, _streamStringHeap.size - position);
+        if (!end)
         {
-            ++stringNum;
-            // std::cout << "#strings.[" << stringNum << "]  " << cur << std::endl;
-            cur += std::strlen((const char*)cur) + 1;
-        }
-        if (cur != _streamStringHeap.data + _streamStringHeap.size)
-        {
-            // std::cerr << "bad #strings" << std::endl;
             return LoadImageErrorCode::BAD_IMAGE;
         }
-        // std::cout << "=== #String. num:" << stringNum << std::endl;
+        position += (size_t)(end - begin) + 1;
     }
 
+    // Check the compressed length prefix before decoding it or advancing past its payload.
+    for (const CliStream* stream : {&_streamUS, &_streamBlobHeap})
     {
-        // std::cout << "=== #GUID. num:" << _streamGuidHeap.size / 16 << std::endl;
+        position = 0;
+        while (position < stream->size)
+        {
+            uint8_t first = stream->data[position];
+            uint32_t prefixSize;
+            if (first < 0x80)
+            {
+                prefixSize = 1;
+            }
+            else if (first < 0xc0)
+            {
+                prefixSize = 2;
+            }
+            else if (first < 0xe0)
+            {
+                prefixSize = 4;
+            }
+            else
+            {
+                return LoadImageErrorCode::BAD_IMAGE;
+            }
+            if (!IsRangeWithin(stream->size, position, prefixSize))
+            {
+                return LoadImageErrorCode::BAD_IMAGE;
+            }
+            uint32_t lengthSize;
+            uint32_t payloadSize = BlobReader::ReadCompressedUint32(stream->data + position, lengthSize);
+            position += lengthSize;
+            if (!IsRangeWithin(stream->size, position, payloadSize))
+            {
+                return LoadImageErrorCode::BAD_IMAGE;
+            }
+            position += payloadSize;
+        }
     }
-    {
-        const byte* cur;
-        uint32_t usNum = 0;
-        uint32_t lengthSize;
-        for (cur = _streamUS.data; cur < _streamUS.data + _streamUS.size;)
-        {
-            ++usNum;
-            uint32_t stringLength = BlobReader::ReadCompressedUint32(cur, lengthSize);
-            cur += lengthSize;
-            // std::cout << "#us.[" << usNum << "].size:" << stringLength << std::endl;
-            cur += stringLength;
-        }
-        if (cur != _streamUS.data + _streamUS.size)
-        {
-            // std::cerr << "bad #US" << std::endl;
-            return LoadImageErrorCode::BAD_IMAGE;
-        }
-        // std::cout << "=== #US. num:" << usNum << std::endl;
-    }
-
-    {
-        const byte* cur;
-        uint32_t blobNum = 0;
-        uint32_t lengthSize;
-        for (cur = _streamBlobHeap.data; cur < _streamBlobHeap.data + _streamBlobHeap.size;)
-        {
-            ++blobNum;
-            uint32_t stringLength = BlobReader::ReadCompressedUint32(cur, lengthSize);
-            cur += lengthSize;
-            // std::cout << "#blob.[" << blobNum << "].size:" << stringLength << std::endl;
-            cur += stringLength;
-        }
-        if (cur != _streamBlobHeap.data + _streamBlobHeap.size)
-        {
-            // std::cerr << "bad #Blob" << std::endl;
-            return LoadImageErrorCode::BAD_IMAGE;
-        }
-        // std::cout << "=== #Blob. num:" << blobNum << std::endl;
-        return LoadImageErrorCode::OK;
-    }
+    return LoadImageErrorCode::OK;
 }
 
 LoadImageErrorCode RawImageBase::LoadTables()
 {
+    if (!_streamTables.data || _streamTables.size < 24)
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
     const TableStreamHeader* ptrTableHeader = (const TableStreamHeader*)_streamTables.data;
     if (ptrTableHeader->reserved != 0 || ptrTableHeader->majorVersion != 2 || ptrTableHeader->minorVersion != 0)
     {
@@ -235,6 +247,13 @@ LoadImageErrorCode RawImageBase::LoadTables()
     {
         return LoadImageErrorCode::BAD_IMAGE;
     }
+    const uint64_t unusedTableMask = ((uint64_t)1 << (int)TableType::UNUSED8) |
+                                     ((uint64_t)1 << (int)TableType::UNUSED9) |
+                                     ((uint64_t)1 << (int)TableType::UNUSED10);
+    if (ptrTableHeader->valid & unusedTableMask)
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
     // sorted include not exist table, so check is not need.
     // if (ptrTableHeader->sorted & ~validMask)
     //{
@@ -242,6 +261,10 @@ LoadImageErrorCode RawImageBase::LoadTables()
     //}
 
     uint32_t validTableNum = GetNotZeroBitCount(ptrTableHeader->valid);
+    if (!IsRangeWithin(_streamTables.size, 24, (size_t)validTableNum * sizeof(uint32_t)))
+    {
+        return LoadImageErrorCode::BAD_IMAGE;
+    }
     // std::cout << "valid table num:" << validTableNum << std::endl;
     // printf("#~ size:%0x\n", _streamTables.size);
     const uint32_t* tableRowNums = (uint32_t*)(_streamTables.data + 24);
@@ -281,9 +304,16 @@ LoadImageErrorCode RawImageBase::LoadTables()
                 totalSize += col.size;
             }
             uint32_t metaDataRowSize = totalSize;
+            size_t tableOffset = (size_t)(curTableData - _streamTables.data);
+            // Divide before multiplying so hostile row counts cannot overflow.
+            if (tableOffset > _streamTables.size ||
+                (rowNum != 0 && (metaDataRowSize == 0 || rowNum > (_streamTables.size - tableOffset) / metaDataRowSize)))
+            {
+                return LoadImageErrorCode::BAD_IMAGE;
+            }
             // uint64_t offset = curTableData - _imageData;
             _tables[i] = {curTableData, metaDataRowSize, rowNum, true, sorted};
-            curTableData += metaDataRowSize * rowNum;
+            curTableData += (size_t)metaDataRowSize * rowNum;
             // std::cout << "table:" << i << " ," << curValidTableIndex << ", row_size:" << metaDataRowSize << ", row_num:" << rowNum << std::endl;
             // printf("table:[%d][%d] offset:%0llx row_size:%d row_count:%d\n", i, curValidTableIndex, offset, metaDataRowSize, rowNum);
             ++curValidTableIndex;
