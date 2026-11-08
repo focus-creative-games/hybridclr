@@ -67,26 +67,25 @@ class BlobReader
 
     int32_t ReadCompressedInt32()
     {
-        uint32_t unsignedValue = ReadCompressedUint32();
-        uint32_t value = unsignedValue >> 1;
+        uint32_t lengthSize;
+        uint32_t unsignedValue = ReadCompressedUint32(_buf + _readPos, lengthSize);
+        _readPos += lengthSize;
+        int32_t value = (int32_t)(unsignedValue >> 1);
         if (!(unsignedValue & 0x1))
         {
             return value;
         }
-        if (value < 0x40)
+        // Sign extension depends on the encoded width, not the decoded magnitude.
+        if (lengthSize == 1)
         {
             return value - 0x40;
         }
-        if (value < 0x2000)
+        if (lengthSize == 2)
         {
             return value - 0x2000;
         }
-        if (value < 0x10000000)
-        {
-            return value - 0x10000000;
-        }
-        IL2CPP_ASSERT(value < 0x20000000);
-        return value - 0x20000000;
+        IL2CPP_ASSERT(lengthSize == 4);
+        return value - 0x10000000;
     }
 
     static uint32_t ReadCompressedUint32(const byte* buf, uint32_t& lengthSize)
