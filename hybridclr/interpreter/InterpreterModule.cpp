@@ -491,9 +491,10 @@ static void InterpreterDelegateInvoke(Il2CppMethodPointer, const MethodInfo* met
         case -1:
         {
             IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(curMethod));
-            void** newArgs = (void**)alloca(sizeof(void*) * (size_t)(curMethod->parameters_count + 1));
+            void** newArgs = (void**)alloca(sizeof(void*) * (size_t)curMethod->parameters_count);
             newArgs[0] = curTarget;
-            for (int k = 0, endK = curMethod->parameters_count; k < endK; k++)
+            // The bound target supplies the first parameter of the static method.
+            for (int k = 0, endK = method->parameters_count; k < endK; k++)
             {
                 newArgs[k + 1] = __args[k];
             }
