@@ -86,6 +86,8 @@ int32_t RuntimeApi::PreJitClass(Il2CppReflectionType* type)
             return false;
         }
     }
+    // The class may exist before its method table has been initialized.
+    il2cpp::vm::Class::SetupMethods(klass);
     for (uint16_t i = 0; i < klass->method_count; i++)
     {
         const MethodInfo* methodInfo = klass->methods[i];
