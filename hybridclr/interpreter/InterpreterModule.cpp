@@ -463,6 +463,7 @@ static void InterpreterDelegateInvoke(Il2CppMethodPointer, const MethodInfo* met
         subDelCount = 1;
     }
 
+    void** newArgs = nullptr;
     for (int32_t i = 0; i < subDelCount; i++)
     {
         Il2CppDelegate* cur = firstSubDel[i];
@@ -491,7 +492,11 @@ static void InterpreterDelegateInvoke(Il2CppMethodPointer, const MethodInfo* met
         case -1:
         {
             IL2CPP_ASSERT(!hybridclr::metadata::IsInstanceMethod(curMethod));
-            void** newArgs = (void**)alloca(sizeof(void*) * (size_t)curMethod->parameters_count);
+            // Allocate on first use, then reuse the buffer for subsequent listeners.
+            if (!newArgs)
+            {
+                newArgs = (void**)alloca(sizeof(void*) * (size_t)curMethod->parameters_count);
+            }
             newArgs[0] = curTarget;
             // The bound target supplies the first parameter of the static method.
             for (int k = 0, endK = method->parameters_count; k < endK; k++)
