@@ -49,7 +49,11 @@ class BasicBlockSpliter
     const metadata::MethodBody& _body;
     std::set<uint32_t> _splitOffsets;
 
+#if IL2CPP_DEBUG
     void SplitNormal(const byte* ilcodeStart, uint32_t codeSize, Uin32Set& ilOffsets);
+#else
+    void SplitNormal(const byte* ilcodeStart, uint32_t codeSize);
+#endif
     void SplitExceptionHandles(const byte* ilcodeStart, uint32_t codeSize, const std::vector<metadata::ExceptionClause>& exceptionClauses);
 };
 } // namespace transform
