@@ -307,162 +307,82 @@ inline bool CheckConvertOverflow_u8_u8(uint64_t x)
 
 inline bool CheckConvertOverflow_f4_i1(float x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y < INT8_MIN || y > INT8_MAX;
+    return !(x > -129.0f && x < 128.0f);
 }
 
 inline bool CheckConvertOverflow_f4_u1(float x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y < 0 || y > UINT8_MAX;
+    return !(x > -1.0f && x < 256.0f);
 }
 
 inline bool CheckConvertOverflow_f4_i2(float x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y < INT16_MIN || y > INT16_MAX;
+    return !(x > -32769.0f && x < 32768.0f);
 }
 
 inline bool CheckConvertOverflow_f4_u2(float x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y < 0 || y > UINT16_MAX;
+    return !(x > -1.0f && x < 65536.0f);
 }
 
 inline bool CheckConvertOverflow_f4_i4(float x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y != (int32_t)x;
+    return !(x >= -2147483648.0f && x < 2147483648.0f);
 }
 
 inline bool CheckConvertOverflow_f4_u4(float x)
 {
-    if (isnan(x) || x < 0)
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y != (uint32_t)x;
+    return !(x > -1.0f && x < 4294967296.0f);
 }
 
 inline bool CheckConvertOverflow_f4_i8(float x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y != (int64_t)x;
+    return !(x >= -9223372036854775808.0f && x < 9223372036854775808.0f);
 }
 
 inline bool CheckConvertOverflow_f4_u8(float x)
 {
-    if (isnan(x) || x < 0)
-    {
-        return true;
-    }
-    float y = truncf(x);
-    return y != (uint64_t)x;
+    return !(x > -1.0f && x < 18446744073709551616.0f);
 }
 
 inline bool CheckConvertOverflow_f8_i1(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y < INT8_MIN || y > INT8_MAX;
+    return !(x > -129.0 && x < 128.0);
 }
 
 inline bool CheckConvertOverflow_f8_u1(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y < 0 || y > UINT8_MAX;
+    return !(x > -1.0 && x < 256.0);
 }
 
 inline bool CheckConvertOverflow_f8_i2(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y < INT16_MIN || y > INT16_MAX;
+    return !(x > -32769.0 && x < 32768.0);
 }
 
 inline bool CheckConvertOverflow_f8_u2(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y < 0 || y > UINT16_MAX;
+    return !(x > -1.0 && x < 65536.0);
 }
 
 inline bool CheckConvertOverflow_f8_i4(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y < INT32_MIN || y > INT32_MAX;
+    return !(x > -2147483649.0 && x < 2147483648.0);
 }
 
 inline bool CheckConvertOverflow_f8_u4(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y < 0 || y > UINT32_MAX;
+    return !(x > -1.0 && x < 4294967296.0);
 }
 
 inline bool CheckConvertOverflow_f8_i8(double x)
 {
-    if (isnan(x))
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y != (int64_t)x;
+    return !(x >= -9223372036854775808.0 && x < 9223372036854775808.0);
 }
 
 inline bool CheckConvertOverflow_f8_u8(double x)
 {
-    if (isnan(x) || x < 0)
-    {
-        return true;
-    }
-    double y = trunc(x);
-    return y != (uint64_t)x;
+    return !(x > -1.0 && x < 18446744073709551616.0);
 }
 
 inline int32_t HiDiv(int32_t a, int32_t b)
