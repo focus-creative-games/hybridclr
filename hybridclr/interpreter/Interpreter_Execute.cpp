@@ -1625,7 +1625,9 @@ inline void PushExceptionFlowInfo(InterpFrame* frame, MachineState& machine, con
         }
         frame->exFlowCapaticy += EXCEPTION_FLOW_INFO_ALLOC_BATCH_NUM;
     }
-    frame->exFlowBase[frame->exFlowCount++] = newExFlowInfo;
+    ExceptionFlowInfo* efi = frame->exFlowBase + frame->exFlowCount++;
+    *efi = newExFlowInfo;
+    HYBRIDCLR_SET_WRITE_BARRIER((void**)&efi->ex);
 }
 
 inline void PopPrevExceptionFlowInfo(InterpFrame* frame, ExceptionFlowInfo** curEx)
@@ -1633,7 +1635,9 @@ inline void PopPrevExceptionFlowInfo(InterpFrame* frame, ExceptionFlowInfo** cur
     if (frame->exFlowCount >= 2)
     {
         frame->exFlowBase[frame->exFlowCount - 2] = frame->exFlowBase[frame->exFlowCount - 1];
+        HYBRIDCLR_SET_WRITE_BARRIER((void**)&frame->exFlowBase[frame->exFlowCount - 2].ex);
         --frame->exFlowCount;
+        frame->exFlowBase[frame->exFlowCount] = {};
         if (curEx)
         {
             *curEx = frame->exFlowBase + frame->exFlowCount - 1;
@@ -1646,6 +1650,7 @@ inline void PopCurExceptionFlowInfo(InterpFrame* frame)
     if (frame->exFlowCount >= 1)
     {
         --frame->exFlowCount;
+        frame->exFlowBase[frame->exFlowCount] = {};
     }
 }
 
@@ -1654,79 +1659,80 @@ inline void PopCurExceptionFlowInfo(InterpFrame* frame)
 #define PREPARE_EXCEPTION_AT(_ex_, _firstHanlderIndex_, ipOffset) \
     PushExceptionFlowInfo(frame, machine, {ExceptionFlowType::Exception, (int32_t)(ipOffset), _ex_, _firstHanlderIndex_, 0});
 
-#define FIND_NEXT_EX_HANDLER_OR_UNWIND()                                                                                                            \
-    while (true)                                                                                                                                    \
-    {                                                                                                                                               \
-        ExceptionFlowInfo* efi = frame->GetCurExFlow();                                                                                             \
-        IL2CPP_ASSERT(efi && efi->exFlowType == ExceptionFlowType::Exception);                                                                      \
-        IL2CPP_ASSERT(efi->ex);                                                                                                                     \
-        int32_t exClauseNum = (int32_t)imi->exClauseCount;                                                                                          \
-        for (; efi->nextExClauseIndex < exClauseNum;)                                                                                               \
-        {                                                                                                                                           \
-            for (ExceptionFlowInfo * prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && efi->nextExClauseIndex >= prevExFlow->nextExClauseIndex;) \
-            {                                                                                                                                       \
-                const InterpExceptionClause* prevIec = &imi->exClauses[prevExFlow->nextExClauseIndex - 1];                                          \
-                if (!(prevIec->handlerBeginOffset <= efi->throwOffset && efi->throwOffset < prevIec->handlerEndOffset))                             \
-                {                                                                                                                                   \
-                    PopPrevExceptionFlowInfo(frame, &efi);                                                                                          \
-                }                                                                                                                                   \
-                else                                                                                                                                \
-                {                                                                                                                                   \
-                    break;                                                                                                                          \
-                }                                                                                                                                   \
-            }                                                                                                                                       \
-            const InterpExceptionClause* iec = &imi->exClauses[efi->nextExClauseIndex++];                                                           \
-            if (iec->tryBeginOffset <= efi->throwOffset && efi->throwOffset < iec->tryEndOffset)                                                    \
-            {                                                                                                                                       \
-                switch (iec->flags)                                                                                                                 \
-                {                                                                                                                                   \
-                case CorILExceptionClauseType::Exception:                                                                                           \
-                {                                                                                                                                   \
-                    if (il2cpp::vm::Class::IsAssignableFrom(iec->exKlass, efi->ex->klass))                                                          \
-                    {                                                                                                                               \
-                        ip = ipBase + iec->handlerBeginOffset;                                                                                      \
-                        StackObject* exObj = localVarBase + imi->evalStackBaseOffset;                                                               \
-                        exObj->obj = efi->ex;                                                                                                       \
-                        efi->exFlowType = ExceptionFlowType::Catch;                                                                                 \
-                        goto LoopStart;                                                                                                             \
-                    }                                                                                                                               \
-                    break;                                                                                                                          \
-                }                                                                                                                                   \
-                case CorILExceptionClauseType::Filter:                                                                                              \
-                {                                                                                                                                   \
-                    ip = ipBase + iec->filterBeginOffset;                                                                                           \
-                    StackObject* exObj = localVarBase + imi->evalStackBaseOffset;                                                                   \
-                    exObj->obj = efi->ex;                                                                                                           \
-                    goto LoopStart;                                                                                                                 \
-                }                                                                                                                                   \
-                case CorILExceptionClauseType::Finally:                                                                                             \
-                {                                                                                                                                   \
-                    ip = ipBase + iec->handlerBeginOffset;                                                                                          \
-                    goto LoopStart;                                                                                                                 \
-                }                                                                                                                                   \
-                case CorILExceptionClauseType::Fault:                                                                                               \
-                {                                                                                                                                   \
-                    ip = ipBase + iec->handlerBeginOffset;                                                                                          \
-                    goto LoopStart;                                                                                                                 \
-                }                                                                                                                                   \
-                default:                                                                                                                            \
-                {                                                                                                                                   \
-                    RaiseExecutionEngineException("");                                                                                              \
-                }                                                                                                                                   \
-                }                                                                                                                                   \
-            }                                                                                                                                       \
-        }                                                                                                                                           \
-        frame = interpFrameGroup.LeaveFrame();                                                                                                      \
-        if (frame)                                                                                                                                  \
-        {                                                                                                                                           \
-            LOAD_PREV_FRAME();                                                                                                                      \
-            PREPARE_EXCEPTION_AT(efi->ex, 0, (int32_t)(ip - ipBase - 1 /* ip have move to next instruction when callinterp */));                    \
-        }                                                                                                                                           \
-        else                                                                                                                                        \
-        {                                                                                                                                           \
-            lastUnwindException = efi->ex;                                                                                                          \
-            goto UnWindFail;                                                                                                                        \
-        }                                                                                                                                           \
+#define FIND_NEXT_EX_HANDLER_OR_UNWIND()                                                                                                         \
+    while (true)                                                                                                                                 \
+    {                                                                                                                                            \
+        ExceptionFlowInfo* efi = frame->GetCurExFlow();                                                                                          \
+        IL2CPP_ASSERT(efi && efi->exFlowType == ExceptionFlowType::Exception);                                                                   \
+        IL2CPP_ASSERT(efi->ex);                                                                                                                  \
+        int32_t exClauseNum = (int32_t)imi->exClauseCount;                                                                                       \
+        for (; efi->nextExClauseIndex < exClauseNum;)                                                                                            \
+        {                                                                                                                                        \
+            for (ExceptionFlowInfo * prevExFlow; (prevExFlow = frame->GetPrevExFlow()) && efi->nextExClauseIndex >= prevExFlow->nextExClauseIndex;)\
+            {                                                                                                                                    \
+                const InterpExceptionClause* prevIec = &imi->exClauses[prevExFlow->nextExClauseIndex - 1];                                       \
+                if (!(prevIec->handlerBeginOffset <= efi->throwOffset && efi->throwOffset < prevIec->handlerEndOffset))                          \
+                {                                                                                                                                \
+                    PopPrevExceptionFlowInfo(frame, &efi);                                                                                       \
+                }                                                                                                                                \
+                else                                                                                                                             \
+                {                                                                                                                                \
+                    break;                                                                                                                       \
+                }                                                                                                                                \
+            }                                                                                                                                    \
+            const InterpExceptionClause* iec = &imi->exClauses[efi->nextExClauseIndex++];                                                        \
+            if (iec->tryBeginOffset <= efi->throwOffset && efi->throwOffset < iec->tryEndOffset)                                                 \
+            {                                                                                                                                    \
+                switch (iec->flags)                                                                                                              \
+                {                                                                                                                                \
+                case CorILExceptionClauseType::Exception:                                                                                        \
+                {                                                                                                                                \
+                    if (il2cpp::vm::Class::IsAssignableFrom(iec->exKlass, efi->ex->klass))                                                       \
+                    {                                                                                                                            \
+                        ip = ipBase + iec->handlerBeginOffset;                                                                                   \
+                        StackObject* exObj = localVarBase + imi->evalStackBaseOffset;                                                            \
+                        exObj->obj = efi->ex;                                                                                                    \
+                        efi->exFlowType = ExceptionFlowType::Catch;                                                                              \
+                        goto LoopStart;                                                                                                          \
+                    }                                                                                                                            \
+                    break;                                                                                                                       \
+                }                                                                                                                                \
+                case CorILExceptionClauseType::Filter:                                                                                           \
+                {                                                                                                                                \
+                    ip = ipBase + iec->filterBeginOffset;                                                                                        \
+                    StackObject* exObj = localVarBase + imi->evalStackBaseOffset;                                                                \
+                    exObj->obj = efi->ex;                                                                                                        \
+                    goto LoopStart;                                                                                                              \
+                }                                                                                                                                \
+                case CorILExceptionClauseType::Finally:                                                                                          \
+                {                                                                                                                                \
+                    ip = ipBase + iec->handlerBeginOffset;                                                                                       \
+                    goto LoopStart;                                                                                                              \
+                }                                                                                                                                \
+                case CorILExceptionClauseType::Fault:                                                                                            \
+                {                                                                                                                                \
+                    ip = ipBase + iec->handlerBeginOffset;                                                                                       \
+                    goto LoopStart;                                                                                                              \
+                }                                                                                                                                \
+                default:                                                                                                                         \
+                {                                                                                                                                \
+                    RaiseExecutionEngineException("");                                                                                           \
+                }                                                                                                                                \
+                }                                                                                                                                \
+            }                                                                                                                                    \
+        }                                                                                                                                        \
+        Il2CppException* unwindException = efi->ex;                                                                                              \
+        frame = interpFrameGroup.LeaveFrame();                                                                                                   \
+        if (frame)                                                                                                                               \
+        {                                                                                                                                        \
+            LOAD_PREV_FRAME();                                                                                                                   \
+            PREPARE_EXCEPTION_AT(unwindException, 0, (int32_t)(ip - ipBase - 1 /* ip have move to next instruction when callinterp */));         \
+        }                                                                                                                                        \
+        else                                                                                                                                     \
+        {                                                                                                                                        \
+            lastUnwindException = unwindException;                                                                                               \
+            goto UnWindFail;                                                                                                                     \
+        }                                                                                                                                        \
     }
 
 #define THROW_EX(_ex_, _firstHandlerIndex_)                                                          \
