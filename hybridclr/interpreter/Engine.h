@@ -74,7 +74,7 @@ class MachineState
         }
         if (_exceptionFlowBase)
         {
-            HYBRIDCLR_FREE(_exceptionFlowBase);
+            il2cpp::gc::GarbageCollector::FreeFixed(_exceptionFlowBase);
         }
     }
 
@@ -232,13 +232,20 @@ class MachineState
 
     void SetExceptionFlowTopIdx(uint32_t exTopIdx)
     {
+        IL2CPP_ASSERT(exTopIdx <= (uint32_t)_exceptionFlowTopIdx);
+        if (exTopIdx < (uint32_t)_exceptionFlowTopIdx)
+        {
+            // Fixed GC allocations are scanned in full, including unused capacity.
+            std::memset(_exceptionFlowBase + exTopIdx, 0, (_exceptionFlowTopIdx - exTopIdx) * sizeof(ExceptionFlowInfo));
+        }
         _exceptionFlowTopIdx = exTopIdx;
     }
 
     void SetExceptionFlowTop(ExceptionFlowInfo* top)
     {
-        _exceptionFlowTopIdx = (int32_t)(top - _exceptionFlowBase);
-        IL2CPP_ASSERT(_exceptionFlowTopIdx >= 0 && _exceptionFlowTopIdx <= _exceptionFlowCount);
+        int32_t topIdx = (int32_t)(top - _exceptionFlowBase);
+        IL2CPP_ASSERT(topIdx >= 0 && topIdx <= _exceptionFlowCount);
+        SetExceptionFlowTopIdx((uint32_t)topIdx);
     }
 
     void PushExecutingImage(const Il2CppImage* image)
@@ -285,8 +292,15 @@ class MachineState
 
     void InitExceptionFlows()
     {
-        _exceptionFlowBase = (ExceptionFlowInfo*)HYBRIDCLR_CALLOC(RuntimeConfig::GetInterpreterThreadExceptionFlowSize(), sizeof(ExceptionFlowInfo));
-        _exceptionFlowCount = (int32_t)RuntimeConfig::GetInterpreterThreadExceptionFlowSize();
+        uint32_t count = RuntimeConfig::GetInterpreterThreadExceptionFlowSize();
+        size_t size = (size_t)count * sizeof(ExceptionFlowInfo);
+        _exceptionFlowBase = (ExceptionFlowInfo*)il2cpp::gc::GarbageCollector::AllocateFixed(size, nullptr);
+        if (!_exceptionFlowBase)
+        {
+            il2cpp::vm::Exception::RaiseOutOfMemoryException();
+        }
+        std::memset(_exceptionFlowBase, 0, size);
+        _exceptionFlowCount = (int32_t)count;
         _exceptionFlowTopIdx = 0;
     }
 
